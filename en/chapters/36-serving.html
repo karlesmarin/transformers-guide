@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>37&nbsp; Serving and deployment – How Transformers Attend</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/37-interpretabilidad.html" rel="next">
+<link href="../chapters/35-compresion.html" rel="prev">
+<link href="../icon.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-995c9648545143e6e90874d2ed57f896.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">How Transformers Attend</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../es/index.html"> 
+<span class="menu-text">ES</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../en/index.html"> 
+<span class="menu-text">EN</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/34-atencion-eficiente.html">Part VI — Efficiency, systems and deployment</a></li><li class="breadcrumb-item"><a href="../chapters/36-serving.html"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Serving and deployment</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/creditos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Credits</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part 0 — Orientation</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/00-orientacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">How to use this guide</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part I — Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01-panorama.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The panorama: what a transformer is and why it won</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02-tokens.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">From text to tokens</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03-embeddings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Embeddings and the residual stream</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04-atencion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Attention as weighted aggregation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-multicabeza.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Multi-head attention</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/06-ffn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The feed-forward network (FFN)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/07-residual-norm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Residual connections and normalization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/08-posicion-rope.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Positional information and RoPE</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/09-bloque.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The complete block and depth</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/10-arquitecturas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Encoder, decoder and encoder-decoder</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/11-entrenamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Training a transformer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/12-inferencia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Inference and decoding</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part II — How transformers attend over distance</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/13-leer-mapas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Reading an attention map</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/14-aliasing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Aliasing and the three scales of RoPE</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/15-ley-gamma.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">The decay law A(d) ∝ d^−γ</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/16-atlas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">The γ atlas: decay measured across 42 models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/17-sumideros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Attention sinks and concentration</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/18-taxonomia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">A taxonomy of attention mechanisms</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/19-contexto-largo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Long-context extension</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/20-kv-cache.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">KV-cache compression in practice</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part III — A physicist’s lens on attention</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/21-fases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Phase structure and the polylog partition function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/22-termodinamica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">The thermodynamic dictionary</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/23-fraccionario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">The fractional transport view</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/24-grokking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Training dynamics and <em>grokking</em></span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part IV — Training, adaptation and fine-tuning</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/25-preentrenamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Pre-training at scale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/26-finetuning-clasificacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Fine-tuning for classification and representation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/27-alineamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Instruction tuning and alignment</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/28-peft.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Parameter-efficient fine-tuning (PEFT)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part V — Using transformers</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/29-generacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Text generation in depth</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/30-prompting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Prompting and in-context learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/31-rag.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Embeddings, semantic search and RAG</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/32-agentes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Agents, tools and memory</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/33-multimodal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Multimodal transformers</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part VI — Efficiency, systems and deployment</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/34-atencion-eficiente.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Efficient attention</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/35-compresion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Quantization, distillation and pruning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/36-serving.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Serving and deployment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part VII — Interpretability and what is real</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/37-interpretabilidad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">A primer on mechanistic interpretability</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/38-audit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Verified, folklore and numerology</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/39-mapa2026.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">The map of the 2026 collapse landscape</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/40-etica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Ethics, safety and limitations</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part VIII — Reference</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R1-formulario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">R1 · Master formulary</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R2-cookbook.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R3-glosario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R3 · Glossary</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R4-medir-gamma.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R4 · Measuring your own γ (and reproducing the atlas)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R9-tafagent.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R9 · tafagent manual</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R10-soluciones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R10 · Exercise solutions</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-idea-in-one-sentence" id="toc-the-idea-in-one-sentence" class="nav-link active" data-scroll-target="#the-idea-in-one-sentence"><span class="header-section-number">37.1</span> The idea in one sentence</a></li>
+  <li><a href="#key-concepts-and-their-role-in-the-transformer" id="toc-key-concepts-and-their-role-in-the-transformer" class="nav-link" data-scroll-target="#key-concepts-and-their-role-in-the-transformer"><span class="header-section-number">37.2</span> Key concepts and their role in the transformer</a></li>
+  <li><a href="#the-two-phases-of-inference-and-why-they-clash" id="toc-the-two-phases-of-inference-and-why-they-clash" class="nav-link" data-scroll-target="#the-two-phases-of-inference-and-why-they-clash"><span class="header-section-number">37.3</span> The two phases of inference (and why they clash)</a></li>
+  <li><a href="#the-metrics-that-matter" id="toc-the-metrics-that-matter" class="nav-link" data-scroll-target="#the-metrics-that-matter"><span class="header-section-number">37.4</span> The metrics that matter</a></li>
+  <li><a href="#continuous-batching-the-big-win" id="toc-continuous-batching-the-big-win" class="nav-link" data-scroll-target="#continuous-batching-the-big-win"><span class="header-section-number">37.5</span> Continuous batching: the big win</a></li>
+  <li><a href="#managing-the-kv-cache-when-serving" id="toc-managing-the-kv-cache-when-serving" class="nav-link" data-scroll-target="#managing-the-kv-cache-when-serving"><span class="header-section-number">37.6</span> Managing the KV cache when serving</a></li>
+  <li><a href="#disaggregated-and-chunked-prefill-2024" id="toc-disaggregated-and-chunked-prefill-2024" class="nav-link" data-scroll-target="#disaggregated-and-chunked-prefill-2024"><span class="header-section-number">37.7</span> Disaggregated and chunked prefill (2024)</a></li>
+  <li><a href="#other-levers-that-you-already-know" id="toc-other-levers-that-you-already-know" class="nav-link" data-scroll-target="#other-levers-that-you-already-know"><span class="header-section-number">37.8</span> Other levers (that you already know)</a></li>
+  <li><a href="#compilation-and-kernels-to-situate" id="toc-compilation-and-kernels-to-situate" class="nav-link" data-scroll-target="#compilation-and-kernels-to-situate"><span class="header-section-number">37.9</span> Compilation and kernels (to situate)</a></li>
+  <li><a href="#the-decision-framework-honest" id="toc-the-decision-framework-honest" class="nav-link" data-scroll-target="#the-decision-framework-honest"><span class="header-section-number">37.10</span> The decision framework (honest)</a></li>
+  <li><a href="#bridge-to-our-theme-brief-and-honest" id="toc-bridge-to-our-theme-brief-and-honest" class="nav-link" data-scroll-target="#bridge-to-our-theme-brief-and-honest"><span class="header-section-number">37.11</span> Bridge to our theme (brief and honest)</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">37.12</span> Summary</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">37.13</span> Exercises</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/34-atencion-eficiente.html">Part VI — Efficiency, systems and deployment</a></li><li class="breadcrumb-item"><a href="../chapters/36-serving.html"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Serving and deployment</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-serving" class="quarto-section-identifier"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Serving and deployment</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Where we are.</strong> This closes Part VI. We already have the model trained (Part IV), compressed (Ch. 35) and with efficient attention (Ch. 34). What’s left is the last and most practical step: <strong>putting it into production</strong>. Serving an LLM has its own physics —two phases with opposite bottlenecks, a cache that limits how many users fit, and a constant tension between <strong>speed for one</strong> and <strong>throughput for all</strong>. This is the <strong>systems</strong> chapter.</p>
+</div>
+</div>
+</div>
+<section id="the-idea-in-one-sentence" class="level2" data-number="37.1">
+<h2 data-number="37.1" class="anchored" data-anchor-id="the-idea-in-one-sentence"><span class="header-section-number">37.1</span> The idea in one sentence</h2>
+<p>Serving an LLM well comes down to <strong>keeping the GPU busy</strong> despite generation being inherently sequential: the art is in <strong>batching many requests</strong> and <strong>managing the KV cache</strong>, balancing <em>throughput</em> (total tokens/sec) against <em>latency</em> (speed for each user).</p>
+</section>
+<section id="key-concepts-and-their-role-in-the-transformer" class="level2" data-number="37.2">
+<h2 data-number="37.2" class="anchored" data-anchor-id="key-concepts-and-their-role-in-the-transformer"><span class="header-section-number">37.2</span> Key concepts and their role in the transformer</h2>
+<p>Before we dig in, let’s define this chapter’s terms and <strong>what each one is for</strong> inside a transformer:</p>
+<ul>
+<li><strong>Prefill.</strong> <em>Definition:</em> processing <strong>the whole prompt at once</strong> (in parallel). <em>In the transformer:</em> it’s <strong>compute-bound</strong> (it saturates the GPU) and sets the <strong>TTFT</strong>.</li>
+<li><strong>Decode.</strong> <em>Definition:</em> generating the answer <strong>token by token</strong>. <em>In the transformer:</em> it’s <strong>bandwidth-bound</strong> (it rereads the KV cache every step) → the serving <strong>bottleneck</strong>.</li>
+<li><strong>TTFT (time-to-first-token).</strong> <em>Definition:</em> how long until you see the <strong>first</strong> word. <em>In the transformer:</em> dominated by <strong>prefill</strong>; key in chat.</li>
+<li><strong>TPOT / ITL.</strong> <em>Definition:</em> time <strong>per output token</strong>. <em>In the transformer:</em> dominated by <strong>decode</strong>; it’s the perceived “speed”.</li>
+<li><strong>Throughput vs goodput.</strong> <em>Definition:</em> total tokens/sec vs requests/sec that meet an <strong>SLO</strong> (latency target). <em>In the transformer:</em> maximizing raw throughput can violate each user’s latency.</li>
+<li><strong>Continuous batching.</strong> <em>Definition:</em> grouping requests at the <strong>iteration</strong> level (not a fixed batch), adding and removing requests every step. <em>In the transformer:</em> it keeps the GPU <strong>full</strong> even though responses finish at different moments.</li>
+<li><strong>KV cache (in serving).</strong> <em>Definition:</em> the memory of already-computed keys/values (Ch. 20). <em>In the transformer:</em> it <strong>grows with the batch and the length</strong> and competes with the weights for HBM → it <strong>limits</strong> how many requests fit.</li>
+<li><strong>Disaggregated / chunked prefill.</strong> <em>Definition:</em> separating or chunking the prefill so it doesn’t <strong>stall</strong> the decodes in flight. <em>In the transformer:</em> it meets the TTFT and TPOT targets at the same time.</li>
+</ul>
+<p>With this in hand, let’s open the server’s box.</p>
+</section>
+<section id="the-two-phases-of-inference-and-why-they-clash" class="level2" data-number="37.3">
+<h2 data-number="37.3" class="anchored" data-anchor-id="the-two-phases-of-inference-and-why-they-clash"><span class="header-section-number">37.3</span> The two phases of inference (and why they clash)</h2>
+<p>Generating with an LLM has <strong>two very distinct phases</strong>, and understanding that they have <strong>opposite</strong> bottlenecks is the key to the whole chapter:</p>
+<ul>
+<li><strong>Prefill:</strong> processing the entire prompt. Since <strong>all</strong> the input tokens are known, it’s a massive, parallel <strong>matrix-matrix</strong> multiplication that <strong>saturates the GPU</strong> → it’s <strong>compute-bound</strong>.</li>
+<li><strong>Decode:</strong> generating the answer <strong>one token at a time</strong>. Each new token needs to reread the states (K, V) of <strong>all</strong> the previous ones → it’s a low-intensity <strong>matrix-vector</strong> operation that <strong>underutilizes</strong> the compute and is <strong>bandwidth-bound</strong>: what matters is <strong>bringing data from HBM</strong> (weights + KV cache), not computing.</li>
+</ul>
+<p><strong>Decode is the serving bottleneck</strong>, and it’s exactly where the <strong>KV cache</strong> (Ch. 20) gets reread on every step. Hence the central tension: putting in <strong>more requests at once</strong> raises total <em>throughput</em>, but <strong>slows down</strong> each user’s token-by-token.</p>
+<div class="analogia">
+<p><strong>🧩 Analogy — reading the question vs writing the answer.</strong> <em>Prefill</em> is <strong>reading the whole question at a glance</strong> (fast, in parallel). <em>Decode</em> is <strong>writing the answer word by word, rereading your notes at each word</strong> (slow, sequential). The server gets stuck writing, not reading.</p>
+</div>
+</section>
+<section id="the-metrics-that-matter" class="level2" data-number="37.4">
+<h2 data-number="37.4" class="anchored" data-anchor-id="the-metrics-that-matter"><span class="header-section-number">37.4</span> The metrics that matter</h2>
+<p>There’s no single number. Serving is measured along several axes that <strong>pull in different directions</strong>:</p>
+<ul>
+<li><strong>Throughput:</strong> output tokens per second summed over <strong>all</strong> users.</li>
+<li><strong>TTFT</strong> (<em>time-to-first-token</em>): how long the user takes to see <strong>the first</strong> word —dominated by <strong>prefill</strong>.</li>
+<li><strong>TPOT / ITL</strong> (time per output token / inter-token latency): the <strong>perceived speed</strong> —dominated by <strong>decode</strong>.</li>
+<li><strong>Total latency</strong> ≈ <strong>TTFT + TPOT × (number of tokens)</strong>.</li>
+<li><strong>Goodput:</strong> the requests/sec the system sustains <strong>while meeting an SLO</strong> (e.g.&nbsp;P90 TTFT &lt; 200 ms and TPOT &lt; 50 ms). It’s more honest than raw <em>throughput</em>: you can have lots of throughput and little goodput if users miss their latency target <span class="citation" data-cites="zhong2024distserve">(<a href="#ref-zhong2024distserve" role="doc-biblioref"><span class="nocase">Zhong et al.</span> 2024</a>)</span>.</li>
+</ul>
+<p>That’s why you optimize differently depending on the case: a <strong>chat</strong> prioritizes low TTFT and TPOT; a <strong>batch</strong> (offline) job maximizes raw throughput.</p>
+<div class="analogia">
+<p><strong>🧩 Analogy — the first course and the pace.</strong> <strong>TTFT</strong> is how long the waiter takes to bring your <strong>first course</strong>; <strong>TPOT</strong> is the <strong>interval between courses</strong>. An impatient diner wants both short; a buffet (batch) just wants to serve the <strong>most plates per hour</strong> to the whole room.</p>
+</div>
+</section>
+<section id="continuous-batching-the-big-win" class="level2" data-number="37.5">
+<h2 data-number="37.5" class="anchored" data-anchor-id="continuous-batching-the-big-win"><span class="header-section-number">37.5</span> Continuous batching: the big win</h2>
+<p>The problem with the <strong>static batch</strong>: if you group N requests and wait for them all to finish, the batch isn’t released until the <strong>longest</strong> one —and since output lengths vary unpredictably, the requests already done keep <strong>idle slots</strong> occupying the GPU.</p>
+<p><strong>Continuous batching</strong> (or <em>iteration-level</em>, or <em>in-flight batching</em>) fixes it by scheduling at the <strong>token/iteration</strong> level <span class="citation" data-cites="yu2022orca">(<a href="#ref-yu2022orca" role="doc-biblioref">Yu et al. 2022</a>)</span>: after <strong>each</strong> step, it <strong>removes</strong> the finished requests and <strong>adds</strong> new ones, keeping the GPU saturated. It’s the biggest <em>throughput</em> jump in modern serving (Orca combines it with <em>selective batching</em>: attention, with different lengths per sequence, is handled separately). vLLM and TensorRT-LLM implement it.</p>
+<div class="analogia">
+<p><strong>🧩 Analogy — the shared taxi.</strong> The static batch is a <strong>van</strong> that won’t start the next trip until it’s completely emptied. Continuous batching is a <strong>shared taxi</strong> that <strong>picks up and drops off passengers nonstop</strong>: as soon as one gets off, another gets on, and the car is never half empty.</p>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Honest — the &quot;23×&quot; doesn't port">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>⚠ Honest — the “23×” doesn’t port
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The speedup figures for continuous batching (<strong>up to ~23×</strong> over a naive static batch have been reported) are <strong>highly workload-dependent</strong>: that maximum only shows up with <strong>high variance</strong> in response lengths; with similar-length responses, all systems converge to ~1×. Treat it as “up to X× <strong>under the reported conditions</strong>”, never as a guarantee.</p>
+</div>
+</div>
+</section>
+<section id="managing-the-kv-cache-when-serving" class="level2" data-number="37.6">
+<h2 data-number="37.6" class="anchored" data-anchor-id="managing-the-kv-cache-when-serving"><span class="header-section-number">37.6</span> Managing the KV cache when serving</h2>
+<p>The <strong>KV cache</strong> is the <strong>binding constraint</strong> of serving: it grows <strong>linearly with batch size and sequence length</strong>, and competes with the weights for HBM. How much KV fits decides <strong>how many requests you can batch</strong> —and therefore your throughput.</p>
+<p>This is where <strong>PagedAttention / vLLM</strong> <span class="citation" data-cites="kwon2023paged">(<a href="#ref-kwon2023paged" role="doc-biblioref"><span class="nocase">Kwon et al.</span> 2023</a>)</span> comes in (its mechanics, in Ch. 34). Its impact <strong>in serving</strong>: by storing the cache in <strong>blocks</strong> like virtual memory, it eliminates fragmentation (<strong>almost zero waste</strong>) → <strong>much larger batches fit</strong> → more throughput (up to <strong>2-4× under the reported conditions</strong>, at equal latency). And it allows <strong>prefix sharing</strong>: if many requests share the same <em>system prompt</em> or <em>few-shot</em> examples, their KV blocks are <strong>physically shared</strong> (<em>automatic prefix caching</em>) instead of recomputed.</p>
+</section>
+<section id="disaggregated-and-chunked-prefill-2024" class="level2" data-number="37.7">
+<h2 data-number="37.7" class="anchored" data-anchor-id="disaggregated-and-chunked-prefill-2024"><span class="header-section-number">37.7</span> Disaggregated and chunked prefill (2024)</h2>
+<p>A subtle problem: prefill (compute-bound) and decode (bandwidth-bound) <strong>interfere</strong> if they coexist. A <strong>long prefill</strong> monopolizes the GPU and <strong>stalls the decodes in flight</strong> of other users → it spikes their TPOT. Two modern solutions:</p>
+<ul>
+<li><strong>Disaggregation — DistServe</strong> <span class="citation" data-cites="zhong2024distserve">(<a href="#ref-zhong2024distserve" role="doc-biblioref"><span class="nocase">Zhong et al.</span> 2024</a>)</span>: put prefill and decode on <strong>separate GPUs/instances</strong>, each phase optimized on its own side, eliminating the interference (at the cost of <strong>transferring the KV cache</strong> between them). It optimizes <strong>goodput</strong> under TTFT and TPOT SLOs (up to <strong>7.4× more requests</strong> under the reported conditions).</li>
+<li><strong>Chunked prefill — Sarathi-Serve</strong> <span class="citation" data-cites="agrawal2024sarathi">(<a href="#ref-agrawal2024sarathi" role="doc-biblioref"><span class="nocase">Agrawal et al.</span> 2024</a>)</span>: chunk the long prefill into <strong>fragments</strong> and <strong>interleave</strong> them with the decodes in flight in the same batch, without pausing them (<em>stall-free batching</em>) → it balances TTFT and TPOT on the <strong>same</strong> GPUs.</li>
+</ul>
+<p>These are two strategies —spatial separation vs temporal interleaving— for the same interference problem.</p>
+</section>
+<section id="other-levers-that-you-already-know" class="level2" data-number="37.8">
+<h2 data-number="37.8" class="anchored" data-anchor-id="other-levers-that-you-already-know"><span class="header-section-number">37.8</span> Other levers (that you already know)</h2>
+<p>Serving composes almost everything above:</p>
+<ul>
+<li><strong>Speculative decoding</strong> (Ch. 29) → lowers <strong>latency</strong> (same result, faster).</li>
+<li><strong>Quantization</strong> (Ch. 35) → bigger models fit, or more batch in the same HBM.</li>
+<li><strong>Tensor/pipeline parallelism</strong> (Ch. 25) → models that don’t fit on one GPU.</li>
+<li><strong>Multi-LoRA — S-LoRA</strong> <span class="citation" data-cites="sheng2023slora">(<a href="#ref-sheng2023slora" role="doc-biblioref"><span class="nocase">Sheng et al.</span> 2023</a>)</span>: <strong>one base model</strong> + <strong>thousands of adapters</strong> in host memory, swapped on the fly, batching requests for different adapters together (Ch. 28).</li>
+</ul>
+</section>
+<section id="compilation-and-kernels-to-situate" class="level2" data-number="37.9">
+<h2 data-number="37.9" class="anchored" data-anchor-id="compilation-and-kernels-to-situate"><span class="header-section-number">37.9</span> Compilation and kernels (to situate)</h2>
+<p>A cross-cutting layer of efficiency: <strong>graph compilation</strong> and <strong>kernel fusion</strong> combine several operations into a single optimized kernel → less launch overhead and fewer trips to memory. Tools: <strong>torch.compile</strong> (PyTorch), <strong>TensorRT-LLM</strong> (NVIDIA: fused kernels + in-flight batching + paged KV + quantization) and <strong>ONNX Runtime</strong> (cross-platform operator fusion). No need to go into detail: the idea is to <strong>generate kernels that move less data</strong>, consistent with decode being <em>bandwidth-bound</em>.</p>
+</section>
+<section id="the-decision-framework-honest" class="level2" data-number="37.10">
+<h2 data-number="37.10" class="anchored" data-anchor-id="the-decision-framework-honest"><span class="header-section-number">37.10</span> The decision framework (honest)</h2>
+<p>Deploying is navigating a <strong>latency–cost–throughput triangle</strong> (with quality in the background). In practice:</p>
+<ul>
+<li>You have a <strong>latency budget</strong> and you maximize throughput within it.</li>
+<li>The <strong>batch size</strong> is the main lever: more batch → more throughput, more latency per user.</li>
+<li><strong>Cost is dominated by decode + KV-cache memory</strong>, so almost all optimizations attack exactly that.</li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Honest — benchmarks don't transfer">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>⚠ Honest — benchmarks don’t transfer
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Almost all the serving “X× faster/cheaper” claims (continuous batching, PagedAttention, DistServe, S-LoRA…) are <strong>highly workload-specific</strong>: they depend on the <em>baseline</em>, the GPU and its interconnect, the model size and the input/output lengths. Read them as “up to X× <strong>under the paper’s conditions</strong>”, and <strong>measure on your own workload</strong> before believing any curve.</p>
+</div>
+</div>
+</section>
+<section id="bridge-to-our-theme-brief-and-honest" class="level2" data-number="37.11">
+<h2 data-number="37.11" class="anchored" data-anchor-id="bridge-to-our-theme-brief-and-honest"><span class="header-section-number">37.11</span> Bridge to our theme (brief and honest)</h2>
+<p>The decode bottleneck <strong>is</strong> the KV cache (it’s reread in HBM every step), and that cache is the <strong>binding constraint</strong> on how many requests fit in the batch. Our <strong>D_f window derived from γ</strong> (Ch. 20) bounds <strong>how much KV</strong> to retain per request → reducing the effective cache length means <strong>more requests in the same HBM</strong>, that is, it touches the serving constraint directly. <em>(Honest: this is an observation of the book’s own; the serving sources don’t talk about γ or D_f.)</em></p>
+<div class="callout callout-style-default callout-note callout-titled" title="🧪 Try it — tafagent">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>🧪 Try it — tafagent
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><a href="https://karlesmarin.github.io/tafagent/">tafagent</a> computes the <strong>KV budget</strong> from γ (Ch. 20): how much cache your model <em>really</em> needs at the target length. Since that cache is what <strong>limits the batch</strong> (and therefore throughput), knowing it in advance helps you size the service —how many concurrent users fit on your GPU.</p>
+</div>
+</div>
+</section>
+<section id="summary" class="level2" data-number="37.12">
+<h2 data-number="37.12" class="anchored" data-anchor-id="summary"><span class="header-section-number">37.12</span> Summary</h2>
+<ul>
+<li><strong>Two phases:</strong> <strong>prefill</strong> (compute-bound, sets <strong>TTFT</strong>) and <strong>decode</strong> (bandwidth-bound, sets <strong>TPOT</strong>) → <strong>decode</strong> is the bottleneck, and it’s where the <strong>KV cache</strong> gets reread.</li>
+<li><strong>Metrics:</strong> <em>throughput</em> vs <strong>goodput</strong> (meeting an SLO); latency ≈ TTFT + TPOT × tokens. Chat optimizes latency; batch, throughput.</li>
+<li><strong>Continuous batching</strong> <span class="citation" data-cites="yu2022orca">(<a href="#ref-yu2022orca" role="doc-biblioref">Yu et al. 2022</a>)</span>: scheduling per iteration (adding/removing requests each step) keeps the GPU full → a big throughput jump.</li>
+<li><strong>KV cache:</strong> the <strong>binding constraint</strong>; <strong>PagedAttention</strong> <span class="citation" data-cites="kwon2023paged">(<a href="#ref-kwon2023paged" role="doc-biblioref"><span class="nocase">Kwon et al.</span> 2023</a>)</span> almost zero waste + <strong>prefix sharing</strong> → more batch, more throughput.</li>
+<li><strong>Disaggregated</strong> (DistServe) or <strong>chunked</strong> (Sarathi-Serve) prefill: keep a long prefill from <strong>stalling</strong> the decodes → they meet TTFT and TPOT at once.</li>
+<li><strong>Composes:</strong> speculative (latency), quantization (capacity), parallelism (size), <strong>multi-LoRA</strong> (S-LoRA); compilation/kernel fusion.</li>
+<li><strong>Honest:</strong> the “X×” are <strong>workload-specific</strong> —measure on yours.</li>
+</ul>
+<p><strong>Next (Part VII):</strong> we leave the engineering behind and return to the book’s underlying question —<strong>what is <em>really</em> happening inside?</strong>—: mechanistic interpretability, our formula audit (verified/folklore/numerology), the map of the 2026 landscape, and ethics.</p>
+</section>
+<section id="exercises" class="level2" data-number="37.13">
+<h2 data-number="37.13" class="anchored" data-anchor-id="exercises"><span class="header-section-number">37.13</span> Exercises</h2>
+<ol type="1">
+<li><strong>Two phases.</strong> Why is prefill <em>compute-bound</em> and decode <em>bandwidth-bound</em>? Which is the serving bottleneck and why?</li>
+<li><strong>Metrics.</strong> Define TTFT and TPOT and say which phase dominates each. Why is <em>goodput</em> more honest than <em>throughput</em>?</li>
+<li><strong>Continuous batching.</strong> What does the static batch waste and how does the continuous one avoid it? Why isn’t the “23×” a guarantee?</li>
+<li><strong>KV cache.</strong> Why does the KV cache limit how many requests fit in the batch? What two things does PagedAttention bring to serving?</li>
+<li><strong>Interference.</strong> How does a long prefill stall the decodes in flight, and how do DistServe and Sarathi-Serve solve it?</li>
+<li><strong>Honesty.</strong> Why might a serving paper’s “5× faster” not hold up in your deployment?</li>
+</ol>
+</section>
+<section id="references" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="references">References</h2>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-agrawal2024sarathi" class="csl-entry" role="listitem">
+<span class="nocase">Agrawal, Amey, Nitin Kedia, Ashish Panwar, et al.</span> 2024. <span>“Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve.”</span> <em>OSDI</em>. <a href="https://arxiv.org/abs/2403.02310">https://arxiv.org/abs/2403.02310</a>.
+</div>
+<div id="ref-kwon2023paged" class="csl-entry" role="listitem">
+<span class="nocase">Kwon, Woosuk, Zhuohan Li, Siyuan Zhuang, et al.</span> 2023. <span>“Efficient Memory Management for Large Language Model Serving with PagedAttention.”</span> <em>SOSP</em>. <a href="https://arxiv.org/abs/2309.06180">https://arxiv.org/abs/2309.06180</a>.
+</div>
+<div id="ref-sheng2023slora" class="csl-entry" role="listitem">
+<span class="nocase">Sheng, Ying, Shiyi Cao, Dacheng Li, et al.</span> 2023. <em>S-LoRA: Serving Thousands of Concurrent LoRA Adapters</em>. <a href="https://arxiv.org/abs/2311.03285">https://arxiv.org/abs/2311.03285</a>.
+</div>
+<div id="ref-yu2022orca" class="csl-entry" role="listitem">
+Yu, Gyeong-In, Joo Seong Jeong, Geon-Woo Kim, Soojeong Kim, and Byung-Gon Chun. 2022. <span>“Orca: A Distributed Serving System for Transformer-Based Generative Models.”</span> <em>OSDI</em>. <a href="https://www.usenix.org/conference/osdi22/presentation/yu">https://www.usenix.org/conference/osdi22/presentation/yu</a>.
+</div>
+<div id="ref-zhong2024distserve" class="csl-entry" role="listitem">
+<span class="nocase">Zhong, Yinmin, Shengyu Liu, Junda Chen, et al.</span> 2024. <span>“DistServe: Disaggregating Prefill and Decoding for Goodput-Optimized Large Language Model Serving.”</span> <em>OSDI</em>. <a href="https://arxiv.org/abs/2401.09670">https://arxiv.org/abs/2401.09670</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/35-compresion.html" class="pagination-link" aria-label="Quantization, distillation and pruning">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Quantization, distillation and pruning</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/37-interpretabilidad.html" class="pagination-link" aria-label="A primer on mechanistic interpretability">
+        <span class="nav-page-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">A primer on mechanistic interpretability</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

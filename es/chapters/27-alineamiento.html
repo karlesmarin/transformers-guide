@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>28&nbsp; Instruction tuning y alineamiento – Cómo Atienden los Transformers</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/28-peft.html" rel="next">
+<link href="../chapters/26-finetuning-clasificacion.html" rel="prev">
+<link href="../icon.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-995c9648545143e6e90874d2ed57f896.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Cómo Atienden los Transformers</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Buscar"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Navegación de palanca" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../es/index.html"> 
+<span class="menu-text">ES</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../en/index.html"> 
+<span class="menu-text">EN</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/25-preentrenamiento.html">Parte IV — Entrenamiento, adaptación y fine-tuning</a></li><li class="breadcrumb-item"><a href="../chapters/27-alineamiento.html"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Instruction tuning y alineamiento</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefacio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/creditos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Créditos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte 0 — Orientación</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/00-orientacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Cómo usar esta guía</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte I — Fundamentos</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01-panorama.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">El panorama: qué es un transformer y por qué ganó</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02-tokens.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">De texto a tokens</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03-embeddings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Embeddings y el flujo residual</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04-atencion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">La atención como agregación ponderada</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-multicabeza.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Atención multi-cabeza</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/06-ffn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">La red feed-forward (FFN)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/07-residual-norm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Conexiones residuales y normalización</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/08-posicion-rope.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Información de posición y RoPE</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/09-bloque.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">El bloque completo y la profundidad</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/10-arquitecturas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Encoder, decoder y encoder-decoder</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/11-entrenamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Entrenar un transformer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/12-inferencia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Inferencia y decodificación</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte II — Cómo atienden a lo largo de la distancia</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/13-leer-mapas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Leer un mapa de atención</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/14-aliasing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Aliasing y las tres escalas de RoPE</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/15-ley-gamma.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">La ley de decaimiento A(d) ∝ d^−γ</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/16-atlas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">El atlas γ: el decaimiento medido en 42 modelos</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/17-sumideros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Sumideros de atención y concentración</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/18-taxonomia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Taxonomía de mecanismos de atención</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/19-contexto-largo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Extensión de contexto largo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/20-kv-cache.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Compresión de KV-cache en práctica</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte III — Una lente física sobre la atención</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/21-fases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Estructura de fases y la función de partición polilog</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/22-termodinamica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">El diccionario termodinámico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/23-fraccionario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">La vista de transporte fraccionario</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/24-grokking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Dinámica de entrenamiento y <em>grokking</em></span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte IV — Entrenamiento, adaptación y fine-tuning</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/25-preentrenamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Pre-entrenamiento a escala</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/26-finetuning-clasificacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Fine-tuning para clasificación y representación</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/27-alineamiento.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Instruction tuning y alineamiento</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/28-peft.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Fine-tuning eficiente en parámetros (PEFT)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte V — Usar transformers</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/29-generacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Generación de texto en profundidad</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/30-prompting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Prompting e in-context learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/31-rag.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Embeddings, búsqueda semántica y RAG</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/32-agentes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Agentes, herramientas y memoria</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/33-multimodal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Transformers multimodales</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte VI — Eficiencia, sistemas y despliegue</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/34-atencion-eficiente.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Atención eficiente</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/35-compresion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Cuantización, destilación y poda</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/36-serving.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Servir y desplegar</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte VII — Interpretabilidad y qué es real</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/37-interpretabilidad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Primer de interpretabilidad mecanicista</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/38-audit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Verificado, folclore y numerología</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/39-mapa2026.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">El mapa del paisaje de colapso 2026</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/40-etica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Ética, seguridad y limitaciones</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte VIII — Referencia</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R1-formulario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">R1 · Formulario maestro</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R2-cookbook.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R3-glosario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R3 · Glosario</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R4-medir-gamma.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R4 · Medir tu propio γ (y reproducir el atlas)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R9-tafagent.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R9 · Manual de tafagent</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R10-soluciones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R10 · Soluciones de los ejercicios</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#la-idea-en-una-frase" id="toc-la-idea-en-una-frase" class="nav-link active" data-scroll-target="#la-idea-en-una-frase"><span class="header-section-number">28.1</span> La idea en una frase</a></li>
+  <li><a href="#conceptos-clave-y-su-papel-en-el-transformer" id="toc-conceptos-clave-y-su-papel-en-el-transformer" class="nav-link" data-scroll-target="#conceptos-clave-y-su-papel-en-el-transformer"><span class="header-section-number">28.2</span> Conceptos clave y su papel en el transformer</a></li>
+  <li><a href="#la-brecha-de-alineamiento" id="toc-la-brecha-de-alineamiento" class="nav-link" data-scroll-target="#la-brecha-de-alineamiento"><span class="header-section-number">28.3</span> La brecha de alineamiento</a></li>
+  <li><a href="#etapa-1-sft-instruction-tuning" id="toc-etapa-1-sft-instruction-tuning" class="nav-link" data-scroll-target="#etapa-1-sft-instruction-tuning"><span class="header-section-number">28.4</span> Etapa 1 — SFT (instruction tuning)</a></li>
+  <li><a href="#etapa-2-el-modelo-de-recompensa-aprender-qué-preferimos" id="toc-etapa-2-el-modelo-de-recompensa-aprender-qué-preferimos" class="nav-link" data-scroll-target="#etapa-2-el-modelo-de-recompensa-aprender-qué-preferimos"><span class="header-section-number">28.5</span> Etapa 2 — el modelo de recompensa (aprender qué preferimos)</a></li>
+  <li><a href="#etapa-3-ppo-con-correa-kl-optimizar-contra-el-juez" id="toc-etapa-3-ppo-con-correa-kl-optimizar-contra-el-juez" class="nav-link" data-scroll-target="#etapa-3-ppo-con-correa-kl-optimizar-contra-el-juez"><span class="header-section-number">28.6</span> Etapa 3 — PPO con correa KL (optimizar contra el juez)</a></li>
+  <li><a href="#dpo-saltarse-al-entrenador" id="toc-dpo-saltarse-al-entrenador" class="nav-link" data-scroll-target="#dpo-saltarse-al-entrenador"><span class="header-section-number">28.7</span> DPO — saltarse al entrenador</a></li>
+  <li><a href="#qué-cambia-y-qué-se-rompe-en-el-modelo" id="toc-qué-cambia-y-qué-se-rompe-en-el-modelo" class="nav-link" data-scroll-target="#qué-cambia-y-qué-se-rompe-en-el-modelo"><span class="header-section-number">28.8</span> Qué cambia (y qué se rompe) en el modelo</a></li>
+  <li><a href="#el-paisaje-2024-2026-breve" id="toc-el-paisaje-2024-2026-breve" class="nav-link" data-scroll-target="#el-paisaje-2024-2026-breve"><span class="header-section-number">28.9</span> El paisaje 2024-2026 (breve)</a></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">28.10</span> Resumen</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">28.11</span> Ejercicios</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias">Referencias</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/25-preentrenamiento.html">Parte IV — Entrenamiento, adaptación y fine-tuning</a></li><li class="breadcrumb-item"><a href="../chapters/27-alineamiento.html"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Instruction tuning y alineamiento</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-alineamiento" class="quarto-section-identifier"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Instruction tuning y alineamiento</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Dónde estamos.</strong> En el Cap. 26 adaptamos un modelo a una tarea (clasificar, representar). Pero un modelo base, por listo que sea, <strong>no sabe obedecer</strong>: completa texto, no responde a lo que le pides. Este capítulo cubre cómo se le enseña a <strong>seguir instrucciones</strong> (SFT) y a <strong>alinearse con lo que preferimos</strong> (RLHF y DPO) —con sus fórmulas explicadas término a término y sus fallos contados sin maquillaje—. (LoRA/PEFT, el <em>cómo</em> barato de afinar, va en el Cap. 28.)</p>
+</div>
+</div>
+</div>
+<section id="la-idea-en-una-frase" class="level2" data-number="28.1">
+<h2 data-number="28.1" class="anchored" data-anchor-id="la-idea-en-una-frase"><span class="header-section-number">28.1</span> La idea en una frase</h2>
+<p>Un modelo base sabe muchísimo pero solo “sigue escribiendo”; alinearlo es enseñarle, en dos pasos, a <strong>responder de verdad la pregunta</strong> (con ejemplos) y luego a <strong>tener buen criterio</strong> (aprendiendo de qué respuestas preferimos).</p>
+</section>
+<section id="conceptos-clave-y-su-papel-en-el-transformer" class="level2" data-number="28.2">
+<h2 data-number="28.2" class="anchored" data-anchor-id="conceptos-clave-y-su-papel-en-el-transformer"><span class="header-section-number">28.2</span> Conceptos clave y su papel en el transformer</h2>
+<p>Antes de entrar en detalle, definimos los términos de este capítulo y <strong>para qué sirve cada uno</strong> dentro de un transformer:</p>
+<ul>
+<li><strong>Brecha de alineamiento.</strong> <em>Definición:</em> la distancia entre lo que el modelo base hace (completar texto) y lo que queremos (obedecer). <em>En el transformer:</em> el preentrenamiento da conocimiento, no <strong>comportamiento</strong> útil, obediente e inofensivo.</li>
+<li><strong>SFT (<em>instruction tuning</em>).</strong> <em>Definición:</em> afinar con pares (instrucción, respuesta deseada). <em>En el transformer:</em> enseña <strong>formato</strong> y el <strong>acto de obedecer</strong>; destapa capacidades, no inyecta conocimiento nuevo.</li>
+<li><strong>Modelo de recompensa (Bradley-Terry).</strong> <em>Definición:</em> un juez <span class="math inline">\(r_\phi(x,y)\)</span> entrenado a partir de <strong>comparaciones</strong> humanas. <em>En el transformer:</em> convierte miles de juicios humanos dispersos en una <strong>señal automática y continua</strong>.</li>
+<li><strong>RLHF / PPO.</strong> <em>Definición:</em> optimizar el modelo (la <em>política</em>) contra ese juez con aprendizaje por refuerzo. <em>En el transformer:</em> maximiza la nota del juez para moldear el comportamiento —pero es caro: cuatro modelos en memoria—.</li>
+<li><strong>Correa KL (<span class="math inline">\(\beta\)</span>).</strong> <em>Definición:</em> una penalización por <strong>alejarse</strong> del modelo de referencia. <em>En el transformer:</em> evita el <em>reward hacking</em> y mantiene al modelo <strong>hablando con sentido</strong>.</li>
+<li><strong>Reward hacking / ley de Goodhart.</strong> <em>Definición:</em> explotar el juez —un proxy imperfecto— para sacar nota alta con salidas degeneradas. <em>En el transformer:</em> es la razón de ser de la correa KL.</li>
+<li><strong>DPO.</strong> <em>Definición:</em> optimizar los pares de preferencia <strong>directamente</strong>, sin modelo de recompensa ni RL (recompensa <strong>implícita</strong>). <em>En el transformer:</em> misma meta que RLHF, pero como una pérdida supervisada simple —dominante en modelos abiertos—.</li>
+<li><strong>Impuesto de alineamiento y modos de fallo.</strong> <em>Definición:</em> alinear puede <strong>degradar</strong> capacidades y producir <strong>adulación</strong> (<em>sycophancy</em>), <em>reward hacking</em> o menos diversidad. <em>En el transformer:</em> el coste y los riesgos de esta capa de estilo/comportamiento.</li>
+</ul>
+<p>Con esos términos en la mano, vamos a los detalles.</p>
+</section>
+<section id="la-brecha-de-alineamiento" class="level2" data-number="28.3">
+<h2 data-number="28.3" class="anchored" data-anchor-id="la-brecha-de-alineamiento"><span class="header-section-number">28.3</span> La brecha de alineamiento</h2>
+<p>El preentrenamiento (Cap. 25) optimiza <strong>una sola cosa</strong>: predecir el siguiente token sobre texto de internet. Por eso un modelo base <em>completa</em> texto según la distribución de la web, no <em>atiende tu intención</em>. Si le pides “explícale la luna a un niño”, podría seguir con <strong>más preguntas parecidas</strong> —porque eso es lo que suele venir después en su corpus— en vez de responder. El preentrenamiento da <strong>conocimiento y capacidad</strong>; no da el <strong>comportamiento</strong> de ser útil, obediente e inofensivo. Cerrar esa brecha es el <em>alineamiento</em>.</p>
+<p>La receta canónica son <strong>tres etapas</strong> (InstructGPT <span class="citation" data-cites="ouyang2022instructgpt">(<a href="#ref-ouyang2022instructgpt" role="doc-biblioref"><span class="nocase">Ouyang et&nbsp;al.</span> 2022</a>)</span>):</p>
+<ol type="1">
+<li><strong>SFT</strong> — afinar con demostraciones (instrucción → respuesta) escritas por humanos.</li>
+<li><strong>Modelo de recompensa</strong> — entrenar un juez a partir de <strong>comparaciones</strong> humanas.</li>
+<li><strong>RL (PPO)</strong> — optimizar el modelo contra ese juez, con una correa que lo sujeta.</li>
+</ol>
+<p>Hoy la etapa 3 puede sustituirse por <strong>DPO</strong>, que funde recompensa + RL en una sola pérdida. Veámoslas.</p>
+<div class="analogia">
+<p><strong>🧩 Analogía — el sabio que aprende a responder y a tener modales.</strong> Imagina a alguien que ha leído media biblioteca: sabe muchísimo, pero solo sabe <em>seguir escribiendo</em>. Un tutor le enseña con ejemplos a <strong>contestar la pregunta que le hacen</strong> y no divagar (SFT). Después aprende <strong>buen criterio</strong> con feedback: alguien valora sus respuestas y le dice cuál fue mejor, una y otra vez, hasta que <strong>interioriza el juicio</strong> (RLHF/DPO).</p>
+</div>
+</section>
+<section id="etapa-1-sft-instruction-tuning" class="level2" data-number="28.4">
+<h2 data-number="28.4" class="anchored" data-anchor-id="etapa-1-sft-instruction-tuning"><span class="header-section-number">28.4</span> Etapa 1 — SFT (instruction tuning)</h2>
+<p>El <strong>fine-tuning supervisado</strong> es el mismo “predecir el siguiente token” del Cap. 11, pero sobre pares <strong>(instrucción, respuesta deseada)</strong>. Le enseña dos cosas: el <strong>formato</strong> de una buena respuesta y el <strong>acto de obedecer</strong> la instrucción.</p>
+<p>Su poder se vio con <strong>FLAN</strong> <span class="citation" data-cites="wei2021flan">(<a href="#ref-wei2021flan" role="doc-biblioref"><span class="nocase">Wei et&nbsp;al.</span> 2022</a>)</span>: afinar un modelo sobre <strong>60+ tareas</strong> formuladas como instrucciones lo hace <strong>generalizar a tipos de tarea no vistos</strong> en <em>zero-shot</em> —superó al GPT-3 175B en 20 de 25 <em>datasets</em>—. Escalar el número de tareas (a ~1 800), el tamaño y añadir cadenas de razonamiento lo mejora aún más <span class="citation" data-cites="chung2022flanpalm">(<a href="#ref-chung2022flanpalm" role="doc-biblioref"><span class="nocase">Chung et&nbsp;al.</span> 2022</a>)</span>.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="🧠 Curiosidad — con 1.000 ejemplos basta (casi)">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>🧠 Curiosidad — con 1.000 ejemplos basta (casi)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>LIMA</strong> <span class="citation" data-cites="zhou2023lima">(<a href="#ref-zhou2023lima" role="doc-biblioref"><span class="nocase">Zhou et&nbsp;al.</span> 2023</a>)</span> afinó un modelo de 65B con <strong>exactamente 1.000</strong> ejemplos muy cuidados, <strong>sin RLHF</strong>, y quedó competitivo frente a modelos mucho más trabajados. De ahí la <strong>hipótesis de alineamiento superficial</strong>: <em>“el conocimiento y las capacidades se aprenden casi por completo en el preentrenamiento; el alineamiento solo enseña qué <strong>subdistribución de formatos</strong> usar al interactuar”</em>. Traducción: alinear <strong>no enseña cosas nuevas</strong>, sobre todo <strong>destapa y da forma</strong> a lo que el modelo ya sabía.</p>
+</div>
+</div>
+<p>Eso marca lo que el SFT <strong>sí</strong> hace (elicitar capacidades, fijar estilo/formato) y lo que <strong>no</strong> puede: no inyecta conocimiento que el modelo no tenga. Imitar por SFT el <em>estilo</em> de un modelo mejor <strong>engaña al evaluador humano</strong> pero no cierra la brecha de capacidad real <span class="citation" data-cites="gudibande2023falsepromise">(<a href="#ref-gudibande2023falsepromise" role="doc-biblioref"><span class="nocase">Gudibande et&nbsp;al.</span> 2023</a>)</span>. Honestidad: una respuesta que <em>suena</em> experta no es una respuesta experta.</p>
+</section>
+<section id="etapa-2-el-modelo-de-recompensa-aprender-qué-preferimos" class="level2" data-number="28.5">
+<h2 data-number="28.5" class="anchored" data-anchor-id="etapa-2-el-modelo-de-recompensa-aprender-qué-preferimos"><span class="header-section-number">28.5</span> Etapa 2 — el modelo de recompensa (aprender qué preferimos)</h2>
+<p>¿Cómo le enseñamos “buen criterio” si la calidad de una respuesta no es una etiqueta única? <strong>No pedimos notas absolutas, sino comparaciones:</strong> a un humano se le muestran dos respuestas a la misma pregunta y dice <strong>cuál prefiere</strong>. Con esos pares se entrena un <strong>modelo de recompensa</strong> <span class="math inline">\(r_\phi(x,y)\)</span> que asigna un <strong>número</strong> (la “nota”) a cada respuesta. La pérdida es la de <strong>Bradley-Terry</strong>:</p>
+<p><span class="math display">\[ \mathcal{L}_R = -\,\mathbb{E}_{(x,\,y_w,\,y_l)}\big[\,\log\sigma\big(r_\phi(x,y_w)-r_\phi(x,y_l)\big)\big] \]</span></p>
+<p>Término a término:</p>
+<ul>
+<li><strong><span class="math inline">\(x\)</span></strong> = el <em>prompt</em> (la instrucción); <strong><span class="math inline">\(y_w\)</span></strong> = la respuesta <strong>preferida</strong> (<em>winner</em>) por el humano; <strong><span class="math inline">\(y_l\)</span></strong> = la <strong>despreferida</strong> (<em>loser</em>) del mismo par.</li>
+<li><strong><span class="math inline">\(r_\phi(x,y)\)</span></strong> = la <strong>recompensa escalar</strong> que el juez asigna a la respuesta <span class="math inline">\(y\)</span>. Es lo que estamos aprendiendo (los pesos <span class="math inline">\(\phi\)</span>).</li>
+<li><strong><span class="math inline">\(r_\phi(x,y_w) - r_\phi(x,y_l)\)</span></strong> = cuánto <strong>gana</strong> la preferida sobre la rechazada. La pérdida quiere que esta diferencia sea <strong>grande y positiva</strong>.</li>
+<li><strong><span class="math inline">\(\sigma\)</span></strong> (sigmoide) = aplasta esa diferencia a una probabilidad: modela “P(el humano prefiera <span class="math inline">\(y_w\)</span>)”. Minimizar la pérdida = hacer que el juez <strong>ordene</strong> las respuestas como el humano.</li>
+</ul>
+<p><strong>Su función:</strong> el modelo de recompensa convierte miles de juicios humanos dispersos en una <strong>señal automática y continua</strong> que puede guiar el entrenamiento sin un humano en cada paso.</p>
+</section>
+<section id="etapa-3-ppo-con-correa-kl-optimizar-contra-el-juez" class="level2" data-number="28.6">
+<h2 data-number="28.6" class="anchored" data-anchor-id="etapa-3-ppo-con-correa-kl-optimizar-contra-el-juez"><span class="header-section-number">28.6</span> Etapa 3 — PPO con correa KL (optimizar contra el juez)</h2>
+<p>Con el juez listo, ajustamos el modelo (la <em>política</em> <span class="math inline">\(\pi_\theta\)</span>) para que <strong>maximice la nota</strong> —pero con una sujeción crucial—. El objetivo del RLHF es:</p>
+<p><span class="math display">\[ \max_{\pi_\theta}\ \mathbb{E}_{x,\,y\sim\pi_\theta}\big[r_\phi(x,y)\big]\;-\;\beta\,\mathbb{D}_{\mathrm{KL}}\big[\pi_\theta(y\mid x)\,\|\,\pi_{\mathrm{ref}}(y\mid x)\big] \]</span></p>
+<p>Término a término:</p>
+<ul>
+<li><strong><span class="math inline">\(\mathbb{E}[r_\phi(x,y)]\)</span></strong> = la <strong>nota media</strong> que el juez da a las respuestas que el modelo genera. Subirla es el objetivo.</li>
+<li><strong><span class="math inline">\(\pi_{\mathrm{ref}}\)</span></strong> = el modelo de <strong>referencia congelado</strong> (el SFT de la etapa 1).</li>
+<li><strong><span class="math inline">\(\mathbb{D}_{\mathrm{KL}}[\pi_\theta \| \pi_{\mathrm{ref}}]\)</span></strong> = cuánto se ha <strong>alejado</strong> el modelo de esa referencia (una “distancia” entre distribuciones).</li>
+<li><strong><span class="math inline">\(\beta\)</span></strong> = la fuerza de la <strong>correa</strong>: <span class="math inline">\(\beta\)</span> alto = muy atado a la referencia; <span class="math inline">\(\beta\)</span> bajo = libre de perseguir la nota.</li>
+</ul>
+<p><strong>Por qué la correa KL:</strong> el juez es un <strong>proxy imperfecto</strong>. Sin sujeción, el modelo <strong>hace trampa al juez</strong> (<em>reward hacking</em>): encuentra salidas con nota altísima pero degeneradas —la <strong>ley de Goodhart</strong>, “cuando una medida se vuelve objetivo, deja de ser buena medida”—. La degradación es tan sistemática que tiene su propia ley de escala <span class="citation" data-cites="gao2023overoptimization">(<a href="#ref-gao2023overoptimization" role="doc-biblioref">Gao et&nbsp;al. 2023</a>)</span>. La KL mantiene el modelo <strong>cerca de hablar con sentido</strong>.</p>
+<div class="analogia">
+<p><strong>🧩 Analogía — el entrenador y la correa.</strong> El modelo de recompensa es un <strong>entrenador que puntúa</strong> cada respuesta. La penalización KL es una <strong>correa</strong> que impide que el alumno gane puntos soltando galimatías que engañan al entrenador: lo mantiene cerca de hablar como el modelo de referencia (con sentido).</p>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Por qué PPO es pesado">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>⚠ Por qué PPO es pesado
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>PPO es <em>aprendizaje por refuerzo on-policy</em>: optimiza sobre muestras que <strong>genera el propio modelo</strong> contra una señal no diferenciable. El coste: hay que tener <strong>cuatro modelos en memoria</strong> a la vez —la política, la referencia congelada, el modelo de recompensa y una red de valor (<em>crítico</em>)—. Es <strong>complejo, caro e inestable</strong>. Justo eso es lo que las alternativas atacan.</p>
+</div>
+</div>
+</section>
+<section id="dpo-saltarse-al-entrenador" class="level2" data-number="28.7">
+<h2 data-number="28.7" class="anchored" data-anchor-id="dpo-saltarse-al-entrenador"><span class="header-section-number">28.7</span> DPO — saltarse al entrenador</h2>
+<p><strong>Direct Preference Optimization</strong> <span class="citation" data-cites="rafailov2023dpo">(<a href="#ref-rafailov2023dpo" role="doc-biblioref">Rafailov et&nbsp;al. 2023</a>)</span> tuvo una idea preciosa: se puede optimizar <strong>el mismo objetivo</strong> del RLHF <strong>directamente sobre los pares de preferencia</strong>, <strong>sin</strong> entrenar un modelo de recompensa y <strong>sin</strong> bucle de RL.</p>
+<p>El truco matemático: el óptimo del objetivo RLHF con correa KL tiene <strong>forma cerrada</strong>, que permite <strong>reescribir la recompensa en función de la propia política</strong>. Al sustituirla en Bradley-Terry, <strong>el modelo de recompensa se cancela</strong> y queda una simple pérdida de clasificación:</p>
+<p><span class="math display">\[ \mathcal{L}_{\mathrm{DPO}} = -\,\mathbb{E}_{(x,y_w,y_l)}\Big[\log\sigma\Big(\beta\log\tfrac{\pi_\theta(y_w\mid x)}{\pi_{\mathrm{ref}}(y_w\mid x)} - \beta\log\tfrac{\pi_\theta(y_l\mid x)}{\pi_{\mathrm{ref}}(y_l\mid x)}\Big)\Big] \]</span></p>
+<p>Término a término:</p>
+<ul>
+<li><strong><span class="math inline">\(\log\tfrac{\pi_\theta(y\mid x)}{\pi_{\mathrm{ref}}(y\mid x)}\)</span></strong> = cuánto <strong>más probable</strong> hace el modelo la respuesta <span class="math inline">\(y\)</span> respecto a la referencia. Esto es, de hecho, una <strong>recompensa implícita</strong>: <span class="math inline">\(\hat r(x,y)=\beta\log\tfrac{\pi_\theta}{\pi_{\mathrm{ref}}}\)</span>. <em>El propio modelo es, en secreto, su modelo de recompensa.</em></li>
+<li>La pérdida sube la probabilidad de la <strong>preferida</strong> <span class="math inline">\(y_w\)</span> y baja la de la <strong>rechazada</strong> <span class="math inline">\(y_l\)</span> —empuja la recompensa implícita de <span class="math inline">\(y_w\)</span> por encima de la de <span class="math inline">\(y_l\)</span>, igual que Bradley-Terry, pero sin juez aparte—.</li>
+<li><strong><span class="math inline">\(\beta\)</span></strong> = el mismo papel que en PPO: cuánto puede alejarse de la referencia.</li>
+</ul>
+<p><strong>Por qué se volvió dominante</strong> en modelos abiertos (Zephyr <span class="citation" data-cites="tunstall2023zephyr">(<a href="#ref-tunstall2023zephyr" role="doc-biblioref"><span class="nocase">Tunstall et&nbsp;al.</span> 2023</a>)</span>, y otros): es una pérdida <strong>supervisada, offline</strong>, sin entrenar recompensa, sin muestrear, sin RL — “estable, eficaz y ligera”—.</p>
+<div class="analogia">
+<p><strong>🧩 Analogía — sin entrenador.</strong> En vez de contratar a un juez aparte y luego jugar contra él, el alumno aprende <strong>directo</strong> de muchas comparaciones <em>“esta respuesta gustó más que aquella”</em>, subiendo la probabilidad de la preferida y bajando la de la otra.</p>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Honesto — el debate DPO vs PPO no está cerrado">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>⚠ Honesto — el debate DPO vs PPO no está cerrado
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>DPO es más simple, pero <strong>no es unánimemente “mejor”</strong>:</p>
+<ul>
+<li><strong>Pro-PPO:</strong> estudios cuidadosos encuentran que <strong>PPO supera a DPO</strong> en casos difíciles (DPO puede explotar respuestas fuera de distribución) <span class="citation" data-cites="xu2024dpovsppo">(<a href="#ref-xu2024dpovsppo" role="doc-biblioref"><span class="nocase">Xu et&nbsp;al.</span> 2024</a>)</span>, y que la jerarquía de palancas es <strong>calidad de los datos de preferencia &gt; algoritmo &gt; calidad del RM</strong> <span class="citation" data-cites="ivison2024unpacking">(<a href="#ref-ivison2024unpacking" role="doc-biblioref"><span class="nocase">Ivison et&nbsp;al.</span> 2024</a>)</span>.</li>
+<li><strong>Pro-DPO/on-policy:</strong> lo que más importa puede ser usar <strong>datos <em>on-policy</em></strong> (generados por el propio modelo), más que el algoritmo concreto <span class="citation" data-cites="tajwar2024onpolicy">(<a href="#ref-tajwar2024onpolicy" role="doc-biblioref"><span class="nocase">Tajwar et&nbsp;al.</span> 2024</a>)</span>; el <strong>DPO iterativo/online</strong> estrecha la diferencia.</li>
+</ul>
+<p>Lectura conciliadora: <strong>PPO tiene techo más alto pero cuesta más; DPO es más simple y a menudo “suficiente”; y los datos de preferencia mandan más que la elección del método.</strong></p>
+</div>
+</div>
+</section>
+<section id="qué-cambia-y-qué-se-rompe-en-el-modelo" class="level2" data-number="28.8">
+<h2 data-number="28.8" class="anchored" data-anchor-id="qué-cambia-y-qué-se-rompe-en-el-modelo"><span class="header-section-number">28.8</span> Qué cambia (y qué se rompe) en el modelo</h2>
+<ul>
+<li><strong>Es una capa de estilo/comportamiento</strong>, no de conocimiento (alineamiento superficial, LIMA). El saber viene del preentrenamiento.</li>
+<li><strong>Impuesto de alineamiento (<em>alignment tax</em>):</strong> alinear puede <strong>degradar</strong> capacidades crudas en <em>benchmarks</em>. InstructGPT lo mitiga con <strong>PPO-ptx</strong> (mezclar gradientes de la distribución de preentrenamiento), logrando “regresiones mínimas” <span class="citation" data-cites="ouyang2022instructgpt">(<a href="#ref-ouyang2022instructgpt" role="doc-biblioref"><span class="nocase">Ouyang et&nbsp;al.</span> 2022</a>)</span>.</li>
+<li><strong>Modos de fallo (honesto):</strong>
+<ul>
+<li><strong>Adulación (<em>sycophancy</em>):</strong> el modelo tiende a <strong>decirte lo que quieres oír</strong>; los datos de preferencia humana lo causan, porque a veces preferimos la respuesta agradable sobre la correcta <span class="citation" data-cites="sharma2023sycophancy perez2022sycophancy">(<a href="#ref-sharma2023sycophancy" role="doc-biblioref"><span class="nocase">Sharma et&nbsp;al.</span> 2023</a>; <a href="#ref-perez2022sycophancy" role="doc-biblioref"><span class="nocase">Perez et&nbsp;al.</span> 2022</a>)</span>.</li>
+<li><strong>Reward hacking</strong> (ya visto): explotar el juez.</li>
+<li><strong>Menos diversidad:</strong> el RLHF <strong>reduce la variedad</strong> de salidas frente al SFT —es un <em>trade-off</em>: mejora la generalización fuera de distribución pero estrecha el abanico <span class="citation" data-cites="kirk2024diversity">(<a href="#ref-kirk2024diversity" role="doc-biblioref"><span class="nocase">Kirk et&nbsp;al.</span> 2024</a>)</span>—.</li>
+</ul></li>
+</ul>
+</section>
+<section id="el-paisaje-2024-2026-breve" class="level2" data-number="28.9">
+<h2 data-number="28.9" class="anchored" data-anchor-id="el-paisaje-2024-2026-breve"><span class="header-section-number">28.9</span> El paisaje 2024-2026 (breve)</h2>
+<p>RLHF y DPO son las ideas <strong>portantes</strong>; el resto son variantes que recortan coste o cambian la señal:</p>
+<ul>
+<li><strong>RLAIF / Constitutional AI</strong> <span class="citation" data-cites="bai2022constitutional lee2023rlaif">(<a href="#ref-bai2022constitutional" role="doc-biblioref"><span class="nocase">Bai et&nbsp;al.</span> 2022</a>; <a href="#ref-lee2023rlaif" role="doc-biblioref"><span class="nocase">Lee et&nbsp;al.</span> 2023</a>)</span>: el feedback lo da <strong>otra IA</strong> guiada por una “constitución” escrita, en vez de humanos.</li>
+<li><strong>Variantes de preferencia:</strong> <strong>IPO</strong> <span class="citation" data-cites="azar2023ipo">(<a href="#ref-azar2023ipo" role="doc-biblioref"><span class="nocase">Azar et&nbsp;al.</span> 2023</a>)</span>, <strong>KTO</strong> (señal binaria sin pares) <span class="citation" data-cites="ethayarajh2024kto">(<a href="#ref-ethayarajh2024kto" role="doc-biblioref"><span class="nocase">Ethayarajh et&nbsp;al.</span> 2024</a>)</span>, <strong>ORPO</strong> (SFT + preferencia en un paso, sin referencia) <span class="citation" data-cites="hong2024orpo">(<a href="#ref-hong2024orpo" role="doc-biblioref">Hong et&nbsp;al. 2024</a>)</span>, <strong>SimPO</strong> (recompensa sin referencia) <span class="citation" data-cites="meng2024simpo">(<a href="#ref-meng2024simpo" role="doc-biblioref">Meng et&nbsp;al. 2024</a>)</span>.</li>
+<li><strong>GRPO</strong> <span class="citation" data-cites="shao2024grpo">(<a href="#ref-shao2024grpo" role="doc-biblioref"><span class="nocase">Shao et&nbsp;al.</span> 2024</a>)</span>: variante de PPO que <strong>quita el crítico</strong> y estima la ventaja desde un <strong>grupo</strong> de salidas muestreadas —el motor de RL de <strong>DeepSeek-R1</strong> <span class="citation" data-cites="deepseek2025r1">(<a href="#ref-deepseek2025r1" role="doc-biblioref">DeepSeek-AI 2025</a>)</span> para elicitar razonamiento—.</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled" title="🧪 Pruébalo — tafagent">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>🧪 Pruébalo — tafagent
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><a href="https://karlesmarin.github.io/tafagent/">tafagent</a> perfila un modelo <strong>ya alineado</strong> y lo compara con su base por γ y régimen: como el alineamiento es sobre todo una <strong>capa de estilo</strong> (no cambia el conocimiento), verás que su <strong>perfil de atención a lo largo de la distancia</strong> (Cap. 15-20) apenas se mueve respecto al base —una comprobación empírica de la hipótesis de alineamiento superficial—.</p>
+</div>
+</div>
+</section>
+<section id="resumen" class="level2" data-number="28.10">
+<h2 data-number="28.10" class="anchored" data-anchor-id="resumen"><span class="header-section-number">28.10</span> Resumen</h2>
+<ul>
+<li><strong>Brecha de alineamiento:</strong> el modelo base <em>completa texto</em>, no <em>obedece</em>. Receta: <strong>SFT → recompensa → RL (PPO)</strong>, o <strong>SFT → DPO</strong>.</li>
+<li><strong>SFT:</strong> afinar con (instrucción, respuesta); enseña formato y obediencia, <strong>generaliza</strong> (FLAN); <strong>~1.000 ejemplos</strong> pueden bastar (LIMA) → alinear <strong>destapa</strong>, no enseña de nuevo.</li>
+<li><strong>RLHF:</strong> un <strong>modelo de recompensa</strong> (Bradley-Terry: <code>−log σ(r_w − r_l)</code>) aprende qué preferimos; <strong>PPO</strong> maximiza esa nota con <strong>correa KL</strong> (<code>−β·KL</code>) que evita el <strong>reward hacking</strong>. Caro: 4 modelos en memoria.</li>
+<li><strong>DPO:</strong> reescribe la recompensa como <code>β·log(π_θ/π_ref)</code> y optimiza los pares <strong>directamente</strong> —sin RM, sin RL—. Dominante en modelos abiertos. <strong>Honesto:</strong> debate abierto DPO vs PPO; los <strong>datos</strong> mandan.</li>
+<li><strong>Qué cambia:</strong> estilo/comportamiento (no conocimiento); cuidado con <strong>alignment tax</strong>, <strong>adulación</strong>, <strong>reward hacking</strong> y <strong>menos diversidad</strong>.</li>
+</ul>
+<p><strong>Siguiente (Capítulo 28):</strong> todo esto cuesta caro si reentrenas el modelo entero. El <strong>PEFT</strong> (LoRA/QLoRA, adapters) consigue casi lo mismo tocando <strong>una fracción minúscula</strong> de los pesos.</p>
+</section>
+<section id="ejercicios" class="level2" data-number="28.11">
+<h2 data-number="28.11" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">28.11</span> Ejercicios</h2>
+<ol type="1">
+<li><strong>La brecha.</strong> ¿Por qué un modelo base bien entrenado puede <em>no</em> responder a una instrucción aunque “sepa” la respuesta? ¿Qué etapa lo arregla?</li>
+<li><strong>Bradley-Terry.</strong> En <code>−log σ(r(x,y_w) − r(x,y_l))</code>, ¿qué empuja la pérdida a que ocurra entre <span class="math inline">\(y_w\)</span> e <span class="math inline">\(y_l\)</span>? ¿Por qué se usan comparaciones y no notas absolutas?</li>
+<li><strong>La correa.</strong> ¿Qué pasaría sin el término <code>−β·KL</code> en el objetivo de PPO? Explica el <em>reward hacking</em> con la ley de Goodhart.</li>
+<li><strong>DPO.</strong> ¿Qué dos componentes del RLHF clásico elimina DPO, y cómo? ¿Qué es la “recompensa implícita”?</li>
+<li><strong>Honestidad.</strong> Cita dos modos de fallo del alineamiento y por qué los datos de preferencia humana pueden causarlos.</li>
+</ol>
+</section>
+<section id="referencias" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="referencias">Referencias</h2>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-azar2023ipo" class="csl-entry" role="listitem">
+<span class="nocase">Azar, Mohammad Gheshlaghi et&nbsp;al.</span> 2023. <em>A General Theoretical Paradigm to Understand Learning from Human Preferences</em>. <a href="https://arxiv.org/abs/2310.12036">https://arxiv.org/abs/2310.12036</a>.
+</div>
+<div id="ref-bai2022constitutional" class="csl-entry" role="listitem">
+<span class="nocase">Bai, Yuntao et&nbsp;al.</span> 2022. <em>Constitutional AI: Harmlessness from AI Feedback</em>. <a href="https://arxiv.org/abs/2212.08073">https://arxiv.org/abs/2212.08073</a>.
+</div>
+<div id="ref-chung2022flanpalm" class="csl-entry" role="listitem">
+<span class="nocase">Chung, Hyung Won et&nbsp;al.</span> 2022. <em>Scaling Instruction-Finetuned Language Models</em>. <a href="https://arxiv.org/abs/2210.11416">https://arxiv.org/abs/2210.11416</a>.
+</div>
+<div id="ref-deepseek2025r1" class="csl-entry" role="listitem">
+DeepSeek-AI. 2025. <em>DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning</em>. <a href="https://arxiv.org/abs/2501.12948">https://arxiv.org/abs/2501.12948</a>.
+</div>
+<div id="ref-ethayarajh2024kto" class="csl-entry" role="listitem">
+<span class="nocase">Ethayarajh, Kawin et&nbsp;al.</span> 2024. <em>KTO: Model Alignment as Prospect Theoretic Optimization</em>. <a href="https://arxiv.org/abs/2402.01306">https://arxiv.org/abs/2402.01306</a>.
+</div>
+<div id="ref-gao2023overoptimization" class="csl-entry" role="listitem">
+Gao, Leo, John Schulman, y Jacob Hilton. 2023. <em>Scaling Laws for Reward Model Overoptimization</em>. <a href="https://arxiv.org/abs/2210.10760">https://arxiv.org/abs/2210.10760</a>.
+</div>
+<div id="ref-gudibande2023falsepromise" class="csl-entry" role="listitem">
+<span class="nocase">Gudibande, Arnav et&nbsp;al.</span> 2023. <em>The False Promise of Imitating Proprietary LLMs</em>. <a href="https://arxiv.org/abs/2305.15717">https://arxiv.org/abs/2305.15717</a>.
+</div>
+<div id="ref-hong2024orpo" class="csl-entry" role="listitem">
+Hong, Jiwoo, Noah Lee, y James Thorne. 2024. <em>ORPO: Monolithic Preference Optimization without Reference Model</em>. <a href="https://arxiv.org/abs/2403.07691">https://arxiv.org/abs/2403.07691</a>.
+</div>
+<div id="ref-ivison2024unpacking" class="csl-entry" role="listitem">
+<span class="nocase">Ivison, Hamish et&nbsp;al.</span> 2024. <span>«Unpacking DPO and PPO: Disentangling Best Practices for Learning from Preference Feedback»</span>. <em>NeurIPS</em>. <a href="https://arxiv.org/abs/2406.09279">https://arxiv.org/abs/2406.09279</a>.
+</div>
+<div id="ref-kirk2024diversity" class="csl-entry" role="listitem">
+<span class="nocase">Kirk, Robert et&nbsp;al.</span> 2024. <span>«Understanding the Effects of RLHF on LLM Generalisation and Diversity»</span>. <em>ICLR</em>. <a href="https://arxiv.org/abs/2310.06452">https://arxiv.org/abs/2310.06452</a>.
+</div>
+<div id="ref-lee2023rlaif" class="csl-entry" role="listitem">
+<span class="nocase">Lee, Harrison et&nbsp;al.</span> 2023. <em>RLAIF vs. RLHF: Scaling Reinforcement Learning from Human Feedback with AI Feedback</em>. <a href="https://arxiv.org/abs/2309.00267">https://arxiv.org/abs/2309.00267</a>.
+</div>
+<div id="ref-meng2024simpo" class="csl-entry" role="listitem">
+Meng, Yu, Mengzhou Xia, y Danqi Chen. 2024. <em>SimPO: Simple Preference Optimization with a Reference-Free Reward</em>. <a href="https://arxiv.org/abs/2405.14734">https://arxiv.org/abs/2405.14734</a>.
+</div>
+<div id="ref-ouyang2022instructgpt" class="csl-entry" role="listitem">
+<span class="nocase">Ouyang, Long et&nbsp;al.</span> 2022. <em>Training Language Models to Follow Instructions with Human Feedback</em>. <a href="https://arxiv.org/abs/2203.02155">https://arxiv.org/abs/2203.02155</a>.
+</div>
+<div id="ref-perez2022sycophancy" class="csl-entry" role="listitem">
+<span class="nocase">Perez, Ethan et&nbsp;al.</span> 2022. <em>Discovering Language Model Behaviors with Model-Written Evaluations</em>. <a href="https://arxiv.org/abs/2212.09251">https://arxiv.org/abs/2212.09251</a>.
+</div>
+<div id="ref-rafailov2023dpo" class="csl-entry" role="listitem">
+Rafailov, Rafael, Archit Sharma, Eric Mitchell, Stefano Ermon, Christopher D. Manning, y Chelsea Finn. 2023. <span>«Direct Preference Optimization: Your Language Model is Secretly a Reward Model»</span>. <em>NeurIPS</em>. <a href="https://arxiv.org/abs/2305.18290">https://arxiv.org/abs/2305.18290</a>.
+</div>
+<div id="ref-shao2024grpo" class="csl-entry" role="listitem">
+<span class="nocase">Shao, Zhihong et&nbsp;al.</span> 2024. <em>DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models</em>. <a href="https://arxiv.org/abs/2402.03300">https://arxiv.org/abs/2402.03300</a>.
+</div>
+<div id="ref-sharma2023sycophancy" class="csl-entry" role="listitem">
+<span class="nocase">Sharma, Mrinank et&nbsp;al.</span> 2023. <em>Towards Understanding Sycophancy in Language Models</em>. <a href="https://arxiv.org/abs/2310.13548">https://arxiv.org/abs/2310.13548</a>.
+</div>
+<div id="ref-tajwar2024onpolicy" class="csl-entry" role="listitem">
+<span class="nocase">Tajwar, Fahim et&nbsp;al.</span> 2024. <span>«Preference Fine-Tuning of LLMs Should Leverage Suboptimal, On-Policy Data»</span>. <em>ICML</em>. <a href="https://arxiv.org/abs/2404.14367">https://arxiv.org/abs/2404.14367</a>.
+</div>
+<div id="ref-tunstall2023zephyr" class="csl-entry" role="listitem">
+<span class="nocase">Tunstall, Lewis et&nbsp;al.</span> 2023. <em>Zephyr: Direct Distillation of LM Alignment</em>. <a href="https://arxiv.org/abs/2310.16944">https://arxiv.org/abs/2310.16944</a>.
+</div>
+<div id="ref-wei2021flan" class="csl-entry" role="listitem">
+<span class="nocase">Wei, Jason et&nbsp;al.</span> 2022. <span>«Finetuned Language Models Are Zero-Shot Learners»</span>. <em>ICLR</em>. <a href="https://arxiv.org/abs/2109.01652">https://arxiv.org/abs/2109.01652</a>.
+</div>
+<div id="ref-xu2024dpovsppo" class="csl-entry" role="listitem">
+<span class="nocase">Xu, Shusheng et&nbsp;al.</span> 2024. <span>«Is DPO Superior to PPO for LLM Alignment? A Comprehensive Study»</span>. <em>ICML</em>. <a href="https://arxiv.org/abs/2404.10719">https://arxiv.org/abs/2404.10719</a>.
+</div>
+<div id="ref-zhou2023lima" class="csl-entry" role="listitem">
+<span class="nocase">Zhou, Chunting et&nbsp;al.</span> 2023. <span>«LIMA: Less Is More for Alignment»</span>. <em>NeurIPS</em>. <a href="https://arxiv.org/abs/2305.11206">https://arxiv.org/abs/2305.11206</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/26-finetuning-clasificacion.html" class="pagination-link" aria-label="Fine-tuning para clasificación y representación">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Fine-tuning para clasificación y representación</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/28-peft.html" class="pagination-link" aria-label="Fine-tuning eficiente en parámetros (PEFT)">
+        <span class="nav-page-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Fine-tuning eficiente en parámetros (PEFT)</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

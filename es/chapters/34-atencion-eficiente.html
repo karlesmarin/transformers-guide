@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>35&nbsp; Atención eficiente – Cómo Atienden los Transformers</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/35-compresion.html" rel="next">
+<link href="../chapters/33-multimodal.html" rel="prev">
+<link href="../icon.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-995c9648545143e6e90874d2ed57f896.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Cómo Atienden los Transformers</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Buscar"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Navegación de palanca" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../es/index.html"> 
+<span class="menu-text">ES</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../en/index.html"> 
+<span class="menu-text">EN</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/34-atencion-eficiente.html">Parte VI — Eficiencia, sistemas y despliegue</a></li><li class="breadcrumb-item"><a href="../chapters/34-atencion-eficiente.html"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Atención eficiente</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefacio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/creditos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Créditos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte 0 — Orientación</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/00-orientacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Cómo usar esta guía</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte I — Fundamentos</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01-panorama.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">El panorama: qué es un transformer y por qué ganó</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02-tokens.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">De texto a tokens</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03-embeddings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Embeddings y el flujo residual</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04-atencion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">La atención como agregación ponderada</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-multicabeza.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Atención multi-cabeza</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/06-ffn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">La red feed-forward (FFN)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/07-residual-norm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Conexiones residuales y normalización</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/08-posicion-rope.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Información de posición y RoPE</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/09-bloque.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">El bloque completo y la profundidad</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/10-arquitecturas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Encoder, decoder y encoder-decoder</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/11-entrenamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Entrenar un transformer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/12-inferencia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Inferencia y decodificación</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte II — Cómo atienden a lo largo de la distancia</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/13-leer-mapas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Leer un mapa de atención</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/14-aliasing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Aliasing y las tres escalas de RoPE</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/15-ley-gamma.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">La ley de decaimiento A(d) ∝ d^−γ</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/16-atlas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">El atlas γ: el decaimiento medido en 42 modelos</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/17-sumideros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Sumideros de atención y concentración</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/18-taxonomia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Taxonomía de mecanismos de atención</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/19-contexto-largo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Extensión de contexto largo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/20-kv-cache.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Compresión de KV-cache en práctica</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte III — Una lente física sobre la atención</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/21-fases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Estructura de fases y la función de partición polilog</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/22-termodinamica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">El diccionario termodinámico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/23-fraccionario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">La vista de transporte fraccionario</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/24-grokking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Dinámica de entrenamiento y <em>grokking</em></span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte IV — Entrenamiento, adaptación y fine-tuning</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/25-preentrenamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Pre-entrenamiento a escala</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/26-finetuning-clasificacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Fine-tuning para clasificación y representación</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/27-alineamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Instruction tuning y alineamiento</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/28-peft.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Fine-tuning eficiente en parámetros (PEFT)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte V — Usar transformers</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/29-generacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Generación de texto en profundidad</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/30-prompting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Prompting e in-context learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/31-rag.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Embeddings, búsqueda semántica y RAG</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/32-agentes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Agentes, herramientas y memoria</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/33-multimodal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Transformers multimodales</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte VI — Eficiencia, sistemas y despliegue</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/34-atencion-eficiente.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Atención eficiente</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/35-compresion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Cuantización, destilación y poda</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/36-serving.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Servir y desplegar</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte VII — Interpretabilidad y qué es real</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/37-interpretabilidad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Primer de interpretabilidad mecanicista</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/38-audit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Verificado, folclore y numerología</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/39-mapa2026.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">El mapa del paisaje de colapso 2026</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/40-etica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Ética, seguridad y limitaciones</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte VIII — Referencia</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R1-formulario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">R1 · Formulario maestro</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R2-cookbook.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R3-glosario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R3 · Glosario</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R4-medir-gamma.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R4 · Medir tu propio γ (y reproducir el atlas)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R9-tafagent.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R9 · Manual de tafagent</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R10-soluciones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R10 · Soluciones de los ejercicios</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#la-idea-en-una-frase" id="toc-la-idea-en-una-frase" class="nav-link active" data-scroll-target="#la-idea-en-una-frase"><span class="header-section-number">35.1</span> La idea en una frase</a></li>
+  <li><a href="#sec-34-conceptos" id="toc-sec-34-conceptos" class="nav-link" data-scroll-target="#sec-34-conceptos"><span class="header-section-number">35.2</span> Conceptos clave y su papel en el transformer</a></li>
+  <li><a href="#anatomía-del-coste-de-dónde-sale-el-on²" id="toc-anatomía-del-coste-de-dónde-sale-el-on²" class="nav-link" data-scroll-target="#anatomía-del-coste-de-dónde-sale-el-on²"><span class="header-section-number">35.3</span> Anatomía del coste: de dónde sale el O(n²)</a></li>
+  <li><a href="#la-clave-que-lo-cambia-todo-la-atención-está-limitada-por-la-memoria" id="toc-la-clave-que-lo-cambia-todo-la-atención-está-limitada-por-la-memoria" class="nav-link" data-scroll-target="#la-clave-que-lo-cambia-todo-la-atención-está-limitada-por-la-memoria"><span class="header-section-number">35.4</span> La clave que lo cambia todo: la atención está limitada por la memoria</a></li>
+  <li><a href="#flashattention-calcular-lo-mismo-moviendo-mucho-menos" id="toc-flashattention-calcular-lo-mismo-moviendo-mucho-menos" class="nav-link" data-scroll-target="#flashattention-calcular-lo-mismo-moviendo-mucho-menos"><span class="header-section-number">35.5</span> FlashAttention: calcular lo mismo moviendo mucho menos</a></li>
+  <li><a href="#atención-lineal-no-mover-la-matriz-más-rápido-sino-no-construirla" id="toc-atención-lineal-no-mover-la-matriz-más-rápido-sino-no-construirla" class="nav-link" data-scroll-target="#atención-lineal-no-mover-la-matriz-más-rápido-sino-no-construirla"><span class="header-section-number">35.6</span> Atención lineal: no mover la matriz más rápido, sino no construirla</a></li>
+  <li><a href="#otros-ahorros-en-una-pincelada-mecánica" id="toc-otros-ahorros-en-una-pincelada-mecánica" class="nav-link" data-scroll-target="#otros-ahorros-en-una-pincelada-mecánica"><span class="header-section-number">35.7</span> Otros ahorros, en una pincelada mecánica</a></li>
+  <li><a href="#cuándo-usar-qué-el-roofline" id="toc-cuándo-usar-qué-el-roofline" class="nav-link" data-scroll-target="#cuándo-usar-qué-el-roofline"><span class="header-section-number">35.8</span> Cuándo usar qué: el <em>roofline</em></a></li>
+  <li><a href="#puente-con-nuestro-tema-atención-a-lo-largo-de-la-distancia" id="toc-puente-con-nuestro-tema-atención-a-lo-largo-de-la-distancia" class="nav-link" data-scroll-target="#puente-con-nuestro-tema-atención-a-lo-largo-de-la-distancia"><span class="header-section-number">35.9</span> Puente con nuestro tema (atención a lo largo de la distancia)</a></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">35.10</span> Resumen</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">35.11</span> Ejercicios</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias">Referencias</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/34-atencion-eficiente.html">Parte VI — Eficiencia, sistemas y despliegue</a></li><li class="breadcrumb-item"><a href="../chapters/34-atencion-eficiente.html"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Atención eficiente</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-atencion-eficiente" class="quarto-section-identifier"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Atención eficiente</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Dónde estamos.</strong> Abre la Parte VI (eficiencia y despliegue). En el Cap. 18 hicimos el <em>mapa</em> de las variantes de atención (FlashAttention, lineal, GQA, Mamba… y qué ganó). Aquí <strong>no repetimos el catálogo</strong>: abrimos el capó y explicamos la <strong>mecánica</strong> —qué hace cara a la atención, por qué el cuello de botella real es <em>mover datos</em> y no <em>calcularlos</em>, y cómo, exactamente, FlashAttention y la atención lineal lo resuelven—.</p>
+</div>
+</div>
+</div>
+<section id="la-idea-en-una-frase" class="level2" data-number="35.1">
+<h2 data-number="35.1" class="anchored" data-anchor-id="la-idea-en-una-frase"><span class="header-section-number">35.1</span> La idea en una frase</h2>
+<p>La atención cuesta <strong>O(n²)</strong> y, en una GPU moderna, su cuello de botella <strong>no son las operaciones, sino mover la matriz n×n entre memorias</strong>; las técnicas eficientes ganan sobre todo <strong>recortando ese tráfico</strong> (FlashAttention) o <strong>evitando construir la matriz</strong> (atención lineal).</p>
+</section>
+<section id="sec-34-conceptos" class="level2" data-number="35.2">
+<h2 data-number="35.2" class="anchored" data-anchor-id="sec-34-conceptos"><span class="header-section-number">35.2</span> Conceptos clave y su papel en el transformer</h2>
+<p>Antes de entrar en detalle, definimos los términos de este capítulo y <strong>para qué sirve cada uno</strong> dentro de un transformer. Es el “mapa de conceptos” para no perderte:</p>
+<ul>
+<li><strong>Coste O(n²) (“cuadrático”).</strong> <em>Definición:</em> una forma de crecer en la que <strong>doblar la entrada cuadruplica el coste</strong>. <em>En el transformer:</em> es el coste de la <strong>atención</strong>, que compara cada token con todos; marca el <strong>límite de contexto</strong> —por qué los modelos “sufren” con secuencias muy largas—.</li>
+<li><strong>Intensidad aritmética.</strong> <em>Definición:</em> cuántas <strong>operaciones</strong> haces por cada <strong>byte</strong> que traes de memoria. <em>En el transformer:</em> la atención tiene intensidad <strong>baja</strong> (mueve mucho dato para poco cálculo), y por eso su cuello de botella es la <strong>memoria</strong>, no el cálculo.</li>
+<li><strong>Limitado por memoria vs por cómputo (<em>memory-/compute-bound</em>).</strong> <em>Definición:</em> si el tiempo lo marca <strong>mover datos</strong> o <strong>hacer operaciones</strong>. <em>En el transformer:</em> la atención está <strong>limitada por memoria</strong> → optimizarla es <strong>mover menos</strong>, no calcular más rápido.</li>
+<li><strong>HBM y SRAM.</strong> <em>Definición:</em> los dos niveles de memoria de una GPU —<strong>HBM</strong> grande y lenta, <strong>SRAM</strong> minúscula y ~10× más rápida—. <em>En el transformer:</em> el modelo vive en HBM y se calcula en SRAM; el coste real es el <strong>tráfico</strong> entre ambas.</li>
+<li><strong>FlashAttention.</strong> <em>Definición:</em> un algoritmo que calcula la atención <strong>exacta</strong> sin escribir nunca la matriz n×n en la memoria lenta. <em>En el transformer:</em> es hoy el <strong>kernel de atención por defecto</strong> en entrenamiento e inferencia —misma calidad, mucho más rápido—.</li>
+<li><strong>Online softmax.</strong> <em>Definición:</em> calcular el softmax <strong>por bloques</strong>, con un máximo y una suma “móviles”, sin necesitar la fila entera. <em>En el transformer:</em> es lo que <strong>hace posible</strong> trocear la atención sin alterar el resultado.</li>
+<li><strong>Atención lineal.</strong> <em>Definición:</em> sustituir el softmax por un <strong>núcleo</strong> que permite reordenar el cálculo y bajar el coste a <strong>O(n)</strong>. <em>En el transformer:</em> cambia la atención por un <strong>estado de tamaño fijo</strong> (tipo RNN) → barata en contexto larguísimo, a costa de <strong>recuerdo</strong>.</li>
+<li><strong>Caché KV.</strong> <em>Definición:</em> la memoria donde se guardan las claves y valores ya calculados para no recomputarlos al generar (Cap. 20). <em>En el transformer:</em> es el coste de <strong>memoria de la inferencia</strong>; muchas técnicas (GQA, PagedAttention) atacan justo esto.</li>
+</ul>
+<p>Con estos conceptos en la mano, vamos a desarrollarlos uno a uno.</p>
+</section>
+<section id="anatomía-del-coste-de-dónde-sale-el-on²" class="level2" data-number="35.3">
+<h2 data-number="35.3" class="anchored" data-anchor-id="anatomía-del-coste-de-dónde-sale-el-on²"><span class="header-section-number">35.3</span> Anatomía del coste: de dónde sale el O(n²)</h2>
+<p>Antes de “arreglar” la atención conviene entender <strong>exactamente qué es lo caro</strong>. La atención, recordemos (Cap. 4), hace dos productos de matrices encadenados:</p>
+<ol type="1">
+<li><strong>Las puntuaciones</strong> <span class="math inline">\(QK^\top\)</span>: cada uno de los <em>n</em> tokens se compara con los otros <em>n</em>, con vectores de dimensión <em>d</em>. El resultado es una matriz <strong>n×n</strong>.</li>
+<li><strong>La mezcla</strong> <span class="math inline">\(AV\)</span>: esa matriz n×n de pesos multiplica a los <em>n</em> valores de dimensión <em>d</em>, dando la salida.</li>
+</ol>
+<p>Cada producto cuesta del orden de <strong>n²·d</strong> operaciones, así que el <strong>cómputo</strong> es <strong>O(n²·d)</strong>. Pero hay un segundo coste, y es el que de verdad explota: para aplicar el softmax hay que <strong>tener escrita</strong> la matriz n×n de puntuaciones. Eso es <strong>O(n²) en memoria</strong>, y —dato importante— <strong>no depende de d</strong>: aunque las cabezas sean pequeñas, la matriz crece con el <em>cuadrado</em> de la longitud.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="✓ Qué significa &quot;O(n²)&quot;">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>✓ Qué significa “O(n²)”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>La notación <strong>O(·)</strong> describe <strong>cómo crece</strong> un coste con el tamaño de la entrada, ignorando constantes. <strong>O(n²)</strong> (“cuadrático”) significa que <strong>doblar</strong> la entrada <strong>cuadruplica</strong> el coste (2² = 4). Por eso, en atención, <strong>pasar de 2.000 a 4.000 tokens no duplica el trabajo: lo cuadruplica</strong> —y multiplica por 4 la matriz que hay que guardar—.</p>
+</div>
+</div>
+<p>El matiz que casi nadie explica: <strong>el resto del transformer es solo lineal en n</strong>. Las proyecciones de Q, K, V y la FFN (Cap. 6) procesan <strong>cada token por separado</strong>, así que su coste crece <em>proporcional</em> a <em>n</em> (no a n²). La consecuencia práctica es nítida:</p>
+<ul>
+<li>Con <strong>secuencias cortas</strong>, el término lineal (la FFN) <strong>domina</strong> el tiempo; la atención apenas se nota.</li>
+<li>El término cuadrático de la atención solo <strong>adelanta</strong> a los demás cuando <em>n</em> se hace grande frente a <em>d</em>.</li>
+</ul>
+<p><strong>Por eso la “atención eficiente” es un problema de <em>contexto largo</em>, no de secuencias cortas.</strong> Cuando lees que un modelo “sufre” con 100.000 tokens, el culpable es este O(n²).</p>
+</section>
+<section id="la-clave-que-lo-cambia-todo-la-atención-está-limitada-por-la-memoria" class="level2" data-number="35.4">
+<h2 data-number="35.4" class="anchored" data-anchor-id="la-clave-que-lo-cambia-todo-la-atención-está-limitada-por-la-memoria"><span class="header-section-number">35.4</span> La clave que lo cambia todo: la atención está limitada por la memoria</h2>
+<p>Aquí está el giro conceptual del capítulo. Uno supondría que, siendo O(n²·d) operaciones, el límite es la <strong>velocidad de cálculo</strong> de la GPU. <strong>No lo es.</strong> El límite es <strong>mover</strong> la matriz n×n entre los distintos tipos de memoria. La distinción clave es entre estar <strong>limitado por cómputo</strong> (el tiempo lo marcan las operaciones, la GPU está a tope calculando) y estar <strong>limitado por memoria</strong> (el tiempo lo marca el trasiego de datos, la GPU está parada esperándolos). ¿Cuál de los dos? Lo decide la <strong>intensidad aritmética</strong> —operaciones por byte movido—: la atención hace <strong>pocas</strong> operaciones por cada byte de la enorme matriz n×n, así que está <strong>limitada por memoria</strong>.</p>
+<p>Y “la memoria” de una GPU no es una sola; es una <strong>jerarquía</strong> con un compromiso brutal entre tamaño y velocidad (cifras del paper de FlashAttention, GPU A100):</p>
+<div id="tbl-memoria" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-memoria-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;35.1: La jerarquía de memoria de la GPU
+</figcaption>
+<div aria-describedby="tbl-memoria-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Memoria</th>
+<th>Tamaño</th>
+<th>Velocidad</th>
+<th>Papel</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>HBM</strong> (alto ancho de banda)</td>
+<td>~40-80 GB</td>
+<td>~1,5-2,0 TB/s</td>
+<td>grande pero “lenta”; vive el modelo</td>
+</tr>
+<tr class="even">
+<td><strong>SRAM</strong> (en chip)</td>
+<td>~20 MB</td>
+<td>~19 TB/s (~10× más)</td>
+<td>minúscula pero rapidísima; donde se calcula</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>El problema de la atención <strong>estándar</strong> es que trata la matriz n×n como cualquier dato: la <strong>escribe</strong> entera en la HBM (lenta), la <strong>relee</strong> para el softmax, <strong>escribe</strong> las probabilidades, y las <strong>relee</strong> otra vez para el producto <span class="math inline">\(AV\)</span>. Son <strong>idas y venidas repetidas de un objeto O(n²) a la memoria lenta</strong>, y eso —no el cálculo— es lo que consume el reloj. De aquí sale la premisa que lo cambió todo: <strong>si recortas el tráfico a la HBM, recortas el tiempo —aunque hagas más operaciones—.</strong></p>
+<div class="analogia">
+<p><strong>🧩 Analogía — el chef que espera ingredientes.</strong> Imagina un cocinero rapidísimo (las unidades de cálculo) que <strong>se pasa el rato parado</strong> porque cada ingrediente hay que traerlo de un <strong>almacén lejano</strong> (la HBM) en vez de cogerlo del <strong>mostrador de al lado</strong> (la SRAM). El cuello de botella es el <strong>acarreo</strong>, no el cortar. Acelera el acarreo —trae menos veces y en bloques— y la comida sale antes, aunque el cocinero “trabaje” un poco más.</p>
+</div>
+</section>
+<section id="flashattention-calcular-lo-mismo-moviendo-mucho-menos" class="level2" data-number="35.5">
+<h2 data-number="35.5" class="anchored" data-anchor-id="flashattention-calcular-lo-mismo-moviendo-mucho-menos"><span class="header-section-number">35.5</span> FlashAttention: calcular lo mismo moviendo mucho menos</h2>
+<p>FlashAttention <span class="citation" data-cites="dao2022flash">(<a href="#ref-dao2022flash" role="doc-biblioref">Dao et&nbsp;al. 2022</a>)</span> calcula la atención <strong>exacta</strong> (idéntica bit a bit a la normal) pero <strong>sin escribir nunca la matriz n×n completa en la memoria lenta</strong>: no cambia <em>qué</em> se calcula, sino <em>cómo se mueven los datos</em>. Descansa en tres ideas que conviene entender una a una.</p>
+<p><strong>1. Tiling (trocear en bloques).</strong> En vez de operar sobre las matrices enteras, parte Q, K y V en <strong>bloques pequeños que caben en la SRAM</strong>. Carga un bloque de Q, hace pasar por la SRAM los bloques de K y V, calcula la atención de ese trozo <strong>dentro del chip</strong> y va acumulando la salida. ¿La ganancia? La matriz n×n completa <strong>nunca se forma en la HBM</strong>: allí solo viven las entradas/salidas (de tamaño O(n·d)) y unos pocos estadísticos. El “acarreo” caro desaparece.</p>
+<p><strong>2. <em>Online softmax</em> (el truco crucial).</strong> Aquí surge un problema: el softmax de una fila necesita, en principio, <strong>la fila entera</strong> —su valor máximo (para no desbordar al exponenciar) y la suma de todas las exponenciales (para normalizar)—. Pero si troceamos, nunca tenemos la fila entera a la vez. La solución <span class="citation" data-cites="milakov2018softmax">(<a href="#ref-milakov2018softmax" role="doc-biblioref">Milakov y Gimelshein 2018</a>)</span> es calcularlo <strong>en una sola pasada por bloques</strong>, manteniendo dos números que se actualizan sobre la marcha:</p>
+<ul>
+<li>un <strong>máximo móvil</strong> <span class="math inline">\(m\)</span> (el mayor valor visto hasta ahora), y</li>
+<li>una <strong>suma móvil</strong> <span class="math inline">\(\ell\)</span> (la suma de exponenciales acumulada).</li>
+</ul>
+<p>Cuando llega un bloque nuevo con un valor <strong>mayor</strong> que cualquiera visto, se <strong>reescala</strong> lo ya acumulado por un factor de corrección <span class="math inline">\(\exp(m_{\text{viejo}} - m_{\text{nuevo}})\)</span> antes de sumar la contribución nueva. La intuición: cada vez que descubres un número más grande, <strong>encoges retroactivamente</strong> el peso que habías dado a los anteriores, de modo que la normalización final sale <strong>exacta</strong>, como si hubieras tenido la fila entera desde el principio.</p>
+<div class="analogia">
+<p><strong>🧩 Analogía — sumar por páginas.</strong> Es como sumar una <strong>columna enorme de cifras una página a la vez</strong>, anotando en un post-it solo un <strong>total móvil</strong> y un <strong>máximo móvil</strong>, en vez de necesitar toda la columna extendida sobre la mesa. Si una página trae un número mayor que todos los anteriores, ajustas el total en proporción (la corrección de reescalado). Al acabar, el total es el mismo que si lo hubieras tenido todo a la vista.</p>
+</div>
+<p><strong>3. Recomputación en la marcha atrás.</strong> Para entrenar hace falta la marcha atrás (<em>backward</em>, Cap. 11), que normalmente necesitaría la matriz n×n de nuevo. En vez de <strong>guardarla</strong> (carísimo en memoria), FlashAttention guarda solo los <strong>estadísticos del softmax</strong> (<span class="math inline">\(m\)</span> y <span class="math inline">\(\ell\)</span> por fila) y, cuando los necesita, <strong>recalcula</strong> el bloque de atención en el chip. Es el mismo intercambio del <em>gradient checkpointing</em> (Cap. 25): <strong>pagar un poco más de cómputo para ahorrar mucha memoria</strong>.</p>
+<div class="analogia">
+<p><strong>🧩 Analogía — rehacer el borrador.</strong> En vez de <strong>guardar todas las hojas de cálculo intermedias</strong> por si acaso, las <strong>tiras</strong> y las <strong>rehaces</strong> a partir de dos números apuntados cuando de verdad las necesitas. Recalcular sale más barato que almacenar.</p>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="✓ El resultado, en cifras">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>✓ El resultado, en cifras
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>FlashAttention da atención <strong>exacta</strong> (no aproximada), con <strong>memoria O(n)</strong> en vez de O(n²), y <strong>más rápida</strong> por hacer menos viajes a la HBM: <strong>+15 % en BERT-large</strong>, <strong>3× en GPT-2 (1K tokens)</strong>, <strong>2,4× en Long-Range Arena</strong> —y permitió entrenar contextos antes imposibles—. <strong>FlashAttention-2</strong> <span class="citation" data-cites="dao2023flash2">(<a href="#ref-dao2023flash2" role="doc-biblioref">Dao 2023</a>)</span> añade ~<strong>2×</strong> (mejor reparto del trabajo y menos operaciones que no son multiplicaciones de matrices); <strong>FlashAttention-3</strong> <span class="citation" data-cites="shah2024flash3">(<a href="#ref-shah2024flash3" role="doc-biblioref"><span class="nocase">Shah et&nbsp;al.</span> 2024</a>)</span> exprime la <strong>asincronía</strong> y la precisión <strong>FP8</strong> de las GPU Hopper (~1,5-2× sobre FA2).</p>
+</div>
+</div>
+</section>
+<section id="atención-lineal-no-mover-la-matriz-más-rápido-sino-no-construirla" class="level2" data-number="35.6">
+<h2 data-number="35.6" class="anchored" data-anchor-id="atención-lineal-no-mover-la-matriz-más-rápido-sino-no-construirla"><span class="header-section-number">35.6</span> Atención lineal: no mover la matriz más rápido, sino no construirla</h2>
+<p>FlashAttention ataca <strong>cómo se mueve</strong> la matriz. La otra gran familia ataca algo más radical: <strong>no formar nunca la matriz n×n</strong> —bajando el coste a <strong>O(n)</strong> al sustituir el softmax por una función que permite <strong>reordenar</strong> las multiplicaciones—. Para entender cómo, hay que ver primero <em>por qué</em> la atención normal está obligada a formar esa matriz.</p>
+<p>El softmax calcula <span class="math inline">\(\exp(q_i\cdot k_j)\)</span> para <strong>cada par</strong> (i, j) → te <strong>obliga</strong> a construir la tabla n×n antes de poder multiplicar por V. La idea de la atención lineal es reemplazar ese <span class="math inline">\(\exp(q_i\cdot k_j)\)</span> por un <strong>núcleo</strong> que <strong>factoriza</strong> como <span class="math inline">\(\varphi(q_i)\cdot
+\varphi(k_j)\)</span> —donde <span class="math inline">\(\varphi\)</span> (“fi”) es una <strong>función de características</strong> aplicada a cada vector—. Si la similitud se factoriza así, la <strong>asociatividad</strong> del producto de matrices permite reordenar el cálculo:</p>
+<p><span class="math display">\[ \big(\varphi(Q)\,\varphi(K)^\top\big)\,V \;=\; \varphi(Q)\,\big(\varphi(K)^\top V\big) \]</span></p>
+<p>Vamos al porqué término a término:</p>
+<ul>
+<li><strong>A la izquierda</strong>, primero formas <span class="math inline">\(\varphi(Q)\varphi(K)^\top\)</span>, que es la matriz <strong>n×n</strong> —y vuelves a O(n²)—.</li>
+<li><strong>A la derecha</strong>, primero calculas <span class="math inline">\(\varphi(K)^\top V\)</span>: el producto de una matriz de tamaño <em>d×n</em> por una <em>n×d</em> da una matriz <strong>pequeña d×d</strong>, en coste <strong>O(n·d²)</strong>. Luego la multiplicas por <span class="math inline">\(\varphi(Q)\)</span>, otra vez O(n·d²).</li>
+<li>Ambos lados dan <strong>el mismo resultado</strong> (es la misma cuenta reordenada), pero el de la derecha <strong>nunca construye el objeto n×n</strong>. Esa reasociación <strong>es todo el truco</strong>, y vuelve el coste <strong>lineal en n</strong>.</li>
+</ul>
+<div class="analogia">
+<p><strong>🧩 Analogía — cambiar el orden de multiplicar.</strong> Es elegir entre <code>(A·B)·C</code> y <code>A·(B·C)</code>: el resultado es idéntico, pero un orden <strong>construye una tabla intermedia gigante</strong> y el otro <strong>solo tablas pequeñas</strong>. La atención lineal siempre elige el segundo orden.</p>
+</div>
+<p>Esto tiene una lectura preciosa: en modo causal (autoregresivo), <span class="math inline">\(\varphi(K)^\top V\)</span> se puede mantener como un <strong>estado de tamaño fijo</strong> <span class="math inline">\(S=\sum_j \varphi(k_j)v_j^\top\)</span> que se actualiza <strong>token a token</strong> —es decir, la atención lineal se comporta como <strong>un RNN</strong> (una red recurrente) con un estado constante, lo que da memoria <strong>O(1) por paso</strong> al generar (Linear Transformers <span class="citation" data-cites="katharopoulos2020linear">(<a href="#ref-katharopoulos2020linear" role="doc-biblioref">Katharopoulos et&nbsp;al. 2020</a>)</span>, hasta 4000× más rápido en secuencias muy largas). Otra rama, <strong>Performer</strong> <span class="citation" data-cites="choromanski2020performer">(<a href="#ref-choromanski2020performer" role="doc-biblioref"><span class="nocase">Choromanski et&nbsp;al.</span> 2021</a>)</span>, no cambia el softmax por otro núcleo, sino que <strong>aproxima el propio softmax</strong> con <strong>características aleatorias</strong>.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Honesto — el estado fijo se paga">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>⚠ Honesto — el estado fijo se paga
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Aquí está el coste oculto: un <strong>estado de tamaño fijo</strong> tiene que <strong>comprimir todo el pasado</strong> en <em>d×d</em> números, mientras que la atención completa conserva <em>cada</em> token en la caché. Por eso la atención lineal sufre una <strong>brecha de calidad medible</strong> en tareas de <strong>recuerdo</strong> (copiar un dato exacto, encontrar la aguja en el pajar, recuperación en contexto). Es justo el veredicto del Cap. 18: <strong>no destronó</strong> a la atención completa. Tiene sentido <strong>solo</strong> cuando el O(n²) es realmente inviable y la tarea tolera ese recorte.</p>
+</div>
+</div>
+</section>
+<section id="otros-ahorros-en-una-pincelada-mecánica" class="level2" data-number="35.7">
+<h2 data-number="35.7" class="anchored" data-anchor-id="otros-ahorros-en-una-pincelada-mecánica"><span class="header-section-number">35.7</span> Otros ahorros, en una pincelada mecánica</h2>
+<ul>
+<li><strong>Memoria O(1)</strong> <span class="citation" data-cites="rabe2021memeff">(<a href="#ref-rabe2021memeff" role="doc-biblioref">Rabe y Staats 2021</a>)</span>: el <strong>precursor</strong> de FlashAttention. Usa la misma idea de <em>online softmax</em>, pero la presenta como un resultado de <strong>memoria</strong> (mostró que la atención <strong>no necesita</strong> O(n²) memoria; 59× menos a 16K tokens) más que de velocidad. FlashAttention le añadió la conciencia del tráfico HBM que lo convirtió en <em>aceleración</em>.</li>
+<li><strong>PagedAttention</strong> <span class="citation" data-cites="kwon2023paged">(<a href="#ref-kwon2023paged" role="doc-biblioref"><span class="nocase">Kwon et&nbsp;al.</span> 2023</a>)</span>: ataca el desperdicio de la <strong>caché KV</strong> (Cap. 20) guardándola en <strong>bloques no contiguos</strong> mapeados como la <strong>memoria virtual</strong> de un sistema operativo → casi cero desperdicio y compartición entre peticiones (2-4× de <em>throughput</em>). Lo veremos al <strong>servir</strong> (Cap. 36).</li>
+<li><strong>MQA/GQA</strong> (Cap. 18): reducen el <strong>número de cabezas KV</strong>, recortando <strong>memoria y ancho de banda</strong> al decodificar. Es una palanca de <strong>ancho de banda</strong>, no de cómputo.</li>
+</ul>
+</section>
+<section id="cuándo-usar-qué-el-roofline" class="level2" data-number="35.8">
+<h2 data-number="35.8" class="anchored" data-anchor-id="cuándo-usar-qué-el-roofline"><span class="header-section-number">35.8</span> Cuándo usar qué: el <em>roofline</em></h2>
+<div class="callout callout-style-default callout-tip callout-titled" title="✓ Qué es el &quot;roofline&quot;">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>✓ Qué es el “roofline”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Un <strong>modelo mental</strong> para razonar sobre el rendimiento: dibuja un “techo” (<em>roof</em>) formado por dos límites —el de <strong>cómputo</strong> (FLOPs/s de la GPU) y el de <strong>memoria</strong> (ancho de banda)—. Un cálculo “choca” contra uno u otro techo. Saber <strong>contra cuál chocas</strong> te dice qué optimización servirá: si estás contra el techo de memoria, acelerar el cálculo no ayuda; hay que mover menos datos.</p>
+</div>
+</div>
+<p>Con eso, cada método ataca un eje distinto:</p>
+<ul>
+<li><strong>FlashAttention: úsalo siempre.</strong> Es exacto y sirve en entrenamiento e inferencia, a cualquier longitud; solo cambia el patrón de IO. Es el kernel por defecto, y <strong>gana más cuanto mayor es n</strong>. Ataca la <strong>constante</strong> (el tráfico) de la cuadrática, no su exponente.</li>
+<li><strong>Atención lineal: solo en contexto larguísimo</strong>, donde el O(n²) es fatal y la tarea aguanta el recorte de recuerdo. Es lo único que cambia la <strong>clase de complejidad</strong> (el exponente).</li>
+<li><strong>Reducciones de KV (GQA/MLA, PagedAttention): memoria y ancho de banda de inferencia.</strong> No tocan los FLOPs de entrenamiento; hacen que <strong>decodificar</strong> quepa y vaya rápido (el paso de decodificación está limitado por el ancho de banda de la caché).</li>
+</ul>
+<p>En una frase: <strong>FlashAttention ataca la constante (IO); la atención lineal, el exponente; los métodos de KV, la caché de inferencia.</strong> Tres ejes distintos del mismo problema.</p>
+</section>
+<section id="puente-con-nuestro-tema-atención-a-lo-largo-de-la-distancia" class="level2" data-number="35.9">
+<h2 data-number="35.9" class="anchored" data-anchor-id="puente-con-nuestro-tema-atención-a-lo-largo-de-la-distancia"><span class="header-section-number">35.9</span> Puente con nuestro tema (atención a lo largo de la distancia)</h2>
+<p>La atención eficiente es la <strong>respuesta de ingeniería</strong> al <strong>mismo coste que estudiamos en física</strong> —el de atender a lo largo de la distancia—. Y hay una distinción honesta que merece la pena: FlashAttention es <strong>agnóstica al contenido</strong>, es decir, calcula <em>todas</em> las interacciones por igual, solo que moviendo los bytes de forma óptima. Nuestra ventana <strong>D_f derivada de γ</strong> (Cap. 20) es el <strong>complemento consciente del contenido</strong>: dice <em>qué</em> entradas KV lejanas tienen masa de atención despreciable y <strong>se pueden tirar</strong> —cambia <em>qué</em> calculas, no solo <em>cómo</em> lo mueves—. Son <strong>ortogonales y componibles</strong>: FlashAttention abarata la ventana que conservas; D_f decide <strong>cuán ancha</strong> debe ser esa ventana. <em>(Honesto: es un puente conceptual, no una afirmación de que D_f sea un método de atención eficiente publicado.)</em></p>
+<div class="callout callout-style-default callout-note callout-titled" title="🧪 Pruébalo — tafagent">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>🧪 Pruébalo — tafagent
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><a href="https://karlesmarin.github.io/tafagent/">tafagent</a> calcula el <strong>presupuesto de KV</strong> a partir de γ (Cap. 20): cuánta caché necesitas <em>de verdad</em> a la longitud objetivo. Combínalo con la lógica de este capítulo: FlashAttention hace barata la atención exacta, y γ/D_f te dice <strong>cuánto contexto distante aporta poco</strong> y podrías comprimir —el “cuánto” que el kernel exacto no decide por ti—.</p>
+</div>
+</div>
+</section>
+<section id="resumen" class="level2" data-number="35.10">
+<h2 data-number="35.10" class="anchored" data-anchor-id="resumen"><span class="header-section-number">35.10</span> Resumen</h2>
+<ul>
+<li><strong>Coste:</strong> la atención es <strong>O(n²·d)</strong> en cómputo <strong>y O(n²) en memoria</strong> (la matriz n×n); el resto del modelo es <strong>lineal en n</strong> → la atención solo manda en <strong>contexto largo</strong>.</li>
+<li><strong>Memory-bound:</strong> el límite real es <strong>mover</strong> la matriz n×n entre <strong>HBM</strong> (grande, lenta) y <strong>SRAM</strong> (mini, ~10× rápida) —baja intensidad aritmética—, no los FLOPs.</li>
+<li><strong>FlashAttention</strong> <span class="citation" data-cites="dao2022flash">(<a href="#ref-dao2022flash" role="doc-biblioref">Dao et&nbsp;al. 2022</a>)</span>: <strong>tiling</strong> + <strong>online softmax</strong> (máximo/suma móviles + reescalado) + <strong>recomputación</strong> → atención <strong>exacta</strong>, <strong>O(n) memoria</strong>, más rápida (FA2/FA3).</li>
+<li><strong>Atención lineal:</strong> quitar el softmax + <strong>reasociar</strong> <span class="math inline">\(\varphi(Q)(\varphi(K)^\top V)\)</span> → <strong>O(n)</strong>; forma <strong>RNN de estado fijo</strong>. <strong>Honesto:</strong> brecha de calidad en recuerdo (Cap. 18).</li>
+<li><strong>Otros:</strong> memoria O(1) (precursor), <strong>PagedAttention</strong> (caché KV paginada → Cap. 36), GQA/MLA (ancho de banda).</li>
+<li><strong>Roofline:</strong> FA ataca la <strong>constante</strong>; la lineal, el <strong>exponente</strong>; KV, la <strong>caché</strong>.</li>
+<li><strong>Puente:</strong> FA es <strong>agnóstica al contenido</strong>; nuestra <strong>D_f (γ)</strong> es el complemento <strong>consciente del contenido</strong>.</li>
+</ul>
+<p><strong>Siguiente (Capítulo 35):</strong> otra vía de eficiencia —hacer el <strong>modelo más pequeño</strong> sin perder (mucha) calidad: <strong>cuantización, destilación y poda</strong>.</p>
+</section>
+<section id="ejercicios" class="level2" data-number="35.11">
+<h2 data-number="35.11" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">35.11</span> Ejercicios</h2>
+<ol type="1">
+<li><strong>Dos costes.</strong> Distingue el coste en <strong>cómputo</strong> y en <strong>memoria</strong> de la atención. ¿Cuál es el que “explota” y por qué no depende de d?</li>
+<li><strong>Memory-bound.</strong> Define “limitado por memoria” frente a “limitado por cómputo”. ¿Por qué la atención cae en el primer caso? ¿Qué papel juegan HBM y SRAM?</li>
+<li><strong>Online softmax.</strong> ¿Por qué el softmax normal necesita la fila entera, y cómo lo evita el cálculo por bloques con máximo y suma móviles?</li>
+<li><strong>Exacta vs aproximada.</strong> ¿Por qué FlashAttention <strong>no</strong> es una aproximación, a diferencia de la atención lineal?</li>
+<li><strong>Reasociación.</strong> En <span class="math inline">\(\varphi(Q)(\varphi(K)^\top V)\)</span>, ¿qué se calcula primero y por qué eso vuelve el coste lineal en n?</li>
+<li><strong>Roofline.</strong> Asocia cada método (FlashAttention / lineal / GQA) con qué ataca: constante de IO, exponente, o caché de inferencia.</li>
+</ol>
+</section>
+<section id="referencias" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="referencias">Referencias</h2>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-choromanski2020performer" class="csl-entry" role="listitem">
+<span class="nocase">Choromanski, Krzysztof et&nbsp;al.</span> 2021. <span>«Rethinking Attention with Performers»</span>. <em>ICLR</em>. <a href="https://arxiv.org/abs/2009.14794">https://arxiv.org/abs/2009.14794</a>.
+</div>
+<div id="ref-dao2023flash2" class="csl-entry" role="listitem">
+Dao, Tri. 2023. <em>FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning</em>. <a href="https://arxiv.org/abs/2307.08691">https://arxiv.org/abs/2307.08691</a>.
+</div>
+<div id="ref-dao2022flash" class="csl-entry" role="listitem">
+Dao, Tri, Daniel Y. Fu, Stefano Ermon, Atri Rudra, y Christopher Ré. 2022. <span>«FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness»</span>. <em>NeurIPS</em>. <a href="https://arxiv.org/abs/2205.14135">https://arxiv.org/abs/2205.14135</a>.
+</div>
+<div id="ref-katharopoulos2020linear" class="csl-entry" role="listitem">
+Katharopoulos, Angelos, Apoorv Vyas, Nikolaos Pappas, y François Fleuret. 2020. <span>«Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention»</span>. <em>ICML</em>. <a href="https://arxiv.org/abs/2006.16236">https://arxiv.org/abs/2006.16236</a>.
+</div>
+<div id="ref-kwon2023paged" class="csl-entry" role="listitem">
+<span class="nocase">Kwon, Woosuk, Zhuohan Li, Siyuan Zhuang, et&nbsp;al.</span> 2023. <span>«Efficient Memory Management for Large Language Model Serving with PagedAttention»</span>. <em>SOSP</em>. <a href="https://arxiv.org/abs/2309.06180">https://arxiv.org/abs/2309.06180</a>.
+</div>
+<div id="ref-milakov2018softmax" class="csl-entry" role="listitem">
+Milakov, Maxim, y Natalia Gimelshein. 2018. <em>Online Normalizer Calculation for Softmax</em>. <a href="https://arxiv.org/abs/1805.02867">https://arxiv.org/abs/1805.02867</a>.
+</div>
+<div id="ref-rabe2021memeff" class="csl-entry" role="listitem">
+Rabe, Markus N., y Charles Staats. 2021. <em>Self-attention Does Not Need O(n^2) Memory</em>. <a href="https://arxiv.org/abs/2112.05682">https://arxiv.org/abs/2112.05682</a>.
+</div>
+<div id="ref-shah2024flash3" class="csl-entry" role="listitem">
+<span class="nocase">Shah, Jay et&nbsp;al.</span> 2024. <em>FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-precision</em>. <a href="https://arxiv.org/abs/2407.08608">https://arxiv.org/abs/2407.08608</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/33-multimodal.html" class="pagination-link" aria-label="Transformers multimodales">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Transformers multimodales</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/35-compresion.html" class="pagination-link" aria-label="Cuantización, destilación y poda">
+        <span class="nav-page-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Cuantización, destilación y poda</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

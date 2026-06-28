@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>5&nbsp; La atención como agregación ponderada – Cómo Atienden los Transformers</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/05-multicabeza.html" rel="next">
+<link href="../chapters/03-embeddings.html" rel="prev">
+<link href="../icon.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-995c9648545143e6e90874d2ed57f896.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Cómo Atienden los Transformers</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Buscar"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Navegación de palanca" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../es/index.html"> 
+<span class="menu-text">ES</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../en/index.html"> 
+<span class="menu-text">EN</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01-panorama.html">Parte I — Fundamentos</a></li><li class="breadcrumb-item"><a href="../chapters/04-atencion.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">La atención como agregación ponderada</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefacio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/creditos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Créditos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte 0 — Orientación</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/00-orientacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Cómo usar esta guía</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte I — Fundamentos</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01-panorama.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">El panorama: qué es un transformer y por qué ganó</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02-tokens.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">De texto a tokens</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03-embeddings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Embeddings y el flujo residual</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04-atencion.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">La atención como agregación ponderada</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-multicabeza.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Atención multi-cabeza</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/06-ffn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">La red feed-forward (FFN)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/07-residual-norm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Conexiones residuales y normalización</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/08-posicion-rope.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Información de posición y RoPE</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/09-bloque.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">El bloque completo y la profundidad</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/10-arquitecturas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Encoder, decoder y encoder-decoder</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/11-entrenamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Entrenar un transformer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/12-inferencia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Inferencia y decodificación</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte II — Cómo atienden a lo largo de la distancia</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/13-leer-mapas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Leer un mapa de atención</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/14-aliasing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Aliasing y las tres escalas de RoPE</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/15-ley-gamma.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">La ley de decaimiento A(d) ∝ d^−γ</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/16-atlas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">El atlas γ: el decaimiento medido en 42 modelos</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/17-sumideros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Sumideros de atención y concentración</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/18-taxonomia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Taxonomía de mecanismos de atención</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/19-contexto-largo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Extensión de contexto largo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/20-kv-cache.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Compresión de KV-cache en práctica</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte III — Una lente física sobre la atención</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/21-fases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Estructura de fases y la función de partición polilog</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/22-termodinamica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">El diccionario termodinámico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/23-fraccionario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">La vista de transporte fraccionario</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/24-grokking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Dinámica de entrenamiento y <em>grokking</em></span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte IV — Entrenamiento, adaptación y fine-tuning</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/25-preentrenamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Pre-entrenamiento a escala</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/26-finetuning-clasificacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Fine-tuning para clasificación y representación</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/27-alineamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Instruction tuning y alineamiento</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/28-peft.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Fine-tuning eficiente en parámetros (PEFT)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte V — Usar transformers</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/29-generacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Generación de texto en profundidad</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/30-prompting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Prompting e in-context learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/31-rag.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Embeddings, búsqueda semántica y RAG</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/32-agentes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Agentes, herramientas y memoria</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/33-multimodal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Transformers multimodales</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte VI — Eficiencia, sistemas y despliegue</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/34-atencion-eficiente.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Atención eficiente</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/35-compresion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Cuantización, destilación y poda</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/36-serving.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Servir y desplegar</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte VII — Interpretabilidad y qué es real</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/37-interpretabilidad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Primer de interpretabilidad mecanicista</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/38-audit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Verificado, folclore y numerología</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/39-mapa2026.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">El mapa del paisaje de colapso 2026</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/40-etica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Ética, seguridad y limitaciones</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte VIII — Referencia</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R1-formulario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">R1 · Formulario maestro</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R2-cookbook.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R3-glosario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R3 · Glosario</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R4-medir-gamma.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R4 · Medir tu propio γ (y reproducir el atlas)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R9-tafagent.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R9 · Manual de tafagent</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R10-soluciones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R10 · Soluciones de los ejercicios</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#la-idea-en-una-frase" id="toc-la-idea-en-una-frase" class="nav-link active" data-scroll-target="#la-idea-en-una-frase"><span class="header-section-number">5.1</span> La idea en una frase</a></li>
+  <li><a href="#conceptos-clave-y-su-papel-en-el-transformer" id="toc-conceptos-clave-y-su-papel-en-el-transformer" class="nav-link" data-scroll-target="#conceptos-clave-y-su-papel-en-el-transformer"><span class="header-section-number">5.2</span> Conceptos clave y su papel en el transformer</a></li>
+  <li><a href="#para-qué-sirve-la-atención-su-papel-en-el-transformer" id="toc-para-qué-sirve-la-atención-su-papel-en-el-transformer" class="nav-link" data-scroll-target="#para-qué-sirve-la-atención-su-papel-en-el-transformer"><span class="header-section-number">5.3</span> Para qué sirve la atención (su papel en el transformer)</a></li>
+  <li><a href="#la-fórmula-de-la-mezcla" id="toc-la-fórmula-de-la-mezcla" class="nav-link" data-scroll-target="#la-fórmula-de-la-mezcla"><span class="header-section-number">5.4</span> La fórmula de la mezcla</a></li>
+  <li><a href="#consultas-claves-y-valores-q-k-v" id="toc-consultas-claves-y-valores-q-k-v" class="nav-link" data-scroll-target="#consultas-claves-y-valores-q-k-v"><span class="header-section-number">5.5</span> Consultas, claves y valores (Q, K, V)</a></li>
+  <li><a href="#por-qué-se-divide-entre-d_k" id="toc-por-qué-se-divide-entre-d_k" class="nav-link" data-scroll-target="#por-qué-se-divide-entre-d_k"><span class="header-section-number">5.6</span> Por qué se divide entre √d_k</a></li>
+  <li><a href="#softmax-de-puntuaciones-a-pesos" id="toc-softmax-de-puntuaciones-a-pesos" class="nav-link" data-scroll-target="#softmax-de-puntuaciones-a-pesos"><span class="header-section-number">5.7</span> Softmax: de puntuaciones a pesos</a></li>
+  <li><a href="#la-operación-completa-en-matrices" id="toc-la-operación-completa-en-matrices" class="nav-link" data-scroll-target="#la-operación-completa-en-matrices"><span class="header-section-number">5.8</span> La operación completa, en matrices</a></li>
+  <li><a href="#ejemplo-a-mano" id="toc-ejemplo-a-mano" class="nav-link" data-scroll-target="#ejemplo-a-mano"><span class="header-section-number">5.9</span> Ejemplo a mano</a></li>
+  <li><a href="#desde-cero-en-código" id="toc-desde-cero-en-código" class="nav-link" data-scroll-target="#desde-cero-en-código"><span class="header-section-number">5.10</span> Desde cero en código</a></li>
+  <li><a href="#lo-que-un-mapa-de-atención-no-te-dice" id="toc-lo-que-un-mapa-de-atención-no-te-dice" class="nav-link" data-scroll-target="#lo-que-un-mapa-de-atención-no-te-dice"><span class="header-section-number">5.11</span> Lo que un mapa de atención NO te dice</a></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">5.12</span> Resumen</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">5.13</span> Ejercicios</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias">Referencias</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01-panorama.html">Parte I — Fundamentos</a></li><li class="breadcrumb-item"><a href="../chapters/04-atencion.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">La atención como agregación ponderada</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-atencion" class="quarto-section-identifier"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">La atención como agregación ponderada</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Dónde estamos.</strong> Ya tenemos cada token convertido en un vector viajando por el flujo residual. Llega el acto central —el que da nombre al libro—: la <strong>atención</strong>, la regla con la que cada token decide <em>a cuáles de los demás hacer caso</em> y mezcla su información. Al terminar sabrás calcular una atención a mano, programarla en ~15 líneas, y distinguir qué afirmaciones populares sobre ella son ciertas, cuáles folclore y cuáles marketing.</p>
+</div>
+</div>
+</div>
+<section id="la-idea-en-una-frase" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="la-idea-en-una-frase"><span class="header-section-number">5.1</span> La idea en una frase</h2>
+<p>Cada token se actualiza convirtiéndose en un <strong>promedio ponderado de la información de los demás tokens</strong>, donde los pesos los decide el propio modelo sobre la marcha según <em>qué es relevante</em>.</p>
+<div class="analogia">
+<p><strong>🧩 Analogía.</strong> Estás en una reunión y alguien hace una pregunta. Miras alrededor: un par de personas dominan el tema, el resto no tanto. Sin pensarlo, <em>ponderas</em> lo que oyes —escuchas con atención a quien sabe, ignoras a medias al resto— y tu respuesta sale como una mezcla, dominada por quien importa. <strong>Eso es exactamente lo que hace la atención con cada palabra:</strong> mezcla información de las demás, dando más peso a las relevantes. Lo único especial es que el modelo decide “quién es relevante” al instante, a partir de las propias palabras.</p>
+</div>
+</section>
+<section id="conceptos-clave-y-su-papel-en-el-transformer" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="conceptos-clave-y-su-papel-en-el-transformer"><span class="header-section-number">5.2</span> Conceptos clave y su papel en el transformer</h2>
+<p>Antes de entrar en detalle, definimos los términos de este capítulo y <strong>para qué sirve cada uno</strong> dentro de un transformer:</p>
+<ul>
+<li><strong>Agregación ponderada.</strong> <em>Definición:</em> construir la salida de un token como un <strong>promedio</strong> de la información de los demás, pesando más a los relevantes. <em>En el transformer:</em> es lo que <em>hace</em> la atención; el mecanismo por el que la información viaja <strong>entre</strong> palabras.</li>
+<li><strong>Consulta, clave y valor (Q, K, V).</strong> <em>Definición:</em> tres vectores que el modelo obtiene de cada token mediante tablas aprendidas —qué <em>busca</em>, qué <em>anuncia</em> y qué <em>entrega</em>—. <em>En el transformer:</em> separar en Q, K y V es lo que permite <strong>aprender qué conectar con qué</strong> en lugar de seguir una regla fija.</li>
+<li><strong>Producto escalar.</strong> <em>Definición:</em> una forma de medir cuánto se parecen dos listas de números (se multiplican pareja a pareja y se suman). <em>En el transformer:</em> compara la consulta de un token con la clave de otro; si sale grande, “se buscan” → peso alto.</li>
+<li><strong>Logits / puntuaciones.</strong> <em>Definición:</em> las comparaciones en bruto <span class="math inline">\(q_i\cdot k_j\)</span> antes de normalizar. <em>En el transformer:</em> son la materia prima de los pesos; el softmax las convierte en una mezcla.</li>
+<li><strong>Escalado <span class="math inline">\(1/\sqrt{d_k}\)</span>.</strong> <em>Definición:</em> dividir las puntuaciones por la raíz de la dimensión de las claves. <em>En el transformer:</em> mantiene los logits en un rango manejable para que el softmax <strong>no se sature</strong> sin importar el ancho del modelo; es una constante <em>derivable</em>, no mágica.</li>
+<li><strong>Softmax.</strong> <em>Definición:</em> la función que convierte una fila de puntuaciones en <strong>pesos no negativos que suman 1</strong>. <em>En el transformer:</em> impone el “presupuesto de 1” (atender más a uno implica atender menos a otro) y hace que la mezcla sea un promedio de verdad.</li>
+<li><strong>Mapa de atención (<span class="math inline">\(A\)</span>).</strong> <em>Definición:</em> la matriz <strong><span class="math inline">\(n\times n\)</span></strong> de pesos, lo que se visualiza como mapa de calor. <em>En el transformer:</em> dice <strong>adónde va el peso</strong>; su tamaño cuadrado es el origen del <strong>coste O(n²)</strong> que encarece el contexto largo.</li>
+<li><strong>Máscara causal.</strong> <em>Definición:</em> poner a <span class="math inline">\(-\infty\)</span> las puntuaciones hacia el futuro antes del softmax. <em>En el transformer:</em> en modelos generativos (tipo GPT) impide que un token mire los que vienen después, condición para generar texto palabra a palabra.</li>
+</ul>
+<p>Con esto en mano, los desarrollamos.</p>
+</section>
+<section id="para-qué-sirve-la-atención-su-papel-en-el-transformer" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="para-qué-sirve-la-atención-su-papel-en-el-transformer"><span class="header-section-number">5.3</span> Para qué sirve la atención (su papel en el transformer)</h2>
+<p>Antes de las fórmulas, lo más importante: <strong>¿qué trabajo hace la atención dentro del modelo, y por qué el transformer la necesita?</strong></p>
+<p>La atención es el <strong>único lugar donde la información viaja <em>entre</em> palabras</strong>. Todo lo demás del transformer —en particular la red feed-forward (Cap. 6)— procesa cada palabra <em>por separado</em>, como islas. Sin atención, la palabra “él” no podría enterarse de a quién se refiere, y “banco” no sabría si está junto a un río o en la Bolsa: cada token se quedaría con su significado de diccionario, <strong>sin contexto</strong>.</p>
+<p><strong>Su función, en una frase:</strong> dar <strong>contexto</strong> a cada palabra dejándola recoger información de las demás. Es lo que convierte una bolsa de palabras sueltas en un texto <em>entendido</em>. Por eso es el corazón del transformer (y de este libro): lo bien que un modelo <em>atiende</em> es, en gran medida, lo bien que <em>entiende</em>.</p>
+</section>
+<section id="la-fórmula-de-la-mezcla" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="la-fórmula-de-la-mezcla"><span class="header-section-number">5.4</span> La fórmula de la mezcla</h2>
+<p>En símbolos, la nueva representación del token <em>i</em> es:</p>
+<p><span id="eq-mezcla"><span class="math display">\[ \text{salida}_i = \sum_j \alpha_{ij}\, v_j  \tag{5.1}\]</span></span></p>
+<p>Qué hace cada término:</p>
+<ul>
+<li><strong><span class="math inline">\(v_j\)</span></strong> = el <em>valor</em> que aporta el token <em>j</em> (qué información entrega si se le atiende).</li>
+<li><strong><span class="math inline">\(\alpha_{ij}\)</span></strong> = el <strong>peso</strong>: cuánto escucha el token <em>i</em> al token <em>j</em>. Es no negativo y todos los pesos de <em>i</em> suman 1.</li>
+<li><strong><span class="math inline">\(\sum_j\)</span></strong> = sumamos sobre todos los tokens <em>j</em> → la salida es una mezcla.</li>
+</ul>
+<p>Todo el arte está en calcular los pesos <span class="math inline">\(\alpha_{ij}\)</span>. Veámoslo por partes.</p>
+</section>
+<section id="consultas-claves-y-valores-q-k-v" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="consultas-claves-y-valores-q-k-v"><span class="header-section-number">5.5</span> Consultas, claves y valores (Q, K, V)</h2>
+<p>¿De dónde salen los pesos? Cada vector de token se transforma en <strong>tres</strong> vectores distintos mediante tres “recetas” que el modelo aprende:</p>
+<p><span class="math display">\[ q_j = W_Q\,x_j, \qquad k_j = W_K\,x_j, \qquad v_j = W_V\,x_j \]</span></p>
+<p>No te asustes con la fórmula: <span class="math inline">\(W_Q, W_K, W_V\)</span> son <strong>tablas de números que el modelo ha aprendido</strong>, y “<span class="math inline">\(W\,x\)</span>” (multiplicar el token por la tabla) es solo la forma matemática de decir <em>transforma este token en su versión consulta, clave o valor</em>. No hace falta saber multiplicar matrices para entender la idea.</p>
+<p>La metáfora que ayuda de verdad:</p>
+<ul>
+<li><strong>Consulta</strong> <span class="math inline">\(q_i\)</span> — “¿qué está <em>buscando</em> el token <em>i</em>?”</li>
+<li><strong>Clave</strong> <span class="math inline">\(k_j\)</span> — “¿qué <em>anuncia</em> de sí mismo el token <em>j</em>?”</li>
+<li><strong>Valor</strong> <span class="math inline">\(v_j\)</span> — “¿qué <em>entrega</em> el token <em>j</em> si se le atiende?”</li>
+</ul>
+<p>El token <em>i</em> compara su consulta con cada clave mediante un <strong>producto escalar</strong> <span class="math inline">\(q_i \cdot k_j\)</span>. <em>(El producto escalar es solo una manera de medir cuánto se parecen dos listas de números: se multiplican pareja a pareja y se suman; si ambas “apuntan a lo mismo”, sale un número grande.)</em> Si sale grande, “<em>j</em> anuncia lo que <em>i</em> busca” → peso alto. Esas puntuaciones en bruto se llaman <em>logits</em>; el softmax las convertirá en los pesos.</p>
+<p><strong>¿Para qué sirve separar en consulta, clave y valor?</strong> Es lo que permite al modelo <strong>aprender qué conectar con qué</strong>, en vez de seguir una regla fija (“mira siempre a la palabra anterior”). Las tablas <span class="math inline">\(W_Q, W_K, W_V\)</span> se ajustan durante el entrenamiento para que cada token <em>busque</em> y <em>anuncie</em> justo lo que conviene a la tarea —por eso un modelo aprende, por ejemplo, a conectar un pronombre con su referente—.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="✓ Verificado">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>✓ Verificado
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Que Q, K, V sean <em>tres proyecciones aprendidas distintas</em> del mismo vector es el mecanismo real, no una simplificación: es lo que hace que la atención dependa del <em>contenido</em> y no sea fija.</p>
+</div>
+</div>
+</section>
+<section id="por-qué-se-divide-entre-d_k" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="por-qué-se-divide-entre-d_k"><span class="header-section-number">5.6</span> Por qué se divide entre √d_k</h2>
+<p>Antes del softmax, la puntuación se escala dividiéndola por la raíz de la dimensión de las claves, <span class="math inline">\(d_k\)</span>:</p>
+<p><span id="eq-score"><span class="math display">\[ s_{ij} = \frac{q_i \cdot k_j}{\sqrt{d_k}}  \tag{5.2}\]</span></span></p>
+<p>Qué hace cada término:</p>
+<ul>
+<li><strong><span class="math inline">\(q_i \cdot k_j\)</span></strong> = la similitud bruta entre lo que <em>i</em> busca y lo que <em>j</em> anuncia (una suma de <span class="math inline">\(d_k\)</span> productos).</li>
+<li><strong><span class="math inline">\(d_k\)</span></strong> = cuántas dimensiones tienen las consultas/claves.</li>
+<li><strong><span class="math inline">\(1/\sqrt{d_k}\)</span></strong> = el factor de escala que <strong>mantiene la puntuación en un rango manejable</strong> sin importar cómo de ancho sea el modelo.</li>
+</ul>
+<div class="analogia">
+<p><strong>🧩 Analogía.</strong> Piensa en el producto escalar como un <em>recuento</em>: puntúas cada una de las <span class="math inline">\(d_k\)</span> dimensiones y las sumas. Igual que un examen con más preguntas tiene una nota total mayor, una suma sobre más dimensiones da números más grandes. Dividimos por <span class="math inline">\(\sqrt{d_k}\)</span> para devolver la escala a “lo que vale una dimensión”, sea cual sea el ancho del modelo.</p>
+</div>
+<p>¿Por qué importa? Si las puntuaciones se hacen enormes, el softmax se satura —pone casi todo el peso en un solo token y deja de aprender—. La <a href="#fig-dk" class="quarto-xref">Figura&nbsp;<span>5.1</span></a> lo muestra con vectores aleatorios reales.</p>
+<div id="fig-dk" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dk-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig03_3_dk_scaling.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dk-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;5.1: Desviación típica de la puntuación según la dimensión <span class="math inline">\(d_k\)</span>, sobre 20 000 pares consulta/clave aleatorios. El producto <strong>crudo</strong> (azul) crece como <span class="math inline">\(\sqrt{d_k}\)</span> (gris punteado) —en <span class="math inline">\(d_k=4096\)</span> ya vale ~64, zona de saturación—; el <strong>escalado</strong> (naranja) se queda en ~1 a lo largo de cuatro órdenes de magnitud. Reproducible: <code>figures/make_fig03_3_scaling.py</code> (semilla 0).
+</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="🔍 Para profundizar — el argumento de la varianza">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>🔍 Para profundizar — el argumento de la varianza
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Si las componentes de <span class="math inline">\(q_i\)</span> y <span class="math inline">\(k_j\)</span> son independientes con media 0 y varianza 1, su producto escalar es una suma de <span class="math inline">\(d_k\)</span> términos de varianza ≈1. Como son independientes, la <strong>varianza de la suma crece como <span class="math inline">\(d_k\)</span></strong> y la desviación típica como <span class="math inline">\(\sqrt{d_k}\)</span>. Dividir por <span class="math inline">\(\sqrt{d_k}\)</span> devuelve los logits a <strong>varianza unidad</strong>. Es una constante <em>derivable</em>, no un número mágico.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="softmax-de-puntuaciones-a-pesos" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="softmax-de-puntuaciones-a-pesos"><span class="header-section-number">5.7</span> Softmax: de puntuaciones a pesos</h2>
+<p>El softmax convierte una fila de puntuaciones en pesos no negativos que suman 1:</p>
+<p><span id="eq-softmax"><span class="math display">\[ \alpha_{ij} = \frac{e^{s_{ij}}}{\sum_{j'} e^{s_{ij'}}}  \tag{5.3}\]</span></span></p>
+<p>Qué hace cada término:</p>
+<ul>
+<li><strong><span class="math inline">\(e^{s_{ij}}\)</span></strong> = la exponencial convierte cualquier puntuación en un número positivo, y <em>amplifica</em> las diferencias (una puntuación algo mayor se lleva bastante más peso).</li>
+<li><strong><span class="math inline">\(\sum_{j'} e^{s_{ij'}}\)</span></strong> = el denominador (la suma de todas) <strong>normaliza</strong>, de modo que los pesos sumen exactamente 1.</li>
+</ul>
+<div class="analogia">
+<p><strong>🧩 Analogía — el presupuesto de 1.</strong> Cada token tiene 1 € de atención que repartir entre todos. Una puntuación mayor compra una porción mayor, pero las porciones siempre suman 1 €: atender más a uno implica <em>necesariamente</em> atender menos a otros. Recuerda esta competencia para los <strong>sumideros de atención</strong> (Parte II).</p>
+</div>
+<p><strong>¿Para qué sirve el softmax aquí?</strong> Para que la mezcla sea un <em>promedio</em> de verdad: convierte comparaciones en bruto (que podrían ser negativas o enormes) en pesos positivos que suman 1. Sin él, la “mezcla” sería una suma de números sin escala, no un promedio interpretable.</p>
+<p>Hay una lectura profunda: el softmax es la distribución de <strong>máxima entropía</strong> (la que menos asume) compatible con una puntuación esperada dada —la misma idea que en física da la distribución de Boltzmann—. <em>Esto no es anecdótico:</em> en la Parte II veremos que combinar esta máxima entropía con la geometría de RoPE <strong>explica por qué la atención decae como una ley de potencia</strong> —uno de nuestros resultados—.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Folclore — &quot;el softmax da una probabilidad, así que los pesos son probabilidades&quot;">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>⚠ Folclore — “el softmax da una probabilidad, así que los pesos son probabilidades”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Suman 1 y son no negativos, así que <em>formalmente</em> son una distribución sobre los tokens —pero tratarlos como las <em>creencias</em> del modelo es injustificado—. Léelos como <strong>coeficientes de mezcla</strong>, no como probabilidades.</p>
+</div>
+</div>
+</section>
+<section id="la-operación-completa-en-matrices" class="level2" data-number="5.8">
+<h2 data-number="5.8" class="anchored" data-anchor-id="la-operación-completa-en-matrices"><span class="header-section-number">5.8</span> La operación completa, en matrices</h2>
+<p>En la práctica esto se hace para todos los tokens a la vez. <em>(Apilar los vectores “en una matriz” es solo ponerlos en filas, uno por token, para hacer todas las comparaciones de golpe en lugar de una a una.)</em></p>
+<p><span id="eq-matriz"><span class="math display">\[ \text{Atención}(Q,K,V) = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right) V  \tag{5.4}\]</span></span></p>
+<p>Qué hace cada pieza:</p>
+<ul>
+<li><strong><span class="math inline">\(QK^\top\)</span></strong> = la matriz <span class="math inline">\(n\times n\)</span> de <strong>todas</strong> las puntuaciones por pares (el <code>⊤</code> es la <em>transpuesta</em>: gira la tabla de claves para poder enfrentar cada consulta con cada clave) (cada consulta contra cada clave).</li>
+<li><strong>softmax(·)</strong> (por filas) = convierte cada fila en pesos que suman 1 → es el <strong>mapa de atención</strong> <span class="math inline">\(A\)</span>, lo que se visualiza como mapa de calor.</li>
+<li><strong><span class="math inline">\(\cdots V\)</span></strong> = multiplicar por los valores produce la salida: cada token, ya como mezcla ponderada.</li>
+</ul>
+<p>Fíjate en el tamaño de <span class="math inline">\(A\)</span>: <strong><span class="math inline">\(n \times n\)</span></strong>. Ese cuadrado es el origen del <strong>coste cuadrático</strong> de la atención y la razón de que el contexto largo sea caro —el tema central de la Parte II—.</p>
+<p><strong>Máscara causal.</strong> En un modelo generativo (tipo GPT), un token solo puede atender a sí mismo y a los anteriores. Se impone poniendo <span class="math inline">\(s_{ij} = -\infty\)</span> para <span class="math inline">\(j &gt; i\)</span> <em>antes</em> del softmax (así esos pesos se vuelven 0). Lo vemos en detalle en el Capítulo 9.</p>
+</section>
+<section id="ejemplo-a-mano" class="level2" data-number="5.9">
+<h2 data-number="5.9" class="anchored" data-anchor-id="ejemplo-a-mano"><span class="header-section-number">5.9</span> Ejemplo a mano</h2>
+<p>Con <span class="math inline">\(d_k = 2\)</span> y tres tokens (vectores ya proyectados):</p>
+<pre><code>q₂ = [1, 0]            # calculamos la salida del token 2
+k₁ = [1, 0]   v₁ = [10, 0]
+k₂ = [0, 1]   v₂ = [0, 10]
+k₃ = [1, 1]   v₃ = [5, 5]</code></pre>
+<ol type="1">
+<li><strong>Puntuaciones</strong> <span class="math inline">\(q_2\cdot k_j\)</span>: <span class="math inline">\(1,\,0,\,1\)</span>.</li>
+<li><strong>Escala</strong> entre <span class="math inline">\(\sqrt2≈1.414\)</span>: <span class="math inline">\(0.707,\,0,\,0.707\)</span>.</li>
+<li><strong>Softmax</strong>: <span class="math inline">\(e^{0.707}=2.028,\ e^0=1,\ e^{0.707}=2.028\)</span>; suma <span class="math inline">\(=5.056\)</span> → <span class="math inline">\(\alpha=[0.401,\,0.198,\,0.401]\)</span>.</li>
+<li><strong>Mezcla</strong>: <span class="math inline">\(\text{salida}_2 = 0.401[10,0]+0.198[0,10]+0.401[5,5]=[6.015,\,3.985]\)</span>.</li>
+</ol>
+<p>El token 2 “miró sobre todo a los tokens 1 y 3” (claves coincidentes) y produjo una mezcla dominada por sus valores.</p>
+</section>
+<section id="desde-cero-en-código" class="level2" data-number="5.10">
+<h2 data-number="5.10" class="anchored" data-anchor-id="desde-cero-en-código"><span class="header-section-number">5.10</span> Desde cero en código</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> atencion(Q, K, V, causal<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Q,K,V: (n, d) — una fila por token</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    d_k <span class="op">=</span> Q.shape[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    scores <span class="op">=</span> (Q <span class="op">@</span> K.transpose(<span class="op">-</span><span class="dv">2</span>, <span class="op">-</span><span class="dv">1</span>)) <span class="op">/</span> d_k<span class="op">**</span><span class="fl">0.5</span>      <span class="co"># (n, n) logits</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> causal:                                          <span class="co"># enmascarar el futuro</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        n <span class="op">=</span> scores.shape[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        mask <span class="op">=</span> torch.triu(torch.ones(n, n), diagonal<span class="op">=</span><span class="dv">1</span>).<span class="bu">bool</span>()</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        scores <span class="op">=</span> scores.masked_fill(mask, <span class="bu">float</span>(<span class="st">'-inf'</span>))</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    A <span class="op">=</span> F.softmax(scores, dim<span class="op">=-</span><span class="dv">1</span>)                       <span class="co"># (n, n) mapa de atención</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> A <span class="op">@</span> V, A</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> torch.tensor([[<span class="fl">1.</span>, <span class="fl">0.</span>]])</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> torch.tensor([[<span class="fl">1.</span>, <span class="fl">0.</span>], [<span class="fl">0.</span>, <span class="fl">1.</span>], [<span class="fl">1.</span>, <span class="fl">1.</span>]])</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>V <span class="op">=</span> torch.tensor([[<span class="fl">10.</span>, <span class="fl">0.</span>], [<span class="fl">0.</span>, <span class="fl">10.</span>], [<span class="fl">5.</span>, <span class="fl">5.</span>]])</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>out, A <span class="op">=</span> atencion(Q, K, V)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A.<span class="bu">round</span>(decimals<span class="op">=</span><span class="dv">3</span>))   <span class="co"># tensor([[0.401, 0.198, 0.401]])</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(out.<span class="bu">round</span>(decimals<span class="op">=</span><span class="dv">3</span>)) <span class="co"># tensor([[6.015, 3.985]])</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Quince líneas reproducen el cálculo a mano. Todo lo demás —multi-cabeza (Cap. 5), FFN (Cap. 6), normalización (Cap. 7)— envuelve este núcleo.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="🧪 Pruébalo en vivo">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>🧪 Pruébalo en vivo
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Para <em>ver</em> que la atención no es un borrón uniforme, abre un visualizador interactivo como <strong>BertViz</strong> <span class="citation" data-cites="vig2019bertviz">(<a href="#ref-vig2019bertviz" role="doc-biblioref">Vig 2019</a>)</span> o el <strong>Transformer Explainer</strong> (poloclub): carga una frase y observa cómo el peso se concentra en pocas posiciones —a menudo el primer token, el <em>sumidero</em> del Cap. 13—. Más adelante, en la <strong>Parte II</strong>, usaremos nuestro <a href="https://karlesmarin.github.io/tafagent/">tafagent</a> para <em>medir</em> ese comportamiento con el exponente γ.</p>
+</div>
+</div>
+</section>
+<section id="lo-que-un-mapa-de-atención-no-te-dice" class="level2" data-number="5.11">
+<h2 data-number="5.11" class="anchored" data-anchor-id="lo-que-un-mapa-de-atención-no-te-dice"><span class="header-section-number">5.11</span> Lo que un mapa de atención NO te dice</h2>
+<p>Es tentador leer un mapa de calor como <em>la explicación del modelo</em> —“predijo X <strong>porque</strong> atendió a Y”—. Esa inferencia <strong>no es válida en general.</strong></p>
+<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Folclore — &quot;los pesos de atención son explicaciones&quot;">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>⚠ Folclore — “los pesos de atención son explicaciones”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>La salida de una capa es <span class="math inline">\(A\,V\)</span> más el <strong>residual</strong> más la <strong>MLP</strong>; la información también fluye por los <em>valores</em> y por capas posteriores. Un token puede recibir mucha atención y aportar poco (si su <span class="math inline">\(\lVert v_j\rVert\)</span> —la <em>longitud</em> o magnitud de su vector valor— es pequeña), o recibir poca y aun así importar por la vía residual. Empíricamente, los pesos a menudo <strong>no son fieles</strong> a lo que el modelo usa. Trata los mapas como un <em>diagnóstico</em>, no como una <em>prueba de razonamiento</em>.</p>
+</div>
+</div>
+<p>Son genuinamente útiles —en la Parte II los usamos para medir el decaimiento— pero como <strong>medidas de adónde va el peso</strong>, no como <strong>certificados de por qué</strong> el modelo decidió algo.</p>
+</section>
+<section id="resumen" class="level2" data-number="5.12">
+<h2 data-number="5.12" class="anchored" data-anchor-id="resumen"><span class="header-section-number">5.12</span> Resumen</h2>
+<ul>
+<li>La atención convierte cada token en un <strong>promedio ponderado aprendido</strong> de los valores (<a href="#eq-mezcla" class="quarto-xref">Ecuación&nbsp;<span>5.1</span></a>).</li>
+<li>Los pesos salen del <strong>producto escalar escalado</strong> de consultas y claves
+<ol class="example" type="1">
+<li>y del <strong>softmax</strong> (<a href="#eq-softmax" class="quarto-xref">Ecuación&nbsp;<span>5.3</span></a>).</li>
+</ol></li>
+<li>El <span class="math inline">\(1/\sqrt{d_k}\)</span> es una normalización de varianza <strong>derivable</strong> (<a href="#fig-dk" class="quarto-xref">Figura&nbsp;<span>5.1</span></a>).</li>
+<li>El softmax impone el <strong>presupuesto de 1</strong> (competencia) y es <strong>máxima entropía</strong> —semilla de nuestra ley de decaimiento de la Parte II—.</li>
+<li>El mapa de atención es <span class="math inline">\(n\times n\)</span> → <strong>coste cuadrático</strong> (por qué el contexto largo es difícil).</li>
+<li>Los pesos son <strong>coeficientes de mezcla, no probabilidades</strong>, y <strong>no explican</strong> las decisiones del modelo.</li>
+</ul>
+<p><strong>Siguiente (Capítulo 5):</strong> una sola atención es miope. La <em>atención multi-cabeza</em> corre varias en paralelo para mirar varias cosas a la vez.</p>
+</section>
+<section id="ejercicios" class="level2" data-number="5.13">
+<h2 data-number="5.13" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">5.13</span> Ejercicios</h2>
+<ol type="1">
+<li><strong>A mano.</strong> Recalcula el ejemplo con <span class="math inline">\(q_2=[0,2]\)</span>. ¿Qué token domina ahora la salida, y por qué?</li>
+<li><strong>El escalado.</strong> Genera <span class="math inline">\(Q,K\in\mathbb{R}^{1\times d}\)</span> aleatorios para <span class="math inline">\(d=4,64,4096\)</span>. Imprime la desviación típica de <span class="math inline">\(QK^\top\)</span> <em>con</em> y <em>sin</em> el factor <span class="math inline">\(1/\sqrt d\)</span>. Confirma que la no escalada crece como <span class="math inline">\(\sqrt d\)</span>.</li>
+<li><strong>Saturación.</strong> Multiplica los logits por 10 antes del softmax. ¿Qué le pasa a <span class="math inline">\(A\)</span>? Relaciónalo con la “temperatura”.</li>
+<li><strong>Fidelidad.</strong> Construye un ejemplo de 2 tokens donde <em>i</em> atienda 0.99 a <em>j</em> y, aun así, cambiar <span class="math inline">\(v_j\)</span> apenas cambie la salida. (Pista: <span class="math inline">\(\lVert v_j\rVert\)</span> minúsculo.)</li>
+</ol>
+</section>
+<section id="referencias" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="referencias">Referencias</h2>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-vig2019bertviz" class="csl-entry" role="listitem">
+Vig, Jesse. 2019. <span>«A Multiscale Visualization of Attention in the Transformer Model»</span>. <em>ACL (demo)</em>. <a href="https://arxiv.org/abs/1906.05714">https://arxiv.org/abs/1906.05714</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/03-embeddings.html" class="pagination-link" aria-label="Embeddings y el flujo residual">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Embeddings y el flujo residual</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/05-multicabeza.html" class="pagination-link" aria-label="Atención multi-cabeza">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Atención multi-cabeza</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

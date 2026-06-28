@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>34&nbsp; Multimodal transformers – How Transformers Attend</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/34-atencion-eficiente.html" rel="next">
+<link href="../chapters/32-agentes.html" rel="prev">
+<link href="../icon.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-995c9648545143e6e90874d2ed57f896.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">How Transformers Attend</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../es/index.html"> 
+<span class="menu-text">ES</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../en/index.html"> 
+<span class="menu-text">EN</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/29-generacion.html">Part V — Using transformers</a></li><li class="breadcrumb-item"><a href="../chapters/33-multimodal.html"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Multimodal transformers</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/creditos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Credits</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part 0 — Orientation</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/00-orientacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">How to use this guide</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part I — Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01-panorama.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The panorama: what a transformer is and why it won</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02-tokens.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">From text to tokens</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03-embeddings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Embeddings and the residual stream</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04-atencion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Attention as weighted aggregation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-multicabeza.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Multi-head attention</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/06-ffn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The feed-forward network (FFN)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/07-residual-norm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Residual connections and normalization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/08-posicion-rope.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Positional information and RoPE</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/09-bloque.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The complete block and depth</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/10-arquitecturas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Encoder, decoder and encoder-decoder</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/11-entrenamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Training a transformer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/12-inferencia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Inference and decoding</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part II — How transformers attend over distance</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/13-leer-mapas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Reading an attention map</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/14-aliasing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Aliasing and the three scales of RoPE</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/15-ley-gamma.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">The decay law A(d) ∝ d^−γ</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/16-atlas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">The γ atlas: decay measured across 42 models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/17-sumideros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Attention sinks and concentration</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/18-taxonomia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">A taxonomy of attention mechanisms</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/19-contexto-largo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Long-context extension</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/20-kv-cache.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">KV-cache compression in practice</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part III — A physicist’s lens on attention</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/21-fases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Phase structure and the polylog partition function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/22-termodinamica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">The thermodynamic dictionary</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/23-fraccionario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">The fractional transport view</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/24-grokking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Training dynamics and <em>grokking</em></span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part IV — Training, adaptation and fine-tuning</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/25-preentrenamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Pre-training at scale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/26-finetuning-clasificacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Fine-tuning for classification and representation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/27-alineamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Instruction tuning and alignment</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/28-peft.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Parameter-efficient fine-tuning (PEFT)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part V — Using transformers</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/29-generacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Text generation in depth</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/30-prompting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Prompting and in-context learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/31-rag.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Embeddings, semantic search and RAG</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/32-agentes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Agents, tools and memory</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/33-multimodal.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Multimodal transformers</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part VI — Efficiency, systems and deployment</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/34-atencion-eficiente.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Efficient attention</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/35-compresion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Quantization, distillation and pruning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/36-serving.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Serving and deployment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part VII — Interpretability and what is real</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/37-interpretabilidad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">A primer on mechanistic interpretability</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/38-audit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Verified, folklore and numerology</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/39-mapa2026.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">The map of the 2026 collapse landscape</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/40-etica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Ethics, safety and limitations</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part VIII — Reference</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R1-formulario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">R1 · Master formulary</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R2-cookbook.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R3-glosario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R3 · Glossary</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R4-medir-gamma.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R4 · Measuring your own γ (and reproducing the atlas)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R9-tafagent.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R9 · tafagent manual</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R10-soluciones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R10 · Exercise solutions</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-idea-in-one-sentence" id="toc-the-idea-in-one-sentence" class="nav-link active" data-scroll-target="#the-idea-in-one-sentence"><span class="header-section-number">34.1</span> The idea in one sentence</a></li>
+  <li><a href="#key-concepts-and-their-role-in-the-transformer" id="toc-key-concepts-and-their-role-in-the-transformer" class="nav-link" data-scroll-target="#key-concepts-and-their-role-in-the-transformer"><span class="header-section-number">34.2</span> Key concepts and their role in the transformer</a></li>
+  <li><a href="#vision-transformer-vit-the-image-as-a-sentence-of-stamps" id="toc-vision-transformer-vit-the-image-as-a-sentence-of-stamps" class="nav-link" data-scroll-target="#vision-transformer-vit-the-image-as-a-sentence-of-stamps"><span class="header-section-number">34.3</span> Vision Transformer (ViT): the image as a sentence of “stamps”</a></li>
+  <li><a href="#clip-a-shared-image-text-meaning-space" id="toc-clip-a-shared-image-text-meaning-space" class="nav-link" data-scroll-target="#clip-a-shared-image-text-meaning-space"><span class="header-section-number">34.4</span> CLIP: a shared image-text meaning space</a></li>
+  <li><a href="#giving-an-llm-eyes-generative-vision-language-models" id="toc-giving-an-llm-eyes-generative-vision-language-models" class="nav-link" data-scroll-target="#giving-an-llm-eyes-generative-vision-language-models"><span class="header-section-number">34.5</span> Giving an LLM eyes: generative vision-language models</a></li>
+  <li><a href="#how-two-modalities-are-fused-cross-attention" id="toc-how-two-modalities-are-fused-cross-attention" class="nav-link" data-scroll-target="#how-two-modalities-are-fused-cross-attention"><span class="header-section-number">34.6</span> How two modalities are fused: cross-attention</a></li>
+  <li><a href="#audio-turning-sound-into-an-image" id="toc-audio-turning-sound-into-an-image" class="nav-link" data-scroll-target="#audio-turning-sound-into-an-image"><span class="header-section-number">34.7</span> Audio: turning sound into an “image”</a></li>
+  <li><a href="#the-frontier-natively-multimodal-brief" id="toc-the-frontier-natively-multimodal-brief" class="nav-link" data-scroll-target="#the-frontier-natively-multimodal-brief"><span class="header-section-number">34.8</span> The frontier: natively multimodal (brief)</a></li>
+  <li><a href="#the-circle-closes-vits-have-sinks-too" id="toc-the-circle-closes-vits-have-sinks-too" class="nav-link" data-scroll-target="#the-circle-closes-vits-have-sinks-too"><span class="header-section-number">34.9</span> The circle closes: ViTs have sinks too</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">34.10</span> Summary</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">34.11</span> Exercises</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/29-generacion.html">Part V — Using transformers</a></li><li class="breadcrumb-item"><a href="../chapters/33-multimodal.html"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Multimodal transformers</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-multimodal" class="quarto-section-identifier"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Multimodal transformers</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Where we are.</strong> We close Part V by stepping out of text. The transformer is not just for language: with one simple trick —<strong>chopping anything into “tokens”</strong>— it sees <strong>images</strong> (ViT), unites <strong>vision and language</strong> (CLIP, LLaVA) and hears <strong>audio</strong> (Whisper). And, as a bonus, we will see that ViTs develop <strong>attention sinks</strong> just like text —closing the circle with our Part II—.</p>
+</div>
+</div>
+</div>
+<section id="the-idea-in-one-sentence" class="level2" data-number="34.1">
+<h2 data-number="34.1" class="anchored" data-anchor-id="the-idea-in-one-sentence"><span class="header-section-number">34.1</span> The idea in one sentence</h2>
+<p>An image or a sound is turned into a <strong>sequence of tokens</strong> (patches, spectrogram fragments) and, from there, <strong>it is the same transformer</strong> that processes them —the architecture does not change, what changes is <em>how you chop the input</em>—.</p>
+</section>
+<section id="key-concepts-and-their-role-in-the-transformer" class="level2" data-number="34.2">
+<h2 data-number="34.2" class="anchored" data-anchor-id="key-concepts-and-their-role-in-the-transformer"><span class="header-section-number">34.2</span> Key concepts and their role in the transformer</h2>
+<p>Before diving in, we define this chapter’s terms and <strong>what each one is for</strong> inside a transformer:</p>
+<ul>
+<li><strong>Tokenizing any modality.</strong> <em>Definition:</em> chopping image or audio into “tokens” (patches, spectrogram fragments). <em>In the transformer:</em> it is the trick that lets you process image or sound with <strong>the same transformer</strong>, without changing the architecture.</li>
+<li><strong>Vision Transformer (ViT).</strong> <em>Definition:</em> applying the transformer to an image chopped into <strong>patches</strong>. <em>In the transformer:</em> it treats each patch like a word → “an image is worth 16×16 words”.</li>
+<li><strong>Patch.</strong> <em>Definition:</em> a fixed chunk of image (e.g.&nbsp;16×16 px) <strong>flattened and projected</strong> into a vector. <em>In the transformer:</em> it is the <strong>visual equivalent of a token</strong>.</li>
+<li><strong>CLIP / contrastive objective.</strong> <em>Definition:</em> two encoders (image and text) trained to <strong>pull together</strong> the correct pairs in a shared space. <em>In the transformer:</em> it uses <strong>language as supervision</strong> → <em>zero-shot</em> classification.</li>
+<li><strong>Bridge / projection (Q-Former).</strong> <em>Definition:</em> a module that <strong>translates</strong> vision features into the LLM’s token space. <em>In the transformer:</em> it “gives eyes” to a <strong>frozen</strong> LLM without retraining it whole.</li>
+<li><strong>Cross-attention.</strong> <em>Definition:</em> the <em>queries</em> come from one modality and the <em>keys/values</em> from another. <em>In the transformer:</em> the mechanism that lets text <strong>“look at”</strong> the image patches.</li>
+<li><strong>Fusion strategies.</strong> <em>Definition:</em> <em>early fusion</em> (concatenate everything), dedicated cross-attention or projection. <em>In the transformer:</em> the three ways to combine modalities, with different cost and modularity.</li>
+<li><strong>Sinks / <em>register tokens</em>.</strong> <em>Definition:</em> high-norm artifact tokens the model uses as a <em>scratchpad</em>. <em>In the transformer:</em> the <strong>same phenomenon</strong> as attention sinks (Part II) reappears in ViTs.</li>
+</ul>
+<p>With that in mind, let’s start with the image.</p>
+</section>
+<section id="vision-transformer-vit-the-image-as-a-sentence-of-stamps" class="level2" data-number="34.3">
+<h2 data-number="34.3" class="anchored" data-anchor-id="vision-transformer-vit-the-image-as-a-sentence-of-stamps"><span class="header-section-number">34.3</span> Vision Transformer (ViT): the image as a sentence of “stamps”</h2>
+<p>The <strong>ViT</strong> <span class="citation" data-cites="dosovitskiy2020vit">(<a href="#ref-dosovitskiy2020vit" role="doc-biblioref"><span class="nocase">Dosovitskiy et al.</span> 2021</a>)</span> applied the transformer to images with a direct trick:</p>
+<ol type="1">
+<li>Split the image into fixed <strong>patches</strong> (e.g.&nbsp;16×16 pixels), non-overlapping.</li>
+<li><strong>Flatten and project</strong> each patch into a vector → a “token” (like a word).</li>
+<li>Add <em>positional embeddings</em> and a <strong><code>[CLS]</code></strong> token (whose final state does the classification).</li>
+<li>Feed it all into a <strong>standard transformer encoder</strong>, unchanged.</li>
+</ol>
+<p>Hence its title: <em>“an image is worth 16×16 words”</em>.</p>
+<div class="analogia">
+<p><strong>🧩 Analogy — the grid of stamps.</strong> You cut the photo into a <strong>grid of postage stamps</strong> and treat each stamp as a “word”. The transformer then <strong>“reads” the sentence of stamps</strong> —attending between patches just as it attended between words—.</p>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Honest — the ViT is data-hungry (with caveats)">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>⚠ Honest — the ViT is data-hungry (with caveats)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The ViT matches or beats CNNs (ResNet) <strong>only if pretrained on massive data</strong> (JFT-300M); on ImageNet-1k alone, it <strong>falls short</strong>. Why? Because it <strong>lacks the inductive biases</strong> that convolution brings “out of the box” —locality and translation equivariance—; the ViT has to <strong>learn them from data</strong>. Important caveat: <strong>DeiT</strong> <span class="citation" data-cites="touvron2020deit">(<a href="#ref-touvron2020deit" role="doc-biblioref">Touvron et al. 2021</a>)</span> showed that with good augmentation + <strong>distillation</strong> a ViT competes <strong>on ImageNet-1k alone</strong> → part of the hunger was about the <strong>recipe</strong>, not the architecture. Let’s not oversell it as an insurmountable limit.</p>
+</div>
+</div>
+</section>
+<section id="clip-a-shared-image-text-meaning-space" class="level2" data-number="34.4">
+<h2 data-number="34.4" class="anchored" data-anchor-id="clip-a-shared-image-text-meaning-space"><span class="header-section-number">34.4</span> CLIP: a shared image-text meaning space</h2>
+<p>What if the supervision were not fixed labels, but <strong>language</strong>? <strong>CLIP</strong> <span class="citation" data-cites="radford2021clip">(<a href="#ref-radford2021clip" role="doc-biblioref"><span class="nocase">Radford et al.</span> 2021</a>)</span> trains <strong>two encoders</strong> —one for image, one for text— on <strong>~400 million (image, caption) pairs</strong> with the <strong>contrastive</strong> objective of Ch. 26: pull the correct pairs together in a <strong>shared space</strong> and push the incorrect ones apart.</p>
+<p>The standout result is <strong>zero-shot classification</strong>: to classify an image, you embed phrases like <em>“a photo of a {cat}”</em> and assign it the highest-similarity label —<strong>without having seen a single ImageNet label, it matches a supervised ResNet-50</strong>—. The big idea: <strong>natural language as a flexible, scalable supervision signal</strong>.</p>
+<div class="analogia">
+<p><strong>🧩 Analogy — matching photos with their captions.</strong> CLIP learns to <strong>match photos with their descriptions</strong> over and over until it builds a shared <strong>“meaning space”</strong>: the photo of a dog and the words “a dog” land in <strong>the same neighborhood</strong>. Classifying is then a matter of seeing which phrase the image is closest to.</p>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Honest — what CLIP does NOT do well">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>⚠ Honest — what CLIP does NOT do well
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The authors themselves acknowledge it: (1) <strong>social biases</strong> inherited from uncurated web data; (2) weak on <strong>abstract/systematic</strong> tasks —e.g.&nbsp;<strong>counting</strong> objects, telling apart fine-grained models—; (3) sensitive to the <strong>prompt wording</strong>. “Matches ResNet-50 zero-shot” is real <strong>on ImageNet</strong>, not universal parity.</p>
+</div>
+</div>
+</section>
+<section id="giving-an-llm-eyes-generative-vision-language-models" class="level2" data-number="34.5">
+<h2 data-number="34.5" class="anchored" data-anchor-id="giving-an-llm-eyes-generative-vision-language-models"><span class="header-section-number">34.5</span> Giving an LLM eyes: generative vision-language models</h2>
+<p>For an LLM to <strong>talk about</strong> an image, the common pattern is: <strong>vision encoder → bridge/projection → the LLM’s token space</strong>.</p>
+<ul>
+<li><strong>BLIP-2</strong> <span class="citation" data-cites="li2023blip2">(<a href="#ref-li2023blip2" role="doc-biblioref">Li et al. 2023</a>)</span>: a lightweight <strong>Q-Former</strong> (with learnable <em>queries</em>) extracts, via cross-attention, the features of the <strong>frozen image encoder</strong> and projects them into the <strong>frozen LLM</strong>. <strong>Only the bridge is trained</strong> → cheap.</li>
+<li><strong>Flamingo</strong> <span class="citation" data-cites="alayrac2022flamingo">(<a href="#ref-alayrac2022flamingo" role="doc-biblioref"><span class="nocase">Alayrac et al.</span> 2022</a>)</span>: it interleaves <strong>gated cross-attention layers</strong> inside a frozen LM (the gate starts at 0 so as not to break it); strong <strong>multimodal few-shot</strong>.</li>
+<li><strong>LLaVA</strong> <span class="citation" data-cites="liu2023llava">(<a href="#ref-liu2023llava" role="doc-biblioref">Liu et al. 2023</a>)</span>: it connects a <strong>CLIP</strong> encoder to an LLM with a <strong>simple projection</strong> and <em>instruction-tunes</em> with synthetic multimodal data. It is the <strong>simple, today-dominant</strong> recipe.</li>
+</ul>
+<div class="analogia">
+<p><strong>🧩 Analogy — the “image-language” translator.</strong> The bridge (Q-Former or projection) is a <strong>translator</strong> that turns the “language of images” into <strong>tokens the LLM already knows how to read</strong> —it does not teach it to see from scratch, it hands it vision in its own vocabulary—.</p>
+</div>
+</section>
+<section id="how-two-modalities-are-fused-cross-attention" class="level2" data-number="34.6">
+<h2 data-number="34.6" class="anchored" data-anchor-id="how-two-modalities-are-fused-cross-attention"><span class="header-section-number">34.6</span> How two modalities are fused: cross-attention</h2>
+<p>The mechanism for one modality to “look at” another is <strong>cross-attention</strong>: the <strong>queries (Q)</strong> come from one modality and the <strong>keys/values (K,V)</strong> from the other —e.g.&nbsp;the text queries the image patches—. Three strategies:</p>
+<ul>
+<li><strong>Early fusion / concatenation:</strong> you join the tokens of both modalities into <strong>a single sequence</strong> and apply <strong>self-attention over everything</strong> (everything attends to everything). Simple and expressive, but quadratic cost in the combined length. <em>(It is, in essence, what LLaVA does after projecting.)</em></li>
+<li><strong>Dedicated cross-attention (Flamingo):</strong> separate streams with cross-attention layers where one modality queries the other; <strong>modular</strong>, it leaves the base LM intact.</li>
+<li><strong>Projection (LLaVA):</strong> it adds no new attention; it <strong>translates</strong> vision into the LLM’s space and lets its normal self-attention mix them.</li>
+</ul>
+<div class="analogia">
+<p><strong>🧩 Analogy — questions and answers.</strong> In cross-attention, the <strong>text asks the questions</strong> (the <em>queries</em>) and the <strong>image patches answer</strong> (they provide <em>keys</em> and <em>values</em>): each word “looks at” the regions of the image that matter to it.</p>
+</div>
+</section>
+<section id="audio-turning-sound-into-an-image" class="level2" data-number="34.7">
+<h2 data-number="34.7" class="anchored" data-anchor-id="audio-turning-sound-into-an-image"><span class="header-section-number">34.7</span> Audio: turning sound into an “image”</h2>
+<p>The pattern repeats: <strong>spectrogram (image-like) or learned features → transformer</strong>.</p>
+<ul>
+<li><strong>Whisper</strong> <span class="citation" data-cites="radford2022whisper">(<a href="#ref-radford2022whisper" role="doc-biblioref">Radford et al. 2022</a>)</span>: an <strong>encoder-decoder</strong> transformer over <strong>log-Mel spectrograms</strong>, trained on <strong>680,000 hours</strong> of weakly supervised audio → robust <em>zero-shot</em> speech recognition.</li>
+<li><strong>Wav2Vec 2.0</strong> <span class="citation" data-cites="baevski2020wav2vec">(<a href="#ref-baevski2020wav2vec" role="doc-biblioref">Baevski et al. 2020</a>)</span>: <strong>self-supervised</strong> —it masks features and solves a contrastive task—, then fine-tunes with little labeled audio.</li>
+<li><strong>AST</strong> <span class="citation" data-cites="gong2021ast">(<a href="#ref-gong2021ast" role="doc-biblioref">Gong et al. 2021</a>)</span>: a ViT applied <strong>directly to spectrograms</strong> —the most literal example of “audio as image”, with no convolutions—.</li>
+</ul>
+</section>
+<section id="the-frontier-natively-multimodal-brief" class="level2" data-number="34.8">
+<h2 data-number="34.8" class="anchored" data-anchor-id="the-frontier-natively-multimodal-brief"><span class="header-section-number">34.8</span> The frontier: natively multimodal (brief)</h2>
+<p>The trend is to train models that are <strong>multimodal from scratch</strong> (not an encoder + LLM glued on afterward) with <strong>unified tokenization</strong> (“any-to-any”: text, image, audio in a common vocabulary). Models like <strong>GPT-4V/4o</strong> or <strong>Gemini</strong> point that way —but their architecture and data are <strong>proprietary and unpublished</strong>, so we cite them <strong>by name only</strong>, as a direction of the field, not as a verifiable fact—.</p>
+</section>
+<section id="the-circle-closes-vits-have-sinks-too" class="level2" data-number="34.9">
+<h2 data-number="34.9" class="anchored" data-anchor-id="the-circle-closes-vits-have-sinks-too"><span class="header-section-number">34.9</span> The circle closes: ViTs have sinks too</h2>
+<p>A nice connection with our <strong>Part II</strong>. ViTs develop <strong>very-high-norm artifact tokens</strong> in <strong>low-information background</strong> patches, which the model <strong>reuses as memory/scratchpad</strong> for global computation —and they show up as <strong>spikes</strong> in the attention maps— <span class="citation" data-cites="darcet2023registers">(<a href="#ref-darcet2023registers" role="doc-biblioref">Darcet et al. 2023</a>)</span>. It is the <strong>same phenomenon as attention sinks</strong> in text (Ch. 17): “cheap” tokens that accumulate a disproportionate mass of attention. The solution —adding dedicated <strong>register tokens</strong>— is the visual parallel of reserving sinks in LLMs. <em>(Honest caveat: later work debates whether <strong>all</strong> ViTs need them; a robust phenomenon, with caveats by architecture.)</em></p>
+<div class="callout callout-style-default callout-note callout-titled" title="🧪 Try it — tafagent">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>🧪 Try it — tafagent
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The text-sink ↔︎ image-register parallel is exactly the kind of phenomenon that <a href="https://karlesmarin.github.io/tafagent/">tafagent</a> diagnoses in text (concentration mass, η-regime; Ch. 17). The same lens of <strong>attention across the sequence</strong> —γ, sinks— applies to a ViT’s patches: concentration in a few tokens is not exclusive to language.</p>
+</div>
+</div>
+</section>
+<section id="summary" class="level2" data-number="34.10">
+<h2 data-number="34.10" class="anchored" data-anchor-id="summary"><span class="header-section-number">34.10</span> Summary</h2>
+<ul>
+<li><strong>ViT</strong> <span class="citation" data-cites="dosovitskiy2020vit">(<a href="#ref-dosovitskiy2020vit" role="doc-biblioref"><span class="nocase">Dosovitskiy et al.</span> 2021</a>)</span>: image → <strong>patches</strong> = tokens → a normal transformer encoder. <strong>Data-hungry</strong> for lack of inductive biases —but <strong>DeiT</strong> mitigates it with the recipe—.</li>
+<li><strong>CLIP</strong> <span class="citation" data-cites="radford2021clip">(<a href="#ref-radford2021clip" role="doc-biblioref"><span class="nocase">Radford et al.</span> 2021</a>)</span>: image+text encoders, <strong>contrastive</strong> (Ch. 26) → <strong>shared space</strong> → <strong>zero-shot classification</strong> (matches ResNet-50 on ImageNet). Honest: weak at counting/abstracting, with biases.</li>
+<li><strong>Vision→LLM:</strong> the pattern <strong>encoder → bridge → the LLM’s tokens</strong>: <strong>BLIP-2</strong> (Q-Former), <strong>Flamingo</strong> (gated cross-attention), <strong>LLaVA</strong> (projection + instruction tuning).</li>
+<li><strong>Fusion:</strong> <strong>cross-attention</strong> (Q from one modality, K/V from another); early-fusion vs cross-attention vs projection.</li>
+<li><strong>Audio:</strong> spectrogram → transformer (<strong>Whisper</strong>, <strong>Wav2Vec 2.0</strong>, <strong>AST</strong>).</li>
+<li><strong>Frontier:</strong> <strong>natively</strong> multimodal / unified tokenization (GPT-4o, Gemini — by name, unpublished).</li>
+<li><strong>Circle closed:</strong> ViTs have <strong>sinks/registers</strong> <span class="citation" data-cites="darcet2023registers">(<a href="#ref-darcet2023registers" role="doc-biblioref">Darcet et al. 2023</a>)</span> just like text (Part II).</li>
+</ul>
+<p><strong>Next (Part VI):</strong> we have <em>used</em> the model; now it is time to make it <strong>efficient and deployable</strong> —quantization, distillation, pruning, <em>serving</em>—, where our KV window (Ch. 20) reappears.</p>
+</section>
+<section id="exercises" class="level2" data-number="34.11">
+<h2 data-number="34.11" class="anchored" data-anchor-id="exercises"><span class="header-section-number">34.11</span> Exercises</h2>
+<ol type="1">
+<li><strong>Patches.</strong> How does the ViT turn an image into “tokens”? What role does the <code>[CLS]</code> play?</li>
+<li><strong>Data hunger.</strong> Why does the ViT need more data than a CNN, and what did DeiT show in that regard?</li>
+<li><strong>CLIP zero-shot.</strong> Explain how CLIP classifies an image <strong>without</strong> training labels for that task. With what objective is it trained?</li>
+<li><strong>The bridge.</strong> What does a Q-Former / a projection do to “give eyes” to a frozen LLM?</li>
+<li><strong>Cross-attention.</strong> Which modality do the <em>queries</em> come from and which the <em>keys/values</em> when text looks at an image?</li>
+<li><strong>The circle.</strong> What do the <em>register tokens</em> of a ViT and the attention sinks of a text LLM have in common?</li>
+</ol>
+</section>
+<section id="references" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="references">References</h2>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-alayrac2022flamingo" class="csl-entry" role="listitem">
+<span class="nocase">Alayrac, Jean-Baptiste et al.</span> 2022. <span>“Flamingo: A Visual Language Model for Few-Shot Learning.”</span> <em>NeurIPS</em>. <a href="https://arxiv.org/abs/2204.14198">https://arxiv.org/abs/2204.14198</a>.
+</div>
+<div id="ref-baevski2020wav2vec" class="csl-entry" role="listitem">
+Baevski, Alexei, Henry Zhou, Abdelrahman Mohamed, and Michael Auli. 2020. <span>“Wav2vec 2.0: A Framework for Self-Supervised Learning of Speech Representations.”</span> <em>NeurIPS</em>. <a href="https://arxiv.org/abs/2006.11477">https://arxiv.org/abs/2006.11477</a>.
+</div>
+<div id="ref-darcet2023registers" class="csl-entry" role="listitem">
+Darcet, Timothée, Maxime Oquab, Julien Mairal, and Piotr Bojanowski. 2023. <em>Vision Transformers Need Registers</em>. <a href="https://arxiv.org/abs/2309.16588">https://arxiv.org/abs/2309.16588</a>.
+</div>
+<div id="ref-dosovitskiy2020vit" class="csl-entry" role="listitem">
+<span class="nocase">Dosovitskiy, Alexey et al.</span> 2021. <span>“An Image Is Worth 16x16 Words: Transformers for Image Recognition at Scale.”</span> <em>ICLR</em>. <a href="https://arxiv.org/abs/2010.11929">https://arxiv.org/abs/2010.11929</a>.
+</div>
+<div id="ref-gong2021ast" class="csl-entry" role="listitem">
+Gong, Yuan, Yu-An Chung, and James Glass. 2021. <span>“AST: Audio Spectrogram Transformer.”</span> <em>Interspeech</em>. <a href="https://arxiv.org/abs/2104.01778">https://arxiv.org/abs/2104.01778</a>.
+</div>
+<div id="ref-li2023blip2" class="csl-entry" role="listitem">
+Li, Junnan, Dongxu Li, Silvio Savarese, and Steven Hoi. 2023. <span>“BLIP-2: Bootstrapping Language-Image Pre-Training with Frozen Image Encoders and Large Language Models.”</span> <em>ICML</em>. <a href="https://arxiv.org/abs/2301.12597">https://arxiv.org/abs/2301.12597</a>.
+</div>
+<div id="ref-liu2023llava" class="csl-entry" role="listitem">
+Liu, Haotian, Chunyuan Li, Qingyang Wu, and Yong Jae Lee. 2023. <span>“Visual Instruction Tuning.”</span> <em>NeurIPS</em>. <a href="https://arxiv.org/abs/2304.08485">https://arxiv.org/abs/2304.08485</a>.
+</div>
+<div id="ref-radford2021clip" class="csl-entry" role="listitem">
+<span class="nocase">Radford, Alec, Jong Wook Kim, Chris Hallacy, et al.</span> 2021. <span>“Learning Transferable Visual Models from Natural Language Supervision.”</span> <em>ICML</em>. <a href="https://arxiv.org/abs/2103.00020">https://arxiv.org/abs/2103.00020</a>.
+</div>
+<div id="ref-radford2022whisper" class="csl-entry" role="listitem">
+Radford, Alec, Jong Wook Kim, Tao Xu, Greg Brockman, Christine McLeavey, and Ilya Sutskever. 2022. <em>Robust Speech Recognition via Large-Scale Weak Supervision</em>. <a href="https://arxiv.org/abs/2212.04356">https://arxiv.org/abs/2212.04356</a>.
+</div>
+<div id="ref-touvron2020deit" class="csl-entry" role="listitem">
+Touvron, Hugo, Matthieu Cord, Matthijs Douze, Francisco Massa, Alexandre Sablayrolles, and Hervé Jégou. 2021. <span>“Training Data-Efficient Image Transformers and Distillation Through Attention.”</span> <em>ICML</em>. <a href="https://arxiv.org/abs/2012.12877">https://arxiv.org/abs/2012.12877</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/32-agentes.html" class="pagination-link" aria-label="Agents, tools and memory">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Agents, tools and memory</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/34-atencion-eficiente.html" class="pagination-link" aria-label="Efficient attention">
+        <span class="nav-page-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Efficient attention</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

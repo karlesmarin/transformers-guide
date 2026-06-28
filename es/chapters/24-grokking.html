@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>25&nbsp; Dinámica de entrenamiento y grokking – Cómo Atienden los Transformers</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/25-preentrenamiento.html" rel="next">
+<link href="../chapters/23-fraccionario.html" rel="prev">
+<link href="../icon.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-995c9648545143e6e90874d2ed57f896.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Cómo Atienden los Transformers</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Buscar"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Navegación de palanca" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../es/index.html"> 
+<span class="menu-text">ES</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../en/index.html"> 
+<span class="menu-text">EN</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/21-fases.html">Parte III — Una lente física sobre la atención</a></li><li class="breadcrumb-item"><a href="../chapters/24-grokking.html"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Dinámica de entrenamiento y <em>grokking</em></span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefacio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/creditos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Créditos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte 0 — Orientación</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/00-orientacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Cómo usar esta guía</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte I — Fundamentos</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01-panorama.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">El panorama: qué es un transformer y por qué ganó</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02-tokens.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">De texto a tokens</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03-embeddings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Embeddings y el flujo residual</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04-atencion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">La atención como agregación ponderada</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-multicabeza.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Atención multi-cabeza</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/06-ffn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">La red feed-forward (FFN)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/07-residual-norm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Conexiones residuales y normalización</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/08-posicion-rope.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Información de posición y RoPE</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/09-bloque.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">El bloque completo y la profundidad</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/10-arquitecturas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Encoder, decoder y encoder-decoder</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/11-entrenamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Entrenar un transformer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/12-inferencia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Inferencia y decodificación</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte II — Cómo atienden a lo largo de la distancia</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/13-leer-mapas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Leer un mapa de atención</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/14-aliasing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Aliasing y las tres escalas de RoPE</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/15-ley-gamma.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">La ley de decaimiento A(d) ∝ d^−γ</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/16-atlas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">El atlas γ: el decaimiento medido en 42 modelos</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/17-sumideros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Sumideros de atención y concentración</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/18-taxonomia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Taxonomía de mecanismos de atención</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/19-contexto-largo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Extensión de contexto largo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/20-kv-cache.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Compresión de KV-cache en práctica</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte III — Una lente física sobre la atención</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/21-fases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Estructura de fases y la función de partición polilog</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/22-termodinamica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">El diccionario termodinámico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/23-fraccionario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">La vista de transporte fraccionario</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/24-grokking.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Dinámica de entrenamiento y <em>grokking</em></span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte IV — Entrenamiento, adaptación y fine-tuning</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/25-preentrenamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Pre-entrenamiento a escala</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/26-finetuning-clasificacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Fine-tuning para clasificación y representación</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/27-alineamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Instruction tuning y alineamiento</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/28-peft.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Fine-tuning eficiente en parámetros (PEFT)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte V — Usar transformers</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/29-generacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Generación de texto en profundidad</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/30-prompting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Prompting e in-context learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/31-rag.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Embeddings, búsqueda semántica y RAG</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/32-agentes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Agentes, herramientas y memoria</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/33-multimodal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Transformers multimodales</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte VI — Eficiencia, sistemas y despliegue</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/34-atencion-eficiente.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Atención eficiente</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/35-compresion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Cuantización, destilación y poda</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/36-serving.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Servir y desplegar</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte VII — Interpretabilidad y qué es real</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/37-interpretabilidad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Primer de interpretabilidad mecanicista</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/38-audit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Verificado, folclore y numerología</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/39-mapa2026.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">El mapa del paisaje de colapso 2026</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/40-etica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Ética, seguridad y limitaciones</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte VIII — Referencia</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R1-formulario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">R1 · Formulario maestro</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R2-cookbook.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R3-glosario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R3 · Glosario</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R4-medir-gamma.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R4 · Medir tu propio γ (y reproducir el atlas)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R9-tafagent.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R9 · Manual de tafagent</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R10-soluciones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R10 · Soluciones de los ejercicios</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#la-idea-en-una-frase" id="toc-la-idea-en-una-frase" class="nav-link active" data-scroll-target="#la-idea-en-una-frase"><span class="header-section-number">25.1</span> La idea en una frase</a></li>
+  <li><a href="#conceptos-clave-y-su-papel-en-el-transformer" id="toc-conceptos-clave-y-su-papel-en-el-transformer" class="nav-link" data-scroll-target="#conceptos-clave-y-su-papel-en-el-transformer"><span class="header-section-number">25.2</span> Conceptos clave y su papel en el transformer</a></li>
+  <li><a href="#qué-es-el-grokking" id="toc-qué-es-el-grokking" class="nav-link" data-scroll-target="#qué-es-el-grokking"><span class="header-section-number">25.3</span> Qué es el <em>grokking</em></a></li>
+  <li><a href="#por-debajo-no-es-tan-súbito-el-algoritmo-que-se-forma-despacio" id="toc-por-debajo-no-es-tan-súbito-el-algoritmo-que-se-forma-despacio" class="nav-link" data-scroll-target="#por-debajo-no-es-tan-súbito-el-algoritmo-que-se-forma-despacio"><span class="header-section-number">25.4</span> Por debajo no es tan súbito: el algoritmo que se forma despacio</a></li>
+  <li><a href="#por-qué-ocurre-el-paisaje-de-pérdida-y-el-weight-decay" id="toc-por-qué-ocurre-el-paisaje-de-pérdida-y-el-weight-decay" class="nav-link" data-scroll-target="#por-qué-ocurre-el-paisaje-de-pérdida-y-el-weight-decay"><span class="header-section-number">25.5</span> Por qué ocurre: el paisaje de pérdida y el <em>weight decay</em></a></li>
+  <li><a href="#cómo-lo-está-mirando-la-frontera-2024-2026-cada-cual-con-su-termómetro" id="toc-cómo-lo-está-mirando-la-frontera-2024-2026-cada-cual-con-su-termómetro" class="nav-link" data-scroll-target="#cómo-lo-está-mirando-la-frontera-2024-2026-cada-cual-con-su-termómetro"><span class="header-section-number">25.6</span> Cómo lo está mirando la frontera (2024-2026): cada cual con su “termómetro”</a></li>
+  <li><a href="#nuestro-resultado-piloto-el-re-ascenso-del-cka-inter-capa" id="toc-nuestro-resultado-piloto-el-re-ascenso-del-cka-inter-capa" class="nav-link" data-scroll-target="#nuestro-resultado-piloto-el-re-ascenso-del-cka-inter-capa"><span class="header-section-number">25.7</span> Nuestro resultado piloto: el re-ascenso del CKA inter-capa</a></li>
+  <li><a href="#el-resultado-que-nos-refutamos-a-nosotros-mismos" id="toc-el-resultado-que-nos-refutamos-a-nosotros-mismos" class="nav-link" data-scroll-target="#el-resultado-que-nos-refutamos-a-nosotros-mismos"><span class="header-section-number">25.8</span> El resultado que nos refutamos a nosotros mismos</a></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">25.9</span> Resumen</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">25.10</span> Ejercicios</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias">Referencias</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/21-fases.html">Parte III — Una lente física sobre la atención</a></li><li class="breadcrumb-item"><a href="../chapters/24-grokking.html"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Dinámica de entrenamiento y <em>grokking</em></span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-grokking" class="quarto-section-identifier"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Dinámica de entrenamiento y <em>grokking</em></span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Dónde estamos.</strong> Cerramos la Parte III con el fenómeno más desconcertante del entrenamiento: un modelo que <strong>memoriza</strong> rápido, se queda <em>atascado</em> sin generalizar durante muchísimo tiempo… y de pronto, mucho después, <strong>generaliza de golpe</strong>. Es el <em>grokking</em>. Lo explicamos de cero, contamos lo que la ciencia ha descubierto sobre <strong>por qué</strong> ocurre, y presentamos —con su alcance honesto— un resultado piloto nuestro: una señal interna y barata que <strong>se enciende antes</strong> del salto.</p>
+</div>
+</div>
+</div>
+<section id="la-idea-en-una-frase" class="level2" data-number="25.1">
+<h2 data-number="25.1" class="anchored" data-anchor-id="la-idea-en-una-frase"><span class="header-section-number">25.1</span> La idea en una frase</h2>
+<p>A veces la <strong>comprensión</strong> de una red no llega cuando deja de equivocarse en el entrenamiento, sino mucho después: el circuito que de verdad generaliza se va formando en silencio bajo la superficie, y el “salto” que vemos es solo el momento en que por fin <strong>pesa más</strong> que la memorización.</p>
+</section>
+<section id="conceptos-clave-y-su-papel-en-el-transformer" class="level2" data-number="25.2">
+<h2 data-number="25.2" class="anchored" data-anchor-id="conceptos-clave-y-su-papel-en-el-transformer"><span class="header-section-number">25.2</span> Conceptos clave y su papel en el transformer</h2>
+<p>Antes de entrar en detalle, definimos los términos de este capítulo y <strong>para qué sirve cada uno</strong> dentro de un transformer:</p>
+<ul>
+<li><strong>Grokking.</strong> <em>Definición:</em> el patrón en que una red <strong>memoriza</strong> rápido (train→100 %, test al azar), pasa una <strong>meseta larga</strong> y luego <strong>generaliza de golpe</strong>. <em>En el transformer:</em> el fenómeno de entrenamiento que estudia todo el capítulo, visible como dos sigmoides muy separadas.</li>
+<li><strong>Memorización vs.&nbsp;generalización.</strong> <em>Definición:</em> almacenar las respuestas vistas sin estructura útil, frente a aprender el <strong>patrón</strong> que resuelve casos nuevos. <em>En el transformer:</em> las dos soluciones que compiten durante el entrenamiento; el “salto” es cuando la segunda por fin gana.</li>
+<li><strong>Algoritmo de Fourier.</strong> <em>Definición:</em> el mecanismo que Nanda halló en la suma modular —colocar números como ángulos y convertir “sumar” en “girar”—. <em>En el transformer:</em> el <strong>circuito que de verdad generaliza</strong>, y que se forma <strong>gradualmente</strong> bajo la meseta.</li>
+<li><strong>Medida de progreso.</strong> <em>Definición:</em> una cantidad continua medible a cada paso (p.&nbsp;ej. cuánta representación se concentra en pocas frecuencias). <em>En el transformer:</em> permite ver que el circuito generalizador crece <strong>antes</strong> del salto visible.</li>
+<li><strong>Mecanismo LU y weight decay.</strong> <em>Definición:</em> la pérdida de train tiene forma de <strong>“L”</strong> (muchas soluciones memorizan) y la de test forma de <strong>“U”</strong> (solo generaliza una franja de <strong>norma pequeña</strong>); el <strong>weight decay</strong> penaliza pesos grandes y arrastra hacia ahí. <em>En el transformer:</em> el motor que empuja de la solución memorizadora a la generalizadora; sin él, muchos modelos <strong>nunca grokean</strong>.</li>
+<li><strong>Parámetro de orden.</strong> <em>Definición:</em> el “termómetro” que delata una transición de fase —una cantidad que cambia cualitativamente al cruzar el umbral—. <em>En el transformer:</em> el marco con que la frontera (2024-2026) lee el grokking como transición de fase.</li>
+<li><strong>CKA inter-capa <span class="math inline">\(\hat{O}_{01}\)</span>.</strong> <em>Definición:</em> <em>Centered Kernel Alignment</em>, un número en [0,1] que mide cuánto se parecen las representaciones de la capa 0 y la capa 1. <em>En el transformer:</em> nuestra señal piloto —<strong>cae</strong> durante la memorización y <strong>re-asciende antes</strong> del salto—.</li>
+<li><strong>Predictivo vs.&nbsp;causal.</strong> <em>Definición:</em> una señal que <strong>anticipa</strong> un evento frente a una palanca que lo <strong>provoca</strong>. <em>En el transformer:</em> el re-ascenso del CKA resultó ser <strong>predictivo, no causal</strong> —forzarlo no fabrica grokking—.</li>
+</ul>
+<p>La idea de fondo: el grokking no es mágico por dentro; algo medible se forma despacio, y saber leerlo permite <strong>anticipar</strong> el salto (aunque no accionarlo).</p>
+</section>
+<section id="qué-es-el-grokking" class="level2" data-number="25.3">
+<h2 data-number="25.3" class="anchored" data-anchor-id="qué-es-el-grokking"><span class="header-section-number">25.3</span> Qué es el <em>grokking</em></h2>
+<p>El término lo acuñaron Power y colaboradores en 2022 <span class="citation" data-cites="power2022grokking">(<a href="#ref-power2022grokking" role="doc-biblioref">Power et&nbsp;al. 2022</a>)</span> estudiando tareas <strong>algorítmicas</strong> pequeñas —el ejemplo canónico es la <strong>suma o multiplicación módulo un primo</strong> <span class="math inline">\(p\)</span> (aritmética sobre un reloj de <span class="math inline">\(p\)</span> horas)—. Entrenaron un transformer pequeño y observaron una curva que rompe la intuición clásica:</p>
+<ol type="1">
+<li><strong>Fase de memorización (pronto).</strong> En pocos pasos, la precisión en el conjunto de <strong>entrenamiento</strong> sube a ~100 %. El modelo se ha aprendido las respuestas <em>de memoria</em>. La precisión en <strong>test</strong> (ejemplos no vistos) sigue en el azar.</li>
+<li><strong>Meseta larga.</strong> Durante un periodo larguísimo —a menudo <strong>mil veces</strong> más pasos que los que costó memorizar— nada parece cambiar: train clavado en 100 %, test en el suelo. Por la lógica clásica del <em>sobreajuste</em>, aquí deberíamos parar: el modelo “ya ha terminado” y solo está memorizando.</li>
+<li><strong>El salto (<em>grok</em>).</strong> Y entonces, sin previo aviso, la precisión en <strong>test</strong> se dispara hasta casi el 100 %. El modelo <strong>generaliza</strong> —“hace clic”— mucho después de haber dejado de mejorar en entrenamiento. De ahí el nombre: <em>to grok</em> es entender algo de forma profunda y repentina.</li>
+</ol>
+<p>La firma visual son <strong>dos sigmoides muy separadas</strong> sobre un eje de pasos en escala logarítmica: la de train sube pronto, la de test sube tardísimo (<a href="#fig-grokking" class="quarto-xref">Figura&nbsp;<span>25.1</span></a>, curvas azul y naranja). Power también notó que <strong>cuanto más pequeño es el conjunto de datos, desproporcionadamente más optimización</strong> hace falta para que llegue el salto.</p>
+<div class="analogia">
+<p><strong>🧩 Analogía — el estudiante que empolla.</strong> Un alumno memoriza las tablas de multiplicar a base de repetir. Durante semanas recita de carrerilla las que ha visto (alta precisión “de entrenamiento”), pero falla en cuanto le pones un problema nuevo (test al azar). Un día el <strong>patrón</strong> subyacente encaja y de pronto resuelve cualquier caso, lo haya visto o no. Lo interesante: la comprensión se estaba montando <strong>en silencio</strong> todo ese tiempo; el “¡ajá!” es solo el instante en que por fin supera a la costumbre de recitar.</p>
+</div>
+</section>
+<section id="por-debajo-no-es-tan-súbito-el-algoritmo-que-se-forma-despacio" class="level2" data-number="25.4">
+<h2 data-number="25.4" class="anchored" data-anchor-id="por-debajo-no-es-tan-súbito-el-algoritmo-que-se-forma-despacio"><span class="header-section-number">25.4</span> Por debajo no es tan súbito: el algoritmo que se forma despacio</h2>
+<p>El salto <em>parece</em> mágico, pero Nanda y colaboradores <span class="citation" data-cites="nanda2023progress">(<a href="#ref-nanda2023progress" role="doc-biblioref">Nanda et&nbsp;al. 2023</a>)</span> lo desmontaron pieza a pieza con <strong>interpretabilidad mecanicista</strong> (abrir la red y leer qué calcula de verdad). En la suma modular, descubrieron que el modelo aprende un <strong>algoritmo de Fourier</strong> concreto: coloca cada número como un <strong>ángulo sobre un círculo</strong> y convierte “sumar” en “<strong>girar</strong>”, usando identidades trigonométricas. Sumar <span class="math inline">\(a+b \bmod p\)</span> se vuelve componer dos rotaciones.</p>
+<p>Lo decisivo para entender el grokking es <strong>cómo</strong> aparece ese algoritmo. Nanda definió <em>medidas de progreso</em> —cantidades continuas que se pueden mirar a cada paso, como cuánta de la representación está concentrada en unas pocas frecuencias de Fourier— y vio que <strong>el circuito generalizador se va formando de forma gradual</strong>, mucho antes del salto visible. El entrenamiento se parte en <strong>tres etapas</strong>:</p>
+<ul>
+<li><strong>Memorización:</strong> la red almacena las respuestas vistas sin estructura útil.</li>
+<li><strong>Formación del circuito:</strong> en paralelo, y lentamente, se construye el mecanismo de Fourier que sí generaliza.</li>
+<li><strong>Limpieza (<em>cleanup</em>):</strong> una vez el circuito bueno funciona, los componentes de pura memorización <strong>se eliminan</strong>.</li>
+</ul>
+<p>La moraleja, importante y contraintuitiva: <strong>el grokking no es realmente súbito por dentro</strong>. La estructura que generaliza se amplifica poco a poco; la <em>brusquedad</em> que vemos en la curva de test es un <strong>artefacto</strong> del momento en que ese circuito —que llevaba rato cocinándose— por fin domina y la memorización se retira. Por eso tiene sentido buscar <strong>señales tempranas</strong>: si algo se está formando gradualmente bajo la superficie, debería poder <em>medirse</em> antes de que aflore.</p>
+</section>
+<section id="por-qué-ocurre-el-paisaje-de-pérdida-y-el-weight-decay" class="level2" data-number="25.5">
+<h2 data-number="25.5" class="anchored" data-anchor-id="por-qué-ocurre-el-paisaje-de-pérdida-y-el-weight-decay"><span class="header-section-number">25.5</span> Por qué ocurre: el paisaje de pérdida y el <em>weight decay</em></h2>
+<p>¿Qué <em>empuja</em> a la red de la región memorizadora a la generalizadora? La respuesta más nítida la dieron Liu, Michaud y Tegmark en <strong>Omnigrok</strong> <span class="citation" data-cites="liu2022omnigrok">(<a href="#ref-liu2022omnigrok" role="doc-biblioref">Liu et&nbsp;al. 2022</a>)</span>, mirando el <strong>paisaje de pérdida</strong> en función de la <strong>norma de los pesos</strong> (cómo de “grandes” son los parámetros en conjunto):</p>
+<ul>
+<li>La pérdida de <strong>entrenamiento</strong>, vista frente a la norma, tiene forma de <strong>“L”</strong>: cae pronto y se queda baja en un rango amplio de normas (hay muchas soluciones que memorizan bien).</li>
+<li>La pérdida de <strong>test</strong> tiene forma de <strong>“U”</strong>: solo es baja en una franja <strong>estrecha</strong> de norma <strong>pequeña</strong> —ahí vive la solución que de verdad generaliza—.</li>
+</ul>
+<p>A esto lo llaman el <strong>mecanismo LU</strong>. La clave práctica es el <strong>weight decay</strong> (la regularización que penaliza pesos grandes; lo vimos en el Cap. 11): empuja la norma hacia abajo <strong>lentamente</strong>, arrastrando los pesos desde la zona memorizadora (norma alta) hacia el mínimo generalizador (norma baja). El grokking aparece justo cuando ese arrastre completa el viaje. Encaja con la “limpieza” de Nanda: la regularización <strong>retira</strong> la solución de norma alta una vez existe un circuito general de norma baja. Sin weight decay suficiente, muchos modelos <strong>nunca llegan a generalizar</strong> —se quedan en la meseta para siempre—.</p>
+</section>
+<section id="cómo-lo-está-mirando-la-frontera-2024-2026-cada-cual-con-su-termómetro" class="level2" data-number="25.6">
+<h2 data-number="25.6" class="anchored" data-anchor-id="cómo-lo-está-mirando-la-frontera-2024-2026-cada-cual-con-su-termómetro"><span class="header-section-number">25.6</span> Cómo lo está mirando la frontera (2024-2026): cada cual con su “termómetro”</h2>
+<p>El grokking se ha vuelto un laboratorio de <strong>transiciones de fase</strong> en redes (conecta directamente con nuestra Parte III: un cambio cualitativo brusco gobernado por un <strong>parámetro de orden</strong>, el “termómetro” que delata la transición). Tres trabajos recientes proponen parámetros de orden distintos:</p>
+<ul>
+<li><strong>Colapso de entropía espectral</strong> <span class="citation" data-cites="truong2026spectral">(<a href="#ref-truong2026spectral" role="doc-biblioref">Khanh et&nbsp;al. 2026</a>)</span>: el parámetro de orden es la <strong>entropía espectral de la matriz de covarianza</strong> de las representaciones —cómo de “repartida” está la información entre direcciones—. Colapsa al cruzar un umbral <strong>antes</strong> de que suba el test; los autores lo plantean explícitamente como marco <strong>predictivo</strong> y lo ligan a representaciones alineadas con Fourier.</li>
+<li><strong>Transición dimensional</strong> <span class="citation" data-cites="wang2026dimensional">(<a href="#ref-wang2026dimensional" role="doc-biblioref">Wang 2026</a>)</span>: el parámetro es la <strong>dimensionalidad efectiva</strong> de la dinámica de gradientes, que cruza de un régimen sub-difusivo a uno super-difusivo en el inicio de la generalización (criticalidad autoorganizada).</li>
+<li><strong>Defecto de conmutador</strong> <span class="citation" data-cites="xu2026earlywarning">(<a href="#ref-xu2026earlywarning" role="doc-biblioref">Xu 2026</a>)</span>: mide la <strong>curvatura</strong> que provoca que las actualizaciones de gradiente <strong>no conmuten</strong> entre sí; esa señal sube antes del salto, y forzar esa no-conmutatividad <em>acelera</em> el grokking.</li>
+</ul>
+</section>
+<section id="nuestro-resultado-piloto-el-re-ascenso-del-cka-inter-capa" class="level2" data-number="25.7">
+<h2 data-number="25.7" class="anchored" data-anchor-id="nuestro-resultado-piloto-el-re-ascenso-del-cka-inter-capa"><span class="header-section-number">25.7</span> Nuestro resultado piloto: el re-ascenso del CKA inter-capa</h2>
+<p>Aquí está nuestra aportación, y la presentamos con su <strong>alcance exacto</strong> —es un estudio <strong>piloto</strong>, no una ley cerrada—.</p>
+<p>Medimos, paso a paso durante el entrenamiento, el <strong>CKA inter-capa</strong>: la <strong>similitud representacional</strong> entre lo que calcula la capa 0 y lo que calcula la capa 1.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Qué es el CKA, en una frase">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Qué es el CKA, en una frase
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>CKA</strong> (<em>Centered Kernel Alignment</em>) es un número entre 0 y 1 que responde a “¿cuánto se parecen dos conjuntos de representaciones?”. 1 = prácticamente la misma estructura; 0 = nada que ver. Lo aplicamos <strong>entre dos capas del mismo modelo</strong> (capa 0 vs capa 1), de ahí “inter-capa”. Lo llamamos <span class="math inline">\(\hat{O}_{01}\)</span>.</p>
+</div>
+</div>
+<p>El patrón que observamos en los modelos que <strong>sí</strong> acaban <em>grokking</em>:</p>
+<ol type="1">
+<li><span class="math inline">\(\hat{O}_{01}\)</span> empieza <strong>alto</strong> (al inicio, las capas hacen cosas parecidas).</li>
+<li><strong>Cae</strong> durante la memorización (las capas se especializan en memorizar, cada una a lo suyo).</li>
+<li>Y entonces <strong>re-asciende</strong> —vuelve a subir— <strong>unos ~3000 pasos <em>antes</em></strong> de que la precisión de test dé el salto (<a href="#fig-grokking" class="quarto-xref">Figura&nbsp;<span>25.1</span></a>, curva verde).</li>
+</ol>
+<div id="fig-grokking" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-grokking-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig24_grokking.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-grokking-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;25.1: Esquema del grokking con nuestra señal superpuesta. La precisión de <em>train</em> (azul) sube pronto —memorización—; la de <em>test</em> (naranja) se dispara mucho después —el <em>grok</em>—. Nuestra señal, el CKA inter-capa <span class="math inline">\(\hat{O}_{01}\)</span> (verde, discontinua), <strong>cae</strong> durante la memorización y <strong>re-asciende antes</strong> del salto, dando una ventaja de aviso. Curvas ilustrativas; los valores numéricos provienen del estudio piloto <span class="citation" data-cites="marin2026grokking">(<a href="#ref-marin2026grokking" role="doc-biblioref">Marín 2026</a>)</span>. Reproducible: <code>figures/make_fig24_grokking.py</code>.
+</figcaption>
+</figure>
+</div>
+<p>Esa <strong>re-subida temprana</strong> es la señal: cuando <span class="math inline">\(\hat{O}_{01}\)</span> vuelve a crecer, el salto de generalización está por llegar. En nuestro piloto, la señal aparece en <strong>16 de 16</strong> modelos que <em>grokean</em> y en <strong>0 de 5</strong> que no, y replica en suma modular con varios primos y en multiplicación modular. La tarea de <strong>paridad <span class="math inline">\(k\)</span>-dispersa</strong> marca el <strong>borde</strong> del fenómeno: ahí la coordinación entre capas funciona distinto y la señal se difumina, lo que acota su <strong>alcance</strong> a tareas de tipo Fourier donde la generalización exige que las capas se <strong>coordinen</strong>.</p>
+<p>Tiene sentido con la historia de Nanda: si el circuito generalizador se monta gradualmente y necesita que <strong>dos capas trabajen juntas</strong>, su similitud representacional debería <strong>recuperarse</strong> mientras se ensambla —antes de que el resultado aflore en el test—.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Honesto — qué afirmamos y qué NO">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>⚠ Honesto — qué afirmamos y qué NO
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Dos cautelas que no nos saltamos:</p>
+<ol type="1">
+<li><strong>“Predecir el grokking” NO es una idea nueva nuestra.</strong> Ya hay trabajo dedicado a ello —uno se titula literalmente <em>Early-Warning Signals of Grokking</em> <span class="citation" data-cites="xu2026earlywarning">(<a href="#ref-xu2026earlywarning" role="doc-biblioref">Xu 2026</a>)</span>, y el de entropía espectral <span class="citation" data-cites="truong2026spectral">(<a href="#ref-truong2026spectral" role="doc-biblioref">Khanh et&nbsp;al. 2026</a>)</span> también predice el tiempo hasta el salto—. Nuestra contribución <strong>no</strong> es “ser los primeros en predecir”, sino una <strong>señal concreta, simple e interna al entrenamiento</strong> (el CKA inter-capa) que es <strong>barata</strong> de medir, es <strong>entre capas</strong> (no covarianza dentro de una) y da una <strong>ventaja temporal</strong> medible.</li>
+<li><strong>Es un piloto, no una ley.</strong> Un solo estudio es <strong>evidencia más débil</strong> que los trabajos multi-semilla de la literatura. Aún debemos validar la <strong>ventaja temporal</strong> y la <strong>robustez entre semillas</strong> con el mismo rigor que ellos. Y el CKA es un proxy <strong>lineal</strong> de la similitud: útil, pero no la última palabra. El vecino más cercano a citar es el colapso de entropía espectral, que también toca la geometría de las representaciones.</li>
+</ol>
+</div>
+</div>
+</section>
+<section id="el-resultado-que-nos-refutamos-a-nosotros-mismos" class="level2" data-number="25.8">
+<h2 data-number="25.8" class="anchored" data-anchor-id="el-resultado-que-nos-refutamos-a-nosotros-mismos"><span class="header-section-number">25.8</span> El resultado que nos refutamos a nosotros mismos</h2>
+<p>Esto es honestidad demostrada, no anunciada (Cap. 0). Al ver que el CKA re-asciende <em>antes</em> del salto, surgió una hipótesis tentadora: si la coordinación entre capas <strong>causa</strong> la generalización, entonces <strong>forzar</strong> <span class="math inline">\(\hat{O}_{01} \to 1\)</span> (obligando a las capas a parecerse) debería <strong>provocar</strong> —o al menos no impedir— el grokking… y quizá lo contrario, <strong>impedirlo</strong>, demostraría que la señal es una <strong>palanca causal</strong>.</p>
+<p>Lo probamos. Y el experimento nos <strong>refutó</strong>: al entrenar durante <strong>20 000 pasos</strong>, <strong>2 de cada 3</strong> modelos con el CKA forzado <strong>siguieron <em>grokking</em> igualmente</strong>. La conclusión honesta:</p>
+<blockquote class="blockquote">
+<p>El re-ascenso del CKA inter-capa es una señal <strong>predictiva / correlacional</strong>, <strong>no una palanca causal</strong> que puedas accionar para fabricar (o bloquear) la generalización.</p>
+</blockquote>
+<p>Corregimos nuestra propia afirmación: pasó de “señal causal candidata” a “<strong>predictor temprano</strong>, sin causalidad demostrada”. Es exactamente el tipo de receta que el manual predica —seguir el dato aunque tumbe tu hipótesis favorita—.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="🧪 Pruébalo — tafagent">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>🧪 Pruébalo — tafagent
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><a href="https://karlesmarin.github.io/tafagent/">tafagent</a> no entrena modelos, pero incluye un <strong>detector de fase de cabezas de inducción</strong> (la receta de dinámica de entrenamiento, basada en <span class="math inline">\(\Delta\gamma\)</span>): te indica si un modelo <strong>ya ha cruzado</strong> la transición en la que se forman los circuitos de copia/inducción —el pariente “de inferencia” de la formación de circuitos que aquí vemos <em>durante</em> el entrenamiento—. Útil para situar un modelo respecto a esa transición de fase sin tener que reentrenarlo.</p>
+</div>
+</div>
+</section>
+<section id="resumen" class="level2" data-number="25.9">
+<h2 data-number="25.9" class="anchored" data-anchor-id="resumen"><span class="header-section-number">25.9</span> Resumen</h2>
+<ul>
+<li><strong>Grokking</strong> <span class="citation" data-cites="power2022grokking">(<a href="#ref-power2022grokking" role="doc-biblioref">Power et&nbsp;al. 2022</a>)</span>: en tareas algorítmicas, la red <strong>memoriza</strong> pronto (train→100 %, test al azar), pasa una <strong>meseta larga</strong> y <strong>generaliza de golpe</strong> mucho después.</li>
+<li><strong>No es súbito por dentro</strong> <span class="citation" data-cites="nanda2023progress">(<a href="#ref-nanda2023progress" role="doc-biblioref">Nanda et&nbsp;al. 2023</a>)</span>: aprende un <strong>algoritmo de Fourier</strong> que se forma <strong>gradualmente</strong> (memorización → formación del circuito → limpieza); la brusquedad es un artefacto de <em>cuándo</em> el circuito bueno gana.</li>
+<li><strong>Por qué</strong> <span class="citation" data-cites="liu2022omnigrok">(<a href="#ref-liu2022omnigrok" role="doc-biblioref">Liu et&nbsp;al. 2022</a>)</span>: el <strong>paisaje de pérdida</strong> frente a la norma de pesos (mecanismo “LU”) + <strong>weight decay</strong> arrastran de la solución memorizadora (norma alta) a la generalizadora (norma baja).</li>
+<li><strong>Frontera 2024-2026:</strong> transiciones de fase con distintos parámetros de orden —entropía espectral, dimensión efectiva, defecto de conmutador—; dos de ellos ya <strong>predicen</strong> el salto.</li>
+<li><strong>Nuestro piloto</strong> <span class="citation" data-cites="marin2026grokking">(<a href="#ref-marin2026grokking" role="doc-biblioref">Marín 2026</a>)</span>: el <strong>CKA inter-capa</strong> <span class="math inline">\(\hat{O}_{01}\)</span> <strong>cae y re-asciende ~3000 pasos antes</strong> del salto (16/16 vs 0/5; alcance = tareas tipo Fourier). <strong>Honesto:</strong> predecir no es novedad; lo nuestro es una señal <strong>simple, interna y barata</strong>, y es un <strong>piloto</strong> por validar.</li>
+<li><strong>Nos refutamos:</strong> forzar el CKA→1 <strong>no impide</strong> el grokking (2/3 a 20 k pasos) → señal <strong>predictiva</strong>, <strong>no causal</strong>.</li>
+</ul>
+<p><strong>Siguiente:</strong> con esto cerramos la <strong>Parte III</strong> —la lente física sobre la atención—. La Parte IV abre el lado práctico: <strong>entrenar y ajustar</strong> modelos (pre-entrenamiento, <em>fine-tuning</em>, LoRA/PEFT, alineamiento), donde toda esta dinámica deja de ser curiosidad y se vuelve decisión de ingeniería.</p>
+</section>
+<section id="ejercicios" class="level2" data-number="25.10">
+<h2 data-number="25.10" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">25.10</span> Ejercicios</h2>
+<ol type="1">
+<li><strong>La curva.</strong> Describe las tres fases del grokking en términos de las precisiones de train y test. ¿Por qué la lógica clásica del sobreajuste te diría que pares antes de que llegue el salto?</li>
+<li><strong>No tan súbito.</strong> Según Nanda, ¿qué se está formando durante la meseta, y por qué el salto de test <em>parece</em> repentino aunque el mecanismo no lo sea?</li>
+<li><strong>El motor.</strong> Explica el mecanismo “LU” de Omnigrok y el papel del <em>weight decay</em>. ¿Qué pasa si el weight decay es insuficiente?</li>
+<li><strong>Honestidad I.</strong> ¿Por qué <strong>no</strong> afirmamos haber sido los primeros en predecir el grokking? ¿En qué consiste entonces nuestra aportación?</li>
+<li><strong>Honestidad II.</strong> Teníamos la hipótesis de que el CKA era una palanca <strong>causal</strong>. ¿Qué experimento la puso a prueba, qué salió, y cómo cambió nuestra afirmación?</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled" title="📄 Nuestro paper — datos y detalles">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>📄 Nuestro paper — datos y detalles
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>El estudio piloto completo —con los datos, las semillas, las tareas (suma/multiplicación modular, paridad <span class="math inline">\(k\)</span>-dispersa) y el experimento de <strong>refutación</strong> del forzado del CKA— está depositado en abierto: <strong><a href="https://zenodo.org/records/19194911"><em>Inter-Layer Alignment Re-Rise Predicts Grokking in Transformers: A Pilot Study</em></a></strong> (Zenodo).</p>
+</div>
+</div>
+</section>
+<section id="referencias" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="referencias">Referencias</h2>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-truong2026spectral" class="csl-entry" role="listitem">
+Khanh, Hoa, Trung, y Duc. 2026. <em>Spectral Entropy Collapse as a Phase Transition in Delayed Generalisation</em>. <a href="https://arxiv.org/abs/2604.13123">https://arxiv.org/abs/2604.13123</a>.
+</div>
+<div id="ref-liu2022omnigrok" class="csl-entry" role="listitem">
+Liu, Ziming, Eric J. Michaud, y Max Tegmark. 2022. <em>Omnigrok: Grokking Beyond Algorithmic Data</em>. <a href="https://arxiv.org/abs/2210.01117">https://arxiv.org/abs/2210.01117</a>.
+</div>
+<div id="ref-marin2026grokking" class="csl-entry" role="listitem">
+Marín, Carles. 2026. <em>Inter-Layer Alignment Re-Rise Predicts Grokking in Transformers: A Pilot Study</em>. <a href="https://zenodo.org/records/19194911">https://zenodo.org/records/19194911</a>.
+</div>
+<div id="ref-nanda2023progress" class="csl-entry" role="listitem">
+Nanda, Neel, Lawrence Chan, Tom Lieberum, Jess Smith, y Jacob Steinhardt. 2023. <em>Progress Measures for Grokking via Mechanistic Interpretability</em>. <a href="https://arxiv.org/abs/2301.05217">https://arxiv.org/abs/2301.05217</a>.
+</div>
+<div id="ref-power2022grokking" class="csl-entry" role="listitem">
+Power, Alethea, Yuri Burda, Harri Edwards, Igor Babuschkin, y Vedant Misra. 2022. <em>Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets</em>. <a href="https://arxiv.org/abs/2201.02177">https://arxiv.org/abs/2201.02177</a>.
+</div>
+<div id="ref-wang2026dimensional" class="csl-entry" role="listitem">
+Wang, P. 2026. <em>Grokking as a Dimensional Phase Transition in Neural Networks</em>. <a href="https://arxiv.org/abs/2604.04655">https://arxiv.org/abs/2604.04655</a>.
+</div>
+<div id="ref-xu2026earlywarning" class="csl-entry" role="listitem">
+Xu, Yongzhong. 2026. <em>Early-Warning Signals of Grokking via Loss-Landscape Geometry</em>. <a href="https://arxiv.org/abs/2602.16967">https://arxiv.org/abs/2602.16967</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/23-fraccionario.html" class="pagination-link" aria-label="La vista de transporte fraccionario">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">La vista de transporte fraccionario</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/25-preentrenamiento.html" class="pagination-link" aria-label="Pre-entrenamiento a escala">
+        <span class="nav-page-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Pre-entrenamiento a escala</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

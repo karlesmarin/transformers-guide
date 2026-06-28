@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>32&nbsp; Embeddings, búsqueda semántica y RAG – Cómo Atienden los Transformers</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/32-agentes.html" rel="next">
+<link href="../chapters/30-prompting.html" rel="prev">
+<link href="../icon.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-995c9648545143e6e90874d2ed57f896.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Cómo Atienden los Transformers</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Buscar"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Navegación de palanca" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../es/index.html"> 
+<span class="menu-text">ES</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../en/index.html"> 
+<span class="menu-text">EN</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/29-generacion.html">Parte V — Usar transformers</a></li><li class="breadcrumb-item"><a href="../chapters/31-rag.html"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Embeddings, búsqueda semántica y RAG</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefacio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/creditos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Créditos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte 0 — Orientación</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/00-orientacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Cómo usar esta guía</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte I — Fundamentos</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01-panorama.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">El panorama: qué es un transformer y por qué ganó</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02-tokens.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">De texto a tokens</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03-embeddings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Embeddings y el flujo residual</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04-atencion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">La atención como agregación ponderada</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-multicabeza.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Atención multi-cabeza</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/06-ffn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">La red feed-forward (FFN)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/07-residual-norm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Conexiones residuales y normalización</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/08-posicion-rope.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Información de posición y RoPE</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/09-bloque.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">El bloque completo y la profundidad</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/10-arquitecturas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Encoder, decoder y encoder-decoder</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/11-entrenamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Entrenar un transformer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/12-inferencia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Inferencia y decodificación</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte II — Cómo atienden a lo largo de la distancia</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/13-leer-mapas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Leer un mapa de atención</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/14-aliasing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Aliasing y las tres escalas de RoPE</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/15-ley-gamma.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">La ley de decaimiento A(d) ∝ d^−γ</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/16-atlas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">El atlas γ: el decaimiento medido en 42 modelos</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/17-sumideros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Sumideros de atención y concentración</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/18-taxonomia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Taxonomía de mecanismos de atención</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/19-contexto-largo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Extensión de contexto largo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/20-kv-cache.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Compresión de KV-cache en práctica</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte III — Una lente física sobre la atención</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/21-fases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Estructura de fases y la función de partición polilog</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/22-termodinamica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">El diccionario termodinámico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/23-fraccionario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">La vista de transporte fraccionario</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/24-grokking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Dinámica de entrenamiento y <em>grokking</em></span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte IV — Entrenamiento, adaptación y fine-tuning</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/25-preentrenamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Pre-entrenamiento a escala</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/26-finetuning-clasificacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Fine-tuning para clasificación y representación</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/27-alineamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Instruction tuning y alineamiento</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/28-peft.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Fine-tuning eficiente en parámetros (PEFT)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte V — Usar transformers</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/29-generacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Generación de texto en profundidad</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/30-prompting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Prompting e in-context learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/31-rag.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Embeddings, búsqueda semántica y RAG</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/32-agentes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Agentes, herramientas y memoria</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/33-multimodal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Transformers multimodales</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte VI — Eficiencia, sistemas y despliegue</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/34-atencion-eficiente.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Atención eficiente</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/35-compresion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Cuantización, destilación y poda</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/36-serving.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Servir y desplegar</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte VII — Interpretabilidad y qué es real</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/37-interpretabilidad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Primer de interpretabilidad mecanicista</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/38-audit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Verificado, folclore y numerología</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/39-mapa2026.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">El mapa del paisaje de colapso 2026</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/40-etica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Ética, seguridad y limitaciones</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte VIII — Referencia</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R1-formulario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">R1 · Formulario maestro</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R2-cookbook.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R3-glosario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R3 · Glosario</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R4-medir-gamma.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R4 · Medir tu propio γ (y reproducir el atlas)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R9-tafagent.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R9 · Manual de tafagent</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R10-soluciones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R10 · Soluciones de los ejercicios</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#la-idea-en-una-frase" id="toc-la-idea-en-una-frase" class="nav-link active" data-scroll-target="#la-idea-en-una-frase"><span class="header-section-number">32.1</span> La idea en una frase</a></li>
+  <li><a href="#conceptos-clave-y-su-papel-en-el-transformer" id="toc-conceptos-clave-y-su-papel-en-el-transformer" class="nav-link" data-scroll-target="#conceptos-clave-y-su-papel-en-el-transformer"><span class="header-section-number">32.2</span> Conceptos clave y su papel en el transformer</a></li>
+  <li><a href="#por-qué-existe-rag" id="toc-por-qué-existe-rag" class="nav-link" data-scroll-target="#por-qué-existe-rag"><span class="header-section-number">32.3</span> Por qué existe RAG</a></li>
+  <li><a href="#el-pipeline-canónico" id="toc-el-pipeline-canónico" class="nav-link" data-scroll-target="#el-pipeline-canónico"><span class="header-section-number">32.4</span> El pipeline canónico</a></li>
+  <li><a href="#la-mitad-de-recuperación-sobre-el-cap.-26" id="toc-la-mitad-de-recuperación-sobre-el-cap.-26" class="nav-link" data-scroll-target="#la-mitad-de-recuperación-sobre-el-cap.-26"><span class="header-section-number">32.5</span> La mitad de recuperación (sobre el Cap. 26)</a>
+  <ul class="collapse">
+  <li><a href="#denso-vs-disperso-e-híbrido" id="toc-denso-vs-disperso-e-híbrido" class="nav-link" data-scroll-target="#denso-vs-disperso-e-híbrido"><span class="header-section-number">32.5.1</span> Denso vs disperso, e híbrido</a></li>
+  <li><a href="#bases-vectoriales-búsqueda-aproximada-ann" id="toc-bases-vectoriales-búsqueda-aproximada-ann" class="nav-link" data-scroll-target="#bases-vectoriales-búsqueda-aproximada-ann"><span class="header-section-number">32.5.2</span> Bases vectoriales: búsqueda aproximada (ANN)</a></li>
+  <li><a href="#reranking-la-ojeada-y-la-lectura-atenta" id="toc-reranking-la-ojeada-y-la-lectura-atenta" class="nav-link" data-scroll-target="#reranking-la-ojeada-y-la-lectura-atenta"><span class="header-section-number">32.5.3</span> Reranking: la ojeada y la lectura atenta</a></li>
+  </ul></li>
+  <li><a href="#chunking-e-indexación" id="toc-chunking-e-indexación" class="nav-link" data-scroll-target="#chunking-e-indexación"><span class="header-section-number">32.6</span> Chunking e indexación</a></li>
+  <li><a href="#variantes-y-avances" id="toc-variantes-y-avances" class="nav-link" data-scroll-target="#variantes-y-avances"><span class="header-section-number">32.7</span> Variantes y avances</a></li>
+  <li><a href="#evaluar-rag-honesto" id="toc-evaluar-rag-honesto" class="nav-link" data-scroll-target="#evaluar-rag-honesto"><span class="header-section-number">32.8</span> Evaluar RAG (honesto)</a></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">32.9</span> Resumen</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">32.10</span> Ejercicios</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias">Referencias</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/29-generacion.html">Parte V — Usar transformers</a></li><li class="breadcrumb-item"><a href="../chapters/31-rag.html"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Embeddings, búsqueda semántica y RAG</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-rag" class="quarto-section-identifier"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Embeddings, búsqueda semántica y RAG</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Dónde estamos.</strong> En el Cap. 30 vimos que el <em>prompting</em> <strong>elicita</strong> lo que el modelo sabe, pero <strong>no le añade conocimiento</strong>. ¿Y si necesita hechos que no tiene —datos recientes, documentos privados—? La respuesta es <strong>recuperarlos y metérselos en el contexto</strong>: la <strong>generación aumentada por recuperación (RAG)</strong>. Este capítulo construye sobre los <em>embeddings</em> y bi/cross-encoders del Cap. 26 para montar el sistema completo: recuperar → leer → generar, con su evaluación honesta.</p>
+</div>
+</div>
+</div>
+<section id="la-idea-en-una-frase" class="level2" data-number="32.1">
+<h2 data-number="32.1" class="anchored" data-anchor-id="la-idea-en-una-frase"><span class="header-section-number">32.1</span> La idea en una frase</h2>
+<p>En vez de confiar en lo que el modelo memorizó, <strong>le buscas la evidencia relevante y se la das en el contexto</strong> para que responda <em>a partir de ella</em> —como un examen a libro abierto—.</p>
+<div class="analogia">
+<p><strong>🧩 Analogía — el examen a libro abierto.</strong> En vez de memorizar todo el temario, el estudiante <strong>busca la página relevante</strong> y responde a partir de ella. RAG hace eso: no le pide al modelo que lo sepa todo de memoria, sino que <strong>consulte</strong> una base de documentos y conteste apoyándose en lo que encuentra.</p>
+</div>
+</section>
+<section id="conceptos-clave-y-su-papel-en-el-transformer" class="level2" data-number="32.2">
+<h2 data-number="32.2" class="anchored" data-anchor-id="conceptos-clave-y-su-papel-en-el-transformer"><span class="header-section-number">32.2</span> Conceptos clave y su papel en el transformer</h2>
+<p>Antes de entrar en detalle, definimos los términos de este capítulo y <strong>para qué sirve cada uno</strong> dentro de un transformer:</p>
+<ul>
+<li><strong>Embedding.</strong> <em>Definición:</em> un <strong>vector</strong> que representa el significado de un texto. <em>En el transformer:</em> es la moneda común de la búsqueda semántica —textos parecidos caen <strong>cerca</strong> en el espacio—.</li>
+<li><strong>Recuperación densa vs dispersa (BM25).</strong> <em>Definición:</em> buscar por <strong>significado</strong> (vectores) o por <strong>solapamiento de palabras</strong> (BM25). <em>En el transformer:</em> el denso capta paráfrasis; BM25 atrapa términos exactos → el <strong>híbrido</strong> suele ganar.</li>
+<li><strong>ANN (vecinos aproximados).</strong> <em>Definición:</em> hallar los vectores más cercanos <strong>sin comparar contra todos</strong> (HNSW, FAISS). <em>En el transformer:</em> hace viable la búsqueda a escala de millones, sacrificando algo de <em>recall</em> por velocidad.</li>
+<li><strong>Reranking (bi- vs cross-encoder).</strong> <em>Definición:</em> recuperar muchos candidatos barato y <strong>reordenar</strong> el <em>top</em> con un modelo caro y preciso. <em>En el transformer:</em> el cross-encoder mira consulta y documento <strong>juntos</strong> → más precisión donde importa.</li>
+<li><strong>Chunking.</strong> <em>Definición:</em> <strong>trocear</strong> los documentos en fragmentos antes de indexarlos. <em>En el transformer:</em> un fragmento enfocado se <em>embebe</em> mejor y cabe en el contexto.</li>
+<li><strong>RAG.</strong> <em>Definición:</em> <strong>recuperar</strong> evidencia y <strong>condicionar</strong> la generación sobre ella. <em>En el transformer:</em> añade memoria <strong>no-paramétrica</strong> consultable frente a la paramétrica de los pesos.</li>
+<li><strong>Memoria paramétrica vs no-paramétrica.</strong> <em>Definición:</em> lo que está <strong>en los pesos</strong> vs lo que está en un <strong>índice externo</strong>. <em>En el transformer:</em> la no-paramétrica se <strong>actualiza sin reentrenar</strong> —de ahí RAG—.</li>
+<li><strong>Fidelidad (<em>groundedness</em>).</strong> <em>Definición:</em> en qué grado la respuesta <strong>se deriva</strong> de los documentos recuperados. <em>En el transformer:</em> eje aparte de la fluidez —RAG <strong>reduce, no elimina</strong> la alucinación—.</li>
+<li><strong>“Lost in the middle”.</strong> <em>Definición:</em> los modelos usan <strong>mejor</strong> la información de los <strong>extremos</strong> del contexto que la del medio. <em>En el transformer:</em> dicta colocar los fragmentos relevantes al <strong>principio o al final</strong>.</li>
+</ul>
+<p>Con esto en mente, montamos el sistema.</p>
+</section>
+<section id="por-qué-existe-rag" class="level2" data-number="32.3">
+<h2 data-number="32.3" class="anchored" data-anchor-id="por-qué-existe-rag"><span class="header-section-number">32.3</span> Por qué existe RAG</h2>
+<p>Cuatro problemas que el preentrenamiento solo no resuelve:</p>
+<ul>
+<li><strong>Corte de conocimiento:</strong> los pesos congelan lo visto al entrenar; no conocen lo posterior.</li>
+<li><strong>Datos privados/cambiantes:</strong> documentos de tu empresa, precios de hoy… no están en los pesos.</li>
+<li><strong>Alucinación:</strong> sin saber, el modelo inventa con fluidez.</li>
+<li><strong>El prompting no añade conocimiento</strong> (techo del Cap. 30): reorganiza lo que ya hay.</li>
+</ul>
+<p>La distinción clave (de <span class="citation" data-cites="lewis2020rag">(<a href="#ref-lewis2020rag" role="doc-biblioref"><span class="nocase">Lewis et&nbsp;al.</span> 2020</a>)</span>): el modelo es <strong>memoria paramétrica</strong> (lo que está <em>en los pesos</em>); el índice de documentos al que accede el recuperador es <strong>memoria no-paramétrica</strong> (lo que está <em>fuera</em>, consultable y actualizable). RAG <strong>condiciona la generación sobre evidencia recuperada</strong> en lugar de recitar de los pesos.</p>
+</section>
+<section id="el-pipeline-canónico" class="level2" data-number="32.4">
+<h2 data-number="32.4" class="anchored" data-anchor-id="el-pipeline-canónico"><span class="header-section-number">32.4</span> El pipeline canónico</h2>
+<p>El término lo acuñó <strong>Lewis et al.</strong> <span class="citation" data-cites="lewis2020rag">(<a href="#ref-lewis2020rag" role="doc-biblioref"><span class="nocase">Lewis et&nbsp;al.</span> 2020</a>)</span>: un <strong>recuperador</strong> denso (estilo DPR, Cap. 26) + un <strong>generador</strong> seq2seq (BART), de modo que los documentos recuperados condicionan la salida. Dos variantes: <strong>RAG-Sequence</strong> (usa el mismo documento para toda la respuesta) y <strong>RAG-Token</strong> (puede usar uno distinto por token). Precursores a recordar: <strong>REALM</strong> <span class="citation" data-cites="guu2020realm">(<a href="#ref-guu2020realm" role="doc-biblioref">Guu et&nbsp;al. 2020</a>)</span> (recuperación <em>durante el preentrenamiento</em>) y <strong>kNN-LM</strong> <span class="citation" data-cites="khandelwal2019knnlm">(<a href="#ref-khandelwal2019knnlm" role="doc-biblioref">Khandelwal et&nbsp;al. 2020</a>)</span> (interpola el LM con un <em>datastore</em> de vecinos —ayuda en lo raro/de cola larga—).</p>
+<p>El patrón práctico de hoy es <strong>“recuperar y leer”</strong> (<em>retrieve-then-read</em>), normalmente con recuperador y generador <strong>congelados</strong>:</p>
+<ol type="1">
+<li><strong>Indexar</strong> el corpus (trocear + <em>embeber</em> cada fragmento).</li>
+<li><strong>Embeber la consulta</strong> del usuario.</li>
+<li><strong>Recuperar</strong> los <em>top-k</em> fragmentos más parecidos.</li>
+<li><strong>Insertarlos</strong> en el prompt.</li>
+<li><strong>Generar</strong> la respuesta condicionada a esa evidencia.</li>
+</ol>
+</section>
+<section id="la-mitad-de-recuperación-sobre-el-cap.-26" class="level2" data-number="32.5">
+<h2 data-number="32.5" class="anchored" data-anchor-id="la-mitad-de-recuperación-sobre-el-cap.-26"><span class="header-section-number">32.5</span> La mitad de recuperación (sobre el Cap. 26)</h2>
+<section id="denso-vs-disperso-e-híbrido" class="level3" data-number="32.5.1">
+<h3 data-number="32.5.1" class="anchored" data-anchor-id="denso-vs-disperso-e-híbrido"><span class="header-section-number">32.5.1</span> Denso vs disperso, e híbrido</h3>
+<ul>
+<li><strong>Denso:</strong> <em>embeddings</em> semánticos (DPR, E5 del Cap. 26). Recupera por <strong>significado</strong>, aunque no coincidan las palabras exactas.</li>
+<li><strong>Disperso/léxico — BM25</strong> <span class="citation" data-cites="robertson2009bm25">(<a href="#ref-robertson2009bm25" role="doc-biblioref">Robertson y Zaragoza 2009</a>)</span>: puntúa por <strong>solapamiento de palabras</strong> ponderado (frecuencia saturada + rareza del término + longitud). Sigue siendo un <strong>baseline fuerte</strong>, sobre todo para nombres propios, códigos y términos exactos.</li>
+<li><strong>Híbrido:</strong> combinar ambos suele <strong>ganar</strong> —el denso aporta semántica; el disperso atrapa coincidencias exactas y raras que el denso pierde—.</li>
+</ul>
+<div class="analogia">
+<p><strong>🧩 Analogía — buscar por significado, no por título.</strong> La recuperación densa es un bibliotecario que <strong>entiende lo que quieres decir</strong> y te trae libros del tema, aunque no uses sus palabras exactas; BM25 es el <strong>catálogo de palabras clave</strong> que solo casa cadenas literales. Cada uno acierta donde el otro falla → por eso se combinan.</p>
+</div>
+</section>
+<section id="bases-vectoriales-búsqueda-aproximada-ann" class="level3" data-number="32.5.2">
+<h3 data-number="32.5.2" class="anchored" data-anchor-id="bases-vectoriales-búsqueda-aproximada-ann"><span class="header-section-number">32.5.2</span> Bases vectoriales: búsqueda aproximada (ANN)</h3>
+<p>Comparar la consulta contra <strong>todos</strong> los vectores es <strong>O(N)</strong> —inviable con millones—. La solución es <strong>vecinos aproximados (ANN)</strong>: se sacrifica un poco de <em>recall</em> por <strong>muchísima</strong> velocidad. Dos piezas habituales:</p>
+<ul>
+<li><strong>HNSW</strong> <span class="citation" data-cites="malkov2016hnsw">(<a href="#ref-malkov2016hnsw" role="doc-biblioref">Malkov y Yashunin 2016</a>)</span>: un <strong>grafo navegable</strong> por el que la búsqueda “salta” hasta el vecino en tiempo casi logarítmico. Es el estándar de las bases vectoriales.</li>
+<li><strong>FAISS</strong> <span class="citation" data-cites="johnson2017faiss">(<a href="#ref-johnson2017faiss" role="doc-biblioref">Johnson et&nbsp;al. 2017</a>)</span>: librería con <strong>IVF</strong> (particiona el espacio en celdas y solo busca en las cercanas) y <strong>PQ</strong> (comprime los vectores para que quepan en memoria).</li>
+</ul>
+<p>La idea común: <strong>estructuras que evitan comparar contra todo</strong>.</p>
+</section>
+<section id="reranking-la-ojeada-y-la-lectura-atenta" class="level3" data-number="32.5.3">
+<h3 data-number="32.5.3" class="anchored" data-anchor-id="reranking-la-ojeada-y-la-lectura-atenta"><span class="header-section-number">32.5.3</span> Reranking: la ojeada y la lectura atenta</h3>
+<p>Aquí enlaza con bi- vs cross-encoder (Cap. 26). Patrón de <strong>dos etapas</strong>: recuperar <em>muchos</em> candidatos barato con un <strong>bi-encoder</strong> (vectores precalculados), y luego <strong>reordenar</strong> el <em>top</em> con un <strong>cross-encoder</strong> caro (consulta + documento juntos → más preciso). Ejemplos: <strong>monoBERT</strong> <span class="citation" data-cites="nogueira2019monobert">(<a href="#ref-nogueira2019monobert" role="doc-biblioref">Nogueira et&nbsp;al. 2019</a>)</span> y <strong>monoT5</strong> <span class="citation" data-cites="nogueira2020monot5">(<a href="#ref-nogueira2020monot5" role="doc-biblioref">Nogueira et&nbsp;al. 2020</a>)</span> (rerankers cross-encoder); <strong>ColBERT</strong> <span class="citation" data-cites="khattab2020colbert">(<a href="#ref-khattab2020colbert" role="doc-biblioref">Khattab y Zaharia 2020</a>)</span> (<em>interacción tardía</em> — punto medio: vectores por token, precalculables, con una comparación barata en consulta).</p>
+<div class="analogia">
+<p><strong>🧩 Analogía — agarrar 50 y leer 5.</strong> El reranking es como coger del estante <strong>50 libros candidatos de una ojeada rápida</strong> (bi-encoder) y luego <strong>leer con cuidado el resumen de los 5 mejores</strong> (cross-encoder) para quedarte con los realmente relevantes.</p>
+</div>
+</section>
+</section>
+<section id="chunking-e-indexación" class="level2" data-number="32.6">
+<h2 data-number="32.6" class="anchored" data-anchor-id="chunking-e-indexación"><span class="header-section-number">32.6</span> Chunking e indexación</h2>
+<ul>
+<li><strong>Por qué trocear:</strong> el contexto es limitado, y un <strong>fragmento enfocado</strong> se <em>embebe</em> mejor que un documento entero (que diluye el tema).</li>
+<li><strong>Tamaño y solapamiento:</strong> fragmentos pequeños = recuperación precisa pero pierden contexto; grandes = más contexto pero <em>embedding</em> borroso y ruido. El <strong>solapamiento</strong> evita cortar ideas a mitad de frase. (Son heurísticas, no teoremas: es un compromiso.)</li>
+<li><strong>“Lost in the middle”</strong> <span class="citation" data-cites="liu2023lostmiddle">(<a href="#ref-liu2023lostmiddle" role="doc-biblioref"><span class="nocase">Liu et&nbsp;al.</span> 2023</a>)</span>: los modelos usan <strong>mejor</strong> la información que está al <strong>principio o al final</strong> del contexto, y <strong>peor la del medio</strong> (curva en U). Implicación para RAG: no metas un <em>k</em> enorme y <strong>coloca los fragmentos más relevantes en los extremos</strong>.</li>
+<li><strong>Filtrado por metadatos:</strong> acotar por fecha, fuente o permisos antes/junto a la búsqueda.</li>
+</ul>
+<div class="analogia">
+<p><strong>🧩 Analogía — fichas de índice.</strong> El <em>chunking</em> es <strong>arrancar el libro en fichas</strong> para sacar solo la ficha relevante, en vez de cargar el libro entero —más fácil de encontrar y de meter en el contexto—.</p>
+</div>
+</section>
+<section id="variantes-y-avances" class="level2" data-number="32.7">
+<h2 data-number="32.7" class="anchored" data-anchor-id="variantes-y-avances"><span class="header-section-number">32.7</span> Variantes y avances</h2>
+<ul>
+<li><strong>Fusion-in-Decoder (FiD)</strong> <span class="citation" data-cites="izacard2020fid">(<a href="#ref-izacard2020fid" role="doc-biblioref">Izacard y Grave 2021</a>)</span>: codifica cada pasaje <strong>por separado</strong> y los <strong>fusiona en el decoder</strong> → escala a muchos pasajes sin el coste cuadrático de concatenarlos.</li>
+<li><strong>REPLUG</strong> <span class="citation" data-cites="shi2023replug">(<a href="#ref-shi2023replug" role="doc-biblioref"><span class="nocase">Shi et&nbsp;al.</span> 2023</a>)</span>: recuperación para LMs <strong>caja negra</strong> (congelados); opcional, entrenar el recuperador usando el propio LM como señal.</li>
+<li><strong>Self-RAG</strong> <span class="citation" data-cites="asai2023selfrag">(<a href="#ref-asai2023selfrag" role="doc-biblioref">Asai et&nbsp;al. 2024</a>)</span>: el modelo <strong>decide cuándo y qué</strong> recuperar y <strong>critica</strong> sus propias salidas y los pasajes (autoevaluación).</li>
+<li><strong>FLARE</strong> <span class="citation" data-cites="jiang2023flare">(<a href="#ref-jiang2023flare" role="doc-biblioref"><span class="nocase">Jiang et&nbsp;al.</span> 2023</a>)</span>: recuperación <strong>iterativa/activa</strong> —anticipa la siguiente frase y, si duda, recupera y regenera— frente al RAG de un solo disparo.</li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Honesto — ¿el contexto largo mata a RAG?">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>⚠ Honesto — ¿el contexto largo mata a RAG?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Con ventanas de 100k-1M+ tokens, ¿basta con meter <em>todo</em> y olvidarse de recuperar? El debate está <strong>abierto</strong>, pero el consenso actual es que son <strong>complementarios</strong>: (1) “lost in the middle” muestra que más contexto <strong>no se aprovecha</strong> por igual; (2) el coste/latencia <strong>crecen</strong> con el contexto; (3) RAG da <strong>atribución</strong> (de dónde sale la respuesta) y <strong>datos frescos</strong>. RAG <strong>selecciona qué meter</strong> en una ventana que sigue costando.</p>
+</div>
+</div>
+</section>
+<section id="evaluar-rag-honesto" class="level2" data-number="32.8">
+<h2 data-number="32.8" class="anchored" data-anchor-id="evaluar-rag-honesto"><span class="header-section-number">32.8</span> Evaluar RAG (honesto)</h2>
+<p>Dos ejes, y conviene no confundirlos:</p>
+<ul>
+<li><strong>Calidad de recuperación</strong> (métricas clásicas de IR): <strong>Recall@k</strong> (¿está el documento bueno entre los k?), <strong>MRR</strong> (a qué posición media llega el primer acierto) y <strong>nDCG</strong> (premia tener lo relevante <strong>arriba</strong> del ranking).</li>
+<li><strong>Calidad de generación + FIDELIDAD</strong> (<em>groundedness</em>): ¿la respuesta <strong>se deriva</strong> de los documentos recuperados? <strong>RAGAS</strong> <span class="citation" data-cites="es2023ragas">(<a href="#ref-es2023ragas" role="doc-biblioref">Es et&nbsp;al. 2024</a>)</span> lo evalúa <strong>sin referencia</strong> con un LLM-juez en tres ejes: <em>faithfulness</em> (soporte en el contexto → caza alucinaciones), relevancia de la respuesta y relevancia del contexto.</li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Honesto — RAG reduce la alucinación, no la elimina">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>⚠ Honesto — RAG reduce la alucinación, no la elimina
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Tres cautelas: (1) el modelo puede <strong>alucinar aun con recuperación correcta</strong> —ignorar o contradecir el contexto—; por eso existe la métrica de <em>faithfulness</em>. (2) <strong>Los errores de recuperación se propagan</strong>: si traes basura, el generador construye sobre basura. (3) <strong>Envenenamiento de contexto</strong>: documentos erróneos, contradictorios o maliciosos degradan o secuestran la respuesta. RAG es una mejora <strong>grande</strong> pero <strong>no</strong> una garantía de verdad.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="🧪 Pruébalo — tafagent">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>🧪 Pruébalo — tafagent
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>El efecto “lost in the middle” es, en el fondo, un fenómeno de <strong>atención a lo largo de la distancia</strong> —justo nuestra Parte II—. <a href="https://karlesmarin.github.io/tafagent/">tafagent</a> te da el <strong>γ</strong> y el <strong>horizonte efectivo</strong> de un modelo: cuánto “ve” de verdad a lo largo del contexto. Útil para decidir <strong>cuántos fragmentos</strong> tiene sentido recuperar (un modelo de horizonte corto no aprovechará un <em>top-k</em> enorme) y dónde colocarlos.</p>
+</div>
+</div>
+</section>
+<section id="resumen" class="level2" data-number="32.9">
+<h2 data-number="32.9" class="anchored" data-anchor-id="resumen"><span class="header-section-number">32.9</span> Resumen</h2>
+<ul>
+<li><strong>RAG</strong> <span class="citation" data-cites="lewis2020rag">(<a href="#ref-lewis2020rag" role="doc-biblioref"><span class="nocase">Lewis et&nbsp;al.</span> 2020</a>)</span>: recuperar evidencia y <strong>condicionar</strong> la generación sobre ella — memoria <strong>paramétrica</strong> (pesos) + <strong>no-paramétrica</strong> (índice consultable)—.</li>
+<li><strong>Pipeline:</strong> indexar → embeber consulta → recuperar <em>top-k</em> → insertar → generar (<em>retrieve-then-read</em>). Precursores: REALM, kNN-LM.</li>
+<li><strong>Recuperación:</strong> <strong>denso</strong> (semántico) + <strong>BM25</strong> (léxico) → <strong>híbrido</strong> gana; <strong>ANN</strong> (HNSW, FAISS) para escalar; <strong>reranking</strong> bi→cross (ColBERT a medio camino).</li>
+<li><strong>Chunking:</strong> trocear para precisión; cuidado con tamaño/solapamiento y con <strong>“lost in the middle”</strong> (relevante a los <strong>extremos</strong>).</li>
+<li><strong>Variantes:</strong> FiD, REPLUG (caja negra), Self-RAG, FLARE (activo). <strong>Contexto largo vs RAG:</strong> complementarios (debate abierto).</li>
+<li><strong>Evaluar:</strong> recuperación (Recall@k/MRR/nDCG) <strong>y</strong> generación + <strong>fidelidad</strong> (RAGAS). <strong>Honesto:</strong> RAG <strong>reduce, no elimina</strong> la alucinación; los errores de recuperación se propagan.</li>
+</ul>
+<p><strong>Siguiente (Capítulo 32):</strong> si en vez de solo recuperar texto el modelo puede <strong>actuar</strong> —usar herramientas, llamar APIs, planear en varios pasos—, entramos en los <strong>agentes</strong>.</p>
+</section>
+<section id="ejercicios" class="level2" data-number="32.10">
+<h2 data-number="32.10" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">32.10</span> Ejercicios</h2>
+<ol type="1">
+<li><strong>Paramétrico vs no.</strong> Explica la diferencia entre memoria paramétrica y no-paramétrica. ¿Cuál actualizas sin reentrenar?</li>
+<li><strong>Denso vs BM25.</strong> Da un caso donde BM25 gane a la recuperación densa y otro al revés. ¿Por qué el híbrido suele ser mejor?</li>
+<li><strong>ANN.</strong> ¿Por qué no se usa kNN exacto a escala de millones de vectores? ¿Qué se sacrifica con HNSW/FAISS?</li>
+<li><strong>Reranking.</strong> ¿Por qué recuperar con bi-encoder y reordenar con cross-encoder, y no usar el cross-encoder para todo?</li>
+<li><strong>Lost in the middle.</strong> Si recuperas 10 fragmentos, ¿dónde colocas los más relevantes y por qué?</li>
+<li><strong>Honestidad.</strong> Cita dos razones por las que RAG puede dar una respuesta equivocada <em>aunque</em> la recuperación funcione.</li>
+</ol>
+</section>
+<section id="referencias" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="referencias">Referencias</h2>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-asai2023selfrag" class="csl-entry" role="listitem">
+Asai, Akari, Zeqiu Wu, Yizhong Wang, Avirup Sil, y Hannaneh Hajishirzi. 2024. <span>«Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection»</span>. <em>ICLR</em>. <a href="https://arxiv.org/abs/2310.11511">https://arxiv.org/abs/2310.11511</a>.
+</div>
+<div id="ref-es2023ragas" class="csl-entry" role="listitem">
+Es, Shahul, Jithin James, Luis Espinosa-Anke, y Steven Schockaert. 2024. <span>«RAGAS: Automated Evaluation of Retrieval Augmented Generation»</span>. <em>EACL (demo)</em>. <a href="https://arxiv.org/abs/2309.15217">https://arxiv.org/abs/2309.15217</a>.
+</div>
+<div id="ref-guu2020realm" class="csl-entry" role="listitem">
+Guu, Kelvin, Kenton Lee, Zora Tung, Panupong Pasupat, y Ming-Wei Chang. 2020. <span>«REALM: Retrieval-Augmented Language Model Pre-Training»</span>. <em>ICML</em>. <a href="https://arxiv.org/abs/2002.08909">https://arxiv.org/abs/2002.08909</a>.
+</div>
+<div id="ref-izacard2020fid" class="csl-entry" role="listitem">
+Izacard, Gautier, y Edouard Grave. 2021. <span>«Leveraging Passage Retrieval with Generative Models for Open Domain Question Answering»</span>. <em>EACL</em>. <a href="https://arxiv.org/abs/2007.01282">https://arxiv.org/abs/2007.01282</a>.
+</div>
+<div id="ref-jiang2023flare" class="csl-entry" role="listitem">
+<span class="nocase">Jiang, Zhengbao, Frank F. Xu, Luyu Gao, et&nbsp;al.</span> 2023. <span>«Active Retrieval Augmented Generation»</span>. <em>EMNLP</em>. <a href="https://arxiv.org/abs/2305.06983">https://arxiv.org/abs/2305.06983</a>.
+</div>
+<div id="ref-johnson2017faiss" class="csl-entry" role="listitem">
+Johnson, Jeff, Matthijs Douze, y Hervé Jégou. 2017. <em>Billion-Scale Similarity Search with GPUs</em>. <a href="https://arxiv.org/abs/1702.08734">https://arxiv.org/abs/1702.08734</a>.
+</div>
+<div id="ref-khandelwal2019knnlm" class="csl-entry" role="listitem">
+Khandelwal, Urvashi, Omer Levy, Dan Jurafsky, Luke Zettlemoyer, y Mike Lewis. 2020. <span>«Generalization through Memorization: Nearest Neighbor Language Models»</span>. <em>ICLR</em>. <a href="https://arxiv.org/abs/1911.00172">https://arxiv.org/abs/1911.00172</a>.
+</div>
+<div id="ref-khattab2020colbert" class="csl-entry" role="listitem">
+Khattab, Omar, y Matei Zaharia. 2020. <span>«ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT»</span>. <em>SIGIR</em>. <a href="https://arxiv.org/abs/2004.12832">https://arxiv.org/abs/2004.12832</a>.
+</div>
+<div id="ref-lewis2020rag" class="csl-entry" role="listitem">
+<span class="nocase">Lewis, Patrick, Ethan Perez, Aleksandra Piktus, et&nbsp;al.</span> 2020. <span>«Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks»</span>. <em>NeurIPS</em>. <a href="https://arxiv.org/abs/2005.11401">https://arxiv.org/abs/2005.11401</a>.
+</div>
+<div id="ref-liu2023lostmiddle" class="csl-entry" role="listitem">
+<span class="nocase">Liu, Nelson F. et&nbsp;al.</span> 2023. <span>«Lost in the Middle: How Language Models Use Long Contexts»</span>. <em>TACL</em>. <a href="https://arxiv.org/abs/2307.03172">https://arxiv.org/abs/2307.03172</a>.
+</div>
+<div id="ref-malkov2016hnsw" class="csl-entry" role="listitem">
+Malkov, Yu A., y D. A. Yashunin. 2016. <em>Efficient and Robust Approximate Nearest Neighbor Search Using Hierarchical Navigable Small World Graphs</em>. <a href="https://arxiv.org/abs/1603.09320">https://arxiv.org/abs/1603.09320</a>.
+</div>
+<div id="ref-nogueira2020monot5" class="csl-entry" role="listitem">
+Nogueira, Rodrigo, Zhiying Jiang, Ronak Pradeep, y Jimmy Lin. 2020. <span>«Document Ranking with a Pretrained Sequence-to-Sequence Model»</span>. <em>Findings of EMNLP</em>. <a href="https://arxiv.org/abs/2003.06713">https://arxiv.org/abs/2003.06713</a>.
+</div>
+<div id="ref-nogueira2019monobert" class="csl-entry" role="listitem">
+Nogueira, Rodrigo, Wei Yang, Kyunghyun Cho, y Jimmy Lin. 2019. <em>Multi-Stage Document Ranking with BERT</em>. <a href="https://arxiv.org/abs/1910.14424">https://arxiv.org/abs/1910.14424</a>.
+</div>
+<div id="ref-robertson2009bm25" class="csl-entry" role="listitem">
+Robertson, Stephen, y Hugo Zaragoza. 2009. <span>«The Probabilistic Relevance Framework: BM25 and Beyond»</span>. <em>Foundations and Trends in Information Retrieval</em> 3 (4): 333-89. <a href="https://doi.org/10.1561/1500000019">https://doi.org/10.1561/1500000019</a>.
+</div>
+<div id="ref-shi2023replug" class="csl-entry" role="listitem">
+<span class="nocase">Shi, Weijia, Sewon Min, Michihiro Yasunaga, et&nbsp;al.</span> 2023. <em>REPLUG: Retrieval-Augmented Black-Box Language Models</em>. <a href="https://arxiv.org/abs/2301.12652">https://arxiv.org/abs/2301.12652</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/30-prompting.html" class="pagination-link" aria-label="Prompting e in-context learning">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Prompting e in-context learning</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/32-agentes.html" class="pagination-link" aria-label="Agentes, herramientas y memoria">
+        <span class="nav-page-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Agentes, herramientas y memoria</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

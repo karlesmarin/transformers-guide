@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>31&nbsp; Prompting e in-context learning – Cómo Atienden los Transformers</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/31-rag.html" rel="next">
+<link href="../chapters/29-generacion.html" rel="prev">
+<link href="../icon.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-995c9648545143e6e90874d2ed57f896.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Cómo Atienden los Transformers</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Buscar"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Navegación de palanca" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../es/index.html"> 
+<span class="menu-text">ES</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../en/index.html"> 
+<span class="menu-text">EN</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/29-generacion.html">Parte V — Usar transformers</a></li><li class="breadcrumb-item"><a href="../chapters/30-prompting.html"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Prompting e in-context learning</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefacio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/creditos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Créditos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte 0 — Orientación</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/00-orientacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Cómo usar esta guía</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte I — Fundamentos</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01-panorama.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">El panorama: qué es un transformer y por qué ganó</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02-tokens.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">De texto a tokens</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03-embeddings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Embeddings y el flujo residual</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04-atencion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">La atención como agregación ponderada</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-multicabeza.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Atención multi-cabeza</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/06-ffn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">La red feed-forward (FFN)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/07-residual-norm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Conexiones residuales y normalización</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/08-posicion-rope.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Información de posición y RoPE</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/09-bloque.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">El bloque completo y la profundidad</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/10-arquitecturas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Encoder, decoder y encoder-decoder</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/11-entrenamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Entrenar un transformer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/12-inferencia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Inferencia y decodificación</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte II — Cómo atienden a lo largo de la distancia</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/13-leer-mapas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Leer un mapa de atención</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/14-aliasing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Aliasing y las tres escalas de RoPE</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/15-ley-gamma.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">La ley de decaimiento A(d) ∝ d^−γ</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/16-atlas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">El atlas γ: el decaimiento medido en 42 modelos</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/17-sumideros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Sumideros de atención y concentración</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/18-taxonomia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Taxonomía de mecanismos de atención</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/19-contexto-largo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Extensión de contexto largo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/20-kv-cache.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Compresión de KV-cache en práctica</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte III — Una lente física sobre la atención</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/21-fases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Estructura de fases y la función de partición polilog</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/22-termodinamica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">El diccionario termodinámico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/23-fraccionario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">La vista de transporte fraccionario</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/24-grokking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Dinámica de entrenamiento y <em>grokking</em></span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte IV — Entrenamiento, adaptación y fine-tuning</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/25-preentrenamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Pre-entrenamiento a escala</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/26-finetuning-clasificacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Fine-tuning para clasificación y representación</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/27-alineamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Instruction tuning y alineamiento</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/28-peft.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Fine-tuning eficiente en parámetros (PEFT)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte V — Usar transformers</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/29-generacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Generación de texto en profundidad</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/30-prompting.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Prompting e in-context learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/31-rag.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Embeddings, búsqueda semántica y RAG</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/32-agentes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Agentes, herramientas y memoria</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/33-multimodal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Transformers multimodales</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte VI — Eficiencia, sistemas y despliegue</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/34-atencion-eficiente.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Atención eficiente</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/35-compresion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Cuantización, destilación y poda</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/36-serving.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Servir y desplegar</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte VII — Interpretabilidad y qué es real</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/37-interpretabilidad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Primer de interpretabilidad mecanicista</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/38-audit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Verificado, folclore y numerología</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/39-mapa2026.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">El mapa del paisaje de colapso 2026</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/40-etica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Ética, seguridad y limitaciones</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
+ <span class="menu-text">Parte VIII — Referencia</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R1-formulario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">R1 · Formulario maestro</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R2-cookbook.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R3-glosario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R3 · Glosario</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R4-medir-gamma.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R4 · Medir tu propio γ (y reproducir el atlas)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R9-tafagent.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R9 · Manual de tafagent</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R10-soluciones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R10 · Soluciones de los ejercicios</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#la-idea-en-una-frase" id="toc-la-idea-en-una-frase" class="nav-link active" data-scroll-target="#la-idea-en-una-frase"><span class="header-section-number">31.1</span> La idea en una frase</a></li>
+  <li><a href="#conceptos-clave-y-su-papel-en-el-transformer" id="toc-conceptos-clave-y-su-papel-en-el-transformer" class="nav-link" data-scroll-target="#conceptos-clave-y-su-papel-en-el-transformer"><span class="header-section-number">31.2</span> Conceptos clave y su papel en el transformer</a></li>
+  <li><a href="#in-context-learning-aprender-sin-reentrenar" id="toc-in-context-learning-aprender-sin-reentrenar" class="nav-link" data-scroll-target="#in-context-learning-aprender-sin-reentrenar"><span class="header-section-number">31.3</span> In-context learning: aprender sin reentrenar</a></li>
+  <li><a href="#qué-hace-funcionar-al-icl-lo-honesto-y-sorprendente" id="toc-qué-hace-funcionar-al-icl-lo-honesto-y-sorprendente" class="nav-link" data-scroll-target="#qué-hace-funcionar-al-icl-lo-honesto-y-sorprendente"><span class="header-section-number">31.4</span> Qué hace funcionar al ICL (lo honesto y sorprendente)</a>
+  <ul class="collapse">
+  <li><a href="#el-puente-a-la-interpretabilidad-cabezas-de-inducción" id="toc-el-puente-a-la-interpretabilidad-cabezas-de-inducción" class="nav-link" data-scroll-target="#el-puente-a-la-interpretabilidad-cabezas-de-inducción"><span class="header-section-number">31.4.1</span> El puente a la interpretabilidad: cabezas de inducción</a></li>
+  </ul></li>
+  <li><a href="#chain-of-thought-pedirle-que-razone-en-voz-alta" id="toc-chain-of-thought-pedirle-que-razone-en-voz-alta" class="nav-link" data-scroll-target="#chain-of-thought-pedirle-que-razone-en-voz-alta"><span class="header-section-number">31.5</span> Chain-of-Thought: pedirle que razone en voz alta</a></li>
+  <li><a href="#prompt-engineering-lo-práctico-y-lo-frágil" id="toc-prompt-engineering-lo-práctico-y-lo-frágil" class="nav-link" data-scroll-target="#prompt-engineering-lo-práctico-y-lo-frágil"><span class="header-section-number">31.6</span> Prompt engineering: lo práctico (y lo frágil)</a></li>
+  <li><a href="#los-límites-del-prompting" id="toc-los-límites-del-prompting" class="nav-link" data-scroll-target="#los-límites-del-prompting"><span class="header-section-number">31.7</span> Los límites del prompting</a></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">31.8</span> Resumen</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">31.9</span> Ejercicios</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias">Referencias</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/29-generacion.html">Parte V — Usar transformers</a></li><li class="breadcrumb-item"><a href="../chapters/30-prompting.html"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Prompting e in-context learning</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-prompting" class="quarto-section-identifier"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Prompting e in-context learning</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Dónde estamos.</strong> Seguimos en la Parte V (usar el modelo). El capítulo anterior trató <em>cómo</em> decodifica; este trata <em>qué le metes en el prompt</em>. Veremos el fenómeno más asombroso de los LLM —<strong>aprender de unos ejemplos en el contexto, sin tocar un solo peso</strong>—, qué lo hace funcionar de verdad (con un puente a la interpretabilidad: las <strong>cabezas de inducción</strong>), las técnicas de razonamiento (<strong>chain-of-thought</strong>, self-consistency, tree-of-thoughts) y los <strong>límites honestos</strong> del prompting.</p>
+</div>
+</div>
+</div>
+<section id="la-idea-en-una-frase" class="level2" data-number="31.1">
+<h2 data-number="31.1" class="anchored" data-anchor-id="la-idea-en-una-frase"><span class="header-section-number">31.1</span> La idea en una frase</h2>
+<p>Un LLM puede aprender una tarea a partir de <strong>unos pocos ejemplos en su propio contexto, en tiempo de inferencia y sin ningún paso de entrenamiento</strong> —pero el prompting <em>elicita</em> capacidades que ya tiene, no le <em>añade</em> conocimiento—.</p>
+</section>
+<section id="conceptos-clave-y-su-papel-en-el-transformer" class="level2" data-number="31.2">
+<h2 data-number="31.2" class="anchored" data-anchor-id="conceptos-clave-y-su-papel-en-el-transformer"><span class="header-section-number">31.2</span> Conceptos clave y su papel en el transformer</h2>
+<p>Antes de entrar en detalle, definimos los términos de este capítulo y <strong>para qué sirve cada uno</strong> dentro de un transformer:</p>
+<ul>
+<li><strong>In-context learning (ICL).</strong> <em>Definición:</em> resolver una tarea a partir de <strong>ejemplos en el propio prompt</strong>, sin actualizar pesos. <em>En el transformer:</em> aprendizaje en <strong>tiempo de inferencia</strong>; <em>elicita</em> capacidades, no las añade.</li>
+<li><strong>Zero / one / few-shot.</strong> <em>Definición:</em> dar cero, uno o varios ejemplos en el contexto. <em>En el transformer:</em> gradúa cuánta “demostración” cabe en la ventana para <strong>fijar la tarea</strong>.</li>
+<li><strong>Cabezas de inducción.</strong> <em>Definición:</em> cabezas de atención que completan patrones “[A][B]…[A]→[B]”. <em>En el transformer:</em> el <strong>mecanismo candidato</strong> detrás del ICL —emparejan el prefijo y <strong>copian</strong> lo que vino después—.</li>
+<li><strong>Chain-of-Thought (CoT).</strong> <em>Definición:</em> pedir al modelo que escriba los <strong>pasos intermedios</strong> antes de responder. <em>En el transformer:</em> despliega el cómputo en tokens → mejora el razonamiento multi-paso (emergente con la escala).</li>
+<li><strong>Self-consistency.</strong> <em>Definición:</em> muestrear <strong>varias cadenas</strong> de razonamiento y votar la mayoritaria. <em>En el transformer:</em> cancela los <strong>errores aleatorios</strong> de una sola cadena.</li>
+<li><strong>Tree-of-Thoughts (ToT).</strong> <em>Definición:</em> explorar un <strong>árbol</strong> de pasos con búsqueda y retroceso. <em>En el transformer:</em> añade planificación/búsqueda a la generación lineal.</li>
+<li><strong>Fragilidad del prompt (orden / formato).</strong> <em>Definición:</em> sensibilidad del resultado a cambios <strong>cosméticos</strong> del prompt. <em>En el transformer:</em> avisa de que mucha “ganancia” puede ser <strong>suerte de formato</strong>, no capacidad.</li>
+<li><strong>Prompt injection.</strong> <em>Definición:</em> instrucciones <strong>hostiles</strong> coladas como si fueran datos. <em>En el transformer:</em> explota que el LLM <strong>no separa</strong> datos de instrucciones.</li>
+</ul>
+<p>Con esto en mente, vamos por partes.</p>
+</section>
+<section id="in-context-learning-aprender-sin-reentrenar" class="level2" data-number="31.3">
+<h2 data-number="31.3" class="anchored" data-anchor-id="in-context-learning-aprender-sin-reentrenar"><span class="header-section-number">31.3</span> In-context learning: aprender sin reentrenar</h2>
+<p>Lo destapó <strong>GPT-3</strong> <span class="citation" data-cites="brown2020gpt3">(<a href="#ref-brown2020gpt3" role="doc-biblioref"><span class="nocase">Brown et&nbsp;al.</span> 2020</a>)</span>: dándole en el prompt unos pocos ejemplos de una tarea, el modelo la resuelve <strong>sin ninguna actualización de pesos</strong> —“las tareas y las demostraciones se especifican puramente como texto”—. Según cuántos ejemplos das:</p>
+<ul>
+<li><strong>Zero-shot:</strong> solo la descripción de la tarea, sin ejemplos.</li>
+<li><strong>One-shot:</strong> un ejemplo.</li>
+<li><strong>Few-shot:</strong> varios (los que quepan en la ventana de contexto).</li>
+</ul>
+<p>Lo asombroso es que esto es <strong>aprendizaje en tiempo de inferencia</strong>: el modelo no cambia; solo “se da cuenta”, dentro de una misma pasada, de qué le estás pidiendo.</p>
+<div class="analogia">
+<p><strong>🧩 Analogía — la nota adhesiva, no el curso.</strong> Es como darle a un empleado nuevo y espabilado <strong>un par de casos resueltos en un post-it</strong> en vez de mandarlo a un curso de formación. No le recableas el cerebro (no hay actualización de pesos): le enseñas el patrón y lo aplica al vuelo.</p>
+</div>
+</section>
+<section id="qué-hace-funcionar-al-icl-lo-honesto-y-sorprendente" class="level2" data-number="31.4">
+<h2 data-number="31.4" class="anchored" data-anchor-id="qué-hace-funcionar-al-icl-lo-honesto-y-sorprendente"><span class="header-section-number">31.4</span> Qué hace funcionar al ICL (lo honesto y sorprendente)</h2>
+<p>Aquí viene lo que rompe la intuición. Uno supondría que el ICL funciona porque el modelo <strong>aprende el mapeo correcto</strong> entrada→etiqueta de los ejemplos. Pues <strong>no del todo</strong>:</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Las etiquetas correctas importan menos de lo que crees">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>⚠ Las etiquetas correctas importan menos de lo que crees
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Min et al.</strong> <span class="citation" data-cites="min2022rethinking">(<a href="#ref-min2022rethinking" role="doc-biblioref">Min et&nbsp;al. 2022</a>)</span> mostraron que <strong>sustituir las etiquetas de los ejemplos por etiquetas ALEATORIAS apenas baja el rendimiento</strong> (caída de 0-5 %, en 12 modelos incluido GPT-3). Lo que de verdad importa es <strong>el formato, el espacio de etiquetas y la distribución del texto de entrada</strong> —no el emparejamiento correcto—. Es decir: los ejemplos le enseñan al modelo <strong>qué tipo de tarea es y cómo responder</strong>, más que la respuesta en sí. <em>(Matiz honesto: <strong>Yoo et al.</strong> <span class="citation" data-cites="yoo2022groundtruth">(<a href="#ref-yoo2022groundtruth" role="doc-biblioref"><span class="nocase">Yoo et&nbsp;al.</span> 2022</a>)</span> replican que esto depende de la configuración —con plantillas más escuetas o modelos pequeños, las etiquetas correctas sí importan—; tómalo como matizado, no absoluto.)</em></p>
+</div>
+</div>
+<section id="el-puente-a-la-interpretabilidad-cabezas-de-inducción" class="level3" data-number="31.4.1">
+<h3 data-number="31.4.1" class="anchored" data-anchor-id="el-puente-a-la-interpretabilidad-cabezas-de-inducción"><span class="header-section-number">31.4.1</span> El puente a la interpretabilidad: cabezas de inducción</h3>
+<p>¿Hay un <strong>mecanismo</strong> identificable detrás del ICL? El candidato más fuerte son las <strong>cabezas de inducción</strong> <span class="citation" data-cites="olsson2022induction">(<a href="#ref-olsson2022induction" role="doc-biblioref"><span class="nocase">Olsson et&nbsp;al.</span> 2022</a>)</span>, que ya asomaron en el Cap. 5. Son cabezas de atención que implementan una regla de <strong>completar patrones</strong>:</p>
+<blockquote class="blockquote">
+<p><strong>“[A][B] … [A] → [B]”</strong>: “la última vez que vi A, le siguió B; ahora veo A otra vez → predigo B”.</p>
+</blockquote>
+<p>Se construye con dos piezas (del marco de circuitos <span class="citation" data-cites="elhage2021framework">(<a href="#ref-elhage2021framework" role="doc-biblioref"><span class="nocase">Elhage et&nbsp;al.</span> 2021</a>)</span>): una cabeza de <em>token previo</em> + la cabeza de inducción, combinando <strong>emparejar el prefijo</strong> (atender a dónde apareció antes el token actual) y <strong>copiar</strong> (subir el logit de lo que vino después).</p>
+<div class="analogia">
+<p><strong>🧩 Analogía — el autocompletado que casa patrones.</strong> Una cabeza de inducción es como un autocompletado con memoria: recuerda <em>“la última vez que vi esto, vino aquello”</em> y lo <strong>copia</strong>. Esa simple regla, repetida, explica buena parte de por qué el modelo “pilla” un patrón de tus ejemplos.</p>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="🧠 Curiosidad — nacen de golpe, en un cambio de fase">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>🧠 Curiosidad — nacen de golpe, en un cambio de fase
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Lo fascinante (y conecta con nuestro Cap. 24, grokking): las cabezas de inducción <strong>se forman de golpe</strong>, en un <strong>cambio de fase</strong> durante el entrenamiento que coincide con un <strong>salto brusco</strong> en la capacidad de ICL —visible como un “bache” en la curva de pérdida— <span class="citation" data-cites="olsson2022induction">(<a href="#ref-olsson2022induction" role="doc-biblioref"><span class="nocase">Olsson et&nbsp;al.</span> 2022</a>)</span>. Honestidad de los propios autores: el caso de que las cabezas de inducción <strong>expliquen</strong> el ICL es <em>“más fuerte para modelos pequeños que para los grandes”</em> (en los grandes la evidencia es circunstancial).</p>
+</div>
+</div>
+<p>¿Y qué <em>es</em>, en el fondo, el ICL? No está zanjado. Conviven varias explicaciones, parcialmente reconciliables: <strong>inferencia bayesiana implícita</strong> —inferir un concepto latente común a los ejemplos— <span class="citation" data-cites="xie2021bayesian">(<a href="#ref-xie2021bayesian" role="doc-biblioref">Xie et&nbsp;al. 2022</a>)</span>; <strong>descenso de gradiente implícito</strong> —una capa de atención lineal equivale a un paso de gradiente, “mesa-optimización”— <span class="citation" data-cites="vonoswald2022gd">(<a href="#ref-vonoswald2022gd" role="doc-biblioref"><span class="nocase">Oswald et&nbsp;al.</span> 2023</a>)</span>; y la evidencia de que los transformers aprenden in-context <strong>clases de funciones</strong> enteras (lineales, árboles…) <span class="citation" data-cites="garg2022functionclasses">(<a href="#ref-garg2022functionclasses" role="doc-biblioref">Garg et&nbsp;al. 2022</a>)</span>. <strong>Honesto:</strong> las dos últimas se han probado sobre todo en <em>settings</em> lineales/de juguete, no en LLM de frontera.</p>
+</section>
+</section>
+<section id="chain-of-thought-pedirle-que-razone-en-voz-alta" class="level2" data-number="31.5">
+<h2 data-number="31.5" class="anchored" data-anchor-id="chain-of-thought-pedirle-que-razone-en-voz-alta"><span class="header-section-number">31.5</span> Chain-of-Thought: pedirle que razone en voz alta</h2>
+<p>Para tareas de <strong>varios pasos</strong> (matemáticas, lógica), una técnica simple dispara el rendimiento: pedirle al modelo que <strong>muestre los pasos intermedios</strong> antes de la respuesta.</p>
+<ul>
+<li><strong>Chain-of-Thought (CoT)</strong> <span class="citation" data-cites="wei2022cot">(<a href="#ref-wei2022cot" role="doc-biblioref">Wei et&nbsp;al. 2022</a>)</span>: incluir en los ejemplos el razonamiento paso a paso. En GSM8K (problemas de mates) con PaLM-540B, pasó de <strong>17,9 %</strong> (prompting normal) a <strong>56,9 %</strong>. Clave honesta: es una <strong>capacidad emergente con la escala</strong> (~100 000 M de parámetros); en modelos pequeños <strong>no ayuda</strong> —producen cadenas fluidas pero ilógicas—.</li>
+<li><strong>Zero-shot CoT</strong> <span class="citation" data-cites="kojima2022zeroshot">(<a href="#ref-kojima2022zeroshot" role="doc-biblioref">Kojima et&nbsp;al. 2022</a>)</span>: ni siquiera hacen falta ejemplos; basta añadir <strong>“Pensemos paso a paso”</strong>. En GSM8K subió de <strong>10,4 %</strong> a <strong>40,7 %</strong> solo con esa frase.</li>
+</ul>
+<div class="analogia">
+<p><strong>🧩 Analogía — mostrar el desarrollo.</strong> CoT es como en un examen de mates: en vez de soltar el resultado a bote pronto, <strong>escribes el desarrollo</strong>. Desglosar el problema en pasos hace que cada paso sea más fácil y reduce los errores de “cálculo mental”.</p>
+</div>
+<ul>
+<li><strong>Self-consistency</strong> <span class="citation" data-cites="wang2022selfconsistency">(<a href="#ref-wang2022selfconsistency" role="doc-biblioref">Wang et&nbsp;al. 2023</a>)</span>: en vez de una sola cadena (greedy), <strong>muestrea varias</strong> cadenas de razonamiento distintas y <strong>vota la respuesta mayoritaria</strong>. Gran mejora sobre CoT a secas (+17,9 % en GSM8K con PaLM-540B).</li>
+<li><strong>Tree-of-Thoughts (ToT)</strong> <span class="citation" data-cites="yao2023tot">(<a href="#ref-yao2023tot" role="doc-biblioref">Yao, Yu, et&nbsp;al. 2023</a>)</span>: explora un <strong>árbol</strong> de pasos de razonamiento con búsqueda, auto-evaluación y <strong>retroceso</strong> (<em>backtracking</em>). En el juego del 24, GPT-4 pasó de <strong>4 %</strong> (CoT) a <strong>74 %</strong> (ToT). Brilla en tareas de planificación/búsqueda.</li>
+</ul>
+<p><em>(Una variante, <strong>ReAct</strong> <span class="citation" data-cites="yao2022react">(<a href="#ref-yao2022react" role="doc-biblioref">Yao, Zhao, et&nbsp;al. 2023</a>)</span>, intercala razonamiento con <strong>acciones</strong> —usar herramientas—; es el puente al Cap. 32, agentes.)</em></p>
+<div class="analogia">
+<p><strong>🧩 Analogía — el voto mayoritario.</strong> Self-consistency es pedir a <strong>varias personas que resuelvan el problema por separado</strong> y quedarse con la respuesta en la que coincide la mayoría: los errores aleatorios de cada una se cancelan, la respuesta correcta tiende a repetirse.</p>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Honesto — el razonamiento escrito puede no ser el real">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>⚠ Honesto — el razonamiento escrito puede no ser el real
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>CoT ayuda <strong>sobre todo en tareas matemáticas/simbólicas/multi-paso</strong>, no en todo. Y hay un debate de <strong>fidelidad</strong>: el razonamiento que el modelo <em>escribe</em> puede <strong>no reflejar</strong> lo que de verdad lo lleva a la respuesta. <strong>Turpin et al.</strong> <span class="citation" data-cites="turpin2023unfaithful">(<a href="#ref-turpin2023unfaithful" role="doc-biblioref">Turpin et&nbsp;al. 2023</a>)</span> sesgaron el prompt (p.&nbsp;ej. que la respuesta correcta fuera siempre “(A)”); el modelo <strong>cambiaba su respuesta hacia el sesgo pero no lo mencionaba</strong> en su cadena —la racionalizaba—, con caídas de hasta 36 % de precisión. Es un debate activo: el CoT <em>puede</em> ser una racionalización <em>post-hoc</em>, no la huella del cálculo real.</p>
+</div>
+</div>
+</section>
+<section id="prompt-engineering-lo-práctico-y-lo-frágil" class="level2" data-number="31.6">
+<h2 data-number="31.6" class="anchored" data-anchor-id="prompt-engineering-lo-práctico-y-lo-frágil"><span class="header-section-number">31.6</span> Prompt engineering: lo práctico (y lo frágil)</h2>
+<p>El prompting funciona, pero es <strong>sorprendentemente frágil</strong>:</p>
+<ul>
+<li><strong>El orden de los ejemplos importa muchísimo</strong> <span class="citation" data-cites="lu2021ordered">(<a href="#ref-lu2021ordered" role="doc-biblioref">Lu et&nbsp;al. 2022</a>)</span>: solo <strong>reordenar</strong> los mismos <em>few-shot</em> puede mover el rendimiento entre <strong>casi-SOTA y el azar</strong> (en SST-2, de &gt;85 % a ~50 %). Y <strong>no desaparece con la escala</strong>.</li>
+<li><strong>El formato importa</strong> <span class="citation" data-cites="sclar2023formatspread">(<a href="#ref-sclar2023formatspread" role="doc-biblioref">Sclar et&nbsp;al. 2024</a>)</span>: cambios cosméticos (separadores, mayúsculas, espacios) provocan <strong>hasta 76 puntos</strong> de diferencia de precisión. Mucha “ganancia” reportada puede ser <strong>suerte de formato</strong>, no capacidad.</li>
+<li>Buenas prácticas: instrucciones claras, delimitadores/estructura, roles <em>system</em>/<em>user</em>.</li>
+<li><em>(Los <strong>soft prompts</strong> —prefijos aprendidos por gradiente— se trataron en el Cap. 28; aquí hablamos de prompts de <strong>texto</strong>.)</em></li>
+</ul>
+</section>
+<section id="los-límites-del-prompting" class="level2" data-number="31.7">
+<h2 data-number="31.7" class="anchored" data-anchor-id="los-límites-del-prompting"><span class="header-section-number">31.7</span> Los límites del prompting</h2>
+<ul>
+<li><strong>Fragilidad</strong> (orden, formato, redacción): hace difícil evaluar de forma fiable y sobreestima capacidades.</li>
+<li><strong>El techo:</strong> el prompting <strong>elicita</strong> lo que el modelo aprendió en el preentrenamiento, <strong>no añade conocimiento</strong> —la <em>hipótesis de alineamiento superficial</em> del Cap. 27 <span class="citation" data-cites="zhou2023lima">(<a href="#ref-zhou2023lima" role="doc-biblioref"><span class="nocase">Zhou et&nbsp;al.</span> 2023</a>)</span>—.</li>
+<li><strong>Seguridad:</strong> los prompts hostiles pueden secuestrar la aplicación (<em>prompt injection</em> <span class="citation" data-cites="greshake2023injection">(<a href="#ref-greshake2023injection" role="doc-biblioref">Greshake et&nbsp;al. 2023</a>)</span>) porque el LLM <strong>difumina la línea entre datos e instrucciones</strong> —lo veremos en seguridad—.</li>
+<li><strong>Cuándo usar qué:</strong> <em>prompting</em> para elicitar capacidades y prototipar; <strong>fine-tuning</strong> (Cap. 28) para fijar formato/estilo o especializar; <strong>RAG</strong> (Cap. 31) para inyectar conocimiento externo o actualizado que el modelo no tiene.</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled" title="🧪 Pruébalo — tafagent">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>🧪 Pruébalo — tafagent
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>La capacidad de ICL nace, según <span class="citation" data-cites="olsson2022induction">(<a href="#ref-olsson2022induction" role="doc-biblioref"><span class="nocase">Olsson et&nbsp;al.</span> 2022</a>)</span>, en un <strong>cambio de fase</strong> donde se forman las cabezas de inducción. <a href="https://karlesmarin.github.io/tafagent/">tafagent</a> incluye un <strong>detector de fase de cabezas de inducción</strong> (basado en <span class="math inline">\(\Delta\gamma\)</span>): te dice si un modelo <strong>ya cruzó</strong> esa transición —es decir, si cabe esperar que el <em>few-shot</em> le funcione bien— sin tener que reentrenarlo.</p>
+</div>
+</div>
+</section>
+<section id="resumen" class="level2" data-number="31.8">
+<h2 data-number="31.8" class="anchored" data-anchor-id="resumen"><span class="header-section-number">31.8</span> Resumen</h2>
+<ul>
+<li><strong>ICL</strong> <span class="citation" data-cites="brown2020gpt3">(<a href="#ref-brown2020gpt3" role="doc-biblioref"><span class="nocase">Brown et&nbsp;al.</span> 2020</a>)</span>: aprender de ejemplos en el contexto <strong>sin actualizar pesos</strong> (zero/one/few-shot).</li>
+<li><strong>Qué lo impulsa (honesto):</strong> las <strong>etiquetas correctas importan menos</strong> que el formato y la distribución <span class="citation" data-cites="min2022rethinking">(<a href="#ref-min2022rethinking" role="doc-biblioref">Min et&nbsp;al. 2022</a>)</span> (matizado por <span class="citation" data-cites="yoo2022groundtruth">(<a href="#ref-yoo2022groundtruth" role="doc-biblioref"><span class="nocase">Yoo et&nbsp;al.</span> 2022</a>)</span>); mecanismo candidato = <strong>cabezas de inducción</strong> (regla “[A][B]…[A]→[B]”, nacen en un <strong>cambio de fase</strong>) <span class="citation" data-cites="olsson2022induction">(<a href="#ref-olsson2022induction" role="doc-biblioref"><span class="nocase">Olsson et&nbsp;al.</span> 2022</a>)</span>; el <em>qué es</em> el ICL <strong>no está zanjado</strong> (Bayes / GD implícito / clases de funciones).</li>
+<li><strong>Razonamiento:</strong> <strong>CoT</strong> (emergente ~100B; 17,9→56,9 % GSM8K), <strong>zero-shot CoT</strong> (“pensemos paso a paso”), <strong>self-consistency</strong> (voto mayoritario), <strong>ToT</strong> (búsqueda con retroceso). <strong>Honesto:</strong> el CoT puede ser <strong>infiel</strong> (racionalización) <span class="citation" data-cites="turpin2023unfaithful">(<a href="#ref-turpin2023unfaithful" role="doc-biblioref">Turpin et&nbsp;al. 2023</a>)</span>.</li>
+<li><strong>Práctica:</strong> frágil al <strong>orden</strong> <span class="citation" data-cites="lu2021ordered">(<a href="#ref-lu2021ordered" role="doc-biblioref">Lu et&nbsp;al. 2022</a>)</span> y al <strong>formato</strong> <span class="citation" data-cites="sclar2023formatspread">(<a href="#ref-sclar2023formatspread" role="doc-biblioref">Sclar et&nbsp;al. 2024</a>)</span>.</li>
+<li><strong>Límites:</strong> elicita, no añade conocimiento (techo del preentrenamiento); <em>prompt injection</em>; prompting vs fine-tune vs RAG.</li>
+</ul>
+<p><strong>Siguiente (Capítulo 31):</strong> cuando el modelo necesita conocimiento que <strong>no tiene</strong> (hechos actuales, documentos privados), no basta el prompt: hay que <strong>recuperarlo</strong> y dárselo. Entramos en <em>embeddings</em>, búsqueda semántica y <strong>RAG</strong>.</p>
+</section>
+<section id="ejercicios" class="level2" data-number="31.9">
+<h2 data-number="31.9" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">31.9</span> Ejercicios</h2>
+<ol type="1">
+<li><strong>Sin gradientes.</strong> ¿Qué significa que el ICL ocurre “en tiempo de inferencia”? ¿En qué se diferencia de un <em>fine-tuning</em>?</li>
+<li><strong>Etiquetas aleatorias.</strong> ¿Qué demostró Min et al.&nbsp;al barajar las etiquetas de los ejemplos? ¿Qué tres cosas sí importan entonces?</li>
+<li><strong>Cabezas de inducción.</strong> Explica la regla “[A][B]…[A]→[B]” y por qué es un buen candidato a mecanismo del ICL. ¿Para qué modelos es más fuerte la evidencia?</li>
+<li><strong>CoT y escala.</strong> ¿Por qué el chain-of-thought <strong>no</strong> ayuda a un modelo pequeño? ¿Qué es la self-consistency y por qué mejora?</li>
+<li><strong>Fragilidad.</strong> Da dos formas en que un mismo prompt puede dar resultados muy distintos sin cambiar su contenido.</li>
+<li><strong>Fidelidad.</strong> ¿Qué mostró Turpin et al.&nbsp;sobre la relación entre el razonamiento escrito y la respuesta real?</li>
+</ol>
+</section>
+<section id="referencias" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="referencias">Referencias</h2>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-brown2020gpt3" class="csl-entry" role="listitem">
+<span class="nocase">Brown, Tom B. et&nbsp;al.</span> 2020. <span>«Language Models are Few-Shot Learners (GPT-3)»</span>. <em>NeurIPS</em>. <a href="https://arxiv.org/abs/2005.14165">https://arxiv.org/abs/2005.14165</a>.
+</div>
+<div id="ref-elhage2021framework" class="csl-entry" role="listitem">
+<span class="nocase">Elhage, Nelson et&nbsp;al.</span> 2021. <span>«A Mathematical Framework for Transformer Circuits»</span>. <em>Transformer Circuits Thread (Anthropic)</em>. <a href="https://transformer-circuits.pub/2021/framework/index.html">https://transformer-circuits.pub/2021/framework/index.html</a>.
+</div>
+<div id="ref-garg2022functionclasses" class="csl-entry" role="listitem">
+Garg, Shivam, Dimitris Tsipras, Percy Liang, y Gregory Valiant. 2022. <span>«What Can Transformers Learn In-Context? A Case Study of Simple Function Classes»</span>. <em>NeurIPS</em>. <a href="https://arxiv.org/abs/2208.01066">https://arxiv.org/abs/2208.01066</a>.
+</div>
+<div id="ref-greshake2023injection" class="csl-entry" role="listitem">
+Greshake, Kai, Sahar Abdelnabi, Shailesh Mishra, Christoph Endres, Thorsten Holz, y Mario Fritz. 2023. <em>Not What You’ve Signed Up For: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection</em>. <a href="https://arxiv.org/abs/2302.12173">https://arxiv.org/abs/2302.12173</a>.
+</div>
+<div id="ref-kojima2022zeroshot" class="csl-entry" role="listitem">
+Kojima, Takeshi, Shixiang Shane Gu, Machel Reid, Yutaka Matsuo, y Yusuke Iwasawa. 2022. <span>«Large Language Models are Zero-Shot Reasoners»</span>. <em>NeurIPS</em>. <a href="https://arxiv.org/abs/2205.11916">https://arxiv.org/abs/2205.11916</a>.
+</div>
+<div id="ref-lu2021ordered" class="csl-entry" role="listitem">
+Lu, Yao, Max Bartolo, Alastair Moore, Sebastian Riedel, y Pontus Stenetorp. 2022. <span>«Fantastically Ordered Prompts and Where to Find Them: Overcoming Few-Shot Prompt Order Sensitivity»</span>. <em>ACL</em>. <a href="https://arxiv.org/abs/2104.08786">https://arxiv.org/abs/2104.08786</a>.
+</div>
+<div id="ref-min2022rethinking" class="csl-entry" role="listitem">
+Min, Sewon, Xinxi Lyu, Ari Holtzman, et&nbsp;al. 2022. <span>«Rethinking the Role of Demonstrations: What Makes In-Context Learning Work?»</span> <em>EMNLP</em>. <a href="https://arxiv.org/abs/2202.12837">https://arxiv.org/abs/2202.12837</a>.
+</div>
+<div id="ref-olsson2022induction" class="csl-entry" role="listitem">
+<span class="nocase">Olsson, Catherine et&nbsp;al.</span> 2022. <span>«In-context Learning and Induction Heads»</span>. <em>Transformer Circuits Thread (Anthropic)</em>. <a href="https://arxiv.org/abs/2209.11895">https://arxiv.org/abs/2209.11895</a>.
+</div>
+<div id="ref-vonoswald2022gd" class="csl-entry" role="listitem">
+<span class="nocase">Oswald, Johannes von et&nbsp;al.</span> 2023. <span>«Transformers Learn In-Context by Gradient Descent»</span>. <em>ICML</em>. <a href="https://arxiv.org/abs/2212.07677">https://arxiv.org/abs/2212.07677</a>.
+</div>
+<div id="ref-sclar2023formatspread" class="csl-entry" role="listitem">
+Sclar, Melanie, Yejin Choi, Yulia Tsvetkov, y Alane Suhr. 2024. <span>«Quantifying Language Models’ Sensitivity to Spurious Features in Prompt Design»</span>. <em>ICLR</em>. <a href="https://arxiv.org/abs/2310.11324">https://arxiv.org/abs/2310.11324</a>.
+</div>
+<div id="ref-turpin2023unfaithful" class="csl-entry" role="listitem">
+Turpin, Miles, Julian Michael, Ethan Perez, y Samuel R. Bowman. 2023. <span>«Language Models Don’t Always Say What They Think: Unfaithful Explanations in Chain-of-Thought Prompting»</span>. <em>NeurIPS</em>. <a href="https://arxiv.org/abs/2305.04388">https://arxiv.org/abs/2305.04388</a>.
+</div>
+<div id="ref-wang2022selfconsistency" class="csl-entry" role="listitem">
+Wang, Xuezhi, Jason Wei, Dale Schuurmans, et&nbsp;al. 2023. <span>«Self-Consistency Improves Chain of Thought Reasoning in Language Models»</span>. <em>ICLR</em>. <a href="https://arxiv.org/abs/2203.11171">https://arxiv.org/abs/2203.11171</a>.
+</div>
+<div id="ref-wei2022cot" class="csl-entry" role="listitem">
+Wei, Jason, Xuezhi Wang, Dale Schuurmans, et&nbsp;al. 2022. <span>«Chain-of-Thought Prompting Elicits Reasoning in Large Language Models»</span>. <em>NeurIPS</em>. <a href="https://arxiv.org/abs/2201.11903">https://arxiv.org/abs/2201.11903</a>.
+</div>
+<div id="ref-xie2021bayesian" class="csl-entry" role="listitem">
+Xie, Sang Michael, Aditi Raghunathan, Percy Liang, y Tengyu Ma. 2022. <span>«An Explanation of In-context Learning as Implicit Bayesian Inference»</span>. <em>ICLR</em>. <a href="https://arxiv.org/abs/2111.02080">https://arxiv.org/abs/2111.02080</a>.
+</div>
+<div id="ref-yao2023tot" class="csl-entry" role="listitem">
+Yao, Shunyu, Dian Yu, Jeffrey Zhao, et&nbsp;al. 2023. <span>«Tree of Thoughts: Deliberate Problem Solving with Large Language Models»</span>. <em>NeurIPS</em>. <a href="https://arxiv.org/abs/2305.10601">https://arxiv.org/abs/2305.10601</a>.
+</div>
+<div id="ref-yao2022react" class="csl-entry" role="listitem">
+Yao, Shunyu, Jeffrey Zhao, Dian Yu, et&nbsp;al. 2023. <span>«ReAct: Synergizing Reasoning and Acting in Language Models»</span>. <em>ICLR</em>. <a href="https://arxiv.org/abs/2210.03629">https://arxiv.org/abs/2210.03629</a>.
+</div>
+<div id="ref-yoo2022groundtruth" class="csl-entry" role="listitem">
+<span class="nocase">Yoo, Kang Min et&nbsp;al.</span> 2022. <span>«Ground-Truth Labels Matter: A Deeper Look into Input-Label Demonstrations»</span>. <em>EMNLP</em>. <a href="https://arxiv.org/abs/2205.12685">https://arxiv.org/abs/2205.12685</a>.
+</div>
+<div id="ref-zhou2023lima" class="csl-entry" role="listitem">
+<span class="nocase">Zhou, Chunting et&nbsp;al.</span> 2023. <span>«LIMA: Less Is More for Alignment»</span>. <em>NeurIPS</em>. <a href="https://arxiv.org/abs/2305.11206">https://arxiv.org/abs/2305.11206</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/29-generacion.html" class="pagination-link" aria-label="Generación de texto en profundidad">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Generación de texto en profundidad</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/31-rag.html" class="pagination-link" aria-label="Embeddings, búsqueda semántica y RAG">
+        <span class="nav-page-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Embeddings, búsqueda semántica y RAG</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

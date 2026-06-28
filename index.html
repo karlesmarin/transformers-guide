@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Transformers Guide — Cómo Atienden los Transformers / How Transformers Attend</title>
+  <link rel="icon" type="image/png" href="icon.png">
+  <script>
+    // Auto-enter by browser language: es → Español, en → English.
+    // Any other language (or ?choose) → show the selection page below.
+    (function () {
+      try {
+        if (location.search.indexOf('choose') !== -1) return;        // manual override: /?choose
+        var langs = (navigator.languages && navigator.languages.length)
+                      ? navigator.languages : [navigator.language || ''];
+        for (var i = 0; i < langs.length; i++) {
+          var l = (langs[i] || '').toLowerCase();
+          if (l.indexOf('es') === 0) { location.replace('es/index.html'); return; }
+          if (l.indexOf('en') === 0) { location.replace('en/index.html'); return; }
+        }
+        // neither es nor en → fall through and render the chooser
+      } catch (e) { /* if anything fails, show the chooser */ }
+    })();
+  </script>
+  <style>
+    :root { --ink:#0A2A43; --blue:#0072B2; --sky:#56B4E9; --soft:#EAF3F9; }
+    * { box-sizing: border-box; }
+    html,body { height:100%; margin:0; }
+    body {
+      font-family: Georgia, "Times New Roman", serif;
+      background: radial-gradient(1200px 600px at 50% -10%, #103a5c 0%, var(--ink) 60%);
+      color:#F5F7FA; display:flex; align-items:center; justify-content:center;
+      min-height:100%; padding:2rem; text-align:center;
+    }
+    .card { max-width: 640px; }
+    .gamma {
+      font-size:5.5rem; font-weight:bold; line-height:1; margin:0 0 .4rem;
+      color:#fff; font-family:"DejaVu Sans",Arial,sans-serif;
+    }
+    h1 { font-size:2.4rem; margin:.2rem 0 .1rem; letter-spacing:.5px; }
+    .sub { color:#cfe3f2; font-size:1.05rem; margin:.2rem 0 .3rem; }
+    .desc { color:#9db8cd; font-size:.95rem; margin:0 0 2rem; }
+    .langs { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+    a.btn {
+      display:block; min-width:210px; padding:1.1rem 1.4rem; border-radius:12px;
+      text-decoration:none; color:#fff; background:rgba(86,180,233,.12);
+      border:1px solid #2f6f9e; transition:all .15s ease;
+    }
+    a.btn:hover { background:var(--blue); border-color:var(--blue); transform:translateY(-2px); }
+    a.btn .big { display:block; font-size:1.5rem; font-weight:bold; }
+    a.btn .small { display:block; font-size:.9rem; color:#cfe3f2; margin-top:.2rem; }
+    a.btn:hover .small { color:#eaf3f9; }
+    footer { margin-top:2.4rem; color:#7f9bb3; font-size:.82rem; }
+    footer a { color:#9db8cd; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="gamma">&gamma;</div>
+    <h1>Transformers Guide</h1>
+    <p class="sub">Una guía de campo y referencia · A field guide &amp; reference</p>
+    <p class="desc">De los tokens al contexto largo — cada fórmula verificada, medida y construida desde cero.<br>
+      From tokens to long context — every formula verified, measured and built from scratch.</p>
+    <nav class="langs">
+      <a class="btn" href="es/index.html" hreflang="es">
+        <span class="big">Español</span>
+        <span class="small">Cómo Atienden los Transformers</span>
+      </a>
+      <a class="btn" href="en/index.html" hreflang="en">
+        <span class="big">English</span>
+        <span class="small">How Transformers Attend</span>
+      </a>
+    </nav>
+    <footer>
+      Carles Marín · <a href="https://karlesmarin.github.io/tafagent/">tafagent</a>
+    </footer>
+  </main>
+</body>
+</html>

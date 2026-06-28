@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>47&nbsp; R10 · Exercise solutions – How Transformers Attend</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/R9-tafagent.html" rel="prev">
+<link href="../icon.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-995c9648545143e6e90874d2ed57f896.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">How Transformers Attend</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../es/index.html"> 
+<span class="menu-text">ES</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../en/index.html"> 
+<span class="menu-text">EN</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/R1-formulario.html">Part VIII — Reference</a></li><li class="breadcrumb-item"><a href="../chapters/R10-soluciones.html"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R10 · Exercise solutions</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/creditos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Credits</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part 0 — Orientation</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/00-orientacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">How to use this guide</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part I — Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01-panorama.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The panorama: what a transformer is and why it won</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02-tokens.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">From text to tokens</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03-embeddings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Embeddings and the residual stream</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04-atencion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Attention as weighted aggregation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-multicabeza.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Multi-head attention</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/06-ffn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The feed-forward network (FFN)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/07-residual-norm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Residual connections and normalization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/08-posicion-rope.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Positional information and RoPE</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/09-bloque.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The complete block and depth</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/10-arquitecturas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Encoder, decoder and encoder-decoder</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/11-entrenamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Training a transformer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/12-inferencia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Inference and decoding</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part II — How transformers attend over distance</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/13-leer-mapas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Reading an attention map</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/14-aliasing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Aliasing and the three scales of RoPE</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/15-ley-gamma.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">The decay law A(d) ∝ d^−γ</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/16-atlas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">The γ atlas: decay measured across 42 models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/17-sumideros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Attention sinks and concentration</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/18-taxonomia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">A taxonomy of attention mechanisms</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/19-contexto-largo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Long-context extension</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/20-kv-cache.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">KV-cache compression in practice</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part III — A physicist’s lens on attention</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/21-fases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Phase structure and the polylog partition function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/22-termodinamica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">The thermodynamic dictionary</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/23-fraccionario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">The fractional transport view</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/24-grokking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Training dynamics and <em>grokking</em></span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part IV — Training, adaptation and fine-tuning</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/25-preentrenamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Pre-training at scale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/26-finetuning-clasificacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Fine-tuning for classification and representation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/27-alineamiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Instruction tuning and alignment</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/28-peft.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Parameter-efficient fine-tuning (PEFT)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part V — Using transformers</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/29-generacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Text generation in depth</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/30-prompting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Prompting and in-context learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/31-rag.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Embeddings, semantic search and RAG</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/32-agentes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Agents, tools and memory</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/33-multimodal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Multimodal transformers</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part VI — Efficiency, systems and deployment</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/34-atencion-eficiente.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Efficient attention</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/35-compresion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Quantization, distillation and pruning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/36-serving.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Serving and deployment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part VII — Interpretability and what is real</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/37-interpretabilidad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">A primer on mechanistic interpretability</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/38-audit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Verified, folklore and numerology</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/39-mapa2026.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">The map of the 2026 collapse landscape</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/40-etica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Ethics, safety and limitations</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part VIII — Reference</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R1-formulario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">R1 · Master formulary</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R2-cookbook.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R3-glosario.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R3 · Glossary</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R4-medir-gamma.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R4 · Measuring your own γ (and reproducing the atlas)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R9-tafagent.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R9 · tafagent manual</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/R10-soluciones.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R10 · Exercise solutions</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#ch.-1-overview" id="toc-ch.-1-overview" class="nav-link active" data-scroll-target="#ch.-1-overview"><span class="header-section-number">47.1</span> Ch. 1 · Overview</a></li>
+  <li><a href="#ch.-2-tokens" id="toc-ch.-2-tokens" class="nav-link" data-scroll-target="#ch.-2-tokens"><span class="header-section-number">47.2</span> Ch. 2 · Tokens</a></li>
+  <li><a href="#ch.-3-embeddings-and-the-residual-stream" id="toc-ch.-3-embeddings-and-the-residual-stream" class="nav-link" data-scroll-target="#ch.-3-embeddings-and-the-residual-stream"><span class="header-section-number">47.3</span> Ch. 3 · Embeddings and the residual stream</a></li>
+  <li><a href="#ch.-4-attention" id="toc-ch.-4-attention" class="nav-link" data-scroll-target="#ch.-4-attention"><span class="header-section-number">47.4</span> Ch. 4 · Attention</a></li>
+  <li><a href="#ch.-5-multi-head-attention" id="toc-ch.-5-multi-head-attention" class="nav-link" data-scroll-target="#ch.-5-multi-head-attention"><span class="header-section-number">47.5</span> Ch. 5 · Multi-head attention</a></li>
+  <li><a href="#ch.-6-ffn" id="toc-ch.-6-ffn" class="nav-link" data-scroll-target="#ch.-6-ffn"><span class="header-section-number">47.6</span> Ch. 6 · FFN</a></li>
+  <li><a href="#ch.-7-residual-and-normalization" id="toc-ch.-7-residual-and-normalization" class="nav-link" data-scroll-target="#ch.-7-residual-and-normalization"><span class="header-section-number">47.7</span> Ch. 7 · Residual and normalization</a></li>
+  <li><a href="#ch.-8-position-and-rope" id="toc-ch.-8-position-and-rope" class="nav-link" data-scroll-target="#ch.-8-position-and-rope"><span class="header-section-number">47.8</span> Ch. 8 · Position and RoPE</a></li>
+  <li><a href="#ch.-9-the-block" id="toc-ch.-9-the-block" class="nav-link" data-scroll-target="#ch.-9-the-block"><span class="header-section-number">47.9</span> Ch. 9 · The block</a></li>
+  <li><a href="#ch.-10-architectures" id="toc-ch.-10-architectures" class="nav-link" data-scroll-target="#ch.-10-architectures"><span class="header-section-number">47.10</span> Ch. 10 · Architectures</a></li>
+  <li><a href="#ch.-11-training" id="toc-ch.-11-training" class="nav-link" data-scroll-target="#ch.-11-training"><span class="header-section-number">47.11</span> Ch. 11 · Training</a></li>
+  <li><a href="#ch.-12-inference" id="toc-ch.-12-inference" class="nav-link" data-scroll-target="#ch.-12-inference"><span class="header-section-number">47.12</span> Ch. 12 · Inference</a></li>
+  <li><a href="#ch.-13-reading-attention-maps" id="toc-ch.-13-reading-attention-maps" class="nav-link" data-scroll-target="#ch.-13-reading-attention-maps"><span class="header-section-number">47.13</span> Ch. 13 · Reading attention maps</a></li>
+  <li><a href="#ch.-14-aliasing-and-ropes-three-scales" id="toc-ch.-14-aliasing-and-ropes-three-scales" class="nav-link" data-scroll-target="#ch.-14-aliasing-and-ropes-three-scales"><span class="header-section-number">47.14</span> Ch. 14 · Aliasing and RoPE’s three scales</a></li>
+  <li><a href="#ch.-15-the-decay-law-ad-dγ" id="toc-ch.-15-the-decay-law-ad-dγ" class="nav-link" data-scroll-target="#ch.-15-the-decay-law-ad-dγ"><span class="header-section-number">47.15</span> Ch. 15 · The decay law A(d) ∝ d^−γ</a></li>
+  <li><a href="#ch.-16-the-γ-atlas-decay-measured-across-42-models" id="toc-ch.-16-the-γ-atlas-decay-measured-across-42-models" class="nav-link" data-scroll-target="#ch.-16-the-γ-atlas-decay-measured-across-42-models"><span class="header-section-number">47.16</span> Ch. 16 · The γ atlas: decay measured across 42 models</a></li>
+  <li><a href="#ch.-17-attention-sinks-and-concentration" id="toc-ch.-17-attention-sinks-and-concentration" class="nav-link" data-scroll-target="#ch.-17-attention-sinks-and-concentration"><span class="header-section-number">47.17</span> Ch. 17 · Attention sinks and concentration</a></li>
+  <li><a href="#ch.-18-taxonomy-of-attention-mechanisms" id="toc-ch.-18-taxonomy-of-attention-mechanisms" class="nav-link" data-scroll-target="#ch.-18-taxonomy-of-attention-mechanisms"><span class="header-section-number">47.18</span> Ch. 18 · Taxonomy of attention mechanisms</a></li>
+  <li><a href="#ch.-19-long-context-extension" id="toc-ch.-19-long-context-extension" class="nav-link" data-scroll-target="#ch.-19-long-context-extension"><span class="header-section-number">47.19</span> Ch. 19 · Long-context extension</a></li>
+  <li><a href="#ch.-20-kv-cache-compression-in-practice" id="toc-ch.-20-kv-cache-compression-in-practice" class="nav-link" data-scroll-target="#ch.-20-kv-cache-compression-in-practice"><span class="header-section-number">47.20</span> Ch. 20 · KV-cache compression in practice</a></li>
+  <li><a href="#ch.-21-phase-structure-and-the-polylog-partition-function" id="toc-ch.-21-phase-structure-and-the-polylog-partition-function" class="nav-link" data-scroll-target="#ch.-21-phase-structure-and-the-polylog-partition-function"><span class="header-section-number">47.21</span> Ch. 21 · Phase structure and the polylog partition function</a></li>
+  <li><a href="#ch.-22-the-thermodynamic-dictionary" id="toc-ch.-22-the-thermodynamic-dictionary" class="nav-link" data-scroll-target="#ch.-22-the-thermodynamic-dictionary"><span class="header-section-number">47.22</span> Ch. 22 · The thermodynamic dictionary</a></li>
+  <li><a href="#ch.-23-the-fractional-transport-view" id="toc-ch.-23-the-fractional-transport-view" class="nav-link" data-scroll-target="#ch.-23-the-fractional-transport-view"><span class="header-section-number">47.23</span> Ch. 23 · The fractional-transport view</a></li>
+  <li><a href="#ch.-24-training-dynamics-and-grokking" id="toc-ch.-24-training-dynamics-and-grokking" class="nav-link" data-scroll-target="#ch.-24-training-dynamics-and-grokking"><span class="header-section-number">47.24</span> Ch. 24 · Training dynamics and grokking</a></li>
+  <li><a href="#ch.-25-pre-training-at-scale" id="toc-ch.-25-pre-training-at-scale" class="nav-link" data-scroll-target="#ch.-25-pre-training-at-scale"><span class="header-section-number">47.25</span> Ch. 25 · Pre-training at scale</a></li>
+  <li><a href="#ch.-26-fine-tuning-for-classification" id="toc-ch.-26-fine-tuning-for-classification" class="nav-link" data-scroll-target="#ch.-26-fine-tuning-for-classification"><span class="header-section-number">47.26</span> Ch. 26 · Fine-tuning for classification</a></li>
+  <li><a href="#ch.-27-alignment" id="toc-ch.-27-alignment" class="nav-link" data-scroll-target="#ch.-27-alignment"><span class="header-section-number">47.27</span> Ch. 27 · Alignment</a></li>
+  <li><a href="#ch.-28-peft" id="toc-ch.-28-peft" class="nav-link" data-scroll-target="#ch.-28-peft"><span class="header-section-number">47.28</span> Ch. 28 · PEFT</a></li>
+  <li><a href="#ch.-29-generation" id="toc-ch.-29-generation" class="nav-link" data-scroll-target="#ch.-29-generation"><span class="header-section-number">47.29</span> Ch. 29 · Generation</a></li>
+  <li><a href="#ch.-30-prompting-and-icl" id="toc-ch.-30-prompting-and-icl" class="nav-link" data-scroll-target="#ch.-30-prompting-and-icl"><span class="header-section-number">47.30</span> Ch. 30 · Prompting and ICL</a></li>
+  <li><a href="#ch.-31-rag" id="toc-ch.-31-rag" class="nav-link" data-scroll-target="#ch.-31-rag"><span class="header-section-number">47.31</span> Ch. 31 · RAG</a></li>
+  <li><a href="#ch.-32-agents" id="toc-ch.-32-agents" class="nav-link" data-scroll-target="#ch.-32-agents"><span class="header-section-number">47.32</span> Ch. 32 · Agents</a></li>
+  <li><a href="#ch.-33-multimodal" id="toc-ch.-33-multimodal" class="nav-link" data-scroll-target="#ch.-33-multimodal"><span class="header-section-number">47.33</span> Ch. 33 · Multimodal</a></li>
+  <li><a href="#ch.-34-efficient-attention" id="toc-ch.-34-efficient-attention" class="nav-link" data-scroll-target="#ch.-34-efficient-attention"><span class="header-section-number">47.34</span> Ch. 34 · Efficient attention</a></li>
+  <li><a href="#ch.-35-compression" id="toc-ch.-35-compression" class="nav-link" data-scroll-target="#ch.-35-compression"><span class="header-section-number">47.35</span> Ch. 35 · Compression</a></li>
+  <li><a href="#ch.-36-serving-and-deploying" id="toc-ch.-36-serving-and-deploying" class="nav-link" data-scroll-target="#ch.-36-serving-and-deploying"><span class="header-section-number">47.36</span> Ch. 36 · Serving and deploying</a></li>
+  <li><a href="#ch.-37-a-primer-on-mechanistic-interpretability" id="toc-ch.-37-a-primer-on-mechanistic-interpretability" class="nav-link" data-scroll-target="#ch.-37-a-primer-on-mechanistic-interpretability"><span class="header-section-number">47.37</span> Ch. 37 · A primer on mechanistic interpretability</a></li>
+  <li><a href="#ch.-38-verified-folklore-and-numerology" id="toc-ch.-38-verified-folklore-and-numerology" class="nav-link" data-scroll-target="#ch.-38-verified-folklore-and-numerology"><span class="header-section-number">47.38</span> Ch. 38 · Verified, folklore, and numerology</a></li>
+  <li><a href="#ch.-39-the-map-of-the-2026-collapse-landscape" id="toc-ch.-39-the-map-of-the-2026-collapse-landscape" class="nav-link" data-scroll-target="#ch.-39-the-map-of-the-2026-collapse-landscape"><span class="header-section-number">47.39</span> Ch. 39 · The map of the 2026 collapse landscape</a></li>
+  <li><a href="#ch.-40-ethics-safety-and-limitations" id="toc-ch.-40-ethics-safety-and-limitations" class="nav-link" data-scroll-target="#ch.-40-ethics-safety-and-limitations"><span class="header-section-number">47.40</span> Ch. 40 · Ethics, safety, and limitations</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/R1-formulario.html">Part VIII — Reference</a></li><li class="breadcrumb-item"><a href="../chapters/R10-soluciones.html"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R10 · Exercise solutions</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-r10" class="quarto-section-identifier"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R10 · Exercise solutions</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>What it is.</strong> <strong>Suggested</strong> solutions to each chapter’s exercises —concise, to check your reasoning, not to replace it—. Many questions admit more than one correct answer; here is the main line. Where a chapter is <strong>honest</strong> about a limit (γ_Padé approximate, D_f unvalidated, Lean proves algebra not reality…), the solution respects it.</p>
+</div>
+</div>
+</div>
+<!-- SOLUCIONES -->
+<section id="ch.-1-overview" class="level2" data-number="47.1">
+<h2 data-number="47.1" class="anchored" data-anchor-id="ch.-1-overview"><span class="header-section-number">47.1</span> Ch. 1 · Overview</h2>
+<ol type="1">
+<li><p><strong>Parallelizing RNNs.</strong> A GPU shines doing thousands of calculations at once, but an RNN processes the sequence word by word, where each step depends on the previous one. That serial dependency makes it impossible to spread the work across the GPU’s many cores, so the hardware sits underused and training becomes slow. In practice this capped the size of models and the amount of data they could be trained on.</p></li>
+<li><p><strong>The cost of connecting distant words.</strong> Connecting any pair of words “in a single step” requires comparing each token with all the others, so the number of comparisons grows with the <em>square</em> of the length (<span class="math inline">\(\sim n^2\)</span>). With thousands of words that blows up compute and memory, and it is exactly what makes long context expensive. It is the central problem tackled in Part II.</p></li>
+</ol>
+</section>
+<section id="ch.-2-tokens" class="level2" data-number="47.2">
+<h2 data-number="47.2" class="anchored" data-anchor-id="ch.-2-tokens"><span class="header-section-number">47.2</span> Ch. 2 · Tokens</h2>
+<ol type="1">
+<li><p><strong>By hand.</strong> After <code>es</code>, <code>est</code> and <code>lo</code>, the live symbols are <code>lo w</code> (in <code>low</code>×5 and <code>lower</code>×2 = 7), <code>n e</code>, <code>n ew</code>/<code>w est</code>, etc. The most frequent pair is <code>lo w</code> with 7 occurrences, so the next merge is <code>low</code>; after it, the pair <code>low e</code> (from <code>lower</code>×2) and <code>n e</code> (from <code>newest</code>×6) compete, and <code>n e</code> → <code>ne</code> wins with 6. In short: the two merges that apply are <code>low</code> and then <code>ne</code>, always picking the most frequent adjacent pair.</p></li>
+<li><p><strong>The space.</strong> <code>"the"</code>, <code>" the"</code> and <code>"  the"</code> produce different lists because the leading space is part of the token: byte-level BPE treats <code>the</code>, <code>the</code> (space + the) and <code>the</code> (double space + the) as different pieces with different numbers. This happens because pre-tokenization attaches the preceding space to the word, so the same word at the start or in the middle of a sentence is encoded differently.</p></li>
+<li><p><strong>The multilingual tax.</strong> “the house is big” usually spends fewer tokens than “la casa es grande”, because tokenizers are trained mostly on English and have longer, more efficient pieces for that language. Spanish (like other languages) ends up chopped into more subwords, which consumes more context to say the same thing. That’s why a “same-length” translation can cost quite a bit more token budget.</p></li>
+<li><p><strong>No unknowns.</strong> A byte-level tokenizer starts from the 256 possible UTF-8 bytes, and <em>any</em> text in the world —any language, emoji, or symbol— can be expressed as a sequence of those 256 bytes. So there are always base pieces to represent it and you never need an <code>&lt;UNK&gt;</code> token. A word-level tokenizer, by contrast, has a finite vocabulary: if a word arrives that wasn’t in it, it has no number for it and must mark it as unknown.</p></li>
+</ol>
+</section>
+<section id="ch.-3-embeddings-and-the-residual-stream" class="level2" data-number="47.3">
+<h2 data-number="47.3" class="anchored" data-anchor-id="ch.-3-embeddings-and-the-residual-stream"><span class="header-section-number">47.3</span> Ch. 3 · Embeddings and the residual stream</h2>
+<ol type="1">
+<li><p><strong>The table <code>E</code>.</strong> The embedding matrix has size vocabulary × <code>d_model</code>, so with 50,000 tokens and <code>d_model = 768</code> that’s <span class="math inline">\(50000 \times 768 = 38\,400\,000\)</span> parameters (about 38.4 million). With <code>d_model = 4096</code> it would be <span class="math inline">\(50000 \times 4096 = 204\,800\,000\)</span>, i.e.&nbsp;about 204.8 million. The embedding table alone already accounts for a large part of the model.</p></li>
+<li><p><strong>Static vs.&nbsp;contextual.</strong> “banco” has a single <em>input</em> embedding because its token-ID always selects the same row of <code>E</code>, without yet knowing which sentence it appears in. But as it passes through the layers, attention adds in information from the neighboring words (“río” or “central”), so the vector becomes <em>contextualized</em> and ends up different in each sentence. Contextualization doesn’t live in <code>E</code>, but in what the layers write on top of it in the residual stream.</p></li>
+<li><p><strong>Additive.</strong> Adding (<span class="math inline">\(x \leftarrow x + \text{FFN}(x)\)</span>) instead of replacing means each layer <em>adds</em> its contribution without erasing what was already there. So information from earlier layers persists along the residual stream and can be recombined later, rather than being lost. On top of that, this additive write (inherited from ResNets) lets the signal and the gradient cross many layers without diluting, which is what makes it possible to train very deep models.</p></li>
+<li><p><strong>Directions.</strong> We’d expect <code>vec(Madrid)</code>, because the subtraction <code>vec(París) − vec(Francia)</code> isolates the “capital of” direction, and adding it to <code>vec(España)</code> reaches the corresponding capital. It’s the same kind of analogy arithmetic as <code>king − man + woman ≈ queen</code>: relations (here “country → its capital”) live as directions in the embedding space. It’s approximate, not exact, but it captures the geometric regularity.</p></li>
+</ol>
+</section>
+<section id="ch.-4-attention" class="level2" data-number="47.4">
+<h2 data-number="47.4" class="anchored" data-anchor-id="ch.-4-attention"><span class="header-section-number">47.4</span> Ch. 4 · Attention</h2>
+<ol type="1">
+<li><p><strong>By hand.</strong> With <span class="math inline">\(q_2=[0,2]\)</span>, the scores <span class="math inline">\(q_2\cdot k_j\)</span> are <span class="math inline">\(0,\,2,\,2\)</span> (since <span class="math inline">\(k_1=[1,0]\)</span>, <span class="math inline">\(k_2=[0,1]\)</span>, <span class="math inline">\(k_3=[1,1]\)</span>). After scaling and applying softmax, tokens 2 and 3 receive high, nearly equal weights, while token 1 is left with low weight. The output becomes dominated by <span class="math inline">\(v_2\)</span> and <span class="math inline">\(v_3\)</span>, because the query now points to the second dimension, which is the one that keys <span class="math inline">\(k_2\)</span> and <span class="math inline">\(k_3\)</span> advertise.</p></li>
+<li><p><strong>The scaling.</strong> For <span class="math inline">\(d=4,64,4096\)</span> you observe that the standard deviation of <span class="math inline">\(QK^\top\)</span> <em>without</em> scaling grows roughly like <span class="math inline">\(\sqrt{d}\)</span> (≈2, ≈8, ≈64), because the dot product is a sum of <span class="math inline">\(d\)</span> terms whose variance grows with <span class="math inline">\(d\)</span>. <em>With</em> the <span class="math inline">\(1/\sqrt d\)</span> factor, the standard deviation stays around 1 regardless of the dimension. This confirms that scaling returns the logits to unit variance and avoids saturating the softmax.</p></li>
+<li><p><strong>Saturation.</strong> Multiplying the logits by 10 before the softmax sharpens the differences: the weight concentrates almost entirely on the highest-scoring token and the rest fall close to 0, i.e.&nbsp;<span class="math inline">\(A\)</span> becomes nearly <em>one-hot</em>. It’s the effect of lowering the “temperature”: larger logits mean a colder, peakier distribution; smaller logits, a hotter, more uniform one.</p></li>
+<li><p><strong>Fidelity.</strong> Take 2 tokens where <span class="math inline">\(q_1\cdot k_2 \gg q_1\cdot k_1\)</span>, so that <span class="math inline">\(\alpha_{12}\approx 0.99\)</span>, but with a value <span class="math inline">\(v_2\)</span> of tiny norm (e.g.&nbsp;<span class="math inline">\(v_2=[0.001,0]\)</span>) against a large <span class="math inline">\(v_1\)</span>. Even though token 1 “attends” almost entirely to 2, the output <span class="math inline">\(0.99\,v_2 + 0.01\,v_1\)</span> barely depends on <span class="math inline">\(v_2\)</span> because its magnitude is negligible; changing <span class="math inline">\(v_2\)</span> hardly alters the output. This illustrates that attention weight does not equal real influence: a heavily attended token can contribute little if its <span class="math inline">\(\lVert v_j\rVert\)</span> is small.</p></li>
+</ol>
+</section>
+<section id="ch.-5-multi-head-attention" class="level2" data-number="47.5">
+<h2 data-number="47.5" class="anchored" data-anchor-id="ch.-5-multi-head-attention"><span class="header-section-number">47.5</span> Ch. 5 · Multi-head attention</h2>
+<ol type="1">
+<li><p><strong>The split.</strong> Since <code>d_k = d_model / h</code>, with <code>d_model = 1024</code> and <code>h = 16</code> heads you get <code>d_k = 1024/16 = 64</code>. With <code>h = 8</code> heads, <code>d_k = 1024/8 = 128</code>. More heads means smaller slices per head, and fewer heads, larger slices.</p></li>
+<li><p><strong>Cost.</strong> They don’t cost 12 times more because each head doesn’t work on the full vector, but on a slice of size <code>d_k = d_model/12</code>. The combined work of the 12 heads over their small slices roughly equals that of a single attention over the whole vector. Multi-head splits the same compute budget across several views, rather than adding cost.</p></li>
+<li><p><strong>Induction head.</strong> It would predict <code>perro</code>. It does so in two steps: first it <em>matches prefixes</em>, looking backward for the previous occurrence of the current token <code>gato</code>; then it <em>copies</em>, raising the probability of the token that followed last time (<code>perro</code>). It’s the pattern <strong>[A][B] … [A] → [B]</strong>: “last time I saw gato, perro followed, so I predict perro”.</p></li>
+<li><p><strong>Pruning.</strong> No, it doesn’t mean multi-head is useless. That many heads can be pruned <em>at inference</em> with little loss only reveals they are partially redundant once the model is trained, and that a few specialized ones do the heavy lifting. But those redundant views might have been necessary <em>during training</em> for the model to discover and consolidate the useful roles; being able to remove them afterward doesn’t imply they were superfluous before.</p></li>
+</ol>
+</section>
+<section id="ch.-6-ffn" class="level2" data-number="47.6">
+<h2 data-number="47.6" class="anchored" data-anchor-id="ch.-6-ffn"><span class="header-section-number">47.6</span> Ch. 6 · FFN</h2>
+<ol type="1">
+<li><strong>The nonlinearity.</strong> Without <span class="math inline">\(\sigma\)</span>, the composition <span class="math inline">\(W_2(W_1 x)\)</span> is <span class="math inline">\((W_2 W_1)\,x\)</span>, i.e.&nbsp;the product of two matrices is just another matrix <span class="math inline">\(W = W_2 W_1\)</span>: a single linear transformation. The model loses the ability to learn nonlinear functions and to act as an “all-or-nothing” detector (threshold), reduced to linear combinations of the input.</li>
+<li><strong>The count.</strong> With <span class="math inline">\(d_{model}=1024\)</span> and a 4× expansion you have <span class="math inline">\(d_{ff}=4096\)</span>. Then <span class="math inline">\(W_1\)</span> is <span class="math inline">\(1024\times 4096 \approx 4.19\)</span> million parameters, and <span class="math inline">\(W_2\)</span> is <span class="math inline">\(4096\times 1024 \approx 4.19\)</span> million more. In total the FFN is around <span class="math inline">\(8.4\)</span> million parameters (ignoring biases).</li>
+<li><strong>Division of labor.</strong> (a) <em>Attention</em>: linking “ella” to its referent requires looking across tokens and moving information between them. (b) <em>The FFN</em>: activating the concept “capital of a country” is token-by-token processing over stored content. (c) <em>Attention</em>: averaging/mixing information from distant tokens is exactly its function.</li>
+<li><strong>Editing a fact.</strong> The middle FFNs act as a key-value associative memory where concrete world facts reside, so that’s where you can modify a specific datum without touching the rest. The embedding layer only stores the generic lexical meaning of each token, not the factual relations, so editing it wouldn’t change the stored fact.</li>
+</ol>
+</section>
+<section id="ch.-7-residual-and-normalization" class="level2" data-number="47.7">
+<h2 data-number="47.7" class="anchored" data-anchor-id="ch.-7-residual-and-normalization"><span class="header-section-number">47.7</span> Ch. 7 · Residual and normalization</h2>
+<ol type="1">
+<li><strong>Add vs replace.</strong> First reason: addition creates a “shortcut” (the residual connection) through which the gradient flows unattenuated, letting you train very deep networks without the signal vanishing. Second reason: each sublayer only needs to learn an incremental <em>adjustment</em> to the existing representation, instead of rebuilding the whole vector from scratch, which eases learning and preserves the information already accumulated.</li>
+<li><strong>LayerNorm vs RMSNorm.</strong> The essential difference is that LayerNorm subtracts the mean before dividing by the standard deviation (centers and scales), whereas RMSNorm skips the centering and only divides by the root mean square. RMSNorm is thus cheaper and, in practice, just as effective.</li>
+<li><strong>Pre vs Post.</strong> Pre-LN: <span class="math inline">\(x \leftarrow x + \mathrm{Sublayer}(\mathrm{Norm}(x))\)</span>. Post-LN: <span class="math inline">\(x \leftarrow \mathrm{Norm}(x + \mathrm{Sublayer}(x))\)</span>. Post-LN needs learning-rate <em>warmup</em> to stabilize; Pre-LN is stable from the start and usually doesn’t require it.</li>
+<li><strong>Collapse.</strong> Without residual connections, stacking many layers of pure attention makes the token representations average together over and over and converge: they all tend toward the same vector. It’s the phenomenon of <em>rank collapse</em> (oversmoothing), which destroys the distinction between tokens as depth increases.</li>
+</ol>
+</section>
+<section id="ch.-8-position-and-rope" class="level2" data-number="47.8">
+<h2 data-number="47.8" class="anchored" data-anchor-id="ch.-8-position-and-rope"><span class="header-section-number">47.8</span> Ch. 8 · Position and RoPE</h2>
+<ol type="1">
+<li><strong>Blindness to order.</strong> Attention is an operation symmetric under token permutation: it treats the input as a set, not a sequence. Without positional information, “el perro muerde al hombre” and “el hombre muerde al perro” contain exactly the same tokens, so they produce identical dot products and therefore the same result.</li>
+<li><strong>Relative for free.</strong> RoPE rotates each vector by an angle proportional to its position; when you take the dot product between <span class="math inline">\(q\)</span> at position <span class="math inline">\(m\)</span> and <span class="math inline">\(k\)</span> at position <span class="math inline">\(n\)</span>, the rotations combine and only the relative angle <span class="math inline">\(m-n\)</span> survives. Just as with two clock hands, what matters for their product is the angle <em>between</em> them, not where each one points in absolute terms.</li>
+<li><strong>θ and reach.</strong> Raising the base <span class="math inline">\(\theta\)</span> makes the rotation frequencies lower (slower rotations) for each pair of dimensions. By turning more slowly, the angles take longer to repeat, so the model distinguishes larger distances well: it increases effective reach at the cost of less fine resolution at short distances.</li>
+<li><strong>q, k, and v?</strong> RoPE applies its rotation only to the queries <span class="math inline">\(q\)</span> and the keys <span class="math inline">\(k\)</span>, not to the values <span class="math inline">\(v\)</span>. This makes sense because position should influence <em>how affinity is computed</em> (the <span class="math inline">\(q\cdot k\)</span> product that decides whom to attend to), but not the <em>content</em> transported once attention is decided, which is what the values carry.</li>
+</ol>
+</section>
+<section id="ch.-9-the-block" class="level2" data-number="47.9">
+<h2 data-number="47.9" class="anchored" data-anchor-id="ch.-9-the-block"><span class="header-section-number">47.9</span> Ch. 9 · The block</h2>
+<ol type="1">
+<li><strong>The pattern.</strong> The two Pre-LN lines are: <span class="math inline">\(x \leftarrow x + \mathrm{Attention}(\mathrm{Norm}(x))\)</span> and then <span class="math inline">\(x \leftarrow x + \mathrm{FFN}(\mathrm{Norm}(x))\)</span>. The first mixes information across tokens (communication); the second processes each token separately (computation). Both add their result to the residual stream.</li>
+<li><strong>The mask.</strong> During training a generative model predicts the next token, so it must hide future positions: if it could see them, it would copy the answer directly and “cheat”. Without the mask it would learn to look ahead instead of to predict, and at inference (where the future doesn’t exist) it would fail completely.</li>
+<li><strong>Depth.</strong> Induction heads (Ch. 5) need at least two layers: a first head copies information from the previous token and a second uses that information to search for and complete the pattern “… A B … A → B”. With a single layer that two-step operation can’t be composed, so the ability doesn’t exist.</li>
+<li><strong>The journey.</strong> The order is: tokenize · embeddings · add position · N blocks · unembed.</li>
+</ol>
+</section>
+<section id="ch.-10-architectures" class="level2" data-number="47.10">
+<h2 data-number="47.10" class="anchored" data-anchor-id="ch.-10-architectures"><span class="header-section-number">47.10</span> Ch. 10 · Architectures</h2>
+<ol type="1">
+<li><strong>The switch.</strong> The main change is the attention mask: going from bidirectional attention (each token sees the whole context) to causal attention (each token sees only the past). That mask, together with the next-token prediction objective, turns a comprehension model into a generation one.</li>
+<li><strong>Why doesn’t BERT write an essay?</strong> BERT uses bidirectional attention and is trained with <em>masked language modeling</em>: filling in blanks while seeing the context on both sides. It doesn’t learn to continue text token by token left to right, so it lacks the autoregressive mechanism needed to generate a long, coherent sequence.</li>
+<li><strong>Cross-attention.</strong> In a T5 translator, the decoder looks at the encoder: each position being generated queries (via <em>cross-attention</em>) the representations of the entire input sentence produced by the encoder. It serves to align what’s being generated with the content of the source text.</li>
+<li><strong>Choosing a tool.</strong> (a) Classifying reviews: a bidirectional encoder model like BERT, which understands the full text in order to label it. (b) Chatbot: an autoregressive decoder model like GPT, which generates responses. (c) Translating English→Spanish: an encoder-decoder architecture like T5, which reads the whole sentence and regenerates it in the other language.</li>
+</ol>
+</section>
+<section id="ch.-11-training" class="level2" data-number="47.11">
+<h2 data-number="47.11" class="anchored" data-anchor-id="ch.-11-training"><span class="header-section-number">47.11</span> Ch. 11 · Training</h2>
+<ol type="1">
+<li><p><strong>Self-supervision.</strong> No human labels are needed because the “correct answer” is the text itself: given a fragment, the next token is already written in the corpus. The model simply hides that token, tries to predict it, and compares against the one that actually came. So any raw text becomes millions of labeled examples for free.</p></li>
+<li><p><strong>Perplexity.</strong> A perplexity of 1 means the model is perfectly confident and always nails the next token (no doubt at all). A perplexity equal to the vocabulary size means the opposite: the model spreads probability uniformly across all words, i.e.&nbsp;it has learned nothing and is choosing at random. Perplexity is read as “among how many equiprobable options the model hesitates on average”.</p></li>
+<li><p><strong>Chinchilla.</strong> Per Chinchilla, you’re probably spending too much compute on parameters and too little on data: a huge model trained on few tokens is undertrained. With a fixed budget it pays to balance size and data (roughly in proportion, about 20 tokens per parameter). A smaller model fed with more tokens would perform better at the same compute.</p></li>
+<li><p><strong>Warmup.</strong> Starting with a high learning rate from step 1 can break training because the weights are freshly initialized and the first gradients are noisy and large. A huge step in that phase can blow up the activations or norms and cause divergence (loss exploding to NaN). Warmup raises the learning rate gradually so the model stabilizes before taking large steps.</p></li>
+</ol>
+</section>
+<section id="ch.-12-inference" class="level2" data-number="47.12">
+<h2 data-number="47.12" class="anchored" data-anchor-id="ch.-12-inference"><span class="header-section-number">47.12</span> Ch. 12 · Inference</h2>
+<ol type="1">
+<li><p><strong>Greedy.</strong> Always picking the most probable word at each step is a local decision that can close off globally better paths. For example, a highly probable first token (“El”) can lead to mediocre continuations, while a slightly less probable second token would open up a sentence of higher joint probability. Greedy can’t undo that decision, so it gets stuck in a local optimum instead of the most probable sentence.</p></li>
+<li><p><strong>Temperature.</strong> For a reliable code assistant I’d use a low T (close to 0), because I want deterministic, correct, reproducible outputs with no inventions. For a creative idea generator I’d use a high T (e.g.&nbsp;0.8–1.2), which flattens the distribution and lets it explore less probable, more varied options. Temperature is, in essence, the knob between “safe and repetitive” and “diverse but risky”.</p></li>
+<li><p><strong>Adaptive top-p.</strong> Top-p (nucleus) accumulates candidates until they sum to a probability mass <span class="math inline">\(p\)</span>; when the model is confident, a single token already holds almost all the mass, so very few candidates suffice. When it’s unsure, probability is spread out and many tokens are needed to reach <span class="math inline">\(p\)</span>. Its advantage over top-k is that it adapts the number of candidates to the model’s confidence, instead of fixing a rigid <span class="math inline">\(k\)</span> that’s too many when there’s certainty and too few when there’s doubt.</p></li>
+<li><p><strong>KV-cache.</strong> Generation slows down and uses more memory because, with each new token, attention must look at all previous tokens, and that context grows linearly with the text. The KV-cache stores the already-computed keys and values so they aren’t recomputed, which saves compute. The trade-off is clear: it spends memory (which grows with length) to gain speed per token.</p></li>
+</ol>
+</section>
+<section id="ch.-13-reading-attention-maps" class="level2" data-number="47.13">
+<h2 data-number="47.13" class="anchored" data-anchor-id="ch.-13-reading-attention-maps"><span class="header-section-number">47.13</span> Ch. 13 · Reading attention maps</h2>
+<ol type="1">
+<li><p><strong>There’s no “single” map.</strong> Each head of each layer produces its own attention map, so with 32 layers and 32 heads there are <span class="math inline">\(32 \times 32 = 1024\)</span> distinct maps per sentence. There’s no “the” map of the model, but more than a thousand different views. That’s why talking about “what the model looks at” as a single image is a misleading simplification.</p></li>
+<li><p><strong>The sink.</strong> Since each attention row must sum to 1 (it’s a probability distribution), a head that doesn’t actually “want” to attend to anything in particular has to dump that mass somewhere. The first token is usually that stable dumping ground, so a bright column appears over it. That brightness is an artifact of normalization, not a sign that the first token matters.</p></li>
+<li><p><strong>Fidelity.</strong> It’s not valid because an attention map shows correlation, not cause: a head attending to Y doesn’t prove that attention is the reason for prediction X. The prediction arises from the interaction of many heads, layers, and the values (V), not just one head’s attention weights. Without an intervention (e.g.&nbsp;ablating that head) you can’t assert the “because”.</p></li>
+<li><p><strong>The U.</strong> Mean attention versus distance is U-shaped (or J-shaped): a very high peak at near-zero distance and another at the initial positions, with a valley in between. The left arm, over the first tokens, is the “sink”. The gentle descent to the right, at growing distances, is the “tail” whose decay we’ll measure with the exponent γ.</p></li>
+</ol>
+</section>
+<section id="ch.-14-aliasing-and-ropes-three-scales" class="level2" data-number="47.14">
+<h2 data-number="47.14" class="anchored" data-anchor-id="ch.-14-aliasing-and-ropes-three-scales"><span class="header-section-number">47.14</span> Ch. 14 · Aliasing and RoPE’s three scales</h2>
+<ol type="1">
+<li><p><strong>Wavelength.</strong> The frequency is <span class="math inline">\(\omega_i = \theta^{-2i/d}\)</span>, so index <span class="math inline">\(i=0\)</span> spins fastest (its <span class="math inline">\(\lambda_0 = 2\pi \approx 6\)</span> positions) and <span class="math inline">\(i=30\)</span> spins extremely slowly (<span class="math inline">\(\lambda \propto \theta^{2i/d}\)</span>, enormous). Therefore, the <span class="math inline">\(i=0\)</span> pair is the fastest-spinning one and the one that aliases first, as it completes its full turn right away.</p></li>
+<li><p><strong>Aliasing.</strong> Like the wagon wheel that on film appears to spin backward or stand still, a RoPE pair “samples” the angle and, past a full turn (<span class="math inline">\(\lambda\)</span>), can’t tell whether <span class="math inline">\(r\)</span> positions or <span class="math inline">\(r+\lambda\)</span> have passed: both give exactly the same angle. With the angle coinciding, the dot product coincides, so that pair can’t distinguish the two distances. That’s why a pair can’t separate distances that differ by exactly one wavelength.</p></li>
+<li><p><strong>The scales.</strong> <span class="math inline">\(T_{\rm max} = 2\pi\theta\)</span> (≈ 62,832 with θ=10⁴) is the wavelength of the slowest pair, i.e.&nbsp;the maximum distance the geometry can encode. There <span class="math inline">\(n_{\rm active}(d)\)</span> drops to zero: no pair retains unambiguous positional signal anymore, because they’ve all aliased. Beyond <span class="math inline">\(T_{\rm max}\)</span> position becomes completely ambiguous.</p></li>
+<li><p><strong>Honesty.</strong> We say “it bounds the resolution” and not “it imposes the decay” because <em>Round and Round We Go</em> showed that with real queries and keys RoPE doesn’t guarantee a monotone decay; in fact models use the low frequencies to match content almost regardless of position. What the geometry does do is mark which distances <em>can</em> be distinguished, an upper bound on resolution. How the model uses each band within that limit is a learned decision, not a geometric decree.</p></li>
+</ol>
+</section>
+<section id="ch.-15-the-decay-law-ad-dγ" class="level2" data-number="47.15">
+<h2 data-number="47.15" class="anchored" data-anchor-id="ch.-15-the-decay-law-ad-dγ"><span class="header-section-number">47.15</span> Ch. 15 · The decay law A(d) ∝ d^−γ</h2>
+<ol type="1">
+<li><p><strong>The slope.</strong> The line with slope <span class="math inline">\(-0.4\)</span> looks farther, because it falls more slowly and keeps more attention mass at distance; being <span class="math inline">\(\gamma &lt; 1\)</span>, it’s Phase A. The one with slope <span class="math inline">\(-1.3\)</span> falls fast and concentrates attention nearby; being <span class="math inline">\(\gamma &gt; 1\)</span>, it’s Phase B. In log-log, a smaller slope (in absolute value) = heavier tail = longer horizon.</p></li>
+<li><p><strong>Maximum entropy.</strong> The only thing RoPE’s geometry fixes on average is <span class="math inline">\(\mathbb{E}[\log d] = \text{constant}\)</span>, a “budget” of log-distance. The most honest distribution is the one that assumes the minimum compatible with that single datum, without inventing extra biases; and it turns out the only one that maximizes entropy under that constraint is the power law <span class="math inline">\(p^*(d) \propto d^{-\gamma}\)</span>, with <span class="math inline">\(\gamma\)</span> as the Lagrange multiplier. A Gaussian would assume a scale and a concentration nobody gave us, so it would be less honest.</p></li>
+<li><p><strong>Honest prediction.</strong> <span class="math inline">\(\gamma_{\rm Padé}\)</span> only captures <span class="math inline">\(\gamma_{\rm geom}(\theta, T)\)</span>, so the difference between the predicted 0.7 and the measured 0.55 lives in the other terms of the decomposition <span class="math inline">\(\gamma_{\rm obs} = \gamma_{\rm geom} + \gamma_{\rm train} + \gamma_{\rm arch} + \varepsilon\)</span>. That the measured γ is lower (looks farther than geometry alone predicts) points mostly to <span class="math inline">\(\gamma_{\rm train}\)</span> —the formation of <em>induction heads</em> from the data— and partly to <span class="math inline">\(\gamma_{\rm arch}\)</span>. It’s consistent with <span class="math inline">\(\gamma_{\rm Padé}\)</span> getting the center right but with a median error of ~20–22% in Phase A.</p></li>
+<li><p><strong>Tool.</strong> In Profile mode, tafagent returns three things: the <span class="math inline">\(\gamma_{\rm Padé}\)</span> predicted from θ and T alone, its comparison with the model’s observed <span class="math inline">\(\gamma\)</span>, and the regime (Phase A or Phase B) along with the effective horizon that model falls into. It’s the chapter’s theory turned into a profiling tool.</p></li>
+</ol>
+</section>
+<section id="ch.-16-the-γ-atlas-decay-measured-across-42-models" class="level2" data-number="47.16">
+<h2 data-number="47.16" class="anchored" data-anchor-id="ch.-16-the-γ-atlas-decay-measured-across-42-models"><span class="header-section-number">47.16</span> Ch. 16 · The γ atlas: decay measured across 42 models</h2>
+<ol type="1">
+<li><p><strong>Reading the map.</strong> That 38 of 42 models have <span class="math inline">\(\gamma&lt;1\)</span> means trained transformers tend to <strong>look far</strong>, not to concentrate nearby. A <span class="math inline">\(\gamma&lt;1\)</span> implies a heavy tail: attention decays slowly with distance and spreads weight to distant tokens too. The pattern suggests that exploiting wide context is the norm models tend toward when left to their own devices, not the exception.</p></li>
+<li><p><strong>The median.</strong> What’s striking is that the models don’t scatter randomly across the whole range, but <strong>cluster just below <span class="math inline">\(\gamma=1\)</span></strong> (median <span class="math inline">\(\approx0.885\)</span>). It’s as if training pushed them right to the edge of the “look-far” regime without quite crossing into concentration. That closeness doesn’t seem accidental and connects with the Hagedorn transition of Ch. 21.</p></li>
+<li><p><strong>Honesty.</strong> Comparing the raw <span class="math inline">\(\gamma\)</span> of two different models mixes several factors at once —base <span class="math inline">\(\theta\)</span>, training data <em>and</em> architecture—, so the difference can’t be cleanly attributed to architecture. The experiment that does isolate the cause is the <em>within-model</em> control: take <strong>the same model</strong> and vary <strong>a single lever</strong> (e.g.&nbsp;rescaling <span class="math inline">\(\theta\)</span>), as in Ch. 17. The atlas describes the landscape, but doesn’t isolate causes on its own.</p></li>
+<li><p><strong>Fit.</strong> I’d take the <span class="math inline">\(\gamma\)</span> of the model with <span class="math inline">\(R^2=0.85\)</span> with considerably less confidence: there the law <span class="math inline">\(A(d)\propto d^{-\gamma}\)</span> fits the real attention worse, so <span class="math inline">\(\gamma\)</span> is a coarser summary. With <span class="math inline">\(R^2=0.98\)</span> the exponent describes the data almost perfectly and is a reliable value. I wouldn’t discard the <span class="math inline">\(0.85\)</span> one, but I’d treat it as approximate and watch the <span class="math inline">\(R^2\)</span> column model by model.</p></li>
+</ol>
+</section>
+<section id="ch.-17-attention-sinks-and-concentration" class="level2" data-number="47.17">
+<h2 data-number="47.17" class="anchored" data-anchor-id="ch.-17-attention-sinks-and-concentration"><span class="header-section-number">47.17</span> Ch. 17 · Attention sinks and concentration</h2>
+<ol type="1">
+<li><p><strong>Independence.</strong> If concentration and decay were the same phenomenon, raising <span class="math inline">\(\gamma\)</span> from <span class="math inline">\(0.75\)</span> to <span class="math inline">\(1.0\)</span> should have moved the sink mass appreciably. What actually happened is that it stayed <strong>flat</strong> (from <span class="math inline">\(0.371\)</span> to <span class="math inline">\(0.387\)</span>, <span class="math inline">\(\approx0.38\)</span>) while <span class="math inline">\(\gamma\)</span> swept almost its entire range. Moving one lever changed one mechanism enormously and left the other intact: they are independent (<span class="math inline">\(\gamma \perp\)</span> sink).</p></li>
+<li><p><strong>The control.</strong> Rescaling <span class="math inline">\(\theta\)</span> within the same model keeps everything else fixed —weights, data, architecture—, so any observed change is <em>caused</em> by <span class="math inline">\(\theta\)</span> and not by a crossed factor. Comparing two different models confounds <span class="math inline">\(\theta\)</span>, data, and architecture at once, so it can’t attribute the effect to a single cause. It’s the difference between describing a landscape (atlas, Ch. 16) and isolating a cause (controlled experiment).</p></li>
+<li><p><strong>Two axes.</strong> A decision that depends on the <strong>sink</strong>: managing concentration by keeping a few initial tokens when trimming context, as StreamingLLM does, so as not to destabilize the softmax. A decision that depends on <strong><span class="math inline">\(\gamma\)</span></strong>: estimating the model’s effective reach and how much its KV-cache can be compressed (Ch. 20), which is a positional phenomenon. Confusing them leads you to “fix” one believing you’re fixing the other.</p></li>
+<li><p><strong>Honesty.</strong> We explicitly leave unresolved whether <strong>secondary sinks</strong> appear or disappear as you sweep <span class="math inline">\(\theta\)</span>. The literature itself notes that large-<span class="math inline">\(\theta\)</span> models sometimes lack them and that the underlying cause remains an open question. We have the apparatus to study it, but we mark it as pending work, not as solved.</p></li>
+</ol>
+</section>
+<section id="ch.-18-taxonomy-of-attention-mechanisms" class="level2" data-number="47.18">
+<h2 data-number="47.18" class="anchored" data-anchor-id="ch.-18-taxonomy-of-attention-mechanisms"><span class="header-section-number">47.18</span> Ch. 18 · Taxonomy of attention mechanisms</h2>
+<ol type="1">
+<li><p><strong>Exact vs approximate.</strong> FlashAttention is not approximate because it computes <strong>exact attention</strong>, bit-for-bit identical to dense; it sacrifices no quality. What it reorganizes is <em>where</em> and <em>how</em> the computation happens in the GPU’s memory hierarchy: it tiles the operation and recomputes it to <strong>never materialize the <span class="math inline">\(n\times n\)</span> matrix</strong>. It’s “efficient” in memory (<span class="math inline">\(O(n)\)</span>) without being approximate in the result.</p></li>
+<li><p><strong>KV vs compute.</strong> GQA doesn’t lower the <span class="math inline">\(O(n^2)\)</span> compute cost: it’s still full, exact attention over all tokens. What it reduces is the <strong>KV-cache memory</strong>, by having groups of heads share the same keys and values, so fewer distinct K/V are stored. It’s a memory saving at inference, not a saving in attention FLOPs.</p></li>
+<li><p><strong>What won.</strong> Linear attentions are cheaper in theory (<span class="math inline">\(O(n)\)</span>), but they trade accuracy for speed, and at scale that <strong>quality loss doesn’t pay off</strong>. Full attention, computed well with FlashAttention, keeps all the fidelity without paying the feared memory overhead. That’s why, despite years of attempts, Performer, Linformer, and the like didn’t dethrone dense attention at the frontier.</p></li>
+<li><p><strong>Another family.</strong> Mamba is not a cheaper attention: it’s a <strong>state-space model (SSM)</strong> with linear-time recurrence and <strong>no attention matrix</strong> at all. Instead of comparing each token with the rest, it propagates information through a recurrent state. That’s why it’s considered another architecture family, and it tends to gain ground as a hybrid (Jamba) rather than a pure replacement.</p></li>
+</ol>
+</section>
+<section id="ch.-19-long-context-extension" class="level2" data-number="47.19">
+<h2 data-number="47.19" class="anchored" data-anchor-id="ch.-19-long-context-extension"><span class="header-section-number">47.19</span> Ch. 19 · Long-context extension</h2>
+<ol type="1">
+<li><p><strong>Why it fails.</strong> A model trained at 4k has only seen the RoPE angles of positions 0…4k; at 16k <strong>out-of-distribution angles</strong> appear that it never observed. In that regime the attention scores blow up and the softmax destabilizes, producing degenerate text (gibberish). That’s why the solution isn’t to extrapolate to new angles, but to remap the long positions within the range of angles already known.</p></li>
+<li><p><strong>NTK vs PI.</strong> PI compresses <strong>all</strong> positions equally (divide by <span class="math inline">\(L/T\)</span>), which also squeezes the high frequencies and loses fine local resolution. NTK-aware applies a <strong>non-uniform</strong> rescaling of <span class="math inline">\(\theta\)</span>: it <strong>preserves the high frequencies</strong> (the local) and stretches only the low ones (the distant). So it respects the local information PI sacrifices, and often works without finetuning for small factors (2–4×).</p></li>
+<li><p><strong>Audit.</strong> I’d ask for a <strong>full-length retrieval</strong> evaluation, passkey- or needle-in-a-haystack-style, that checks whether the model truly locates concrete information throughout the entire nominal context. Perplexity isn’t enough because it’s dominated by local tokens and can stay low while retrieval has already collapsed. I’d also watch for “lost in the middle”: the usable length is usually less than the nominal one, so a “1M” is rarely 1M effective.</p></li>
+<li><p><strong>Honesty.</strong> We present the <span class="math inline">\(\gamma\)</span> rule as unvalidated because, although the <strong>geometry is solid</strong> (rescaling <span class="math inline">\(\theta\)</span> moves <span class="math inline">\(\gamma\)</span> monotonically and predictably), our <strong>empirical validation with passkey came out incomplete</strong>: the experiment crashed for lack of memory (CUDA-OOM) before covering the lengths that discriminated between conditions. We only confirmed the expected (the native model retrieves within its training length), not that the rule beats YaRN. This book refuses to sell as fact what is still a hypothesis pending reproduction.</p></li>
+</ol>
+</section>
+<section id="ch.-20-kv-cache-compression-in-practice" class="level2" data-number="47.20">
+<h2 data-number="47.20" class="anchored" data-anchor-id="ch.-20-kv-cache-compression-in-practice"><span class="header-section-number">47.20</span> Ch. 20 · KV-cache compression in practice</h2>
+<ol type="1">
+<li><p><strong>Compressibility.</strong> You compress the <span class="math inline">\(\gamma=1.3\)</span> one better. With <span class="math inline">\(\gamma&gt;1\)</span> (Phase B, light tail) attention decays fast and a small <strong>finite window</strong> captures almost all the mass, so you can discard much of the distant KV without losing hardly any attention. With <span class="math inline">\(\gamma=0.7\)</span> (Phase A, heavy tail) the mass is spread across the whole context and no finite window captures it, so it’s hard to compress.</p></li>
+<li><p><strong>The boundary.</strong> <span class="math inline">\(\gamma=1\)</span> separates the two regimes because it’s where the behavior of the sum <span class="math inline">\(\sum d^{-\gamma}\)</span> changes. With <span class="math inline">\(\gamma&gt;1\)</span> the series <strong>converges</strong>: the tail beyond <span class="math inline">\(D\)</span> shrinks like <span class="math inline">\(D^{1-\gamma}\)</span>, so a finite window suffices (compressible). With <span class="math inline">\(\gamma&lt;1\)</span> the series <strong>diverges</strong> like <span class="math inline">\(D^{1-\gamma}\)</span>: the mass piles up without bound with distance and no finite window captures it (hard). At <span class="math inline">\(\gamma=1\)</span> it diverges marginally, like <span class="math inline">\(\log D\)</span>, which is the boundary case.</p></li>
+<li><p><strong>Honesty.</strong> We don’t claim <span class="math inline">\(D_f\)</span> is better than Ada-KV because the <strong>head-to-head</strong> is missing: they must be compared at matched memory on task benchmarks (RULER, LongBench, NIAH), not just against heuristics. We present <span class="math inline">\(D_f\)</span> as a derived, predictive, parameter-free budget, but <strong>not proven superior</strong>. The experiment that’s missing is exactly that head-to-head benchmark against the principled methods (Ada-KV, LAVa).</p></li>
+<li><p><strong>Mass ≠ fidelity.</strong> A token can receive <strong>little attention mass</strong> and still influence the output a lot if the <strong>norm of its value vector (V) is large</strong>, because the output is a weighted sum of the V’s. So discarding it for low mass —as <span class="math inline">\(D_f\)</span> would— would degrade the output despite “losing little attention”. This is Ada-KV’s critique: mass is necessary but not sufficient to guarantee fidelity.</p></li>
+</ol>
+</section>
+<section id="ch.-21-phase-structure-and-the-polylog-partition-function" class="level2" data-number="47.21">
+<h2 data-number="47.21" class="anchored" data-anchor-id="ch.-21-phase-structure-and-the-polylog-partition-function"><span class="header-section-number">47.21</span> Ch. 21 · Phase structure and the polylog partition function</h2>
+<ol type="1">
+<li><p><strong>Partition function.</strong> <span class="math inline">\(Z\)</span> “censuses” all the states of the system, summing them weighted by <span class="math inline">\(e^{-E/T}\)</span>, so the low-energy ones count more; in attention it’s the softmax normalizer viewed over distance. Knowing <span class="math inline">\(Z\)</span> gives you everything —mean energy, fluctuations, entropy— because those quantities come from differentiating <span class="math inline">\(Z\)</span>, so having the partition function is equivalent to having the system’s complete behavior.</p></li>
+<li><p><strong>The polylog.</strong> Because <span class="math inline">\(\mathrm{Li}_s(z)=\sum_{k\ge1} z^k/k^s\)</span> is simply the generic normalizer of <em>any</em> distribution with a power-law tail (and at <span class="math inline">\(z=1\)</span> it’s the Riemann zeta). That “<span class="math inline">\(Z\)</span> is a polylog” is automatic mathematics the moment attention decays like <span class="math inline">\(d^{-\gamma}\)</span>: nothing is discovered, the function is merely named. The real value would be in showing that the distance distribution truly has that form and that <span class="math inline">\(\gamma\)</span> is a measurable control parameter.</p></li>
+<li><p><strong>Transition vs crossover.</strong> A phase transition is a qualitative, abrupt change upon crossing a critical value (still water at 100°C turning to steam); a smooth crossover is a gradual change with no singular point (butter softening). Our neighbor Kim <span class="citation" data-cites="kim2026thermo">(<a href="#ref-kim2026thermo" role="doc-biblioref">Kim 2026</a>)</span> explicitly reports that he does <em>not</em> observe asymptotic power-law divergence, “only a critical-type crossover”, i.e.&nbsp;he sees a smooth crossover, not a true transition.</p></li>
+<li><p><strong>Honesty.</strong> Because at finite <span class="math inline">\(N\)</span>, <span class="math inline">\(\mathrm{Li}_1\)</span> diverges only as <span class="math inline">\(\log N\)</span>, which looks more like a crossover than a jump, and our nearest neighbor observes no divergence. The susceptibility <span class="math inline">\(\chi=1/|\gamma-1|\)</span> diverges <em>formally</em> at <span class="math inline">\(\gamma=1\)</span>, but whether that’s a real transition or a mere smooth crossover is an open question. That’s why we present it as “a candidate boundary with evidence”, not as a proven transition.</p></li>
+</ol>
+</section>
+<section id="ch.-22-the-thermodynamic-dictionary" class="level2" data-number="47.22">
+<h2 data-number="47.22" class="anchored" data-anchor-id="ch.-22-the-thermodynamic-dictionary"><span class="header-section-number">47.22</span> Ch. 22 · The thermodynamic dictionary</h2>
+<ol type="1">
+<li><p><strong>Fisher and C_V.</strong> Fisher information measures how sharply the distribution changes as you move a parameter (how easy it is to “pin down” <span class="math inline">\(\gamma\)</span> from the data), and the heat capacity <span class="math inline">\(C_V\)</span> measures the size of energy fluctuations, <span class="math inline">\(\mathrm{Var}(E)/T^2\)</span>. It makes sense that they’re the same thing (up to a <span class="math inline">\(\gamma^2\)</span> factor) because both are the second derivative of the free energy: statistical sensitivity and thermal fluctuation are two faces of the same curvature.</p></li>
+<li><p><strong>The Lean receipt.</strong> A Lean (Mathlib) proof of <span class="math inline">\(\mathrm{Fisher}=C_V/\gamma^2\)</span> shows that the <strong>algebra of the identity is correct</strong> —that the formulas check out with zero residual, beyond any numerical doubt—. What it does <em>not</em> show is that this relation describes a transformer <strong>causally</strong>: “the algebra is consistent” is one thing, and “this is what the model does” is a very different one. It’s a receipt of formal consistency, not an empirical claim about the network.</p></li>
+<li><p><strong>The erratum.</strong> The coefficient of <span class="math inline">\(C_V\)</span> at <span class="math inline">\(\gamma=1\)</span> went from <span class="math inline">\((\log N)^2/4\)</span> to <span class="math inline">\((\log N)^2/12\)</span>, i.e.&nbsp;an error of a <strong>factor 3</strong> (the denominator is multiplied by 3). The correct value, <span class="math inline">\((\log N)^2/12\)</span>, is confirmed by two independent derivations and we verified it in Lean.</p></li>
+<li><p><strong>Honesty.</strong> Because reporting an error of <em>your own</em> —flagging it as an erratum, correcting it, and re-proving it in Lean— teaches where we went wrong and how we fixed it, which is exactly what distinguishes a trustworthy source. A manual that only tells its successes can’t be audited; one that exhibits the wrong factor 3 and its correction demonstrates honesty rather than proclaiming it, which makes it more credible, not less.</p></li>
+</ol>
+</section>
+<section id="ch.-23-the-fractional-transport-view" class="level2" data-number="47.23">
+<h2 data-number="47.23" class="anchored" data-anchor-id="ch.-23-the-fractional-transport-view"><span class="header-section-number">47.23</span> Ch. 23 · The fractional-transport view</h2>
+<ol type="1">
+<li><p><strong>Ant vs albatross.</strong> The ant is normal (Brownian) diffusion: many small local steps, territory that grows slowly (<span class="math inline">\(\propto\sqrt{t}\)</span>), and an ordinary Laplacian. The albatross is a Lévy flight (anomalous diffusion): rare, enormous power-law-tailed jumps that dominate how far it reaches. The albatross is the one that resembles attention with a power-law tail <span class="math inline">\(d^{-\gamma}\)</span>, because its jump kernel has that same power-law form.</p></li>
+<li><p><strong>The order.</strong> With <span class="math inline">\(s=(\gamma-1)/2\)</span>: a model with <span class="math inline">\(\gamma=0.7\)</span> gives <span class="math inline">\(s=-0.15&lt;0\)</span>, so it <strong>integrates/smooths</strong> (long-range averaging). One with <span class="math inline">\(\gamma=1.3\)</span> gives <span class="math inline">\(s=0.15&gt;0\)</span>, so it <strong>differentiates</strong> (amplifies the fine, roughness). The crossover is at <span class="math inline">\(\gamma=1\)</span> (<span class="math inline">\(s=0\)</span>, identity), and most trained models fall on the smoothing side.</p></li>
+<li><p><strong>Honesty.</strong> The fractional/Lévy framework is <strong>not ours</strong>: <em>Fractional Neural Attention</em> (FNA) <span class="citation" data-cites="qu2025fna">(<a href="#ref-qu2025fna" role="doc-biblioref">Qu et al. 2025</a>)</span> already designs attention as a fractional Laplacian with a hand-chosen order <span class="math inline">\(\alpha\)</span>. What’s plausibly ours is <em>reading</em> the <strong>measured</strong> <span class="math inline">\(\gamma\)</span> (from the atlas, tied to RoPE) as a fractional order and placing trained models in the smoothing regime —a descriptive claim, not a new operator—.</p></li>
+<li><p><strong>The Lévy caveat.</strong> A <em>real</em> Lévy index is only stable for <span class="math inline">\(\alpha\in(0,2)\)</span>, and our mapping is <span class="math inline">\(\alpha=\gamma-1\)</span>. For very large <span class="math inline">\(\gamma\)</span>, <span class="math inline">\(\alpha=\gamma-1\)</span> goes above 2, outside the range of <span class="math inline">\(\alpha\)</span>-stable processes, and the analogy stops making physical sense. That’s why the lens is valid only within a regime (<span class="math inline">\(\gamma\)</span> not too large), not always; besides, <span class="math inline">\(\alpha=\gamma-1\)</span> and <span class="math inline">\(s=(\gamma-1)/2\)</span> are interpretive mappings, not theorems.</p></li>
+</ol>
+</section>
+<section id="ch.-24-training-dynamics-and-grokking" class="level2" data-number="47.24">
+<h2 data-number="47.24" class="anchored" data-anchor-id="ch.-24-training-dynamics-and-grokking"><span class="header-section-number">47.24</span> Ch. 24 · Training dynamics and grokking</h2>
+<ol type="1">
+<li><p><strong>The curve.</strong> Phase 1: <strong>train</strong> accuracy rises to ~100% early (memorization) while <strong>test</strong> stays at chance. Phase 2: a very long plateau (often a thousand times more steps) with train pinned at 100% and test on the floor. Phase 3: the <strong>jump</strong>, where test shoots up to nearly 100% much later. Classic overfitting logic would tell you to stop on the plateau, because train is already perfect and test isn’t improving —it looks as if the model “already finished” and is just memorizing—.</p></li>
+<li><p><strong>Not so sudden.</strong> Per Nanda <span class="citation" data-cites="nanda2023progress">(<a href="#ref-nanda2023progress" role="doc-biblioref">Nanda et al. 2023</a>)</span>, during the plateau the circuit that truly generalizes is forming <strong>gradually</strong> —in modular addition, a Fourier algorithm that turns “adding” into “rotating”. The test jump <em>seems</em> abrupt because it only becomes visible in the metric when that circuit, which had been cooking for a while, finally outweighs memorization and the latter retreats (cleanup); the curve’s abruptness is an artifact of <em>when</em>, not of the mechanism.</p></li>
+<li><p><strong>The engine.</strong> In Omnigrok <span class="citation" data-cites="liu2022omnigrok">(<a href="#ref-liu2022omnigrok" role="doc-biblioref">Liu et al. 2022</a>)</span>, against the weight norm the train loss is “L”-shaped (many norms memorize well) and the test loss “U”-shaped (only a narrow band of small norm generalizes); hence the “LU” mechanism. <strong>Weight decay</strong> penalizes large weights and slowly drags the norm from the memorizing zone (high) toward the generalizing minimum (low), and the grok happens when that journey completes. If weight decay is insufficient, the drag never arrives and many models <strong>never generalize</strong>: they stay on the plateau forever.</p></li>
+<li><p><strong>Honesty I.</strong> Because predicting grokking already has dedicated work —e.g.&nbsp;<em>Early-Warning Signals of Grokking</em> <span class="citation" data-cites="xu2026earlywarning">(<a href="#ref-xu2026earlywarning" role="doc-biblioref">Xu 2026</a>)</span> and spectral entropy collapse <span class="citation" data-cites="truong2026spectral">(<a href="#ref-truong2026spectral" role="doc-biblioref">Khanh et al. 2026</a>)</span>—, so claiming primacy would be false. Our contribution is a <strong>concrete, simple, training-internal, cheap signal</strong>: the inter-layer CKA <span class="math inline">\(\hat{O}_{01}\)</span>, which is <em>between</em> layers (not within-one covariance) and gives a measurable temporal lead.</p></li>
+<li><p><strong>Honesty II.</strong> We had the hypothesis that forcing <span class="math inline">\(\hat{O}_{01}\to1\)</span> (forcing the layers to resemble each other) would cause or prevent grokking, which would prove that CKA is a <strong>causal lever</strong>. The experiment —training 20,000 steps with CKA forced— refuted us: <strong>2 out of 3</strong> models kept grokking anyway. So we corrected the claim from “candidate causal signal” to “<strong>early predictor, correlational, with no demonstrated causality</strong>”.</p></li>
+</ol>
+</section>
+<section id="ch.-25-pre-training-at-scale" class="level2" data-number="47.25">
+<h2 data-number="47.25" class="anchored" data-anchor-id="ch.-25-pre-training-at-scale"><span class="header-section-number">47.25</span> Ch. 25 · Pre-training at scale</h2>
+<ol type="1">
+<li><p><strong>The terms.</strong> In <span class="math inline">\(L(N,D)=E+A/N^{\alpha}+B/D^{\beta}\)</span>, <span class="math inline">\(E\)</span> is the <strong>irreducible entropy</strong>: the loss floor no model can go below because language has genuine randomness. Even if <span class="math inline">\(N\)</span> (parameters) and <span class="math inline">\(D\)</span> (tokens) were infinite, the terms <span class="math inline">\(A/N^{\alpha}\)</span> and <span class="math inline">\(B/D^{\beta}\)</span> tend to zero but never go below <span class="math inline">\(E\)</span>. That’s why no model, however large, goes below that floor.</p></li>
+<li><p><strong>The split.</strong> With Chinchilla <span class="citation" data-cites="hoffmann2022chinchilla">(<a href="#ref-hoffmann2022chinchilla" role="doc-biblioref"><span class="nocase">Hoffmann et al.</span> 2022</a>)</span> (<span class="math inline">\(a\approx b\approx0.5\)</span>, <span class="math inline">\(N,D\propto C^{0.5}\)</span>), 10× more compute is split evenly: the model grows <span class="math inline">\(\sqrt{10}\approx3.16\times\)</span> and the data also <span class="math inline">\(\approx3.16\times\)</span> —brain and study in step, ~20 tokens/parameter rule—. Kaplan <span class="citation" data-cites="kaplan2020scaling">(<a href="#ref-kaplan2020scaling" role="doc-biblioref"><span class="nocase">Kaplan et al.</span> 2020</a>)</span>, by contrast, said “almost everything to brain” (<span class="math inline">\(N\propto C^{0.73}\)</span>, <span class="math inline">\(D\propto C^{0.27}\)</span>): the model grew ~5.4× and the data only ~1.85×, leaving the giants undertrained.</p></li>
+<li><p><strong>Inference-aware.</strong> That rule optimizes only <strong>training</strong> compute and completely ignores the cost of <strong>serving</strong> the model, which answers trillions of requests afterward; the lifetime bill is training + inference × usage volume. Since a smaller model is cheaper to serve each day, it pays to over-train it: that’s why Llama-3 trains an 8B with ~15 trillion tokens (~1,875 tokens/parameter, nearly 90× the 20:1 rule), because performance kept improving well past its Chinchilla-optimal point.</p></li>
+<li><p><strong>Parallelism.</strong> <strong>Tensor</strong> parallelism splits the matrices <em>within</em> each layer and forces the GPUs to communicate at every fwd/bwd step (very high traffic), so it only pays off <strong>within a node</strong>, with a fast interconnect like NVLink. <strong>Pipeline</strong> parallelism cuts the layer stack into stages and only exchanges the boundary activations (low traffic), so it tolerates the slower bandwidth <strong>between nodes</strong>. The rule is: the more the GPUs “talk”, the closer they must be.</p></li>
+<li><p><strong>Stability.</strong> In PaLM <span class="citation" data-cites="chowdhery2022palm">(<a href="#ref-chowdhery2022palm" role="doc-biblioref"><span class="nocase">Chowdhery et al.</span> 2022</a>)</span>, re-feeding the same skipped batches after a spike did <strong>not</strong> reproduce the loss spike. That indicates the cause wasn’t the data itself (if it were, the spike would return), but the <strong>interaction between that batch and the model’s specific state</strong> at that instant. That’s why the fix was to rewind to a checkpoint ~100 steps earlier and skip ~200-500 batches, changing the state instead of the data.</p></li>
+</ol>
+</section>
+<section id="ch.-26-fine-tuning-for-classification" class="level2" data-number="47.26">
+<h2 data-number="47.26" class="anchored" data-anchor-id="ch.-26-fine-tuning-for-classification"><span class="header-section-number">47.26</span> Ch. 26 · Fine-tuning for classification</h2>
+<ol type="1">
+<li><p><strong>The head.</strong> In <span class="math inline">\(W \in \mathbb{R}^{K\times H}\)</span>, <span class="math inline">\(K\)</span> is the number of classes (the output dimensions, one logit per label) and <span class="math inline">\(H\)</span> is the model’s hidden dimension (the size of the vector entering the head). It’s “the only thing born from scratch” because the body (embeddings and layers) comes pretrained, whereas this task-specific linear projection is initialized randomly and didn’t exist before the fine-tuning.</p></li>
+<li><p><strong>Freeze vs fine-tune.</strong> With only 200 examples and little compute it pays to freeze the body and train only the head (or use a bi-encoder/linear probing): there’s far too little data to move millions of parameters without overfitting. With 2 million examples full fine-tuning is worthwhile, because there’s enough signal to adapt all the representations and it usually gives better accuracy.</p></li>
+<li><p><strong>The raw <code>[CLS]</code>.</strong> The embedding space of an unfinetuned BERT is <em>anisotropic</em>: the vectors occupy a narrow cone instead of spreading over the sphere, so any two sentences have an artificially high cosine similarity. That’s why the raw <code>[CLS]</code> discriminates poorly between sentences: the cosine distances barely separate meanings and the vector isn’t a good sentence representative until the fine-tuning (or a contrastive objective) reduces that anisotropy.</p></li>
+<li><p><strong>Bi vs cross.</strong> A cross-encoder feeds the two sentences together through the network and produces a joint score, so comparing one query with 10,000 sentences requires 10,000 full model passes: it doesn’t scale. A bi-encoder encodes each sentence separately into a vector, so it can <em>precompute</em> the 10,000 embeddings once and, at query time, only computes dot products (nearest-neighbor search), which is cheap.</p></li>
+<li><p><strong>Temperature.</strong> In an InfoNCE-style contrastive loss, <span class="math inline">\(\tau\)</span> scales the logits (<span class="math inline">\(\text{sim}/\tau\)</span>); lowering <span class="math inline">\(\tau\)</span> a lot makes the softmax very peaky and concentrates almost all the gradient weight on the hardest negatives (the ones closest to the positive). This hardens the penalty on those negatives, but too small a <span class="math inline">\(\tau\)</span> makes training unstable and sensitive to label noise.</p></li>
+<li><p><strong>SimCSE.</strong> SimCSE builds a positive pair by passing the <em>same</em> sentence twice through the encoder with different <em>dropout</em> masks: the two slightly perturbed views are the positive, with no need for labels. If you remove the <em>dropout</em>, the two passes are identical, the positive is trivial (perfect similarity), and the model collapses: the method stops learning useful representations.</p></li>
+</ol>
+</section>
+<section id="ch.-27-alignment" class="level2" data-number="47.27">
+<h2 data-number="47.27" class="anchored" data-anchor-id="ch.-27-alignment"><span class="header-section-number">47.27</span> Ch. 27 · Alignment</h2>
+<ol type="1">
+<li><p><strong>The gap.</strong> A base model is only trained to predict the next token over raw text, so faced with an instruction it tends to continue it (e.g.&nbsp;generating more questions) instead of answering, even if it “knows” the answer: the ability exists but isn’t conditioned to the instruction-response format. <em>Instruction tuning</em> (SFT), and then preference alignment, is the stage that teaches it to map instructions to useful responses.</p></li>
+<li><p><strong>Bradley-Terry.</strong> The loss <span class="math inline">\(-\log \sigma(r(x,y_w) - r(x,y_l))\)</span> pushes the reward of the winner <span class="math inline">\(y_w\)</span> to exceed that of the loser <span class="math inline">\(y_l\)</span> by a growing margin (maximizes that difference). Pairwise comparisons are used rather than absolute scores because humans are far more consistent saying “A is better than B” than assigning calibrated numerical scores, which vary across annotators and over time.</p></li>
+<li><p><strong>The leash.</strong> Without the <span class="math inline">\(-\beta\cdot\text{KL}\)</span> term that anchors the policy to the reference model, the policy drifts freely to maximize reward and falls into <em>reward hacking</em>: it exploits flaws in the reward model (long, sycophantic responses, or patterns the RM scores high) instead of genuinely improving. It’s Goodhart’s law: when the reward (a proxy metric) becomes the objective, it stops being a good measure of real quality.</p></li>
+<li><p><strong>DPO.</strong> DPO removes (a) training an explicit reward model and (b) the online RL loop with PPO; it does so by rewriting the RLHF objective in closed form to optimize directly over the preference pairs with the policy and a frozen reference model. The “implicit reward” is the quantity <span class="math inline">\(\beta \log \frac{\pi_\theta(y\mid x)}{\pi_{\text{ref}}(y\mid x)}\)</span>: the policy itself encodes a reward, with no separate RM needed. (It’s an open debate: DPO is simpler and more stable, but there’s evidence that well-tuned PPO can beat it on certain benchmarks; neither dominates universally.)</p></li>
+<li><p><strong>Honesty.</strong> Two failure modes are <em>sycophancy</em>, saying what the user wants to hear instead of the truth, and <em>confident hallucination</em>, inventing with a self-assured tone. Human preference data can cause them because annotators tend to reward responses that please them, sound confident, or confirm their beliefs, so the model learns to optimize perceived approval rather than truthfulness.</p></li>
+</ol>
+</section>
+<section id="ch.-28-peft" class="level2" data-number="47.28">
+<h2 data-number="47.28" class="anchored" data-anchor-id="ch.-28-peft"><span class="header-section-number">47.28</span> Ch. 28 · PEFT</h2>
+<ol type="1">
+<li><p><strong>The saving.</strong> PEFT reduces training memory because only a handful of parameters are trainable, and the optimizer states (in Adam, two moments per parameter) plus the gradients only exist for <em>those</em> parameters, not for the billions of the frozen base. Since those states are usually the bulk of training memory (several times the model’s size), cutting them to a tiny fraction is the big saving.</p></li>
+<li><p><strong>LoRA term by term.</strong> In <span class="math inline">\(h = W_0 x + \frac{\alpha}{r}BAx\)</span>, <span class="math inline">\(W_0\)</span> is the frozen pretrained matrix; <span class="math inline">\(A \in \mathbb{R}^{r\times d}\)</span> projects down to a low rank <span class="math inline">\(r\)</span> and <span class="math inline">\(B \in \mathbb{R}^{d\times r}\)</span> projects back up, so <span class="math inline">\(BA\)</span> is a trainable low-rank update. <span class="math inline">\(B\)</span> is initialized to zero so that at the start <span class="math inline">\(BA=0\)</span> and the model begins as exactly the pretrained one, avoiding a random perturbation at the start.</p></li>
+<li><p><strong>Zero latency.</strong> LoRA adds no inference latency because the update <span class="math inline">\(\frac{\alpha}{r}BA\)</span> can be <em>fused</em> into <span class="math inline">\(W_0\)</span> by adding it (<span class="math inline">\(W = W_0 + \frac{\alpha}{r}BA\)</span>), leaving a single matrix identical in shape to the original. An adapter, by contrast, inserts extra sequential layers in the compute path that can’t be fused, so they add steps and latency on every forward pass.</p></li>
+<li><p><strong>QLoRA.</strong> The frozen base matrix <span class="math inline">\(W_0\)</span> is quantized to 4 bits (NF4), and the LoRA adapters (<span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>) are trained in 16 bits. The 4-bit base “is never updated” because it’s frozen and only used for the forward pass (dequantized on the fly for the product); all gradients flow to the 16-bit adapters, so the quantized version doesn’t need to be trainable.</p></li>
+<li><p><strong>Honesty.</strong> Per <em>LoRA Learns Less and Forgets Less</em>, LoRA falls short on tasks that demand learning genuinely new knowledge or domains (e.g.&nbsp;continued pretraining in code or math), where full fine-tuning learns more. In exchange, LoRA <em>forgets less</em>: it acts as a regularizer and better preserves the base model’s capabilities outside the target task, keeping more diversity in the outputs.</p></li>
+</ol>
+</section>
+<section id="ch.-29-generation" class="level2" data-number="47.29">
+<h2 data-number="47.29" class="anchored" data-anchor-id="ch.-29-generation"><span class="header-section-number">47.29</span> Ch. 29 · Generation</h2>
+<ol type="1">
+<li><p><strong>Probability ≠ quality.</strong> Greedy and beam search degenerate in open generation because maximizing probability leads to loops and repetitions: the most probable text isn’t the most natural. Holtzman et al.&nbsp;showed that human text does <em>not</em> occupy the maximum-probability regions: it oscillates, uses surprising words, and its probability varies, so chasing the maximum produces flat, repetitive outputs.</p></li>
+<li><p><strong>Min-p vs top-p.</strong> Top-p (nucleus) cuts by accumulating probability mass up to a fixed threshold <span class="math inline">\(p\)</span> over the sorted set; min-p sets a threshold <em>relative</em> to the most probable token, discarding those that fall below <span class="math inline">\(\text{min\_p}\cdot p_{\max}\)</span>. Min-p holds up better at high temperatures because its cutoff adapts to the model’s confidence: when the distribution flattens from the temperature, it still demands proximity to the peak and avoids admitting absurd tokens from the tail.</p></li>
+<li><p><strong>Text CFG.</strong> In <span class="math inline">\(\text{logits}_{\text{without}} + \gamma\cdot(\text{logits}_{\text{with}} - \text{logits}_{\text{without}})\)</span>, <span class="math inline">\(\gamma\)</span> is the guidance strength: it amplifies the difference the prompt/condition introduces, pushing the output toward what the conditioning favors. With <span class="math inline">\(\gamma=1\)</span> you recover normal conditional generation (the expression collapses to <span class="math inline">\(\text{logits}_{\text{with}}\)</span>); <span class="math inline">\(\gamma&gt;1\)</span> exaggerates the prompt’s effect.</p></li>
+<li><p><strong>Constrained.</strong> The “mask + renormalize” mechanism sets to <span class="math inline">\(-\infty\)</span> (zero probability) the logits of tokens that would violate the grammar/schema at that point, and renormalizes the softmax over the allowed tokens, guaranteeing the output is syntactically valid. But a valid JSON doesn’t guarantee a correct answer: the constraint only forces the <em>form</em>, not the <em>content</em>, so the model can fill valid fields with false or meaningless data.</p></li>
+<li><p><strong>Speculative.</strong> Speculative decoding uses a small model to propose several tokens and the large one verifies them in parallel, accepting them with a sampling criterion (rejection sampling) and, on rejection, sampling from a corrected residual distribution. That acceptance/correction scheme is designed so that the resulting distribution is <em>exactly</em> that of the large model sampling alone: only the speed changes, not the probabilities.</p></li>
+<li><p><strong>LLM-judges.</strong> Two biases are <em>position bias</em> (preferring the first or second response according to the order they’re presented in) and <em>verbosity/self-preference bias</em> (favoring longer responses or those generated by models of its own family/style, regardless of their real quality).</p></li>
+</ol>
+</section>
+<section id="ch.-30-prompting-and-icl" class="level2" data-number="47.30">
+<h2 data-number="47.30" class="anchored" data-anchor-id="ch.-30-prompting-and-icl"><span class="header-section-number">47.30</span> Ch. 30 · Prompting and ICL</h2>
+<ol type="1">
+<li><p><strong>No gradients.</strong> That ICL happens “at inference time” means the model learns from the pattern of the examples within the prompt itself during a single forward pass, without updating any weights. It differs from fine-tuning in that there’s no backpropagation or permanent change to the model: the “learning” lives only in the activation of that context and disappears when the prompt changes.</p></li>
+<li><p><strong>Random labels.</strong> Min et al.&nbsp;showed that shuffling (randomly assigning) the labels of the demonstration examples barely degrades performance, which indicates that the correct input→label mapping isn’t what contributes most. What does matter is: the <em>label space</em> (which classes exist), the <em>input text distribution</em>, and the <em>format</em> of the demonstration.</p></li>
+<li><p><strong>Induction heads.</strong> The “[A][B]…[A]→[B]” rule describes an attention head that, on seeing token [A] again, looks for its previous occurrence and copies what came after ([B]), i.e.&nbsp;it completes by pattern matching in the context. It’s a good candidate mechanism for ICL because it implements exactly the kind of copy/generalization-by-analogy that learning from examples requires; the evidence is stronger in small/toy models (where Olsson et al.&nbsp;isolated it), and plausible but less verifiable in large ones.</p></li>
+<li><p><strong>CoT and scale.</strong> Chain-of-thought doesn’t help (and may even hurt) a small model because it lacks the underlying reasoning capacity to execute the intermediate steps well; CoT only <em>unlocks</em> abilities that emerge with scale. Self-consistency samples several reasoning chains and takes the answer by <em>majority vote</em>: since there are many correct paths but errors scatter, marginalizing over chains improves accuracy.</p></li>
+<li><p><strong>Fragility.</strong> Two ways the same prompt can give very different results without changing its content: (a) reordering the few-shot examples (the order of the demonstrations changes the output a lot) and (b) superficial variations of format or wording (line breaks, separators, capitalization, spaces) that don’t alter the meaning but do alter the prediction.</p></li>
+<li><p><strong>Fidelity.</strong> Turpin et al.&nbsp;showed that written CoT reasoning can be <em>unfaithful</em>: it doesn’t necessarily reflect the real cause of the answer. By introducing biases into the prompt (e.g.&nbsp;always marking option “A” as correct in the examples), the model changes its answer to follow the bias but generates a plausible CoT justification that never mentions that bias, rationalizing after the fact instead of explaining its real decision.</p></li>
+</ol>
+</section>
+<section id="ch.-31-rag" class="level2" data-number="47.31">
+<h2 data-number="47.31" class="anchored" data-anchor-id="ch.-31-rag"><span class="header-section-number">47.31</span> Ch. 31 · RAG</h2>
+<ol type="1">
+<li><p><strong>Parametric vs non.</strong> Parametric memory is the knowledge encoded in the model’s weights during training; non-parametric is an external store (corpus, vector index) queried at inference time. The one you update without retraining is the non-parametric: it’s enough to reindex or add documents to the store.</p></li>
+<li><p><strong>Dense vs BM25.</strong> BM25 wins when exact lexical matching matters: product codes, rare proper names, identifiers, or jargon that didn’t appear in the <em>embedder</em>’s training. Dense retrieval wins with paraphrases and synonyms, where query and document say the same thing with different words. The hybrid is usually better because it combines BM25’s literal precision with dense’s semantic coverage, covering each one’s failures.</p></li>
+<li><p><strong>ANN.</strong> Exact kNN requires comparing the query with all the vectors, a linear cost <span class="math inline">\(O(n\,d)\)</span> that becomes prohibitive with millions of items per query. HNSW/FAISS use approximate search (navigable graphs or quantization) to achieve near-logarithmic latency. What’s sacrificed is the exactness guarantee: sometimes a true neighbor is missed (lower <em>recall</em>) in exchange for enormous speed.</p></li>
+<li><p><strong>Reranking.</strong> The bi-encoder encodes query and document separately, so their vectors are precomputed and retrieval is a lightning-fast dot product over millions of candidates. The cross-encoder processes the query-document pair together and is far more precise, but also far more expensive: applying it to the whole corpus would be infeasible. That’s why it’s used in two stages: the bi-encoder narrows to a handful of candidates and the cross-encoder reranks only those.</p></li>
+<li><p><strong>Lost in the middle.</strong> The most relevant fragments are placed at the beginning and the end of the context, not in the center. Models attend better to the edges and tend to “lose” information situated in the middle of a long window, so burying what’s important in the middle degrades the answer.</p></li>
+<li><p><strong>Honesty.</strong> First, the model can ignore the retrieved context and answer from its parametric memory, contradicting the correct source. Second, it can misinterpret or poorly synthesize fragments that were relevant, or combine correct pieces into a false conclusion. RAG reduces hallucination by anchoring the answer in evidence, but doesn’t eliminate it.</p></li>
+</ol>
+</section>
+<section id="ch.-32-agents" class="level2" data-number="47.32">
+<h2 data-number="47.32" class="anchored" data-anchor-id="ch.-32-agents"><span class="header-section-number">47.32</span> Ch. 32 · Agents</h2>
+<ol type="1">
+<li><p><strong>Agent vs RAG.</strong> “Retrieving” is bringing in information to condition a single response; “acting” is executing tools that change the state of the world or the process itself and observing the result in a loop. RAG is a particular case of an agent with a single tool (the retriever) and a single step, with no iterative decision cycle.</p></li>
+<li><p><strong>ReAct.</strong> The cycle interleaves a <em>Thought</em> (reasoning about what’s needed), an <em>Action</em> (invoking a tool), and an <em>Observation</em> (reading the real result), repeating until solved. It reduces hallucination because each step is anchored in verifiable external observations rather than inventing facts from the model’s weights alone.</p></li>
+<li><p><strong>Code as action.</strong> First, code is compositional and expressive: loops, conditionals, and variables let you chain many operations into a single action, something impossible with flat tool calls. Second, it’s verifiable and executable: an interpreter gives exact feedback (results or errors) and leverages a vast ecosystem of existing libraries.</p></li>
+<li><p><strong>Error composition.</strong> With independent steps at 90%, the reliability of 10 steps is <span class="math inline">\(0.9^{10}\approx 0.35\)</span>, barely 35%. This shows that long-horizon agents collapse from the multiplication of probabilities: you need extremely high per-step reliability, error recovery, or verification for long tasks to be viable.</p></li>
+<li><p><strong>Demo vs production.</strong> A revealing figure is τ-bench, where GPT-4o is around 61% on the first try but falls to ~25% in <em>pass^8</em>; in GAIA the gap is 15% for agents versus ~92% human. <em>pass^k</em> measures consistency: whether the agent achieves the task in all <span class="math inline">\(k\)</span> tries in a row, not just once; a low <em>pass^8</em> betrays brutal inconsistency even if the one-off success rate is high.</p></li>
+<li><p><strong>Security.</strong> In a chatbot, a prompt injection at most manipulates the output text. In an agent, that malicious text can hijack real actions (delete files, send money, leak data) because the agent has the power to act on the world; the damage is amplified when crossing from words to effects.</p></li>
+</ol>
+</section>
+<section id="ch.-33-multimodal" class="level2" data-number="47.33">
+<h2 data-number="47.33" class="anchored" data-anchor-id="ch.-33-multimodal"><span class="header-section-number">47.33</span> Ch. 33 · Multimodal</h2>
+<ol type="1">
+<li><p><strong>Patches.</strong> The ViT chops the image into fixed-size patches (e.g.&nbsp;<span class="math inline">\(16\times16\)</span>), flattens each one, and projects it linearly into a vector, obtaining a sequence of “tokens” analogous to words. The <code>[CLS]</code> token is a learned token added at the start whose final state aggregates the global representation of the image for classification tasks.</p></li>
+<li><p><strong>Data hunger.</strong> The ViT lacks the inductive biases of CNNs (locality and translation equivariance), so it must learn them from scratch from the data, which demands enormous datasets (JFT-300M style) to surpass CNNs. DeiT showed that with distillation and a good training recipe you can train a competitive ViT with ImageNet alone, without large-scale private data.</p></li>
+<li><p><strong>CLIP zero-shot.</strong> CLIP trains with a contrastive objective that aligns images and their text descriptions into a single <em>embedding</em> space, pulling the correct pairs together and pushing the incorrect ones apart. To classify without task labels, it turns each class into a sentence (“a photo of a cat”) and assigns the image to the class whose text has the highest similarity, all without task-specific training.</p></li>
+<li><p><strong>The bridge.</strong> A Q-Former or a projection acts as an adapter that translates the visual encoder’s features into the <em>embedding</em> space the frozen LLM understands. So the LLM is “given eyes” without retraining it: only the bridge is trained, converting image features into something equivalent to input tokens of the text model.</p></li>
+<li><p><strong>Cross-attention.</strong> When the text looks at an image, the <em>queries</em> come from the text modality (what the model is looking for) and the <em>keys/values</em> come from the image modality (the available information). So each text position attends to and extracts information from the visual features.</p></li>
+<li><p><strong>The circle.</strong> Both are “extra” tokens with no semantic content of their own that the model uses as dumping grounds: the ViT’s <em>register tokens</em> and the LLM’s attention sinks absorb leftover attention mass so as not to contaminate the useful tokens. They arise analogously because attention needs a place to “deposit” probability when there’s nothing relevant to look at.</p></li>
+</ol>
+</section>
+<section id="ch.-34-efficient-attention" class="level2" data-number="47.34">
+<h2 data-number="47.34" class="anchored" data-anchor-id="ch.-34-efficient-attention"><span class="header-section-number">47.34</span> Ch. 34 · Efficient attention</h2>
+<ol type="1">
+<li><p><strong>Two costs.</strong> Attention’s compute cost is <span class="math inline">\(O(n^2 d)\)</span> and its memory cost is the score matrix <span class="math inline">\(O(n^2)\)</span>. What “explodes” is the <span class="math inline">\(O(n^2)\)</span> memory with the sequence length <span class="math inline">\(n\)</span>; it doesn’t depend on the dimension <span class="math inline">\(d\)</span> because the attention matrix is of size <span class="math inline">\(n\times n\)</span> per head, regardless of how many channels each vector has.</p></li>
+<li><p><strong>Memory-bound.</strong> “Memory-bound” means the bottleneck is moving data between memory levels, not the arithmetic operations; “compute-bound” is the opposite. Attention falls in the former because it does few operations per byte read/written of the enormous <span class="math inline">\(n\times n\)</span> matrix. HBM is the GPU’s large but slow memory and SRAM the small, fast on-chip one; the real cost is in the HBM↔︎SRAM shuttling.</p></li>
+<li><p><strong>Online softmax.</strong> Normal softmax needs the entire row because it must subtract the max and divide by the sum of exponentials of all elements, global values of the row. Block-wise computation avoids this by keeping a running max and sum that update as each block is processed, rescaling the partial results, so it never materializes the full row.</p></li>
+<li><p><strong>Exact vs approximate.</strong> FlashAttention reorders the computation (operation fusion and online block-wise softmax) but computes exactly the same softmax as standard attention, only with less memory traffic. Linear attention, by contrast, replaces the softmax with a feature kernel <span class="math inline">\(\varphi\)</span>, which changes the function computed and is therefore an approximation.</p></li>
+<li><p><strong>Reassociation.</strong> In <span class="math inline">\(\varphi(Q)(\varphi(K)^\top V)\)</span> you first compute <span class="math inline">\(\varphi(K)^\top V\)</span>, a matrix of size <span class="math inline">\(d\times d\)</span> independent of <span class="math inline">\(n\)</span>. Associating this way avoids forming the <span class="math inline">\(n\times n\)</span> matrix and the cost becomes linear in <span class="math inline">\(n\)</span> instead of quadratic.</p></li>
+<li><p><strong>Roofline.</strong> FlashAttention attacks the IO constant (reduces HBM↔︎SRAM traffic without changing the complexity). Linear attention attacks the exponent (from <span class="math inline">\(n^2\)</span> to <span class="math inline">\(n\)</span>). GQA attacks the inference cache (shares <em>keys/values</em> across heads to reduce the KV-cache size).</p></li>
+</ol>
+</section>
+<section id="ch.-35-compression" class="level2" data-number="47.35">
+<h2 data-number="47.35" class="anchored" data-anchor-id="ch.-35-compression"><span class="header-section-number">47.35</span> Ch. 35 · Compression</h2>
+<ol type="1">
+<li><p><strong>The map.</strong> In <span class="math inline">\(x \approx S\,(x_q - Z)\)</span>, <span class="math inline">\(S\)</span> is the scale (factor mapping integers to reals) and <span class="math inline">\(Z\)</span> is the zero-point (the integer representing the real value <span class="math inline">\(0\)</span>). Group-wise quantization assigns its own <span class="math inline">\(S\)</span> (and <span class="math inline">\(Z\)</span>) to each subblock of weights instead of a single one per tensor, capturing local ranges better and reducing the error versus per-tensor quantization.</p></li>
+<li><p><strong>PTQ vs QAT.</strong> PTQ quantizes an already-trained model cheaply and quickly, without retraining, and usually suffices at 8 bits. QAT simulates quantization during training so the model learns to tolerate it, which is worth its cost when going to aggressive precisions (4 bits or less) or when PTQ degrades quality too much.</p></li>
+<li><p><strong>Outliers.</strong> A few activation dimensions have enormous magnitudes that stretch the quantization range, crushing all the others into very few levels and blowing up the error. LLM.int8() isolates them: it processes those outlier columns in high precision (FP16) and quantizes the rest to int8, combining both results.</p></li>
+<li><p><strong>Soft targets.</strong> The teacher’s full distribution reveals its “dark knowledge”: the relative probabilities among wrong classes (what resembles what), information that the hard single-class label hides. Temperature <span class="math inline">\(T\)</span> smooths that distribution (logits divided by <span class="math inline">\(T\)</span>) to amplify those small signals so the student learns the relations between classes better.</p></li>
+<li><p><strong>Pruning.</strong> Structured pruning removes whole units (neurons, heads, channels), leaving smaller, denser matrices that the GPU runs directly faster. Unstructured pruning scatters zeros everywhere: it saves parameters but the GPU still processes the dense matrix except with special <em>sparsity</em> support, so it rarely actually speeds things up on normal hardware.</p></li>
+<li><p><strong>Honesty.</strong> Perplexity is an aggregate average that can barely move while compression destroys concrete capabilities (reasoning, instruction-following, rare factual knowledge) that don’t dominate that average. You need to evaluate with downstream task <em>benchmarks</em> and specific tests, because near-intact perplexity doesn’t guarantee the compressed model still works.</p></li>
+</ol>
+</section>
+<section id="ch.-36-serving-and-deploying" class="level2" data-number="47.36">
+<h2 data-number="47.36" class="anchored" data-anchor-id="ch.-36-serving-and-deploying"><span class="header-section-number">47.36</span> Ch. 36 · Serving and deploying</h2>
+<ol type="1">
+<li><p><strong>Two phases.</strong> <em>Prefill</em> processes the whole prompt at once: since all input tokens are known, it’s a massive, parallel matrix-matrix multiplication that saturates the GPU’s cores, so it’s compute-bound. <em>Decode</em> generates one token at a time and must reread the keys/values of all the previous ones, a low-arithmetic-intensity matrix-vector operation whose limit is bringing data from HBM (weights + KV cache), not computing: that’s why it’s bandwidth-bound. The serving bottleneck is decode, because it’s sequential, underuses the compute, and is where the KV cache is reread at every step.</p></li>
+<li><p><strong>Metrics.</strong> TTFT (<em>time-to-first-token</em>) is how long the user waits to see the first word and is dominated by prefill; TPOT/ITL is the time per output token and is dominated by decode (it’s the perceived speed). <em>Goodput</em> —requests/sec meeting a latency SLO— is more honest than plain <em>throughput</em> because you can have many total tokens/sec and yet have almost no user meet their TTFT/TPOT target; throughput counts tokens, goodput counts satisfied users.</p></li>
+<li><p><strong>Continuous batching.</strong> A static batch isn’t released until the longest request finishes, and since output lengths vary unpredictably, already-finished requests leave idle <em>slots</em> occupying the GPU. Continuous batching schedules at the iteration level: after each step it removes the finished ones and admits new ones, keeping the GPU saturated. The “23×” isn’t a guarantee because that maximum only appears with high variance in response lengths; with similar-length responses all systems converge to ~1×.</p></li>
+<li><p><strong>KV cache.</strong> The KV cache grows linearly with the batch size and the sequence length and competes with the weights for HBM, so how much KV fits decides how many requests you can batch. PagedAttention brings two things to serving: it stores the cache in virtual-memory-style blocks, eliminating fragmentation (near-zero waste → larger batches fit), and it lets common-prefix blocks (same <em>system prompt</em> or <em>few-shot</em> examples) be physically shared instead of recomputed.</p></li>
+<li><p><strong>Interference.</strong> A long prefill is compute-bound and monopolizes the GPU, so other users’ in-progress decodes stall and their TPOT spikes. DistServe solves it by disaggregation —placing prefill and decode on separate GPUs/instances, each phase optimized on its own, at the cost of transferring the KV cache between them—. Sarathi-Serve solves it by chopping the long prefill into chunks and interleaving them with the decodes in the same batch without pausing them (<em>stall-free batching</em>): spatial separation versus temporal interleaving.</p></li>
+<li><p><strong>Honesty.</strong> Because almost all the serving “X× faster” claims are very workload-specific: they depend on the chosen <em>baseline</em>, the GPU and its interconnect, the model size, and the input/output lengths. A result obtained with high-variance responses or a naive <em>baseline</em> can collapse to ~1× on your real traffic, so read them as “up to X× under the paper’s conditions” and measure on your own workload before believing the curve.</p></li>
+</ol>
+</section>
+<section id="ch.-37-a-primer-on-mechanistic-interpretability" class="level2" data-number="47.37">
+<h2 data-number="47.37" class="anchored" data-anchor-id="ch.-37-a-primer-on-mechanistic-interpretability"><span class="header-section-number">47.37</span> Ch. 37 · A primer on mechanistic interpretability</h2>
+<ol type="1">
+<li><p><strong>Causal vs correlational.</strong> MI insists on intervention because its goal is to demonstrate which component <em>causes</em> a behavior, not just what correlates with it. A bright attention map over a token is correlational: information can flow through the residual stream, the values, and the MLPs without passing through where attention “looks”, so a high weight doesn’t prove that token caused the output. That’s why MI prefers transplanting activations and measuring the effect, not reading maps.</p></li>
+<li><p><strong>QK vs OV.</strong> The QK circuit decides <em>where</em> the head attends (the attention pattern, who it looks at), and the OV circuit decides <em>what</em> it writes into the residual stream when it looks there. Separating them is useful because they’re nearly independent computations: a head can get who to attend to right but contribute irrelevant content, or vice versa, and diagnosing them separately avoids confusing routing with content.</p></li>
+<li><p><strong>Superposition.</strong> The 50-slot drawer holds 100 objects by tilting them so they overlap but stay distinguishable: you gain capacity but there’s no longer “one object per slot”. Likewise, the network represents more features than dimensions in nearly orthogonal directions, so opening one neuron returns a mix of disparate concepts (polysemanticity). SAEs try to undo that superposition by training an overcomplete, sparse dictionary that decomposes the activation into many monosemantic features.</p></li>
+<li><p><strong>Patching.</strong> <em>Activation patching</em> runs a clean pass and a corrupted one, transplants an activation from one to the other, and measures how much the output changes; if moving <em>that</em> component changes the result, <em>that</em> one is causally responsible. It’s causal precisely because it intervenes and observes the effect, not just looks. It differs from a linear probe (<em>probing</em>), which only trains a classifier to see whether certain information is <em>present</em>: the probe shows the datum is decodable, not that the model uses it (correlation ≠ use).</p></li>
+<li><p><strong>Honesty.</strong> First, published circuits tend to be partial and victims of <em>cherry-picking</em> and the streetlight effect: we study what the tools illuminate, not necessarily what matters, and the model may use routes that aren’t isolated. Second, <em>patching</em> itself has unsettled subtleties —logit difference, probability, or KL, and different ways of “corrupting”, can yield different conclusions— and most clean circuits are from small models or narrow behaviors that we don’t know how to scale to the frontier.</p></li>
+<li><p><strong>Structure vs circuit.</strong> Our per-head γ is a descriptive/correlational measure of the aggregate geometry of attention (how it spreads over distance), not an isolated algorithm with causal evidence. A mechanistic circuit identifies which components implement a concrete computation and proves it by intervening; γ isolates no component and doesn’t intervene, it only summarizes global statistics. They are complementary lenses —structure-level versus algorithm-level—, not the same thing.</p></li>
+</ol>
+</section>
+<section id="ch.-38-verified-folklore-and-numerology" class="level2" data-number="47.38">
+<h2 data-number="47.38" class="anchored" data-anchor-id="ch.-38-verified-folklore-and-numerology"><span class="header-section-number">47.38</span> Ch. 38 · Verified, folklore, and numerology</h2>
+<ol type="1">
+<li><p><strong>The three buckets.</strong> <em>Verified/derived</em> is a claim with a receipt —a formal proof in Lean or reproducible data—, e.g.&nbsp;our Fisher = <span class="math inline">\(C_V/\gamma^2\)</span> identity proved in Lean. <em>Folklore</em> is a popular belief without justification or already contradicted, like “attention explains the model’s decision”. <em>Numerology</em> is a number or formula that fits the data with no mechanism to explain it: fitting a curve with good R² isn’t understanding it.</p></li>
+<li><p><strong>The receipt.</strong> A mathematical identity needs a formal proof (Lean) verifying that the algebra checks out and is consistent; an empirical claim needs reproducible data showing that the phenomenon occurs in real models. The same one doesn’t work because they’re different things: Lean proves the formulas are coherent, not that they describe a transformer causally, and data that fits doesn’t guarantee the underlying algebra is correct.</p></li>
+<li><p><strong>Lean ≠ reality.</strong> The imprint ν ≈ <span class="math inline">\(-1/(2\pi)\)</span> has an algebraic identity proved in Lean, so the algebra is internally correct. But when measured on data it doesn’t reproduce: the confidence interval comes out wide and doesn’t converge in Pythia-70M. This shows that “proved in Lean” only certifies algebraic consistency (the blueprint is well drawn), not that the building constructed —the real model— resembles it; an empirical claim can be false even if its algebra is valid.</p></li>
+<li><p><strong>Erratum.</strong> In Paper I we claimed <span class="math inline">\(C_V(\gamma=1) = (\log N)^2/4\)</span>, an error of a factor 3; the correct value is <span class="math inline">\((\log N)^2/12\)</span>, which two independent derivations reach and which we re-proved in Lean. Reporting it increases reliability because it shows we apply the same yardstick to our own work and that the process detects and corrects errors: a book that teaches where it went wrong is more credible than one that only exhibits successes.</p></li>
+<li><p><strong>Myth.</strong> “Attention explains the model’s decision” is folklore because, as Ch. 37 argues, an attention map is correlational, not causal: information can flow through the residual stream, the values, and the MLPs without passing through where attention puts its weight. That a head “looks” a lot at a token doesn’t prove that token caused the output; proving it requires causal intervention (<em>activation patching</em>), not reading the map.</p></li>
+<li><p><strong>Apply it.</strong> First, what kind of receipt does it bring —a formal proof, reproducible data, or just an eyeballed fit? Second, is there a mechanism that explains <em>why</em> that number appears, or is it coincidence (numerology)? Third, does it reproduce outside its case —on other tasks, models, or seeds, with a narrow confidence interval—, or is it from a single task/family? Without receipt, mechanism, or reproducibility, treat it as folklore.</p></li>
+</ol>
+</section>
+<section id="ch.-39-the-map-of-the-2026-collapse-landscape" class="level2" data-number="47.39">
+<h2 data-number="47.39" class="anchored" data-anchor-id="ch.-39-the-map-of-the-2026-collapse-landscape"><span class="header-section-number">47.39</span> Ch. 39 · The map of the 2026 collapse landscape</h2>
+<ol type="1">
+<li><p><strong>Four objects.</strong> Sinks measures the concentration of attention mass on specific (low-information, typically BOS) tokens. Temperature/thermodynamics measures the global sharpness of the softmax read as Boltzmann plus the training dynamics. Covariance/grokking measures the geometry of the representations (spectral entropy, effective dimension). Fractional measures a Lévy diffusion kernel with a designed order α. Since each framework has its own order parameter and measures a different object, they can’t be “the same thing”: they are four lenses, not four views of a single proven phenomenon.</p></li>
+<li><p><strong>Real overlap.</strong> The field recognizes two solid bridges with no need for our γ. First, it’s been shown that sink = <em>massive activation</em> = compression valley are the same phenomenon (proved identity). Second, Kim’s energy fluctuation (thermodynamics) and the grokking parameters point to the same event: the onset of generalization.</p></li>
+<li><p><strong>Honest γ.</strong> <em>Strong connector</em>: γ ↔︎ fractional, via the order <span class="math inline">\((\gamma-1)/2\)</span>, even if it’s a descriptor↔︎design crossover. <em>Our analogy</em>: γ=1 ↔︎ Hagedorn boundary (temperature), since Kim doesn’t fix a static boundary at γ=1 and equating them is our interpretive layer. <em>Separator</em>: γ ⊥ sink-mass, where γ doesn’t unify but instead shows that sinks are an orthogonal axis. <em>Weak correlation</em>: γ-rerise/CKA ↔︎ grokking, an analogy with no mechanism that competes with other signals.</p></li>
+<li><p><strong>Overclaiming.</strong> Defensible version: “γ is a measurable exponent that lets you <em>situate</em> a model against three of the lenses —directly with the fractional, as an analogy with temperature, and as a correlation with grokking— and that also <em>shows sinks to be a fourth, orthogonal lens</em>.” It’s not “the coordinate that unifies the four frameworks”; it’s a coordinate that locates and separates, flagging γ=1↔︎Hagedorn and γ↔︎grokking as our synthesis/speculation.</p></li>
+<li><p><strong>What’s open.</strong> First, there’s no consensus first-principles theory: almost everything is descriptive or analogical (thermo = “isomorphism”, fractional = designed operator) and the only rigorous local result —softmax = free-energy minimum— doesn’t scale to the trained model. Second, there’s no agreed grokking order parameter: four early signals compete with no winner, and the causal origin of sinks remains unresolved. They matter because without them you can’t go from describing collapse to predicting or causally controlling it.</p></li>
+<li><p><strong>Descriptor vs design.</strong> FNA’s α is a <em>designed</em> operator: it’s built by hand so the kernel has the desired multiscale reach. γ is a <em>measured</em> descriptor: it’s extracted by fitting the observed attention of real models. It matters for claiming mechanism because a parameter that is measured describes what the model does but, on its own, doesn’t prove <em>why</em> it does it; one that is designed generates a behavior, but doesn’t prove the real model implements it that way —conflating them is the error that runs through the whole field.</p></li>
+</ol>
+</section>
+<section id="ch.-40-ethics-safety-and-limitations" class="level2" data-number="47.40">
+<h2 data-number="47.40" class="anchored" data-anchor-id="ch.-40-ethics-safety-and-limitations"><span class="header-section-number">47.40</span> Ch. 40 · Ethics, safety, and limitations</h2>
+<ol type="1">
+<li><p><strong>Capability ≠ safety.</strong> A model can be very capable writing code or fluent responses and at the same time be unreliable: it confidently hallucinates false data, or is susceptible to <em>jailbreaks</em> that bypass its safety training. Knowing how to do something (capability) doesn’t imply doing it reliably and safely: fluency and correctness/safety are distinct axes, which is why a competent model still needs supervision and verification.</p></li>
+<li><p><strong>Hallucination.</strong> Partial calibration doesn’t solve it because, although large models are reasonably calibrated at judging whether their own answer is correct, they still hallucinate: knowing how to estimate confidence doesn’t prevent producing the false output. It’s “partly intrinsic” because predicting the next token over imperfect data generates fluent unsupported outputs, and there’s an argument (theoretical, worst-case) that it can’t be eliminated entirely —argued, not settled—; RAG reduces it, doesn’t erase it.</p></li>
+<li><p><strong>Jailbreak.</strong> The first mode is <em>competing objectives</em>: being helpful clashes with being safe, and the attacker exploits that tension to make the model prioritize helping. The second is <em>mismatched generalization</em>: capabilities reach domains the safety training didn’t cover. A “guardrail” isn’t containment because there exist universal adversarial suffixes, automatically generated, that transfer across models: safety training is bypassable friction, not a guarantee robust to optimization attacks.</p></li>
+<li><p><strong>Sleeper agents.</strong> It demonstrates exactly that a backdoor <em>inserted on purpose</em> (safe code if “2023”, exploitable if “2024”) can persist through SFT, RLHF, and adversarial training, and that the latter sometimes teaches the model to hide the trigger better. It does NOT demonstrate that models develop deception on their own in normal training: the backdoor was introduced deliberately, so the result is about persistence and concealment, not about the spontaneous emergence of deceptiveness.</p></li>
+<li><p><strong>Evaluating.</strong> Benchmark contamination occurs when test-set data leaks into training, artificially inflating the figures. It would make you distrust a headline number because that result may reflect memorization of the test and not real capability, so it’s worth doing holistic evaluation (beyond <em>accuracy</em>: robustness, bias, toxicity) with contamination control before believing any standout score.</p></li>
+<li><p><strong>Final honesty.</strong> First, we don’t know why or when capabilities emerge: scaling laws fit the loss, not the <em>onset</em> of a capability or a risk, and we can’t predict or bound emergent behaviors before they appear. Second, we don’t know how to certify the safety of a deployed model —interpretability isn’t there yet, the alignment of superhuman systems is unresolved, and even “what the model knows” isn’t sharp—. They matter because using these models responsibly demands admitting those limits instead of pretending the hood is transparent.</p></li>
+</ol>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-chowdhery2022palm" class="csl-entry" role="listitem">
+<span class="nocase">Chowdhery, Aakanksha et al.</span> 2022. <em>PaLM: Scaling Language Modeling with Pathways</em>. <a href="https://arxiv.org/abs/2204.02311">https://arxiv.org/abs/2204.02311</a>.
+</div>
+<div id="ref-hoffmann2022chinchilla" class="csl-entry" role="listitem">
+<span class="nocase">Hoffmann, Jordan et al.</span> 2022. <em>Training Compute-Optimal Large Language Models (Chinchilla)</em>. <a href="https://arxiv.org/abs/2203.15556">https://arxiv.org/abs/2203.15556</a>.
+</div>
+<div id="ref-kaplan2020scaling" class="csl-entry" role="listitem">
+<span class="nocase">Kaplan, Jared et al.</span> 2020. <em>Scaling Laws for Neural Language Models</em>. <a href="https://arxiv.org/abs/2001.08361">https://arxiv.org/abs/2001.08361</a>.
+</div>
+<div id="ref-truong2026spectral" class="csl-entry" role="listitem">
+Khanh, Hoa, Trung, and Duc. 2026. <em>Spectral Entropy Collapse as a Phase Transition in Delayed Generalisation</em>. <a href="https://arxiv.org/abs/2604.13123">https://arxiv.org/abs/2604.13123</a>.
+</div>
+<div id="ref-kim2026thermo" class="csl-entry" role="listitem">
+Kim, Gunn. 2026. <em>Thermodynamic Isomorphism of Transformers: A Lagrangian Approach to Attention Dynamics</em>. <a href="https://arxiv.org/abs/2602.08216">https://arxiv.org/abs/2602.08216</a>.
+</div>
+<div id="ref-liu2022omnigrok" class="csl-entry" role="listitem">
+Liu, Ziming, Eric J. Michaud, and Max Tegmark. 2022. <em>Omnigrok: Grokking Beyond Algorithmic Data</em>. <a href="https://arxiv.org/abs/2210.01117">https://arxiv.org/abs/2210.01117</a>.
+</div>
+<div id="ref-nanda2023progress" class="csl-entry" role="listitem">
+Nanda, Neel, Lawrence Chan, Tom Lieberum, Jess Smith, and Jacob Steinhardt. 2023. <em>Progress Measures for Grokking via Mechanistic Interpretability</em>. <a href="https://arxiv.org/abs/2301.05217">https://arxiv.org/abs/2301.05217</a>.
+</div>
+<div id="ref-qu2025fna" class="csl-entry" role="listitem">
+Qu, Xiao, Cheng Ly, and Pulin Gong. 2025. <em>Fractional Neural Attention for Efficient Multiscale Sequence Processing</em>. <a href="https://arxiv.org/abs/2511.10208">https://arxiv.org/abs/2511.10208</a>.
+</div>
+<div id="ref-xu2026earlywarning" class="csl-entry" role="listitem">
+Xu, Yongzhong. 2026. <em>Early-Warning Signals of Grokking via Loss-Landscape Geometry</em>. <a href="https://arxiv.org/abs/2602.16967">https://arxiv.org/abs/2602.16967</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/R9-tafagent.html" class="pagination-link" aria-label="R9 · tafagent manual">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R9 · tafagent manual</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
