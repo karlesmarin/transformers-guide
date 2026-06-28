@@ -92,6 +92,35 @@ div.csl-indent {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -643,6 +672,30 @@ Figure&nbsp;18.1: <em>Within-model</em> experiment (real data, pythia-1b): resca
 <li><strong>It adjudicates a confusion in the 2026 literature.</strong> Many works speak of “concentration” of attention as if it were the same as its decay with the distance. It’s not: our experiment separates them with data. When measuring or comparing attention, you have to treat them as <strong>two distinct axes</strong>.</li>
 <li><strong>The clean control is <em>within the same model</em>.</strong> In Ch. 16 we warned that comparing <em>raw</em> γ across different models mixes factors. Here we avoid that problem: <strong>same model, same everything, only θ changes</strong> → any effect is <em>caused</em> by θ. That’s the difference between <em>describing</em> (atlas) and <em>isolating a cause</em> (controlled experiment).</li>
 </ol>
+<div class="callout callout-style-default callout-note callout-titled" title="🔍 Going deeper — is the sink a *Bose-Einstein condensation*?">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>🔍 Going deeper — is the sink a <em>Bose-Einstein condensation</em>?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>There’s a tempting thermodynamic analogy (our <em>Part III</em>). Since softmax <strong>conserves probability mass</strong> (each row sums to 1), under RoPE with sharp decay (γ&gt;1) the excess mass “has to condense” into the ground state —the first token—, just as in a <strong>Bose-Einstein condensation</strong> particles pile up in the ground level. The theory even gives a <strong>closed form</strong> for the condensed fraction as a function of γ:</p>
+<p><span class="math display">\[ N_{\text{cond}} \;=\; 1 \;-\; \frac{1}{\zeta(\gamma)}\int_{1}^{L} d^{-\gamma}\,\mathrm{d}d \]</span></p>
+<p>where <span class="math inline">\(\zeta\)</span> is the Riemann zeta function and <span class="math inline">\(L\)</span> the context length.</p>
+<p><strong>But let’s be surgical about what the data do and don’t say.</strong> The formula predicts the condensate <strong>depends on γ</strong>, and that condensation <em>onsets</em> at the Hagedorn point (γ=1): in Phase A (γ&lt;1) there would be little condensate. Now, our <em>within-model</em> experiment (<a href="#fig-ortog" class="quarto-xref">Figure&nbsp;<span>18.1</span></a>) sweeps γ from 0.75 to 0.999 —<strong>all of it Phase A</strong>— and there it finds a <strong>large, flat sink (≈0.38)</strong>. Carefully, this means:</p>
+<ul>
+<li>What the data <strong>do</strong> show: a robust sink <strong>in Phase A, where the condensation picture would predict little</strong> → this is in <strong>tension</strong> with identifying the sink <em>with</em> the BEC condensate. And, consistent with this chapter’s thesis (γ⊥sink), its mass <strong>isn’t set by γ</strong>.</li>
+<li>What we <strong>cannot</strong> claim: the clean sweep <strong>never enters Phase B (γ&gt;1)</strong>, which is where the BEC’s γ-dependent prediction lives. The few γ&gt;1 points we have are <strong>cross-model and confounded</strong> (Mistral ≈0.64, Qwen2.5 ≈0.02), not a clean test.</li>
+</ul>
+<p>Honest conclusion: BEC is a <strong>valid conceptual lens</strong> —it explains <em>why</em> a sink must exist (mass conservation)— but its <strong>quantitative, γ-dependent prediction is unsupported and open</strong>, neither confirmed nor cleanly refuted. We use it as mechanistic intuition, <strong>not as a number</strong>. ⚠ <em>In dispute / open question — a within-model test at γ&gt;1 is still missing.</em></p>
+</div>
+</div>
+</div>
 </section>
 <section id="the-practical-implication" class="level2" data-number="18.6">
 <h2 data-number="18.6" class="anchored" data-anchor-id="the-practical-implication"><span class="header-section-number">18.6</span> The practical implication</h2>
