@@ -6,8 +6,8 @@
   <title>Transformers Guide — Cómo Atienden los Transformers / How Transformers Attend</title>
   <link rel="icon" type="image/png" href="icon.png">
   <script>
-    // Auto-enter by browser language: es → Español, en → English.
-    // Any other language (or ?choose) → show the selection page below.
+    // Auto-enter by browser language: Spanish browsers → Español; everyone else → English (default).
+    // Manual override: /?choose shows the selection page below.
     (function () {
       try {
         if (location.search.indexOf('choose') !== -1) return;        // manual override: /?choose
@@ -18,7 +18,7 @@
           if (l.indexOf('es') === 0) { location.replace('es/index.html'); return; }
           if (l.indexOf('en') === 0) { location.replace('en/index.html'); return; }
         }
-        // neither es nor en → fall through and render the chooser
+        location.replace('en/index.html');   // default: English
       } catch (e) { /* if anything fails, show the chooser */ }
     })();
   </script>

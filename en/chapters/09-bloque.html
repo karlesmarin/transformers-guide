@@ -107,6 +107,428 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<style>
+/* ============================================================
+   .fg-flow — animated step-flow diagram component (shared)
+   Loaded as a plain CSS file (via format.html.css) so it bypasses
+   Quarto's brittle SCSS css-vars extractor.
+   Vanguard touches: rail current + traveling spark, sequential
+   glow, hover-lift, "breathing" loop, Q/K/V branch pills, and
+   scroll-triggered play (see assets/_diagram-script.html).
+   Progressive enhancement: animations run by default; JS only
+   PAUSES off-screen ones (so if JS is absent, everything runs).
+   ============================================================ */
+.fg-flow{
+  --c-blue:#0072B2; --c-cyan:#34b3e0; --c-ink:#1c3a4f; --c-green:#1f9d6b;
+  --rail:30px; --steps:7; --cycle:7s;
+  position:relative; display:flex; flex-direction:column; gap:.55rem;
+  margin:1.6rem auto; max-width:580px;
+  font-family:Georgia, "Times New Roman", serif; overflow:visible;
+}
+.fg-flow::before{ content:""; position:absolute; top:24px; bottom:24px; left:var(--rail);
+  width:4px; transform:translateX(-50%); border-radius:4px; background:#e2ebf3; z-index:0; }
+.fg-flow::after{ content:""; position:absolute; top:24px; bottom:24px; left:var(--rail);
+  width:4px; transform:translateX(-50%); border-radius:4px; z-index:1;
+  background:linear-gradient(180deg,transparent 0%,transparent 10%,
+    var(--c-cyan) 16%,var(--c-blue) 20%,transparent 30%,transparent 100%);
+  background-size:100% 280%; animation:fg-flowrail var(--cycle) linear infinite; }
+.fg-flow .fg-spark{ position:absolute; left:var(--rail); top:24px; width:16px; height:16px;
+  margin-left:-8px; border-radius:50%; z-index:4;
+  background:radial-gradient(circle,#eaf7ff 0%,var(--c-cyan) 45%,var(--c-blue) 70%,rgba(0,114,178,0) 78%);
+  box-shadow:0 0 16px 5px rgba(52,179,224,.6);
+  animation:fg-spark var(--cycle) cubic-bezier(.66,0,.34,1) infinite; }
+.fg-flow .fg-step{ position:relative; z-index:2; display:flex; align-items:center; gap:.85rem;
+  padding-left:calc(var(--rail) + 26px); }
+.fg-flow .fg-chip{ position:absolute; left:var(--rail); top:50%; transform:translate(-50%,-50%);
+  width:46px; height:46px; border-radius:50%; z-index:3; display:flex; align-items:center;
+  justify-content:center; font-size:1.25rem; background:linear-gradient(145deg,#fff,#eef4fa);
+  border:2px solid #d3e0ec; box-shadow:0 2px 6px rgba(20,50,80,.12);
+  transition:transform .35s ease,box-shadow .35s ease,border-color .35s ease;
+  animation:fg-chip var(--cycle) ease-in-out infinite;
+  animation-delay:calc(var(--i) * (var(--cycle) / var(--steps))); }
+.fg-flow .fg-card{ flex:1; position:relative; box-sizing:border-box;
+  padding:.62rem .9rem .62rem 1rem; border-radius:.7rem;
+  background:linear-gradient(180deg,#fff,#f6fafd);
+  border:1px solid #dce7f0; border-left:4px solid #c5d6e6; color:var(--c-ink);
+  box-shadow:0 2px 8px rgba(20,50,80,.07);
+  transition:transform .35s ease,box-shadow .35s ease,border-color .35s ease;
+  animation:fg-card var(--cycle) ease-in-out infinite;
+  animation-delay:calc(var(--i) * (var(--cycle) / var(--steps))); }
+.fg-flow .fg-card b{ display:block; font-size:1.02rem; font-weight:650; line-height:1.25; }
+.fg-flow .fg-card span{ display:block; font-size:.79rem; opacity:.72; margin-top:.12rem; }
+.fg-flow .fg-step:hover .fg-card{ transform:translateX(4px);
+  border-left-color:var(--c-blue); box-shadow:0 6px 18px rgba(0,114,178,.18); }
+.fg-flow .fg-step:hover .fg-chip{ transform:translate(-50%,-50%) scale(1.1);
+  border-color:var(--c-blue); box-shadow:0 0 0 4px rgba(0,114,178,.15); }
+.fg-flow .fg-trio{ display:flex; gap:.4rem; margin-top:.35rem; flex-wrap:wrap; }
+.fg-flow .fg-pill{ font-size:.72rem; font-weight:700; padding:.12rem .5rem; border-radius:1rem;
+  background:rgba(0,114,178,.1); color:var(--c-blue); border:1px solid rgba(0,114,178,.25);
+  animation:fg-pill 2.2s ease-in-out infinite; }
+.fg-flow .fg-pill:nth-child(2){ animation-delay:.25s; }
+.fg-flow .fg-pill:nth-child(3){ animation-delay:.5s; }
+.fg-flow .is-out .fg-card{ border-left-color:var(--c-green);
+  background:linear-gradient(180deg,#fff,#f1faf5); }
+.fg-flow .is-out .fg-chip{ border-color:#bfe3cc; }
+.fg-flow .fg-badge{ position:absolute; left:calc(var(--rail) + 14px); top:6px; z-index:5;
+  background:var(--c-blue); color:#fff; font-size:.7rem; font-weight:700;
+  padding:.08rem .42rem; border-radius:1rem; box-shadow:0 1px 4px rgba(0,0,0,.25);
+  animation:fg-badge 1.7s ease-in-out infinite; }
+.fg-flow .is-loop .fg-card{ border-style:dashed; border-left-style:solid;
+  border-color:var(--c-blue); border-left-color:var(--c-blue);
+  animation:fg-card var(--cycle) ease-in-out infinite,fg-breathe 2.6s ease-in-out infinite;
+  animation-delay:calc(var(--i) * (var(--cycle) / var(--steps))),0s; }
+@keyframes fg-chip{ 0%,16%,100%{ border-color:#d3e0ec; box-shadow:0 2px 6px rgba(20,50,80,.12);
+    transform:translate(-50%,-50%) scale(1); }
+  6%,11%{ border-color:var(--c-blue);
+    box-shadow:0 0 0 5px rgba(52,179,224,.22),0 0 18px rgba(0,114,178,.45);
+    transform:translate(-50%,-50%) scale(1.12); } }
+@keyframes fg-card{ 0%,16%,100%{ border-color:#dce7f0; border-left-color:#c5d6e6;
+    box-shadow:0 2px 8px rgba(20,50,80,.07); transform:translateX(0); }
+  6%,11%{ border-color:#bcd6ec; border-left-color:var(--c-blue);
+    box-shadow:0 6px 20px rgba(0,114,178,.2); transform:translateX(3px); } }
+@keyframes fg-flowrail{ 0%{ background-position:0 -120%; } 100%{ background-position:0 220%; } }
+@keyframes fg-spark{ 0%{ top:24px; opacity:0; transform:scale(.5); }
+  5%{ opacity:1; transform:scale(1); } 93%{ opacity:1; transform:scale(1); }
+  100%{ top:calc(100% - 24px); opacity:0; transform:scale(.5); } }
+@keyframes fg-breathe{ 0%,100%{ box-shadow:0 0 0 0 rgba(0,114,178,0); }
+  50%{ box-shadow:0 0 16px 1px rgba(0,114,178,.32); } }
+@keyframes fg-badge{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.14); } }
+@keyframes fg-pill{ 0%,100%{ background:rgba(0,114,178,.1); transform:translateY(0); }
+  50%{ background:rgba(0,114,178,.22); transform:translateY(-2px); } }
+.fg-armed .fg-flow:not(.fg-inview)::after,
+.fg-armed .fg-flow:not(.fg-inview) .fg-spark,
+.fg-armed .fg-flow:not(.fg-inview) .fg-chip,
+.fg-armed .fg-flow:not(.fg-inview) .fg-card,
+.fg-armed .fg-flow:not(.fg-inview) .fg-badge,
+.fg-armed .fg-flow:not(.fg-inview) .fg-pill{ animation-play-state:paused; }
+.fg-armed .fg-flow:not(.fg-inview) .fg-spark{ opacity:0; }
+@media (prefers-reduced-motion:reduce){
+  .fg-flow *,.fg-flow::after{ animation:none !important; }
+  .fg-flow .fg-spark{ display:none; } }
+
+/* ============================================================
+   .fg-attn — animated causal attention map (n×n heatmap).
+   Grid built by JS from data-tokens (see _diagram-script.html).
+   Each query row "scans" its keys in sequence; cell intensity
+   = attention weight; the upper triangle (future) is masked.
+   ============================================================ */
+.fg-attn-fig{ margin:1.6rem auto; text-align:center; max-width:640px; }
+.fg-attn{ --n:7; --cell:40px; --cycle:8.4s; --blue:0,114,178;
+  display:inline-grid; gap:3px; margin:.2rem auto;
+  grid-template-columns:auto repeat(var(--n),var(--cell));
+  font-family:Georgia,"Times New Roman",serif; }
+.fg-attn .fg-attn-corner{ }
+.fg-attn .fg-attn-k{ font-size:.72rem; color:#37527a; text-align:center;
+  align-self:end; padding-bottom:.2rem; line-height:1; word-break:break-word; }
+.fg-attn .fg-attn-q{ font-size:.78rem; color:#23425c; text-align:right;
+  padding-right:.5rem; display:flex; align-items:center; justify-content:flex-end;
+  transition:color .3s; animation:fg-attn-q var(--cycle) ease-in-out infinite;
+  animation-delay:calc(var(--r) * (var(--cycle) / var(--n))); }
+.fg-attn .fg-attn-cell{ width:var(--cell); height:var(--cell); border-radius:5px;
+  border:1px solid #e3ebf2;
+  background:rgba(var(--blue),calc(var(--w) * .10));
+  animation:fg-attn-scan var(--cycle) ease-in-out infinite;
+  animation-delay:calc(var(--r) * (var(--cycle) / var(--n))); }
+.fg-attn .fg-attn-cell.masked{ background:#f4f6f8; border:1px dashed #e0e4e8;
+  animation:none; }
+@keyframes fg-attn-scan{
+  0%,14%,100%{ background:rgba(var(--blue),calc(var(--w) * .10)); transform:scale(1); }
+  5%,10%{ background:rgba(var(--blue),calc(.12 + var(--w) * .85));
+    transform:scale(1.06); box-shadow:0 0 8px rgba(var(--blue),calc(var(--w)*.5)); } }
+@keyframes fg-attn-q{ 0%,14%,100%{ color:#23425c; font-weight:400; }
+  5%,10%{ color:rgb(var(--blue)); font-weight:700; } }
+.fg-armed .fg-attn-fig:not(.fg-inview) .fg-attn-cell,
+.fg-armed .fg-attn-fig:not(.fg-inview) .fg-attn-q{ animation-play-state:paused; }
+@media (prefers-reduced-motion:reduce){
+  .fg-attn .fg-attn-cell,.fg-attn .fg-attn-q{ animation:none !important; }
+  .fg-attn .fg-attn-cell{ background:rgba(var(--blue),calc(.12 + var(--w) * .7)); } }
+
+/* ============================================================
+   .fg-cta — "reproduce it live" call-to-action button.
+   Used in the 🧪 Pruébalo boxes to deep-link into the live
+   tafagent web app (auto-fills + runs, in-browser, no GPU).
+   ============================================================ */
+.fg-cta{ display:inline-flex; align-items:center; gap:.5rem;
+  margin:.5rem 0 .2rem; padding:.55rem 1rem; border-radius:.6rem;
+  font-family:Georgia,"Times New Roman",serif; font-size:.95rem; font-weight:700;
+  color:#fff !important; text-decoration:none !important;
+  background:linear-gradient(135deg,#0072B2,#34b3e0);
+  box-shadow:0 3px 10px rgba(0,114,178,.32);
+  transition:transform .2s ease,box-shadow .2s ease,filter .2s ease; }
+.fg-cta:hover{ transform:translateY(-2px); filter:brightness(1.06);
+  box-shadow:0 6px 18px rgba(0,114,178,.42); color:#fff !important; }
+.fg-cta .fg-cta-play{ font-size:.85rem; }
+.fg-cta-note{ font-size:.78rem; opacity:.7; margin-top:.15rem; }
+@media (prefers-reduced-motion:reduce){ .fg-cta{ transition:none; } }
+
+/* ============================================================
+   .fg-demo — in-page animated "simulation" of a tafagent run.
+   Shows the TAF Card building up (γ, phase, recipes) with REAL
+   numbers; sits above the .fg-cta button (preview → reproduce).
+   ============================================================ */
+.fg-demo{ --cycle:9s; max-width:560px; margin:1.4rem auto .5rem; border-radius:.7rem;
+  overflow:hidden; border:1px solid #1d2f40; box-shadow:0 6px 24px rgba(0,0,0,.22);
+  background:linear-gradient(180deg,#0f1c28,#0a131c); color:#dbe7f0;
+  font-family:ui-monospace,"Cascadia Code",Consolas,monospace; }
+.fg-demo-head{ display:flex; align-items:center; gap:.45rem; padding:.5rem .85rem;
+  background:#0b151e; border-bottom:1px solid #1d2f40; font-size:.78rem; color:#8fb4d4; }
+.fg-demo-head .dot{ width:10px; height:10px; border-radius:50%; display:inline-block; }
+.fg-demo-head .dot.r{ background:#ff5f56; } .fg-demo-head .dot.y{ background:#ffbd2e; }
+.fg-demo-head .dot.g{ background:#27c93f; } .fg-demo-head .ttl{ margin-left:.4rem; }
+.fg-demo-body{ padding:.85rem 1.05rem 1.05rem; }
+.fg-demo-row{ opacity:0; transform:translateY(8px);
+  animation:fg-demo-in var(--cycle) ease-out infinite;
+  animation-delay:calc(var(--i) * .55s); margin:.32rem 0; line-height:1.4; }
+.fg-demo-cmd{ color:#7fa8c9; font-size:.86rem; }
+.fg-demo-cmd .prompt{ color:#27c93f; } .fg-demo-cmd .arg{ color:#ffd479; }
+.fg-demo-gamma{ font-size:1.5rem; font-weight:700; color:#fff; }
+.fg-demo-gamma small{ font-size:.82rem; font-weight:400; color:#8fb4d4; margin-left:.5rem; }
+.fg-demo-badge{ display:inline-block; padding:.18rem .6rem; border-radius:1rem;
+  font-size:.82rem; font-weight:700; color:#cbe3ff;
+  background:rgba(52,179,224,.16); border:1px solid rgba(52,179,224,.4); }
+.fg-demo-rec{ font-size:.86rem; }
+.fg-demo-rec .ok{ color:#27c93f; font-weight:700; } .fg-demo-rec .no{ color:#ff6b6b; font-weight:700; }
+.fg-demo-rec .lbl{ color:#9fb6c9; } .fg-demo-cap{ font-size:.76rem; color:#6f8aa0; margin-top:.5rem; }
+@keyframes fg-demo-in{ 0%{ opacity:0; transform:translateY(8px); }
+  7%{ opacity:1; transform:translateY(0); } 95%{ opacity:1; transform:translateY(0); }
+  100%{ opacity:0; transform:translateY(8px); } }
+.fg-armed .fg-demo:not(.fg-inview) .fg-demo-row{ animation-play-state:paused; opacity:0; }
+@media (prefers-reduced-motion:reduce){
+  .fg-demo .fg-demo-row{ animation:none !important; opacity:1 !important; transform:none !important; } }
+
+/* ============================================================
+   .fg-mm — animated matrix-multiply heatmap (A·B = C, cell by cell)
+   .fg-decay — γ decay row (attention fading with distance, map style)
+   Both JS-built (see _diagram-script.html). Heatmap aesthetic = .fg-attn.
+   ============================================================ */
+.fg-mm{ --blue:0,114,178; max-width:680px; margin:1.5rem auto; font-family:Georgia, "Times New Roman", serif; }
+.fg-mm-eq{ text-align:center; font-size:1.2rem; color:#23425c; margin:.1rem 0 .8rem; }
+.fg-mm-eq b{ color:rgb(var(--blue)); }
+.fg-mm-stage{ display:flex; align-items:center; justify-content:center; gap:.6rem; flex-wrap:wrap; }
+.fg-mm-block{ text-align:center; }
+.fg-mm-lbl{ font-size:.8rem; color:#5b7790; margin-bottom:.3rem; }
+.fg-mm-grid{ display:grid; gap:3px; justify-content:center; }
+.fg-mm-cell{ width:38px; height:32px; display:flex; align-items:center; justify-content:center;
+  font:600 12.5px Georgia, "Times New Roman", serif; border-radius:4px; border:1px solid #e3ebf2; background:#fff; color:#23425c;
+  transition:background .25s, box-shadow .25s, transform .25s, border-color .25s; }
+.fg-mm-cell.heat{ background:rgba(var(--blue),var(--a)); }
+.fg-mm-op{ font-size:1.4rem; color:#9bb4c9; }
+.fg-mm-cell.row-active{ box-shadow:0 0 0 3px rgba(214,69,0,.55); border-color:#d64500; }
+.fg-mm-cell.col-active{ box-shadow:0 0 0 3px rgba(0,150,120,.55); border-color:#009678; }
+.fg-mm-cell.computing{ box-shadow:0 0 0 4px rgba(230,170,0,.85),0 0 14px rgba(230,170,0,.5);
+  border-color:#e6aa00; transform:scale(1.12); background:#fff7e0; color:#7a5b00; }
+.fg-mm-cap{ margin-top:.8rem; font-size:.9rem; line-height:1.45; padding:.5rem .7rem; border-radius:.5rem;
+  background:rgba(var(--blue),.06); border-left:3px solid rgb(var(--blue)); min-height:2.2em; text-align:center; }
+.fg-mm-cap .g{ color:#b8860b; font-weight:700; }
+@media (prefers-reduced-motion:reduce){ .fg-mm-cell{ transition:none; } }
+
+.fg-decay{ --blue:0,114,178; max-width:560px; margin:1.3rem auto; text-align:center; font-family:Georgia, "Times New Roman", serif; }
+.fg-decay-lbl{ font-size:.95rem; color:#23425c; margin-bottom:.4rem; }
+.fg-decay-row{ display:flex; gap:3px; justify-content:center; }
+.fg-decay-cell{ flex:1; max-width:46px; height:40px; border-radius:5px; border:1px solid #e3ebf2;
+  background:rgba(var(--blue),var(--a)); display:flex; align-items:flex-end; justify-content:center; }
+.fg-decay-cell span{ font-size:.7rem; color:#37527a; opacity:.7; padding-bottom:2px; }
+.fg-decay-axis{ font-size:.78rem; color:#9bb4c9; margin-top:.3rem; }
+.fg-decay-ctrl{ display:flex; align-items:center; gap:.7rem; justify-content:center; margin-top:.7rem; }
+.fg-decay-btn{ font:600 13px Georgia,"Times New Roman",serif; padding:.25rem .85rem; border-radius:1rem; cursor:pointer;
+  color:#fff; border:none; background:linear-gradient(135deg,#0072B2,#34b3e0); box-shadow:0 2px 6px rgba(0,114,178,.3); white-space:nowrap; }
+.fg-decay-btn:hover{ filter:brightness(1.06); }
+.fg-decay-range{ flex:1; max-width:240px; accent-color:#0072B2; height:6px; cursor:pointer; }
+.fg-playbtn{ font:600 13px Georgia,"Times New Roman",serif; padding:.25rem .85rem; border-radius:1rem;
+  cursor:pointer; color:#fff; border:none; background:linear-gradient(135deg,#0072B2,#34b3e0);
+  box-shadow:0 2px 6px rgba(0,114,178,.3); white-space:nowrap; }
+.fg-playbtn:hover{ filter:brightness(1.06); }
+.fg-mm-ctrl, .fg-atxt-ctrl{ text-align:center; margin-top:.6rem; }
+
+/* ============================================================
+   .fg-attn-text — attention OVER the text (CircuitsVis/Neuroscope style):
+   a sentence where, for the current query token, every other token lights up
+   by how much the query attends to it. Auto-cycles + responds to hover.
+   JS-built (see _diagram-script.html).
+   ============================================================ */
+.fg-atxt{ --blue:0,114,178; max-width:620px; margin:1.4rem auto; text-align:center; font-family:Georgia,"Times New Roman",serif; }
+.fg-atxt-sent{ font-size:1.3rem; line-height:2.3; }
+.fg-atxt-tok{ padding:.08rem .35rem; border-radius:.35rem; margin:0 1px; cursor:pointer;
+  background:rgba(var(--blue),var(--a,0)); border:1px solid transparent;
+  transition:background .3s ease, box-shadow .25s ease; }
+.fg-atxt-tok.query{ box-shadow:0 0 0 2px #d64500; border-color:#d64500; background:#fff3ec; }
+.fg-atxt-cap{ margin-top:.7rem; font-size:.9rem; line-height:1.45; padding:.5rem .7rem; border-radius:.5rem;
+  background:rgba(var(--blue),.06); border-left:3px solid rgb(var(--blue)); min-height:2.2em; }
+.fg-atxt-cap .q{ color:#d64500; font-weight:700; } .fg-atxt-cap b{ color:rgb(var(--blue)); }
+.fg-atxt-hint{ font-size:.76rem; color:#9bb4c9; margin-top:.35rem; }
+
+/* ============================================================
+   .fg-arch — master diagram: the full transformer architecture.
+   Residual spine with a rising pulse, ×N block with two sublayers
+   (attention / FFN), live layer counter, sequential glow. JS-built
+   (see _diagram-script.html). PHASE 1: animated skeleton.
+   ============================================================ */
+.fg-arch{ --blue:0,114,178; --green:31,157,107; max-width:560px; margin:1.6rem auto;
+  position:relative; font-family:Georgia,"Times New Roman",serif; }
+.fg-arch-legend{ font-size:.76rem; color:#5b7790; text-align:center; margin-bottom:.5rem; }
+.fg-arch-legend i{ font-style:normal; padding:0 .35rem; }
+.fg-arch-stack{ display:flex; flex-direction:column; gap:.45rem; position:relative; padding-left:36px; }
+.fg-arch-spine{ position:absolute; left:16px; top:6px; bottom:6px; width:4px; transform:translateX(-50%);
+  background:#dbe7f0; border-radius:4px; }
+.fg-arch-pulse{ position:absolute; left:16px; width:16px; height:16px; margin-left:-8px; border-radius:50%;
+  background:radial-gradient(circle,#eaf7ff 0%,rgb(var(--blue)) 65%,rgba(0,114,178,0) 78%);
+  box-shadow:0 0 14px 4px rgba(0,114,178,.5); z-index:6; top:0; }
+.fg-arch-stage{ position:relative; z-index:2; border-radius:.6rem; padding:.5rem .9rem; border:1px solid #dce7f0;
+  background:#fff; text-align:center; transition:box-shadow .3s ease, transform .3s ease; }
+.fg-arch-stage b{ display:block; font-weight:650; line-height:1.2; }
+.fg-arch-stage span, .fg-arch-stage small{ font-size:.77rem; color:#5b7790; }
+.fg-arch-stage.in{ background:#f4f6f8; }
+.fg-arch-stage.emb{ background:linear-gradient(180deg,#fff,#eef4fa); }
+.fg-arch-stage.norm{ background:#f3f5f7; color:#5b7790; font-size:.82rem; padding:.28rem; }
+.fg-arch-stage.out{ background:linear-gradient(180deg,#fff,#f1faf5); border-left:4px solid rgb(var(--green)); }
+.fg-arch-block{ position:relative; z-index:2; border:2px dashed #bcd6ec; border-radius:.7rem;
+  padding:.55rem .5rem; display:flex; flex-direction:column; gap:.4rem; }
+.fg-arch-badge{ position:absolute; right:-6px; top:-12px; background:rgb(var(--blue)); color:#fff;
+  font-size:.72rem; font-weight:700; padding:.1rem .55rem; border-radius:1rem; box-shadow:0 1px 4px rgba(0,0,0,.25); }
+.fg-arch-sub{ display:flex; align-items:center; gap:.5rem; border-radius:.5rem; padding:.4rem .6rem;
+  transition:box-shadow .3s ease, transform .3s ease; }
+.fg-arch-sub.attn{ background:rgba(var(--blue),.10); border:1px solid rgba(var(--blue),.30); }
+.fg-arch-sub.ffn{ background:rgba(var(--green),.10); border:1px solid rgba(var(--green),.30); }
+.fg-arch-sub .sub-norm{ font-size:.7rem; color:#7a8aa0; }
+.fg-arch-sub .sub-body{ flex:1; font-weight:650; font-size:.92rem; text-align:left; }
+.fg-arch-sub .sub-body small{ font-weight:400; }
+.fg-arch-sub .sub-add{ font-size:1.15rem; color:#5b7790; }
+.fg-arch-glow{ box-shadow:0 0 0 3px rgba(0,114,178,.40), 0 0 16px rgba(0,114,178,.28); transform:scale(1.02); }
+.fg-arch-cap{ margin-top:.7rem; font-size:.86rem; color:#5b7790; text-align:center; }
+.fg-arch-cap b{ color:rgb(var(--blue)); }
+@media (prefers-reduced-motion:reduce){ .fg-arch-pulse{ display:none; } }
+/* Phase 2: each stage opens its real mini-component in-situ */
+.fg-arch-detail{ max-height:0; overflow:hidden; opacity:0; margin-top:0;
+  transition:max-height .45s ease, opacity .35s ease, margin-top .35s ease; }
+.fg-arch-stage.open .fg-arch-detail, .fg-arch-sub.open .fg-arch-detail{ max-height:170px; opacity:1; margin-top:.5rem; }
+.fg-arch-stage, .fg-arch-sub{ cursor:pointer; }
+.fg-arch-vec{ display:flex; gap:2px; justify-content:center; }
+.fg-arch-vec i{ width:16px; height:22px; border-radius:3px; display:block; background:rgba(var(--blue),var(--a)); border:1px solid #e3ebf2; }
+.fg-arch-mini{ display:inline-grid; gap:2px; }
+.fg-arch-mini i{ width:15px; height:15px; border-radius:3px; }
+.fg-arch-mini i.m{ background:#f0f3f6; border:1px dashed #e0e4e8; }
+.fg-arch-mini i.c{ background:rgba(var(--blue),var(--a)); }
+.fg-arch-ffn{ display:flex; flex-direction:column; gap:3px; align-items:center; }
+.fg-arch-ffn .row{ display:flex; gap:2px; } .fg-arch-ffn .row i{ width:12px; height:12px; border-radius:2px; background:rgba(var(--green),.65); }
+.fg-arch-ffn .lab{ font-size:.66rem; color:#5b7790; }
+.fg-arch-logits{ display:flex; flex-direction:column; gap:3px; max-width:230px; margin:0 auto; }
+.fg-arch-logits .lg{ display:flex; align-items:center; gap:.4rem; font-size:.74rem; color:#5b7790; }
+.fg-arch-logits .nm{ width:46px; text-align:right; } .fg-arch-logits .bar{ height:11px; border-radius:3px; background:rgb(var(--blue)); }
+.fg-arch-detail .dh{ font-size:.68rem; color:#7a8aa0; margin-bottom:.25rem; }
+/* Phase 3 — controls + jump-to-chapter */
+.fg-arch-ctrl{ display:flex; align-items:center; gap:.55rem; justify-content:center; flex-wrap:wrap;
+  margin:.1rem 0 .8rem; font-size:.78rem; color:#5b7790; }
+.fg-arch-btn{ font:inherit; font-size:.78rem; cursor:pointer; border:1px solid rgba(var(--blue),.45);
+  background:rgba(var(--blue),.08); color:rgb(var(--blue)); border-radius:.45rem; padding:.18rem .6rem;
+  line-height:1.2; transition:background .15s; }
+.fg-arch-btn:hover{ background:rgba(var(--blue),.18); }
+.fg-arch-range{ accent-color:rgb(var(--blue)); width:130px; vertical-align:middle; cursor:pointer; }
+.fg-arch-ctrl .lc{ min-width:70px; }
+.fg-arch-ctrl .lc b{ color:rgb(var(--blue)); }
+.fg-arch-stage::after, .fg-arch-sub::after{ content:"↗"; position:absolute; right:.4rem; top:.3rem;
+  font-size:.8rem; color:rgb(var(--blue)); opacity:0; transition:opacity .15s; pointer-events:none; font-weight:700; }
+.fg-arch-stage:hover::after, .fg-arch-sub:hover::after{ opacity:.8; }
+.fg-arch-stage.norm::after{ content:""; }
+/* fg-rope3d — WebGL 3D RoPE "tunnel of clocks" */
+.fg-rope3d{ --blue:0,114,178; --red:213,94,0; max-width:660px; margin:1.7rem auto; }
+.fg-rope3d-canvas{ width:100%; height:380px; display:block; border:1px solid #dce7f0; border-radius:.7rem;
+  background:radial-gradient(120% 120% at 50% 25%, #fbfdff, #e9f1f9); cursor:grab; touch-action:none; }
+.fg-rope3d-canvas:active{ cursor:grabbing; }
+.fg-rope3d-ctrl{ display:flex; align-items:center; gap:.55rem; justify-content:center; flex-wrap:wrap;
+  margin:.55rem 0 .3rem; font-size:.78rem; color:#5b7790; }
+.fg-rope3d-ctrl .lc{ min-width:104px; } .fg-rope3d-ctrl .lc b{ color:rgb(var(--blue)); }
+.fg-rope3d-cap{ font-size:.84rem; color:#5b7790; text-align:center; margin-top:.2rem; line-height:1.45; }
+.fg-rope3d-cap b{ color:rgb(var(--blue)); } .fg-rope3d-cap .hot{ color:rgb(var(--red)); font-weight:600; }
+.fg-rope3d-fallback{ padding:1.1rem; border:1px dashed #cdd9e4; border-radius:.7rem; background:#f7fafc;
+  color:#5b7790; font-size:.85rem; text-align:center; }
+
+/* shared mini-schema shell */
+.fg-sch{ --blue:0,114,178; --green:31,157,107; --red:213,94,0; max-width:600px; margin:1.6rem auto;
+  border:1px solid #dce7f0; border-radius:.7rem; padding:.9rem 1.1rem; background:linear-gradient(180deg,#fff,#f6fafd); }
+.fg-sch-h{ font-weight:650; font-size:.92rem; color:#33536e; margin-bottom:.6rem; text-align:center; }
+.fg-sch-cap{ font-size:.8rem; color:#5b7790; text-align:center; margin-top:.7rem; line-height:1.45; }
+.fg-sch-cap b{ color:rgb(var(--blue)); } .fg-sch-cap .hot{ color:rgb(var(--red)); font-weight:600; }
+.fg-sch-cap .ok{ color:rgb(var(--green)); font-weight:600; }
+.fg-sch-btn{ font:inherit; font-size:.76rem; cursor:pointer; border:1px solid rgba(var(--blue),.45);
+  background:rgba(var(--blue),.08); color:rgb(var(--blue)); border-radius:.4rem; padding:.14rem .5rem; transition:background .15s; }
+.fg-sch-btn:hover{ background:rgba(var(--blue),.18); } .fg-sch-btn.on{ background:rgb(var(--blue)); color:#fff; }
+
+/* fg-qkv — attention as a soft dictionary lookup (real worked example) */
+.fg-qkv-q{ text-align:center; font-size:.9rem; margin-bottom:.6rem; }
+.fg-qkv-q b{ color:rgb(var(--blue)); } .fg-qkv-q code, .fg-qkv code{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.86em; }
+.fg-qkv-key{ display:grid; grid-template-columns:74px 96px 1fr 84px; align-items:center; gap:.5rem;
+  padding:.32rem .4rem; border-radius:.45rem; margin:.18rem 0; transition:background .25s, box-shadow .25s; }
+.fg-qkv-key.lit{ background:rgba(var(--blue),.10); box-shadow:0 0 0 1px rgba(var(--blue),.25); }
+.fg-qkv-key .kk{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.8rem; color:#33536e; }
+.fg-qkv-key .dd{ font-size:.74rem; color:#7a8aa0; } .fg-qkv-key .dd b{ color:rgb(var(--blue)); }
+.fg-qkv-key .wb{ height:16px; border-radius:8px; background:#e9eef3; overflow:hidden; }
+.fg-qkv-key .wb i{ display:block; height:100%; background:rgb(var(--blue)); border-radius:8px; transition:width .5s ease; }
+.fg-qkv-key .vv{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.78rem; color:rgb(var(--green)); text-align:right; }
+.fg-qkv-out{ margin-top:.55rem; text-align:center; font-size:.9rem; padding-top:.5rem; border-top:1px dashed #d8e3ec; }
+.fg-qkv-out b{ color:rgb(var(--green)); font-family:ui-monospace,Menlo,Consolas,monospace; }
+
+/* fg-lnorm — LayerNorm normalizes a real vector live */
+.fg-lnorm-plot{ position:relative; height:160px; display:flex; align-items:center; justify-content:center; gap:6px; }
+.fg-lnorm-zero{ position:absolute; left:0; right:0; top:50%; height:1px; background:#c7d6e2; }
+.fg-lnorm-bar{ width:26px; border-radius:3px; transition:height .6s ease, transform .6s ease, background .3s;
+  background:rgb(var(--blue)); align-self:center; }
+.fg-lnorm-stat{ text-align:center; font-size:.82rem; color:#5b7790; margin-top:.5rem; }
+.fg-lnorm-stat b{ color:rgb(var(--blue)); font-family:ui-monospace,Menlo,Consolas,monospace; }
+.fg-lnorm-steps{ display:flex; gap:.4rem; justify-content:center; margin-top:.5rem; }
+
+/* fg-kvc — KV-cache compressibility from real Σ d^-γ */
+.fg-kvc-svg{ width:100%; height:230px; display:block; }
+.fg-kvc-svg .axis{ stroke:#c7d6e2; stroke-width:1; } .fg-kvc-svg .grid{ stroke:#eef3f7; stroke-width:1; }
+.fg-kvc-svg .curve{ fill:none; stroke-width:2.5; } .fg-kvc-svg .area{ opacity:.12; }
+.fg-kvc-svg .lbl{ font-size:11px; fill:#7a8aa0; } .fg-kvc-svg .dmark{ stroke:#5b7790; stroke-dasharray:3 3; }
+.fg-kvc-ctrl{ display:flex; align-items:center; gap:.55rem; justify-content:center; flex-wrap:wrap; margin:.5rem 0 .2rem; font-size:.8rem; color:#5b7790; }
+.fg-kvc-ctrl input[type=range]{ accent-color:rgb(var(--blue)); width:150px; }
+.fg-kvc-ctrl .gv{ font-family:ui-monospace,Menlo,Consolas,monospace; } .fg-kvc-ctrl .gv b{ color:rgb(var(--blue)); }
+.fg-kvc-badge{ display:inline-block; font-size:.74rem; font-weight:600; padding:.12rem .5rem; border-radius:.4rem; margin-left:.3rem; }
+.fg-kvc-badge.b{ background:rgba(var(--green),.15); color:rgb(var(--green)); }
+.fg-kvc-badge.a{ background:rgba(var(--red),.13); color:rgb(var(--red)); }
+
+/* fg-arcs — attention "who attends to whom" bipartite arcs */
+.fg-arcs-svg{ width:100%; height:210px; display:block; cursor:pointer; }
+.fg-arcs-svg .tok{ font-size:13px; fill:#5b7790; font-family:Georgia,"Times New Roman",serif; }
+.fg-arcs-svg .tok.qy{ fill:rgb(var(--blue)); font-weight:700; }
+.fg-arcs-svg .arc{ fill:none; stroke:rgb(var(--blue)); transition:opacity .35s ease, stroke-width .35s ease; }
+.fg-arcs-svg .node{ transition:r .3s ease, fill .3s ease; }
+
+/* fg-cmask — causal mask mechanism (raw → −∞ → softmax) */
+.fg-cmask-wrap{ display:flex; gap:1rem; justify-content:center; align-items:center; }
+.fg-cmask-grid{ display:inline-grid; gap:3px; }
+.fg-cmask-grid .cell{ width:34px; height:34px; border-radius:4px; display:flex; align-items:center; justify-content:center;
+  font-size:.64rem; color:#33536e; transition:background .4s ease, color .3s ease; }
+.fg-cmask-grid .cell.mask{ background:#33414d !important; color:#cfd8df; font-weight:600; }
+
+/* fg-rope2d — relative angle = relative position */
+.fg-rope2d-svg{ width:240px; height:200px; display:block; margin:0 auto; }
+.fg-rope2d .fg-kvc-ctrl input[type=range]{ width:96px; }
+
+/* fg-formula plots reuse .fg-kvc-svg / .fg-kvc-ctrl; softmax-temperature uses bars */
+.fg-fsm-bars{ display:flex; align-items:flex-end; justify-content:center; gap:12px; height:160px; padding-top:18px; }
+.fg-fsm-bars .b{ width:44px; background:rgb(var(--blue)); border-radius:5px 5px 0 0; position:relative; transition:height .35s ease; }
+.fg-fsm-bars .b span{ position:absolute; top:-16px; left:0; right:0; text-align:center; font-size:.68rem; color:rgb(var(--blue)); font-weight:600; }
+.fg-fsm-bars .b small{ position:absolute; bottom:-19px; left:0; right:0; text-align:center; font-size:.66rem; color:#7a8aa0; }
+.fg-fsm-ent{ text-align:center; font-size:.8rem; color:#5b7790; margin-top:1.7rem; }
+.fg-fsm-ent b{ color:rgb(var(--blue)); font-family:ui-monospace,Menlo,Consolas,monospace; }
+.fg-kvc-svg .pt{ fill:rgb(var(--red)); } .fg-kvc-svg .curve2{ fill:none; stroke-dasharray:5 4; }
+
+/* fg-atlas — interactive γ atlas, model comparison on one axis */
+.fg-atlas-svg{ width:100%; height:240px; display:block; }
+.fg-atlas-svg circle{ cursor:pointer; transition:r .15s ease, fill-opacity .15s ease; }
+.fg-atlas-svg circle:hover{ r:7.5; fill-opacity:1; }
+.fg-atlas-svg .lbl{ font-size:11px; fill:#7a8aa0; }
+.fg-atlas-legend{ display:flex; gap:1.2rem; justify-content:center; font-size:.74rem; color:#5b7790; margin-top:.2rem; }
+.fg-atlas-legend i{ font-style:normal; }
+.fg-atlas-legend b{ display:inline-block; width:10px; height:10px; border-radius:50%; vertical-align:middle; margin-right:.3rem; }
+.fg-atlas-read{ text-align:center; font-size:.82rem; color:#5b7790; min-height:1.3em; margin-top:.35rem; }
+.fg-atlas-read b{ color:rgb(var(--blue)); }
+.fg-g3d-canvas{ width:100%; height:340px; display:block; border:1px solid #dce7f0; border-radius:.7rem;
+  background:radial-gradient(120% 120% at 50% 25%, #fbfdff, #e9f1f9); cursor:grab; touch-action:none; }
+.fg-g3d-canvas:active{ cursor:grabbing; }
+</style>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -695,6 +1117,38 @@ window.Quarto = {
 <li><strong>Final norm + “unembedding”</strong> (Ch. 12): each token’s final vector is projected back to the vocabulary to give a <strong>prediction</strong> (e.g., the next word).</li>
 </ol>
 <p>The residual stream is the thread that runs through everything: the embeddings <strong>initialize</strong> it, the blocks <strong>edit</strong> it, and its <strong>final</strong> value is translated into the output.</p>
+<div class="fg-flow" style="--steps:7" role="img" aria-label="A token's journey: text, tokenize, embeddings and position, N blocks (mix and process), final norm, unembed, and logits for the next word.">
+  <span class="fg-spark" aria-hidden="true"></span>
+  <div class="fg-step" style="--i:0">
+    <span class="fg-chip">📝</span>
+    <div class="fg-card"><b>text</b><span>the raw input</span></div>
+  </div>
+  <div class="fg-step" style="--i:1">
+    <span class="fg-chip">🔡</span>
+    <div class="fg-card"><b>Tokenize</b><span>Ch. 2 · text → numbers</span></div>
+  </div>
+  <div class="fg-step" style="--i:2">
+    <span class="fg-chip">🧭</span>
+    <div class="fg-card"><b>Embeddings + position</b><span>Ch. 3, 8 · each token → a situated vector</span></div>
+  </div>
+  <div class="fg-step is-loop" style="--i:3">
+    <span class="fg-chip">🧱</span><span class="fg-badge">× N</span>
+    <div class="fg-card"><b>N blocks</b><span>Ch. 4–7 · mix (attention) → process (FFN)</span></div>
+  </div>
+  <div class="fg-step" style="--i:4">
+    <span class="fg-chip">📏</span>
+    <div class="fg-card"><b>Final norm</b><span>Ch. 12</span></div>
+  </div>
+  <div class="fg-step" style="--i:5">
+    <span class="fg-chip">🔤</span>
+    <div class="fg-card"><b>Unembed</b><span>projection back to the vocabulary</span></div>
+  </div>
+  <div class="fg-step is-out" style="--i:6">
+    <span class="fg-chip">🎯</span>
+    <div class="fg-card"><b>Logits → next word</b><span>the prediction</span></div>
+  </div>
+</div>
+<p><em>(The dashed box —the N blocks— is the only one that repeats; everything else happens just once. Move the pulse over it: that’s how a token travels, from text to prediction.)</em></p>
 </section>
 <section id="a-minimal-transformer-in-code" class="level2" data-number="10.7">
 <h2 data-number="10.7" class="anchored" data-anchor-id="a-minimal-transformer-in-code"><span class="header-section-number">10.7</span> A minimal transformer, in code</h2>
@@ -756,6 +1210,918 @@ window.Quarto = {
 </section>
 
 </main> <!-- /main -->
+<!-- Diagram enhancements: build attention maps + scroll-trigger play.
+     Progressive enhancement — if anything fails, CSS animations just run always. -->
+<script>
+(function () {
+  var FG_LANG = (document.documentElement.lang || 'es').toLowerCase().slice(0, 2);
+  function L(es, en) { return FG_LANG === 'en' ? en : es; }
+
+  // ---- 0. Fix ES/EN navbar toggle: jump to the SAME page in the other language, any depth/base ----
+  try {
+    var _p = location.pathname;
+    document.querySelectorAll('.navbar a, header a, nav a').forEach(function (a) {
+      var t = (a.textContent || '').trim();
+      if (t === 'EN') a.setAttribute('href', /\/es\//.test(_p) ? _p.replace('/es/', '/en/') : _p);
+      else if (t === 'ES') a.setAttribute('href', /\/en\//.test(_p) ? _p.replace('/en/', '/es/') : _p);
+    });
+  } catch (e) {}
+
+  // ---- 1. Build .fg-attn causal attention heatmaps from data-tokens ----
+  try {
+    document.querySelectorAll('.fg-attn[data-tokens]').forEach(function (grid) {
+      var toks = grid.getAttribute('data-tokens').split(',').map(function (t) { return t.trim(); });
+      var n = toks.length;
+      grid.style.setProperty('--n', n);
+      var html = '<div class="fg-attn-corner"></div>';
+      // top row: key labels
+      toks.forEach(function (t) { html += '<div class="fg-attn-k">' + t + '</div>'; });
+      // body rows: query label + causal cells
+      for (var i = 0; i < n; i++) {
+        html += '<div class="fg-attn-q" style="--r:' + i + '">' + toks[i] + '</div>';
+        // raw weights over keys j<=i: recency decay + self + sink on token 0
+        var raw = [], max = 0;
+        for (var j = 0; j < n; j++) {
+          if (j > i) { raw.push(null); continue; }
+          var w = Math.exp(-(i - j) / 1.8) + (j === 0 ? 0.45 : 0) + (j === i ? 0.25 : 0);
+          raw.push(w); if (w > max) max = w;
+        }
+        for (var k = 0; k < n; k++) {
+          if (raw[k] === null) { html += '<div class="fg-attn-cell masked"></div>'; continue; }
+          var wn = (max > 0 ? raw[k] / max : 0).toFixed(3);
+          html += '<div class="fg-attn-cell" style="--r:' + i + ';--w:' + wn + '"></div>';
+        }
+      }
+      grid.innerHTML = html;
+    });
+  } catch (e) { /* leave any pre-rendered fallback in place */ }
+
+  // ---- 1b. Build .fg-mm animated matrix-multiply heatmaps (A·B = C) ----
+  try {
+    document.querySelectorAll('.fg-mm').forEach(function (box) {
+      var N = +(box.dataset.n || 4), K = +(box.dataset.k || 3), M = +(box.dataset.m || 3);
+      var rnd = function (s) { var x = Math.sin(s) * 9973; return x - Math.floor(x); };
+      var A = [], B = [], C = [];
+      for (var i = 0; i < N; i++) { A[i] = []; for (var k = 0; k < K; k++) A[i][k] = +((rnd(i * 7 + k * 3 + 1) * 2 - 1)).toFixed(1); }
+      for (var k2 = 0; k2 < K; k2++) { B[k2] = []; for (var j = 0; j < M; j++) B[k2][j] = +((rnd(k2 * 5 + j * 11 + 2) * 2 - 1)).toFixed(1); }
+      for (var i2 = 0; i2 < N; i2++) { C[i2] = []; for (var j2 = 0; j2 < M; j2++) { var s = 0; for (var kk = 0; kk < K; kk++) s += A[i2][kk] * B[kk][j2]; C[i2][j2] = +s.toFixed(1); } }
+      var mx = function (g) { return Math.max.apply(null, [].concat.apply([], g).map(Math.abs)) || 1; };
+      var mA = mx(A), mB = mx(B), mC = mx(C);
+      function grid(g, m, fill) {
+        var h = '<div class="fg-mm-grid" style="grid-template-columns:repeat(' + g[0].length + ',1fr)">';
+        g.forEach(function (row, ri) { row.forEach(function (v, cj) {
+          h += fill
+            ? '<div class="fg-mm-cell heat" data-i="' + ri + '" data-j="' + cj + '" style="--a:' + (Math.abs(v) / m * 0.85).toFixed(2) + '">' + v + '</div>'
+            : '<div class="fg-mm-cell" data-i="' + ri + '" data-j="' + cj + '"></div>';
+        }); });
+        return h + '</div>';
+      }
+      box.innerHTML = '<div class="fg-mm-eq">' + (box.dataset.eq || 'C = A · B') + '</div>' +
+        '<div class="fg-mm-stage"><div class="fg-mm-block"><div class="fg-mm-lbl">' + (box.dataset.a || 'A') + '</div>' + grid(A, mA, true) + '</div>' +
+        '<div class="fg-mm-op">×</div><div class="fg-mm-block"><div class="fg-mm-lbl">' + (box.dataset.b || 'B') + '</div>' + grid(B, mB, true) + '</div>' +
+        '<div class="fg-mm-op">=</div><div class="fg-mm-block"><div class="fg-mm-lbl">' + (box.dataset.c || 'C') + '</div>' + grid(C, mC, false) + '</div></div>' +
+        '<div class="fg-mm-cap"></div>';
+      var grids = box.querySelectorAll('.fg-mm-grid'), elA = grids[0], elB = grids[1], elC = grids[2];
+      var cap = box.querySelector('.fg-mm-cap'), Cl = box.dataset.c || 'C';
+      var cell = function (el, ri, cj) { return el.querySelector('.fg-mm-cell[data-i="' + ri + '"][data-j="' + cj + '"]'); };
+      var clr = function () { box.querySelectorAll('.row-active,.col-active,.computing').forEach(function (c) { c.classList.remove('row-active', 'col-active', 'computing'); }); };
+      var i = 0, j = 0;
+      function step() {
+        clr();
+        for (var k = 0; k < K; k++) cell(elA, i, k).classList.add('row-active');
+        for (var k2b = 0; k2b < K; k2b++) cell(elB, k2b, j).classList.add('col-active');
+        var cc = cell(elC, i, j); cc.classList.add('computing');
+        cap.innerHTML = '<span class="g">' + Cl + '[' + i + '][' + j + ']</span> = ' +
+          A[i].map(function (a, k) { return a + '·' + B[k][j]; }).join(' + ') + ' = <b>' + C[i][j] + '</b>';
+        setTimeout(function () {
+          cc.classList.remove('computing'); cc.classList.add('heat');
+          cc.style.setProperty('--a', (Math.abs(C[i][j]) / mC * 0.85).toFixed(2)); cc.textContent = C[i][j];
+          j++; if (j >= M) { j = 0; i++; }
+          if (i >= N) { setTimeout(function () { clr(); for (var a = 0; a < N; a++) for (var b = 0; b < M; b++) { var x = cell(elC, a, b); x.classList.remove('heat'); x.textContent = ''; x.style.removeProperty('--a'); } i = 0; j = 0; cap.innerHTML = '↺'; setTimeout(step, 700); }, 1700); }
+          else setTimeout(step, 600);
+        }, 650);
+      }
+      step();
+    });
+  } catch (e) {}
+
+  // ---- 1c. Build .fg-decay γ-decay rows (attention fades with distance, map style) ----
+  // Static (data-gamma) or animated sweep (data-animate="1": γ oscillates so the
+  // colours visibly recede as γ grows). Respects prefers-reduced-motion.
+  try {
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll('.fg-decay').forEach(function (box) {
+      var n = +(box.dataset.n || 12), animate = box.dataset.animate === '1';
+      var h = '<div class="fg-decay-row">';
+      for (var d = 1; d <= n; d++) { h += '<div class="fg-decay-cell" data-d="' + d + '"><span>' + d + '</span></div>'; }
+      h += '</div>';
+      var ctrl = (animate && !reduce)
+        ? '<div class="fg-decay-ctrl"><button type="button" class="fg-decay-btn">' + L('⏸ Pausar', '⏸ Pause') + '</button>' +
+          '<input type="range" class="fg-decay-range" min="0.3" max="2.6" step="0.01" value="1.35" aria-label="γ"></div>'
+        : '';
+      box.innerHTML = '<div class="fg-decay-lbl"></div>' + h + '<div class="fg-decay-axis">' + L('distancia d →', 'distance d →') + '</div>' + ctrl;
+      var lbl = box.querySelector('.fg-decay-lbl');
+      var cells = [].slice.call(box.querySelectorAll('.fg-decay-cell'));
+      function render(g) {
+        for (var i = 0; i < cells.length; i++) cells[i].style.setProperty('--a', Math.pow(i + 1, -g).toFixed(3));
+        var note = g < 0.95 ? L('cola pesada — la atención llega lejos (Fase A)', 'heavy tail — attention looks far (Phase A)')
+                 : (g <= 1.05 ? L('frontera de Hagedorn (γ≈1)', 'Hagedorn boundary (γ≈1)')
+                 : L('cola ligera — la atención es corta (Fase B)', 'light tail — attention is short (Phase B)'));
+        lbl.innerHTML = 'γ = <b>' + g.toFixed(2) + '</b> — ' + note;
+      }
+      if (!animate || reduce) { render(+(box.dataset.gamma || 0.8)); return; }
+      // animated sweep with pause/continue button + manual γ slider (pure client JS, no server)
+      var t = 1.6, timer = null;
+      var btn = box.querySelector('.fg-decay-btn'), range = box.querySelector('.fg-decay-range');
+      function frame() { t += 0.03; var g = 1.35 + 1.05 * Math.sin(t); render(g); range.value = g.toFixed(2); }
+      function start() { if (timer) return; timer = setInterval(frame, 60); btn.innerHTML = L('⏸ Pausar', '⏸ Pause'); }
+      function stop() { if (timer) { clearInterval(timer); timer = null; } btn.innerHTML = L('▶ Continuar', '▶ Continue'); }
+      btn.addEventListener('click', function () { timer ? stop() : start(); });
+      range.addEventListener('input', function () {
+        stop(); var g = parseFloat(range.value);
+        t = Math.asin(Math.max(-1, Math.min(1, (g - 1.35) / 1.05)));  // sync phase so resume is smooth
+        render(g);
+      });
+      render(1.35); start();
+    });
+  } catch (e) {}
+
+  // ---- 1d. Build .fg-attn-text — attention over the sentence (hover + auto-cycle) ----
+  try {
+    var reduceT = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll('.fg-attn-text[data-tokens]').forEach(function (box) {
+      var toks = box.getAttribute('data-tokens').split(',').map(function (t) { return t.trim(); });
+      var n = toks.length;
+      var sent = '<div class="fg-atxt-sent">' +
+        toks.map(function (t, i) { return '<span class="fg-atxt-tok" data-i="' + i + '">' + t + '</span>'; }).join(' ') +
+        '</div>';
+      box.innerHTML = sent + '<div class="fg-atxt-cap"></div><div class="fg-atxt-hint">' + L('▸ pasa el ratón por una palabra para ver a qué atiende', '▸ hover over a word to see what it attends to') + '</div>';
+      var spans = [].slice.call(box.querySelectorAll('.fg-atxt-tok'));
+      var cap = box.querySelector('.fg-atxt-cap');
+      function setQ(qi) {
+        var raw = [], mx = 0;
+        for (var j = 0; j < n; j++) {
+          if (j > qi) { raw.push(0); continue; }
+          var w = Math.exp(-(qi - j) / 1.8) + (j === 0 ? 0.45 : 0) + (j === qi ? 0.25 : 0);
+          raw.push(w); if (w > mx) mx = w;
+        }
+        spans.forEach(function (s, j) {
+          s.style.setProperty('--a', mx > 0 ? (raw[j] / mx * 0.85).toFixed(2) : 0);
+          s.classList.toggle('query', j === qi);
+        });
+        // top-2 attended (excluding the query itself) for the caption
+        var idx = raw.map(function (w, j) { return [w, j]; }).filter(function (p) { return p[1] !== qi && p[0] > 0; })
+          .sort(function (a, b) { return b[0] - a[0]; }).slice(0, 2).map(function (p) { return '«' + toks[p[1]] + '»'; });
+        cap.innerHTML = '<span class="q">«' + toks[qi] + '»</span>' + L(' atiende sobre todo a ', ' attends mostly to ') +
+          (idx.length ? '<b>' + idx.join(L('</b> y <b>', '</b> and <b>')) + '</b>' : L('<b>sí misma</b>', '<b>itself</b>')) + L(' — y nunca al futuro.', ' — and never the future.');
+      }
+      var cur = Math.min(n - 1, 3), timer = null;
+      function play() { timer = setInterval(function () { cur = (cur + 1) % n; if (cur === 0) cur = 1; setQ(cur); }, 1900); }
+      spans.forEach(function (s) {
+        s.addEventListener('mouseenter', function () { if (timer) { clearInterval(timer); timer = null; } cur = +s.dataset.i; setQ(cur); });
+      });
+      box.addEventListener('mouseleave', function () { if (!timer && !reduceT) play(); });
+      setQ(cur);
+      if (!reduceT) play();
+    });
+  } catch (e) {}
+
+  // ---- 1e. Build .fg-arch master architecture (Phases 1+2: skeleton + in-situ detail) ----
+  try {
+    var reduceA = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var arnd = function (s) { var x = Math.sin(s) * 9973; return x - Math.floor(x); };
+    function dVec() {
+      var h = '<div class="fg-arch-detail"><div class="dh">' + L('el vector del token (cada celda = una dimensión)', "the token's vector (each cell = one dimension)") + '</div><div class="fg-arch-vec">';
+      for (var i = 0; i < 12; i++) h += '<i style="--a:' + (0.15 + 0.8 * arnd(i + 3)).toFixed(2) + '"></i>';
+      return h + '</div></div>';
+    }
+    function dAttn() {
+      var n = 5, h = '<div class="fg-arch-detail"><div class="dh">' + L('cada token mira a los anteriores (mapa causal)', 'each token looks at the previous ones (causal map)') + '</div><div class="fg-arch-mini" style="grid-template-columns:repeat(' + n + ',15px)">';
+      for (var i = 0; i < n; i++) {
+        var raw = [], mx = 0;
+        for (var j = 0; j < n; j++) { if (j > i) { raw.push(null); continue; } var w = Math.exp(-(i - j) / 1.5) + (j === 0 ? 0.4 : 0) + (j === i ? 0.2 : 0); raw.push(w); if (w > mx) mx = w; }
+        for (var k = 0; k < n; k++) { h += raw[k] === null ? '<i class="m"></i>' : '<i class="c" style="--a:' + (raw[k] / mx * 0.9).toFixed(2) + '"></i>'; }
+      }
+      return h + '</div></div>';
+    }
+    function dFfn() {
+      function row(k) { var s = '<div class="row">'; for (var i = 0; i < k; i++) s += '<i></i>'; return s + '</div>'; }
+      return '<div class="fg-arch-detail"><div class="dh">' + L('expandir → no linealidad → comprimir', 'expand → nonlinearity → compress') + '</div><div class="fg-arch-ffn">' + row(4) + '<span class="lab">↓ ×4</span>' + row(14) + '<span class="lab">' + L('↓ GELU + comprimir', '↓ GELU + compress') + '</span>' + row(4) + '</div></div>';
+    }
+    function dLogits() {
+      var d = [[L('perro', 'dog'), .42], [L('gato', 'cat'), .27], [L('ratón', 'mouse'), .14], ['…', .08]], h = '<div class="fg-arch-detail"><div class="dh">' + L('probabilidad de la siguiente palabra', 'probability of the next word') + '</div><div class="fg-arch-logits">';
+      d.forEach(function (p) { h += '<div class="lg"><span class="nm">' + p[0] + '</span><span class="bar" style="width:' + (p[1] * 180).toFixed(0) + 'px"></span>' + (p[1] * 100).toFixed(0) + '%</div>'; });
+      return h + '</div></div>';
+    }
+    document.querySelectorAll('.fg-arch').forEach(function (box) {
+      var N = +(box.dataset.layers || 12);
+      var HREF = { in: '02-tokens.html', emb: '03-embeddings.html', attn: '04-atencion.html', ffn: '06-ffn.html', fnorm: '07-residual-norm.html', out: '12-inferencia.html' };
+      box.innerHTML =
+        '<div class="fg-arch-legend"><i>🔵 ' + L('Atención', 'Attention') + '</i>·<i>🟢 FFN</i>·<i>⚪ Norm</i>·<i>— ' + L('flujo residual', 'residual stream') + '</i></div>' +
+        '<div class="fg-arch-ctrl">' +
+          '<button class="fg-arch-btn" data-act="pp" type="button">' + L('⏸ Pausar', '⏸ Pause') + '</button>' +
+          '<input class="fg-arch-range" type="range" min="1" max="' + N + '" value="1" aria-label="' + L('capa', 'layer') + '">' +
+          '<span class="lc">' + L('capa', 'layer') + ' <b>1</b>/' + N + '</span>' +
+        '</div>' +
+        '<div class="fg-arch-stack">' +
+          '<div class="fg-arch-stage out" data-st="out" data-href="' + HREF.out + '"><b>' + L('Desembeber → logits', 'Unembed → logits') + '</b><span>' + L('la siguiente palabra', 'the next word') + '</span>' + dLogits() + '</div>' +
+          '<div class="fg-arch-stage norm" data-st="fnorm" data-href="' + HREF.fnorm + '">' + L('Norm final', 'Final norm') + '</div>' +
+          '<div class="fg-arch-block"><div class="fg-arch-badge">× ' + N + L(' capas', ' layers') + '</div>' +
+            '<div class="fg-arch-sub ffn" data-st="ffn" data-href="' + HREF.ffn + '"><span class="sub-norm">Norm</span><span class="sub-body">FFN <small>' + L('(procesar)', '(process)') + '</small>' + dFfn() + '</span><span class="sub-add">⊕</span></div>' +
+            '<div class="fg-arch-sub attn" data-st="attn" data-href="' + HREF.attn + '"><span class="sub-norm">Norm</span><span class="sub-body">' + L('Atención multi-cabeza', 'Multi-head attention') + ' <small>' + L('(mezclar)', '(mix)') + '</small>' + dAttn() + '</span><span class="sub-add">⊕</span></div>' +
+          '</div>' +
+          '<div class="fg-arch-stage emb" data-st="emb" data-href="' + HREF.emb + '"><b>' + L('Embeddings + Posición', 'Embeddings + Position') + '</b><span>' + L('cada token → un vector', 'each token → a vector') + '</span>' + dVec() + '</div>' +
+          '<div class="fg-arch-stage in" data-st="in" data-href="' + HREF.in + '"><b>tokens</b><span>' + L('«El gato durmió»', '«The cat slept»') + '</span></div>' +
+        '</div>' +
+        '<div class="fg-arch-spine"></div><div class="fg-arch-pulse"></div><div class="fg-arch-cap"></div>';
+      var pulse = box.querySelector('.fg-arch-pulse'), cap = box.querySelector('.fg-arch-cap');
+      var btn = box.querySelector('[data-act="pp"]'), range = box.querySelector('.fg-arch-range'), lc = box.querySelector('.lc');
+      var els = ['in', 'emb', 'attn', 'ffn', 'fnorm', 'out'].map(function (k) { return box.querySelector('[data-st="' + k + '"]'); });
+      function cy(el) { var r = el.getBoundingClientRect(), b = box.getBoundingClientRect(); return r.top - b.top + r.height / 2; }
+      function openOnly(el) { box.querySelectorAll('.fg-arch-glow, .open').forEach(function (e) { e.classList.remove('fg-arch-glow', 'open'); }); if (el) el.classList.add('fg-arch-glow', 'open'); }
+      var hovered = null, layer = 1, p = 0, lastBest = null, dwell = 0, paused = false;
+      function updLayerUI() { if (range) range.value = layer; if (lc) lc.innerHTML = L('capa', 'layer') + ' <b>' + layer + '</b>/' + N; }
+      els.forEach(function (e) {                                                 // click a stage → open its chapter
+        if (!e) return;
+        e.addEventListener('mouseenter', function () { hovered = e; openOnly(e); });
+        e.addEventListener('mouseleave', function () { if (hovered === e) hovered = null; });
+        e.addEventListener('click', function () { var h = e.dataset.href; if (h) window.location.href = h; });
+      });
+      cap.innerHTML = L('El token sube por el <b>flujo residual</b> · <i>pasa el ratón para inspeccionar una etapa, haz clic para abrir su capítulo</i>', 'The token rises through the <b>residual stream</b> · <i>hover to inspect a stage, click to open its chapter</i>');
+      if (reduceA) { openOnly(els[2]); return; }
+      if (btn) btn.addEventListener('click', function () { paused = !paused; btn.textContent = paused ? L('▶ Reanudar', '▶ Resume') : L('⏸ Pausar', '⏸ Pause'); });
+      if (range) range.addEventListener('input', function () { paused = true; if (btn) btn.textContent = L('▶ Reanudar', '▶ Resume'); layer = +range.value; p = 0; lastBest = null; updLayerUI(); });
+      function frame() {
+        var vr = box.getBoundingClientRect();
+        if (vr.bottom < 0 || vr.top > (window.innerHeight || 999999)) return;   // off-screen
+        if (paused || hovered) return;                                          // stopped or inspecting
+        if (dwell > 0) { dwell--; return; }                                     // pause so the detail is readable
+        p += 0.0075; if (p >= 1) { p = 0; layer = layer % N + 1; updLayerUI(); lastBest = null; }
+        var yIn = cy(els[0]), yOut = cy(els[5]), y = yIn + p * (yOut - yIn);
+        pulse.style.top = (y - 8) + 'px';
+        var best = null, bd = 1e9; els.forEach(function (e) { var d = Math.abs(cy(e) - y); if (d < bd) { bd = d; best = e; } });
+        if (best !== lastBest) { lastBest = best; openOnly(best); dwell = 45; }  // ~1.35s dwell on each stage
+      }
+      setInterval(frame, 30);
+    });
+  } catch (e) {}
+
+  // ---- 1f. Build .fg-rope3d: WebGL 3D "tunnel of clocks" for RoPE ----
+  try {
+    var r3dNodes = document.querySelectorAll('.fg-rope3d');
+    if (r3dNodes.length) {
+      // lazy-load vendored three.js (relative path → works locally and on GitHub Pages subpaths)
+      var loadThree = function (cb) {
+        if (window.THREE) { cb(true); return; }
+        var s = document.createElement('script');
+        s.src = '../vendor/three.min.js';
+        s.onload = function () { cb(!!window.THREE); };
+        s.onerror = function () { cb(false); };
+        document.head.appendChild(s);
+      };
+      loadThree(function (ok) {
+        r3dNodes.forEach(function (box) { initRope3d(box, ok); });
+      });
+    }
+    function initRope3d(box, haveThree) {
+      var K = +(box.dataset.bands || 6);                 // number of frequency "clocks"
+      var canvas = document.createElement('canvas'); canvas.className = 'fg-rope3d-canvas';
+      var ctrl = document.createElement('div'); ctrl.className = 'fg-rope3d-ctrl';
+      ctrl.innerHTML =
+        '<button class="fg-arch-btn" data-act="pp" type="button">' + L('⏸ Pausar', '⏸ Pause') + '</button>' +
+        '<span>' + L('posición', 'position') + '</span><input class="fg-arch-range" type="range" min="0" max="64" step="0.5" value="0" aria-label="' + L('posición del token', 'token position') + '">' +
+        '<span class="lc">pos = <b>0</b></span>';
+      var cap = document.createElement('div'); cap.className = 'fg-rope3d-cap';
+      cap.innerHTML = L('RoPE codifica la posición como un <b>conjunto de relojes</b>: uno por banda de frecuencia. ' +
+        'Mueve la posición — los relojes <span class="hot">rápidos (al fondo)</span> dan muchas vueltas y se <span class="hot">solapan (aliasing)</span>; ' +
+        'los <b>lentos (al frente)</b> apenas giran. Arrastra para girar la escena.',
+        'RoPE encodes position as a <b>set of clocks</b>: one per frequency band. ' +
+        'Move the position — the <span class="hot">fast clocks (at the back)</span> spin many times and <span class="hot">overlap (aliasing)</span>; ' +
+        'the <b>slow ones (at the front)</b> barely turn. Drag to rotate the scene.');
+      var reduce3d = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var ctx = null;
+      try { ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl'); } catch (e) {}
+      if (!haveThree || !ctx) {
+        var fb = document.createElement('div'); fb.className = 'fg-rope3d-fallback';
+        fb.innerHTML = L('🕐 <b>RoPE = un conjunto de relojes a distinta velocidad.</b> Cada banda de frecuencia gira a su ritmo con la posición: ' +
+          'las rápidas se solapan (aliasing), las lentas apenas se mueven. (Tu navegador no tiene WebGL para la versión 3D interactiva.)',
+          '🕐 <b>RoPE = a set of clocks at different speeds.</b> Each frequency band turns at its own pace with position: ' +
+          'the fast ones overlap (aliasing), the slow ones barely move. (Your browser has no WebGL for the interactive 3D version.)');
+        box.appendChild(fb); box.appendChild(cap); return;
+      }
+      box.appendChild(canvas); box.appendChild(ctrl); box.appendChild(cap);
+
+      var THREE = window.THREE;
+      var scene = new THREE.Scene();
+      var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+      var camera = new THREE.PerspectiveCamera(42, 2, 0.1, 100);
+
+      var R = 1.0, dz = 1.35, z0 = 0, zBack = -(K - 1) * dz, midZ = (z0 + zBack) / 2;
+      function lerp(a, b, t) { return a + (b - a) * t; }
+      function bandColor(t) { return new THREE.Color(lerp(0, 0.835, t), lerp(0.447, 0.369, t), lerp(0.698, 0, t)); } // blue→vermillion
+      var freqs = [], clocks = [];
+      for (var k = 0; k < K; k++) {
+        var t = K > 1 ? k / (K - 1) : 0;
+        var freq = 0.16 * Math.pow(1.85, k);             // geometric: front slow, back fast
+        freqs.push(freq);
+        var z = z0 - k * dz, col = bandColor(t);
+        // ring
+        var ringPts = [];
+        for (var a = 0; a <= 64; a++) { var ang = a / 64 * Math.PI * 2; ringPts.push(new THREE.Vector3(Math.cos(ang) * R, Math.sin(ang) * R, z)); }
+        var ring = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(ringPts), new THREE.LineBasicMaterial({ color: col, transparent: true, opacity: 0.45 }));
+        scene.add(ring);
+        // hand (center → rim)
+        var handGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, z), new THREE.Vector3(R, 0, z)]);
+        var hand = new THREE.Line(handGeo, new THREE.LineBasicMaterial({ color: col, linewidth: 2 }));
+        scene.add(hand);
+        // tip
+        var tip = new THREE.Mesh(new THREE.SphereGeometry(0.085, 16, 16), new THREE.MeshBasicMaterial({ color: col }));
+        scene.add(tip);
+        // hub
+        var hub = new THREE.Mesh(new THREE.SphereGeometry(0.04, 10, 10), new THREE.MeshBasicMaterial({ color: 0x9fb3c4 }));
+        hub.position.set(0, 0, z); scene.add(hub);
+        clocks.push({ z: z, freq: freq, hand: hand, tip: tip });
+      }
+      // axis line through the hubs
+      scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, z0 + 0.4), new THREE.Vector3(0, 0, zBack - 0.4)]),
+        new THREE.LineBasicMaterial({ color: 0xc2d3e0, transparent: true, opacity: 0.6 })));
+
+      // manual orbit camera
+      var target = new THREE.Vector3(0, 0, midZ);
+      var camR = 7.2, az = 0.9, pol = 1.15;             // azimuth, polar
+      function placeCam() {
+        camera.position.set(
+          target.x + camR * Math.sin(pol) * Math.cos(az),
+          target.y + camR * Math.cos(pol),
+          target.z + camR * Math.sin(pol) * Math.sin(az));
+        camera.lookAt(target);
+      }
+      var dragging = false, lx = 0, ly = 0;
+      canvas.addEventListener('pointerdown', function (e) { dragging = true; lx = e.clientX; ly = e.clientY; canvas.setPointerCapture(e.pointerId); });
+      canvas.addEventListener('pointermove', function (e) {
+        if (!dragging) return;
+        az -= (e.clientX - lx) * 0.008; pol -= (e.clientY - ly) * 0.008;
+        pol = Math.max(0.25, Math.min(Math.PI - 0.25, pol)); lx = e.clientX; ly = e.clientY;
+      });
+      canvas.addEventListener('pointerup', function (e) { dragging = false; });
+      canvas.addEventListener('pointercancel', function () { dragging = false; });
+
+      var btn = ctrl.querySelector('[data-act="pp"]'), range = ctrl.querySelector('.fg-arch-range'), lc = ctrl.querySelector('.lc');
+      var pos = 0, playing = !reduce3d;
+      if (reduce3d) btn.textContent = L('▶ Reanudar', '▶ Resume');
+      btn.addEventListener('click', function () { playing = !playing; btn.textContent = playing ? L('⏸ Pausar', '⏸ Pause') : L('▶ Reanudar', '▶ Resume'); });
+      range.addEventListener('input', function () { pos = +range.value; playing = false; btn.textContent = L('▶ Reanudar', '▶ Resume'); updHands(); updLc(); });
+      function updLc() { lc.innerHTML = 'pos = <b>' + pos.toFixed(1) + '</b>'; }
+      function updHands() {
+        for (var i = 0; i < clocks.length; i++) {
+          var c = clocks[i], ang = pos * c.freq, x = Math.cos(ang) * R, y = Math.sin(ang) * R;
+          c.hand.geometry.setFromPoints([new THREE.Vector3(0, 0, c.z), new THREE.Vector3(x, y, c.z)]);
+          c.tip.position.set(x, y, c.z);
+        }
+      }
+      function resize() {
+        var w = box.clientWidth || 640, h = 380;
+        renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+      }
+      window.addEventListener('resize', resize); resize(); updHands(); updLc();
+
+      function loop() {
+        requestAnimationFrame(loop);
+        var r = box.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > (window.innerHeight || 9999)) return;   // off-screen → skip
+        if (!dragging) az += 0.0016;                                        // gentle idle auto-orbit
+        if (playing) { pos += 0.18; if (pos > 64) pos = 0; if (range) range.value = pos; updLc(); }
+        if (playing || dragging) updHands();
+        placeCam(); renderer.render(scene, camera);
+      }
+      loop();
+    }
+  } catch (e) {}
+
+  // ---- 1g. Build .fg-qkv: attention as a soft dictionary lookup (real worked example) ----
+  try {
+    document.querySelectorAll('.fg-qkv').forEach(function (box) {
+      var q = [1, 0];
+      var keys = [{ k: [1, 0], v: [10, 0] }, { k: [0, 1], v: [0, 10] }, { k: [1, 1], v: [5, 5] }];
+      var dk = q.length;
+      var sc = keys.map(function (o) { return (q[0] * o.k[0] + q[1] * o.k[1]) / Math.sqrt(dk); });
+      var ex = sc.map(Math.exp), Z = ex.reduce(function (a, b) { return a + b; }, 0), al = ex.map(function (e) { return e / Z; });
+      var maxAl = Math.max.apply(null, al), out = [0, 0];
+      keys.forEach(function (o, j) { out[0] += al[j] * o.v[0]; out[1] += al[j] * o.v[1]; });
+      var html = '<div class="fg-sch-h">' + L('La atención = una búsqueda blanda en un diccionario', 'Attention = a soft dictionary lookup') + '</div>' +
+        '<div class="fg-qkv-q">' + L('consulta <b>q = [1, 0]</b> · «qué busco»', "query <b>q = [1, 0]</b> · «what I'm looking for»") + '</div>';
+      keys.forEach(function (o, j) {
+        html += '<div class="fg-qkv-key" data-j="' + j + '">' +
+          '<span class="kk">k=[' + o.k.join(', ') + ']</span>' +
+          '<span class="dd">q·k/√2 = <b>' + sc[j].toFixed(2) + '</b></span>' +
+          '<span class="wb"><i style="width:' + (al[j] / maxAl * 100).toFixed(0) + '%"></i></span>' +
+          '<span class="vv">α=' + al[j].toFixed(2) + ' · v=[' + o.v.join(',') + ']</span>' +
+          '</div>';
+      });
+      html += '<div class="fg-qkv-out">' + L('salida = Σ α·v = <b>[', 'output = Σ α·v = <b>[') + out[0].toFixed(2) + ', ' + out[1].toFixed(2) + ']</b></div>' +
+        '<div class="fg-sch-cap">' + L('El token compara su consulta con cada <b>clave</b> (producto escalar), el <b>softmax</b> reparte 1 unidad de peso (α), y la salida es la <b>mezcla de los valores</b> ponderada por α. Son los números reales del ejemplo del capítulo.', "The token compares its query with each <b>key</b> (dot product), the <b>softmax</b> distributes 1 unit of weight (α), and the output is the <b>mix of the values</b> weighted by α. These are the real numbers from the chapter's example.") + '</div>';
+      box.className = 'fg-qkv fg-sch'; box.innerHTML = html;
+      var rows = box.querySelectorAll('.fg-qkv-key'), i = 0;
+      function step() { rows.forEach(function (r) { r.classList.remove('lit'); }); rows[i].classList.add('lit'); i = (i + 1) % rows.length; }
+      step();
+      setInterval(function () { var r = box.getBoundingClientRect(); if (r.bottom < 0 || r.top > (window.innerHeight || 9999)) return; step(); }, 1100);
+    });
+  } catch (e) {}
+
+  // ---- 1h. Build .fg-lnorm: LayerNorm normalizes a real vector live ----
+  try {
+    document.querySelectorAll('.fg-lnorm').forEach(function (box) {
+      var e0 = [2.0, -1.0, 3.5, 0.5, -2.5, 1.0, 4.0, -0.5], n = e0.length;
+      var mu = e0.reduce(function (a, x) { return a + x; }, 0) / n;
+      var vv = e0.reduce(function (a, x) { return a + (x - mu) * (x - mu); }, 0) / n, sd = Math.sqrt(vv + 1e-5);
+      var centered = e0.map(function (x) { return x - mu; }), normed = centered.map(function (x) { return x / sd; });
+      var stages = [
+        { name: L('crudo · e', 'raw · e'), data: e0, mu: mu, sd: sd },
+        { name: L('centrado · e − μ', 'centered · e − μ'), data: centered, mu: 0, sd: sd },
+        { name: L('normalizado · (e − μ)/σ', 'normalized · (e − μ)/σ'), data: normed, mu: 0, sd: 1 }
+      ];
+      box.className = 'fg-lnorm fg-sch';
+      box.innerHTML = '<div class="fg-sch-h">' + L('LayerNorm: lleva el vector a media 0 y varianza 1', 'LayerNorm: brings the vector to mean 0 and variance 1') + '</div>' +
+        '<div class="fg-lnorm-plot"><div class="fg-lnorm-zero"></div></div>' +
+        '<div class="fg-lnorm-stat"></div>' +
+        '<div class="fg-lnorm-steps"></div>' +
+        '<div class="fg-sch-cap">' + L('Fórmula real: <b>ê = (e − μ)/σ · γ + β</b>. Primero <b>resta la media</b> (centrar), luego <b>divide por σ</b> (escala); γ y β son perillas aprendidas. RMSNorm se salta el centrado.', 'Real formula: <b>ê = (e − μ)/σ · γ + β</b>. First <b>subtract the mean</b> (center), then <b>divide by σ</b> (scale); γ and β are learned knobs. RMSNorm skips the centering.') + '</div>';
+      var plot = box.querySelector('.fg-lnorm-plot'), stat = box.querySelector('.fg-lnorm-stat'), steps = box.querySelector('.fg-lnorm-steps');
+      var bars = e0.map(function () { var d = document.createElement('div'); d.className = 'fg-lnorm-bar'; plot.appendChild(d); return d; });
+      var Hh = 150;
+      function render(si) {
+        var s = stages[si], lm = Math.max.apply(null, s.data.map(Math.abs)) || 1;
+        bars.forEach(function (bar, k) {
+          var val = s.data[k], h = Math.max(2, Math.abs(val) / lm * (Hh / 2));
+          bar.style.height = h + 'px';
+          bar.style.transform = 'translateY(' + (val >= 0 ? -h / 2 : h / 2) + 'px)';
+          bar.style.background = val >= 0 ? 'rgb(0,114,178)' : 'rgb(213,94,0)';
+        });
+        stat.innerHTML = '<b>' + s.name + '</b> — μ = ' + s.mu.toFixed(2) + ' · σ = ' + s.sd.toFixed(2);
+        Array.prototype.forEach.call(steps.children, function (btn, bi) { btn.classList.toggle('on', bi === si); });
+      }
+      stages.forEach(function (s, si) {
+        var btn = document.createElement('button'); btn.className = 'fg-sch-btn'; btn.textContent = (si + 1) + '. ' + s.name.split(' · ')[0];
+        btn.addEventListener('click', function () { cur = si; render(si); });
+        steps.appendChild(btn);
+      });
+      var cur = 0; render(0);
+      setInterval(function () { var r = box.getBoundingClientRect(); if (r.bottom < 0 || r.top > (window.innerHeight || 9999)) return; cur = (cur + 1) % stages.length; render(cur); }, 1800);
+    });
+  } catch (e) {}
+
+  // ---- 1i. Build .fg-kvc: KV-cache compressibility from the real Σ d^-γ ----
+  try {
+    document.querySelectorAll('.fg-kvc').forEach(function (box) {
+      box.className = 'fg-kvc fg-sch';
+      box.innerHTML = '<div class="fg-sch-h">' + L('¿Cuánto KV-cache puedes tirar? Lo decide γ', 'How much KV-cache can you throw away? γ decides') + '</div>' +
+        '<svg class="fg-kvc-svg" viewBox="0 0 460 230" preserveAspectRatio="xMidYMid meet"></svg>' +
+        '<div class="fg-kvc-ctrl">' +
+          '<span>γ</span><input type="range" min="0.3" max="2" step="0.05" value="0.6">' +
+          '<span class="gv">γ = <b>0.60</b></span><span class="fg-kvc-badge"></span>' +
+          '<span style="flex-basis:100%;height:0"></span>' +
+          '<button class="fg-sch-btn" data-g="0.6">Llama-2 · γ=0.60</button>' +
+          '<button class="fg-sch-btn" data-g="1.0">' + L('frontera · γ=1.0', 'boundary · γ=1.0') + '</button>' +
+          '<button class="fg-sch-btn" data-g="1.3">' + L('cola ligera · γ=1.3', 'light tail · γ=1.3') + '</button>' +
+        '</div><div class="fg-sch-cap"></div>';
+      var svg = box.querySelector('svg'), range = box.querySelector('input'), gv = box.querySelector('.gv b'),
+        badge = box.querySelector('.fg-kvc-badge'), cap = box.querySelector('.fg-sch-cap');
+      var W = 460, H = 230, padL = 44, padR = 16, padT = 14, padB = 34, Nmax = 4096, eps = 0.1;
+      var x0 = padL, x1 = W - padR, y0 = H - padB, y1 = padT, lN = Math.log(Nmax);
+      function X(D) { return x0 + (Math.log(D) / lN) * (x1 - x0); }
+      function Y(f) { return y0 + f * (y1 - y0); }
+      function draw(g) {
+        var tot = 0, d;
+        for (d = 1; d <= Nmax; d++) tot += Math.pow(d, -g);
+        var c = 0, path = '', first = true;
+        for (d = 1; d <= Nmax; d++) {
+          c += Math.pow(d, -g);
+          if (d === 1 || d === Nmax || d % 8 === 0) { path += (first ? 'M' : 'L') + X(d).toFixed(1) + ' ' + Y(c / tot).toFixed(1) + ' '; first = false; }
+        }
+        var area = path + 'L' + X(Nmax) + ' ' + y0 + ' L' + x0 + ' ' + y0 + ' Z';
+        var phaseB = g > 1.0001, frontier = Math.abs(g - 1) < 0.0011;
+        var col = phaseB ? 'rgb(31,157,107)' : (frontier ? 'rgb(120,120,120)' : 'rgb(213,94,0)');
+        var Df = phaseB ? Math.pow(eps, -1 / (g - 1)) : Infinity;
+        var s = '';
+        [0, 0.25, 0.5, 0.75, 1].forEach(function (f) { s += '<line class="grid" x1="' + x0 + '" y1="' + Y(f) + '" x2="' + x1 + '" y2="' + Y(f) + '"/>'; });
+        s += '<line class="axis" x1="' + x0 + '" y1="' + y0 + '" x2="' + x1 + '" y2="' + y0 + '"/>';
+        s += '<line class="axis" x1="' + x0 + '" y1="' + y1 + '" x2="' + x0 + '" y2="' + y0 + '"/>';
+        s += '<path class="area" d="' + area + '" fill="' + col + '"/><path class="curve" d="' + path + '" stroke="' + col + '"/>';
+        if (isFinite(Df) && Df <= Nmax) {
+          var xd = X(Df);
+          s += '<line class="dmark" x1="' + xd.toFixed(1) + '" y1="' + y1 + '" x2="' + xd.toFixed(1) + '" y2="' + y0 + '"/>' +
+            '<text class="lbl" x="' + (xd + 4).toFixed(1) + '" y="' + (y1 + 12) + '">D_f≈' + Math.round(Df) + '</text>';
+        }
+        s += '<text class="lbl" x="' + x0 + '" y="' + (y0 + 20) + '">1</text>' +
+          '<text class="lbl" x="' + (x1 - 78) + '" y="' + (y0 + 20) + '">' + Nmax + ' tokens (log)</text>' +
+          '<text class="lbl" x="6" y="' + (y1 + 6) + '">100%</text><text class="lbl" x="16" y="' + (y0) + '">0</text>' +
+          '<text class="lbl" x="' + (x0 + 8) + '" y="' + (y0 - 4) + '">' + L('masa capturada al guardar las D claves más cercanas', 'mass captured by keeping the D nearest keys') + '</text>';
+        svg.innerHTML = s;
+        gv.textContent = g.toFixed(2);
+        badge.textContent = phaseB ? L('Fase B · comprimible', 'Phase B · compressible') : (frontier ? L('γ=1 · frontera', 'γ=1 · boundary') : L('Fase A · difícil', 'Phase A · hard'));
+        badge.className = 'fg-kvc-badge ' + (phaseB ? 'b' : 'a');
+        cap.innerHTML = phaseB
+          ? L('Con <b>γ>1</b> (cola ligera) la suma <b>Σd⁻ᵞ converge</b>: una ventana finita <b>D_f≈', 'With <b>γ>1</b> (light tail) the sum <b>Σd⁻ᵞ converges</b>: a finite window <b>D_f≈') + (isFinite(Df) ? Math.round(Df) : '') + L('</b> captura el ', '</b> captures ') + Math.round((1 - eps) * 100) + L('% de la atención → <span class="ok">muy comprimible</span>.', '% of the attention → <span class="ok">very compressible</span>.')
+          : (frontier
+            ? L('En <b>γ=1</b> la suma diverge como <b>log D</b> — es la <b>frontera</b> exacta entre los dos regímenes.', "At <b>γ=1</b> the sum diverges like <b>log D</b> — it's the exact <b>boundary</b> between the two regimes.")
+            : L('Con <span class="hot">γ&lt;1</span> (cola pesada) la suma <b>diverge</b>: la masa se reparte por todo el contexto, <span class="hot">ninguna ventana finita</span> basta → difícil de comprimir.', 'With <span class="hot">γ&lt;1</span> (heavy tail) the sum <b>diverges</b>: the mass spreads across the whole context, <span class="hot">no finite window</span> is enough → hard to compress.'));
+      }
+      function set(g) { g = Math.round(g * 100) / 100; range.value = g; draw(g); }
+      range.addEventListener('input', function () { draw(+range.value); });
+      box.querySelectorAll('button[data-g]').forEach(function (b) { b.addEventListener('click', function () { set(+b.dataset.g); }); });
+      draw(+range.value);
+    });
+  } catch (e) {}
+
+  // ---- 1j. Build .fg-arcs: attention "who attends to whom" arcs (causal, recency+sink) ----
+  try {
+    document.querySelectorAll('.fg-arcs').forEach(function (box) {
+      var toks = (box.dataset.tokens || L('El,gato,que,vimos,ayer,dormía,aquí', 'The,cat,we,saw,yesterday,slept,here')).split(',');
+      var n = toks.length, tau = 2.2, W = 640, yT = 50, yB = 150, padX = 44;
+      box.className = 'fg-arcs fg-sch';
+      box.innerHTML = '<div class="fg-sch-h">' + L('¿Quién atiende a quién? (atención causal)', 'Who attends to whom? (causal attention)') + '</div>' +
+        '<svg class="fg-arcs-svg" viewBox="0 0 640 200" preserveAspectRatio="xMidYMid meet"></svg>' +
+        '<div class="fg-sch-cap">' + L('Cada palabra de <b>arriba</b> es una consulta; los arcos bajan a las palabras que <b>atiende</b>, más gruesos cuanto más peso. Patrón típico: <b>recencia</b> (lo cercano) + <b>sumidero</b> en la primera palabra. Pasa el ratón por una palabra de arriba para fijarla.', 'Each word on <b>top</b> is a query; the arcs drop down to the words it <b>attends to</b>, thicker the more weight. Typical pattern: <b>recency</b> (the nearby) + <b>sink</b> on the first word. Hover over a word on top to pin it.') + '</div>';
+      var svg = box.querySelector('svg');
+      function xAt(i) { return padX + (n <= 1 ? 0 : i * (W - 2 * padX) / (n - 1)); }
+      function weights(i) {
+        var w = [], s = 0, j;
+        for (j = 0; j <= i; j++) { var v = Math.exp(-(i - j) / tau) + (j === 0 ? 0.5 : 0) + (j === i ? 0.25 : 0); w[j] = v; s += v; }
+        for (j = 0; j <= i; j++) w[j] /= s;
+        return w;
+      }
+      function render(qi) {
+        var w = weights(qi), mx = Math.max.apply(null, w), s = '', i, j;
+        for (j = 0; j <= qi; j++) {
+          var x1 = xAt(qi), x2 = xAt(j), op = (0.16 + 0.84 * w[j] / mx).toFixed(2), sw = (1 + 6 * w[j] / mx).toFixed(1), cym = (yT + yB) / 2;
+          s += '<path class="arc" d="M' + x1 + ' ' + (yT + 10) + ' C ' + x1 + ' ' + cym + ' ' + x2 + ' ' + cym + ' ' + x2 + ' ' + (yB - 10) + '" stroke-width="' + sw + '" opacity="' + op + '"/>';
+        }
+        for (i = 0; i < n; i++) {
+          var lit = i === qi;
+          s += '<circle class="node" cx="' + xAt(i) + '" cy="' + yT + '" r="' + (lit ? 7 : 4) + '" fill="' + (lit ? 'rgb(0,114,178)' : '#b9c8d6') + '"/>';
+          s += '<text class="tok' + (lit ? ' qy' : '') + '" x="' + xAt(i) + '" y="' + (yT - 12) + '" text-anchor="middle">' + toks[i] + '</text>';
+          var bw = i <= qi ? w[i] / mx : 0;
+          s += '<circle class="node" cx="' + xAt(i) + '" cy="' + yB + '" r="' + (4 + 5 * bw).toFixed(1) + '" fill="rgba(0,114,178,' + (0.22 + 0.78 * bw).toFixed(2) + ')"/>';
+          s += '<text class="tok" x="' + xAt(i) + '" y="' + (yB + 20) + '" text-anchor="middle">' + toks[i] + '</text>';
+        }
+        svg.innerHTML = s;
+      }
+      var qi = n - 1, hover = false;
+      svg.addEventListener('mousemove', function (ev) {
+        var r = svg.getBoundingClientRect(), x = (ev.clientX - r.left) / r.width * W, best = 0, bd = 1e9, i;
+        for (i = 0; i < n; i++) { var d = Math.abs(xAt(i) - x); if (d < bd) { bd = d; best = i; } }
+        hover = true; qi = best; render(qi);
+      });
+      svg.addEventListener('mouseleave', function () { hover = false; });
+      render(qi);
+      setInterval(function () { var r = box.getBoundingClientRect(); if (r.bottom < 0 || r.top > (window.innerHeight || 9999)) return; if (hover) return; qi = (qi + 1) % n; render(qi); }, 1500);
+    });
+  } catch (e) {}
+
+  // ---- 1k. Build .fg-cmask: causal mask mechanism (raw → −∞ → softmax) ----
+  try {
+    document.querySelectorAll('.fg-cmask').forEach(function (box) {
+      var n = 6;
+      function rawScore(i, j) { return 1.6 - 0.35 * Math.abs(i - j) + (j === 0 ? 0.4 : 0); }
+      box.className = 'fg-cmask fg-sch';
+      box.innerHTML = '<div class="fg-sch-h">' + L('La máscara causal: nadie mira al futuro', 'The causal mask: no one looks at the future') + '</div>' +
+        '<div class="fg-cmask-wrap"><div class="fg-cmask-grid"></div></div>' +
+        '<div class="fg-sch-steps" style="display:flex;gap:.4rem;justify-content:center;margin-top:.6rem"></div>' +
+        '<div class="fg-sch-cap"></div>';
+      var grid = box.querySelector('.fg-cmask-grid'), steps = box.querySelector('.fg-sch-steps'), cap = box.querySelector('.fg-sch-cap');
+      grid.style.gridTemplateColumns = 'repeat(' + n + ',34px)';
+      var cells = [], i, j;
+      for (i = 0; i < n; i++) for (j = 0; j < n; j++) { var c = document.createElement('div'); c.className = 'cell'; grid.appendChild(c); cells.push(c); }
+      var caps = [
+        L('Paso 1 — <b>puntuaciones crudas</b> q·k de cada par (fila i = consulta, columna j = clave): aún se ve todo, incluido el <b>futuro</b> (encima de la diagonal).', 'Step 1 — <b>raw scores</b> q·k for each pair (row i = query, column j = key): everything is still visible, including the <b>future</b> (above the diagonal).'),
+        L('Paso 2 — <b>máscara causal</b>: las celdas del futuro (j&gt;i) se ponen a <b>−∞</b> antes del softmax.', 'Step 2 — <b>causal mask</b>: the future cells (j&gt;i) are set to <b>−∞</b> before the softmax.'),
+        L('Paso 3 — <b>softmax por fila</b>: el −∞ se vuelve <b>0</b> y cada fila reparte 1 entre presente y pasado. Queda el triángulo causal limpio.', 'Step 3 — <b>row-wise softmax</b>: the −∞ becomes <b>0</b> and each row distributes 1 across present and past. The clean causal triangle remains.')
+      ];
+      function render(st) {
+        for (var i = 0; i < n; i++) {
+          var ex = [], sm = 0, j;
+          for (j = 0; j < n; j++) { var v = j <= i ? Math.exp(rawScore(i, j)) : 0; ex[j] = v; sm += v; }
+          for (j = 0; j < n; j++) {
+            var c = cells[i * n + j], future = j > i, raw = rawScore(i, j);
+            c.classList.remove('mask'); c.textContent = ''; c.style.color = '#33536e';
+            if (st === 0) { var t = (raw + 0.5) / 3; c.style.background = 'rgba(0,114,178,' + Math.max(0.06, Math.min(0.95, t)).toFixed(2) + ')'; }
+            else if (st === 1) {
+              if (future) { c.classList.add('mask'); c.textContent = '−∞'; }
+              else { var t1 = (raw + 0.5) / 3; c.style.background = 'rgba(0,114,178,' + Math.max(0.06, Math.min(0.95, t1)).toFixed(2) + ')'; }
+            } else {
+              if (future) { c.style.background = '#f0f3f6'; c.textContent = '0'; c.style.color = '#b9c8d6'; }
+              else { var a = ex[j] / sm; c.style.background = 'rgba(0,114,178,' + Math.max(0.06, a).toFixed(2) + ')'; }
+            }
+          }
+        }
+        cap.innerHTML = caps[st];
+        Array.prototype.forEach.call(steps.children, function (b, bi) { b.classList.toggle('on', bi === st); });
+      }
+      [L('1. crudo', '1. raw'), L('2. máscara −∞', '2. mask −∞'), L('3. softmax', '3. softmax')].forEach(function (lbl, si) {
+        var b = document.createElement('button'); b.className = 'fg-sch-btn'; b.textContent = lbl;
+        b.addEventListener('click', function () { cur = si; render(si); }); steps.appendChild(b);
+      });
+      var cur = 0; render(0);
+      setInterval(function () { var r = box.getBoundingClientRect(); if (r.bottom < 0 || r.top > (window.innerHeight || 9999)) return; cur = (cur + 1) % 3; render(cur); }, 2000);
+    });
+  } catch (e) {}
+
+  // ---- 1l. Build .fg-rope2d: relative angle = relative position ----
+  try {
+    document.querySelectorAll('.fg-rope2d').forEach(function (box) {
+      var w0 = 0.5, cx = 120, cy = 95, R = 70;
+      box.className = 'fg-rope2d fg-sch';
+      box.innerHTML = '<div class="fg-sch-h">' + L('RoPE: el ángulo entre dos tokens = su distancia', 'RoPE: the angle between two tokens = their distance') + '</div>' +
+        '<svg class="fg-rope2d-svg" viewBox="0 0 240 200"></svg>' +
+        '<div class="fg-kvc-ctrl">' +
+          '<span>m</span><input class="im" type="range" min="0" max="20" step="1" value="4">' +
+          '<span>n</span><input class="in2" type="range" min="0" max="20" step="1" value="1">' +
+          '<button class="fg-sch-btn shift">' + L('desliza ambos +3 →', 'slide both +3 →') + '</button>' +
+        '</div><div class="fg-sch-cap"></div>';
+      var svg = box.querySelector('svg'), im = box.querySelector('.im'), inp = box.querySelector('.in2'), cap = box.querySelector('.fg-sch-cap');
+      function hand(a, col, lab) {
+        var x = cx + R * Math.cos(-a), y = cy + R * Math.sin(-a);
+        return '<line x1="' + cx + '" y1="' + cy + '" x2="' + x.toFixed(1) + '" y2="' + y.toFixed(1) + '" stroke="' + col + '" stroke-width="3"/>' +
+          '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="5" fill="' + col + '"/>' +
+          '<text x="' + x.toFixed(1) + '" y="' + (y - 9).toFixed(1) + '" text-anchor="middle" font-size="11" font-weight="700" fill="' + col + '">' + lab + '</text>';
+      }
+      function draw() {
+        var m = +im.value, nn = +inp.value, am = m * w0, an = nn * w0, r2 = 30;
+        var a0 = -an, a1 = -am, large = Math.abs(am - an) % (2 * Math.PI) > Math.PI ? 1 : 0, sweep = am > an ? 0 : 1;
+        var p0x = cx + r2 * Math.cos(a0), p0y = cy + r2 * Math.sin(a0), p1x = cx + r2 * Math.cos(a1), p1y = cy + r2 * Math.sin(a1);
+        var s = '<circle cx="' + cx + '" cy="' + cy + '" r="' + R + '" fill="none" stroke="#dbe5ee" stroke-width="2"/>';
+        s += '<path d="M' + cx + ' ' + cy + ' L' + p0x.toFixed(1) + ' ' + p0y.toFixed(1) + ' A' + r2 + ' ' + r2 + ' 0 ' + large + ' ' + sweep + ' ' + p1x.toFixed(1) + ' ' + p1y.toFixed(1) + ' Z" fill="rgba(213,94,0,.18)" stroke="rgb(213,94,0)" stroke-width="1"/>';
+        s += hand(an, 'rgb(213,94,0)', 'n=' + nn) + hand(am, 'rgb(0,114,178)', 'm=' + m);
+        svg.innerHTML = s;
+        var deg = (m - nn) * w0 * 180 / Math.PI; deg = ((deg % 360) + 360) % 360;
+        cap.innerHTML = L('Distancia <b>m−n = ', 'Distance <b>m−n = ') + (m - nn) + L('</b> → ángulo relativo = (m−n)·ω = <b>', '</b> → relative angle = (m−n)·ω = <b>') + deg.toFixed(0) + L('°</b>. Pulsa <b>«desliza ambos»</b>: las manecillas giran, pero el <span class="hot">ángulo entre ellas no cambia</span> — por eso la atención de RoPE solo depende de la <b>distancia</b>, no de la posición absoluta.', '°</b>. Click <b>«slide both»</b>: the hands rotate, but the <span class="hot">angle between them does not change</span> — that\'s why RoPE\'s attention depends only on <b>distance</b>, not absolute position.');
+      }
+      im.addEventListener('input', draw); inp.addEventListener('input', draw);
+      box.querySelector('.shift').addEventListener('click', function () { im.value = Math.min(20, +im.value + 3); inp.value = Math.min(20, +inp.value + 3); draw(); });
+      draw();
+    });
+  } catch (e) {}
+
+  // ---- shared SVG line-chart helper for formula plots ----
+  function fgChart(o) {
+    var W = 460, H = 230, P = o.pad, x0 = P.l, x1 = W - P.r, y0 = H - P.b, y1 = P.t;
+    function X(v) { return o.xlog ? x0 + (Math.log(v) - Math.log(o.x[0])) / (Math.log(o.x[1]) - Math.log(o.x[0])) * (x1 - x0) : x0 + (v - o.x[0]) / (o.x[1] - o.x[0]) * (x1 - x0); }
+    function Y(v) { return o.ylog ? y0 + (Math.log(v) - Math.log(o.y[0])) / (Math.log(o.y[1]) - Math.log(o.y[0])) * (y1 - y0) : y0 + (v - o.y[0]) / (o.y[1] - o.y[0]) * (y1 - y0); }
+    var s = '';
+    (o.grid || []).forEach(function (g) { s += '<line class="grid" x1="' + x0 + '" y1="' + Y(g).toFixed(1) + '" x2="' + x1 + '" y2="' + Y(g).toFixed(1) + '"/>'; });
+    (o.hlines || []).forEach(function (h) { s += '<line x1="' + x0 + '" y1="' + Y(h.y).toFixed(1) + '" x2="' + x1 + '" y2="' + Y(h.y).toFixed(1) + '" stroke="' + (h.col || '#aaa') + '" stroke-width="1" stroke-dasharray="' + (h.dash || '4 3') + '"/>'; if (h.label) s += '<text class="lbl" x="' + (x1 - 4) + '" y="' + (Y(h.y) - 3).toFixed(1) + '" text-anchor="end">' + h.label + '</text>'; });
+    s += '<line class="axis" x1="' + x0 + '" y1="' + y0 + '" x2="' + x1 + '" y2="' + y0 + '"/><line class="axis" x1="' + x0 + '" y1="' + y1 + '" x2="' + x0 + '" y2="' + y0 + '"/>';
+    (o.series || []).forEach(function (se) {
+      var p = '', f = true; se.pts.forEach(function (pt) { p += (f ? 'M' : 'L') + X(pt[0]).toFixed(1) + ' ' + Y(pt[1]).toFixed(1) + ' '; f = false; });
+      if (se.fill) s += '<path class="area" d="' + p + 'L' + X(se.pts[se.pts.length - 1][0]).toFixed(1) + ' ' + y0 + ' L' + x0 + ' ' + y0 + ' Z" fill="' + se.fill + '"/>';
+      s += '<path class="curve' + (se.dash ? '2' : '') + '" d="' + p + '" stroke="' + se.color + '"' + (se.dash ? ' stroke-dasharray="5 4"' : '') + '/>';
+    });
+    (o.marks || []).forEach(function (m) { s += '<line class="dmark" x1="' + X(m.x).toFixed(1) + '" y1="' + y1 + '" x2="' + X(m.x).toFixed(1) + '" y2="' + y0 + '"/>'; if (m.py != null) s += '<circle class="pt" cx="' + X(m.x).toFixed(1) + '" cy="' + Y(m.py).toFixed(1) + '" r="4"/>'; if (m.label) s += '<text class="lbl" x="' + (X(m.x) + 4).toFixed(1) + '" y="' + (y1 + 12) + '">' + m.label + '</text>'; });
+    (o.xtick || []).forEach(function (t) { s += '<text class="lbl" x="' + X(t.x).toFixed(1) + '" y="' + (y0 + 16) + '" text-anchor="middle">' + t.t + '</text>'; });
+    (o.ytick || []).forEach(function (t) { s += '<text class="lbl" x="' + (x0 - 6) + '" y="' + (Y(t.y) + 4).toFixed(1) + '" text-anchor="end">' + t.t + '</text>'; });
+    if (o.xlab) s += '<text class="lbl" x="' + ((x0 + x1) / 2) + '" y="' + (y0 + 30) + '" text-anchor="middle">' + o.xlab + '</text>';
+    if (o.ylab) s += '<text class="lbl" x="' + (x0 + 6) + '" y="' + (y1 + 4) + '">' + o.ylab + '</text>';
+    return s;
+  }
+  function fgFmt(n) { if (n >= 1e6) return (n / 1e6).toFixed(n % 1e6 ? 1 : 0).replace('.0', '') + 'M'; if (n >= 1000) return (n / 1000).toFixed(n % 1000 ? 1 : 0).replace('.0', '') + 'K'; return '' + Math.round(n); }
+
+  // ---- 1m. Build .fg-fgamma: γ_Padé predictor (θ, T → γ) ----
+  try {
+    document.querySelectorAll('.fg-fgamma').forEach(function (box) {
+      box.className = 'fg-fgamma fg-sch';
+      box.innerHTML = '<div class="fg-sch-h">' + L('Predice γ desde la geometría: γ_Padé(θ, T)', 'Predict γ from geometry: γ_Padé(θ, T)') + '</div>' +
+        '<svg class="fg-kvc-svg" viewBox="0 0 460 230" preserveAspectRatio="xMidYMid meet"></svg>' +
+        '<div class="fg-kvc-ctrl"><span>θ</span><input class="ith" type="range" min="3" max="7" step="0.05" value="4">' +
+        '<span class="thv gv">θ=<b>10K</b></span><span>T</span><input class="itt" type="range" min="8" max="17" step="0.25" value="12">' +
+        '<span class="ttv gv">T=<b>4K</b></span></div>' +
+        '<div class="fg-kvc-ctrl" style="margin-top:.2rem">' +
+        '<button class="fg-sch-btn" data-th="4" data-tt="2048">pythia-70m</button>' +
+        '<button class="fg-sch-btn" data-th="4" data-tt="4096">Llama-2-7B</button>' +
+        '<button class="fg-sch-btn" data-th="6" data-tt="32768">Qwen2.5-7B</button></div>' +
+        '<div class="fg-sch-cap"></div>';
+      var svg = box.querySelector('svg'), ith = box.querySelector('.ith'), itt = box.querySelector('.itt'),
+        thv = box.querySelector('.thv b'), ttv = box.querySelector('.ttv b'), cap = box.querySelector('.fg-sch-cap');
+      function gamma(th, T) { return (2 * th - T * Math.SQRT2) / (2 * th + T * Math.SQRT2); }
+      function cl(v) { return Math.max(-0.3, Math.min(1.3, v)); }
+      function draw() {
+        var th = Math.pow(10, +ith.value), T = Math.pow(2, +itt.value), g = gamma(th, T);
+        var pts = [], Tmin = 256, Tmax = Math.pow(2, 17), k;
+        for (k = 0; k <= 60; k++) { var TT = Tmin * Math.pow(Tmax / Tmin, k / 60); pts.push([TT, cl(gamma(th, TT))]); }
+        svg.innerHTML = fgChart({
+          pad: { l: 40, r: 16, t: 16, b: 34 }, xlog: true, x: [Tmin, Tmax], y: [-0.3, 1.3], grid: [0, 0.5, 1],
+          series: [{ pts: pts, color: 'rgb(0,114,178)' }],
+          hlines: [{ y: 1, col: 'rgb(213,94,0)', dash: '5 4', label: 'γ=1 (Hagedorn)' }],
+          marks: [{ x: T, py: cl(g), label: 'T=' + fgFmt(T) }],
+          xtick: [{ x: 512, t: '512' }, { x: 8192, t: '8K' }, { x: 131072, t: '128K' }],
+          ytick: [{ y: 0, t: '0' }, { y: 0.5, t: '.5' }, { y: 1, t: '1' }], xlab: L('T (contexto, log)', 'T (context, log)'), ylab: 'γ'
+        });
+        thv.textContent = fgFmt(th); ttv.textContent = fgFmt(T);
+        var phase = g > 1.02 ? L('Fase B (concentra cerca)', 'Phase B (concentrates nearby)') : (Math.abs(g - 1) <= 0.02 ? L('Hagedorn (γ≈1)', 'Hagedorn (γ≈1)') : L('Fase A (mira lejos)', 'Phase A (looks far)'));
+        cap.innerHTML = L('Con <b>θ=', 'With <b>θ=') + fgFmt(th) + L('</b> y <b>T=', '</b> and <b>T=') + fgFmt(T) + '</b> → <b>γ_Padé = ' + g.toFixed(2) + '</b> · ' + phase + L('. Sube θ y γ→1 (mira lejos); sube T y γ baja (cae antes). Cero parámetros ajustados — es lo que calcula tafagent.', '. Raise θ and γ→1 (looks far); raise T and γ drops (decays sooner). Zero fitted parameters — it\'s what tafagent computes.');
+      }
+      ith.addEventListener('input', draw); itt.addEventListener('input', draw);
+      box.querySelectorAll('button[data-th]').forEach(function (b) { b.addEventListener('click', function () { ith.value = +b.dataset.th; itt.value = Math.log(+b.dataset.tt) / Math.log(2); draw(); }); });
+      draw();
+    });
+  } catch (e) {}
+
+  // ---- 1n. Build .fg-fdecay: A(d) = d^-γ (linear / log-log) ----
+  try {
+    document.querySelectorAll('.fg-fdecay').forEach(function (box) {
+      box.className = 'fg-fdecay fg-sch';
+      box.innerHTML = '<div class="fg-sch-h">' + L('La ley de decaimiento A(d) = d^−γ', 'The decay law A(d) = d^−γ') + '</div>' +
+        '<svg class="fg-kvc-svg" viewBox="0 0 460 230" preserveAspectRatio="xMidYMid meet"></svg>' +
+        '<div class="fg-kvc-ctrl"><span>γ</span><input class="ig" type="range" min="0.3" max="1.6" step="0.05" value="0.7">' +
+        '<span class="gvv gv">γ=<b>0.70</b></span><button class="fg-sch-btn loglog">' + L('ver log-log', 'view log-log') + '</button></div><div class="fg-sch-cap"></div>';
+      var svg = box.querySelector('svg'), ig = box.querySelector('.ig'), gvv = box.querySelector('.gvv b'),
+        tg = box.querySelector('.loglog'), cap = box.querySelector('.fg-sch-cap'), logmode = false;
+      function draw() {
+        var g = +ig.value, Dmax = 256, pts = [], k, d;
+        for (k = 0; k <= 80; k++) { d = logmode ? Math.pow(Dmax, k / 80) : 1 + (Dmax - 1) * k / 80; pts.push([d, Math.pow(d, -g)]); }
+        var conf = logmode
+          ? { pad: { l: 40, r: 16, t: 16, b: 34 }, xlog: true, ylog: true, x: [1, Dmax], y: [Math.pow(Dmax, -1.6), 1], series: [{ pts: pts, color: 'rgb(0,114,178)' }], xtick: [{ x: 1, t: '1' }, { x: 16, t: '16' }, { x: 256, t: '256' }], xlab: L('distancia d (log)', 'distance d (log)'), ylab: 'A (log)' }
+          : { pad: { l: 40, r: 16, t: 16, b: 34 }, xlog: false, x: [1, Dmax], y: [0, 1], grid: [0, 0.5, 1], series: [{ pts: pts, color: 'rgb(0,114,178)', fill: 'rgba(0,114,178,0.12)' }], xtick: [{ x: 1, t: '1' }, { x: 128, t: '128' }, { x: 256, t: '256' }], ytick: [{ y: 0, t: '0' }, { y: 0.5, t: '.5' }, { y: 1, t: '1' }], xlab: L('distancia d', 'distance d'), ylab: 'A(d)' };
+        svg.innerHTML = fgChart(conf);
+        gvv.textContent = g.toFixed(2);
+        var ph = g < 0.98 ? L('Fase A — cola pesada, mira lejos', 'Phase A — heavy tail, looks far') : (Math.abs(g - 1) <= 0.02 ? L('γ=1 — frontera Hagedorn', 'γ=1 — Hagedorn boundary') : L('Fase B — concentra cerca', 'Phase B — concentrates nearby'));
+        cap.innerHTML = '<b>' + ph + '.</b> ' + (logmode ? L('En <b>log-log</b> es una <b>recta de pendiente −γ</b> — medir γ es medir esa pendiente.', "In <b>log-log</b> it's a <b>straight line of slope −γ</b> — measuring γ means measuring that slope.") : L('γ pequeño cae despacio (mira lejos), γ grande cae rápido (concentra). Pulsa «log-log» y verás la recta.', "Small γ decays slowly (looks far), large γ decays fast (concentrates). Click «log-log» and you'll see the straight line."));
+      }
+      ig.addEventListener('input', draw);
+      tg.addEventListener('click', function () { logmode = !logmode; tg.textContent = logmode ? L('ver lineal', 'view linear') : L('ver log-log', 'view log-log'); tg.classList.toggle('on', logmode); draw(); });
+      draw();
+    });
+  } catch (e) {}
+
+  // ---- 1o. Build .fg-fsoftmax: softmax with temperature ----
+  try {
+    document.querySelectorAll('.fg-fsoftmax').forEach(function (box) {
+      box.className = 'fg-fsoftmax fg-sch';
+      var logits = [3.0, 1.2, 2.4, 0.6, 1.8], labels = [L('perro', 'dog'), L('gato', 'cat'), L('el', 'the'), L('casa', 'house'), L('sol', 'sun')];
+      box.innerHTML = '<div class="fg-sch-h">' + L('Softmax con temperatura T', 'Softmax with temperature T') + '</div>' +
+        '<div class="fg-fsm-bars"></div><div class="fg-fsm-ent"></div>' +
+        '<div class="fg-kvc-ctrl"><span>T</span><input class="it" type="range" min="0.1" max="3" step="0.05" value="1"><span class="tv gv">T=<b>1.0</b></span></div>' +
+        '<div class="fg-sch-cap">' + L('El softmax con <b>temperatura</b>: <b>α_j = e^(s_j/T) / Σ e^(s_k/T)</b>. <b>T baja</b> → afilado (casi elige solo el mayor); <b>T alta</b> → plano (todos casi igual). Es el mando de «creatividad» al generar.', "The softmax with <b>temperature</b>: <b>α_j = e^(s_j/T) / Σ e^(s_k/T)</b>. <b>Low T</b> → sharp (almost picks only the largest); <b>high T</b> → flat (all almost equal). It's the «creativity» knob when generating.") + '</div>';
+      var barsEl = box.querySelector('.fg-fsm-bars'), ent = box.querySelector('.fg-fsm-ent'), it = box.querySelector('.it'), tv = box.querySelector('.tv b');
+      var bars = logits.map(function (_, i) { var d = document.createElement('div'); d.className = 'b'; d.innerHTML = '<span></span><small>' + labels[i] + '</small>'; barsEl.appendChild(d); return d; });
+      function draw() {
+        var T = +it.value, ex = logits.map(function (s) { return Math.exp(s / T); }), Z = ex.reduce(function (a, b) { return a + b; }, 0), al = ex.map(function (e) { return e / Z; });
+        var mx = Math.max.apply(null, al), Hh = 0;
+        al.forEach(function (a, i) { bars[i].style.height = (8 + a / mx * 118) + 'px'; bars[i].querySelector('span').textContent = (a * 100).toFixed(0) + '%'; if (a > 0) Hh -= a * Math.log(a) / Math.log(2); });
+        tv.textContent = T.toFixed(1);
+        ent.innerHTML = L('entropía = <b>', 'entropy = <b>') + Hh.toFixed(2) + '</b> bits ' + (T < 0.5 ? L('(muy afilado)', '(very sharp)') : (T > 2 ? L('(casi uniforme)', '(almost uniform)') : L('(intermedio)', '(intermediate)')));
+      }
+      it.addEventListener('input', draw); draw();
+    });
+  } catch (e) {}
+
+  // ---- 1p. Build .fg-fdk: 1/√d_k scaling (raw vs scaled std) ----
+  try {
+    document.querySelectorAll('.fg-fdk').forEach(function (box) {
+      box.className = 'fg-fdk fg-sch';
+      box.innerHTML = '<div class="fg-sch-h">' + L('Por qué se divide entre √d_k', 'Why you divide by √d_k') + '</div>' +
+        '<svg class="fg-kvc-svg" viewBox="0 0 460 230" preserveAspectRatio="xMidYMid meet"></svg>' +
+        '<div class="fg-kvc-ctrl"><span>d_k</span><input class="id" type="range" min="2" max="13" step="0.25" value="6"><span class="dv gv">d_k=<b>64</b></span></div><div class="fg-sch-cap"></div>';
+      var svg = box.querySelector('svg'), id = box.querySelector('.id'), dv = box.querySelector('.dv b'), cap = box.querySelector('.fg-sch-cap');
+      function draw() {
+        var dk = Math.pow(2, +id.value), dmin = 4, dmax = Math.pow(2, 13), raw = [], sca = [], k;
+        for (k = 0; k <= 60; k++) { var d = dmin * Math.pow(dmax / dmin, k / 60); raw.push([d, Math.sqrt(d)]); sca.push([d, 1]); }
+        svg.innerHTML = fgChart({
+          pad: { l: 42, r: 16, t: 16, b: 34 }, xlog: true, ylog: true, x: [dmin, dmax], y: [0.7, 128],
+          series: [{ pts: raw, color: 'rgb(0,114,178)' }, { pts: sca, color: 'rgb(213,94,0)', dash: true }],
+          marks: [{ x: dk, py: Math.sqrt(dk), label: 'd_k=' + Math.round(dk) }],
+          xtick: [{ x: 4, t: '4' }, { x: 64, t: '64' }, { x: 4096, t: '4K' }], ytick: [{ y: 1, t: '1' }, { y: 8, t: '8' }, { y: 64, t: '64' }], xlab: 'd_k (log)', ylab: 'std(q·k)'
+        });
+        dv.textContent = Math.round(dk);
+        cap.innerHTML = L('Sin escalar (<b style="color:rgb(0,114,178)">azul</b>) la std de q·k crece como <b>√d_k</b> → en d_k=', 'Without scaling (<b style="color:rgb(0,114,178)">blue</b>) the std of q·k grows as <b>√d_k</b> → at d_k=') + Math.round(dk) + L(' vale ~<b>', ' it is ~<b>') + Math.sqrt(dk).toFixed(0) + L('</b> (el softmax se satura). Al dividir entre √d_k (<span class="hot">naranja</span>) se queda en <b>~1</b> a cualquier ancho.', '</b> (the softmax saturates). Dividing by √d_k (<span class="hot">orange</span>) keeps it at <b>~1</b> at any width.');
+      }
+      id.addEventListener('input', draw); draw();
+    });
+  } catch (e) {}
+
+  // shared inline γ atlas data: [name, corpus(m/r), theta, gamma, R2]
+  var FG_ATLAS = [["deepseek-llm-7b-chat","m",10000,0.151,0.85],["Llama-2-7b-hf","m",10000,0.287,0.81],["CodeLlama-13b-Instruct-hf","m",1000000,0.382,0.93],["Mistral-Nemo-Instruct-2407","m",1000000,0.428,0.92],["Yi-6B","m",5000000,0.458,0.95],["pythia-160m","m",10000,0.511,0.92],["OLMo-7B","m",10000,0.524,0.98],["OLMo-7B","r",10000,0.541,0.96],["OLMo-7B-hf","r",500000,0.551,0.96],["pythia-2.8b","r",10000,0.551,0.64],["Yi-9B","m",5000000,0.553,0.94],["SmolLM2-135M","r",100000,0.627,0.83],["gemma-2-9b-it","m",10000,0.628,0.98],["phi-3-mini-4k-instruct","m",10000,0.630,0.99],["pythia-2.8b","m",10000,0.674,1],["pythia-14m","m",10000,0.685,0.9],["pythia-1.4b","r",10000,0.688,0.95],["pythia-1.4b","m",10000,0.705,0.84],["pythia-1b","r",10000,0.713,0.96],["gpt2-large","r",0,0.727,0.98],["gpt2-medium","r",0,0.741,1],["pythia-70m","m",10000,0.748,0.98],["SmolLM2-135M","m",100000,0.748,0.99],["gpt2-large","m",0,0.753,0.96],["Meta-Llama-3-8B","r",500000,0.759,0.98],["Qwen2.5-3B","m",1000000,0.772,1],["starcoder2-7b","m",1000000,0.774,0.99],["gpt2-medium","m",0,0.784,1],["OLMoE-1B-7B-0924","r",10000,0.823,0.99],["Llama-2-7b-hf","r",10000,0.827,0.99],["Qwen2.5-7B","r",1000000,0.827,0.98],["OLMo-7B-hf","m",500000,0.829,1],["Mistral-7B-v0.1","r",10000,0.830,1],["gpt-j-6B","r",10000,0.835,0.98],["OLMoE-1B-7B-0924","m",10000,0.850,0.99],["Qwen2.5-1.5B","r",1000000,0.859,0.99],["phi-2","r",10000,0.871,0.95],["bloom-7b1","r",0,0.882,0.99],["gpt-j-6B","m",10000,0.897,0.99],["deepseek-llm-7b-base","r",0,0.910,0.99],["Qwen2.5-0.5B","r",1000000,0.919,1],["SmolLM2-360M","r",100000,0.920,0.99],["pythia-1b","m",10000,0.931,0.98],["pythia-410m","r",10000,0.936,0.99],["Qwen2.5-7B-Instruct","m",1000000,0.945,0.99],["Qwen2.5-Coder-7B","m",1000000,0.945,0.99],["deepseek-llm-7b-base","m",0,0.947,1],["deepseek-coder-6.7b-base","m",100000,0.951,1],["Mistral-7B-Instruct-v0.3","m",1000000,0.952,0.99],["Qwen2.5-3B","r",1000000,0.964,0.98],["SmolLM2-360M","m",100000,0.969,1],["Yi-6B","r",5000000,0.992,0.99],["starcoder2-3b","m",1000000,0.994,0.99],["Yi-9B","r",5000000,0.995,0.99],["Qwen2.5-7B","m",1000000,0.997,0.99],["pythia-14m","r",10000,1.004,0.98],["gpt2-xl","m",0,1.010,0.98],["pythia-160m","r",10000,1.017,0.98],["pythia-410m","m",10000,1.022,0.98],["gpt2","m",0,1.023,0.96],["gpt2-xl","r",0,1.024,0.99],["Qwen2.5-0.5B","m",1000000,1.028,1],["Qwen2.5-1.5B","m",1000000,1.034,1],["phi-3-mini-4k-instruct","r",10000,1.037,0.98],["phi-2","m",10000,1.045,0.98],["Meta-Llama-3-8B","m",500000,1.046,1],["gpt2","r",0,1.052,0.91],["Mistral-7B-v0.1","m",10000,1.061,1],["gemma-2-9b-it","r",10000,1.135,0.98],["pythia-70m","r",10000,1.171,0.99],["bloom-7b1","m",0,1.218,1],["pythia-31m","m",10000,1.235,0.97],["pythia-31m","r",10000,1.540,0.96]];
+
+  // ---- 1q. Build .fg-atlas: interactive γ atlas (inline data, staggered load) ----
+  try {
+    document.querySelectorAll('.fg-atlas').forEach(function (box) {
+      box.className = 'fg-atlas fg-sch';
+      box.innerHTML = '<div class="fg-sch-h">' + L('El atlas γ: compara modelos reales en un mismo eje', 'The γ atlas: compare real models on one axis') + '</div>' +
+        '<div class="fg-kvc-ctrl"><button class="fg-sch-btn on" data-c="m">' + L('texto (γ medido)', 'text (measured γ)') + '</button>' +
+        '<button class="fg-sch-btn" data-c="r">' + L('aleatorio (geometría)', 'random (geometry)') + '</button></div>' +
+        '<svg class="fg-atlas-svg" viewBox="0 0 480 230" preserveAspectRatio="xMidYMid meet"></svg>' +
+        '<div class="fg-atlas-legend"><i><b style="background:rgb(0,114,178)"></b>' + L('Fase A · γ&lt;1 (mira lejos)', 'Phase A · γ&lt;1 (looks far)') + '</i>' +
+        '<i><b style="background:rgb(213,94,0)"></b>' + L('Fase B · γ&gt;1 (concentra)', 'Phase B · γ&gt;1 (concentrates)') + '</i></div>' +
+        '<div class="fg-atlas-read">' + L('Pasa el ratón por un punto para ver el modelo', 'Hover over a point to see the model') + '</div>' +
+        '<div class="fg-sch-cap">' + L('Cada punto es un modelo real del atlas; su posición es su <b>γ</b> medido. La mayoría cae en <b>Fase A</b> (γ&lt;1, miran lejos), agolpados justo por debajo de la frontera <b>γ=1 (Hagedorn)</b>. Conmuta entre γ en <b>texto</b> y en tokens <b>aleatorios</b>.', 'Each point is a real model from the atlas; its position is its measured <b>γ</b>. Most fall in <b>Phase A</b> (γ&lt;1, looking far), crowded just below the <b>γ=1 (Hagedorn)</b> boundary. Switch between γ on <b>text</b> and on <b>random</b> tokens.') + '</div>';
+      var svg = box.querySelector('svg'), read = box.querySelector('.fg-atlas-read'), corpus = 'm';
+      var W = 480, padL = 20, padR = 20, padB = 34, padT = 20, x0 = padL, x1 = W - padR, y0 = 230 - padB, y1 = padT;
+      function gx(g) { return x0 + (g - 0.1) / (1.7 - 0.1) * (x1 - x0); }
+      function render() {
+        var seen = {}, pts = [];
+        FG_ATLAS.forEach(function (r) { if (r[1] !== corpus || seen[r[0]]) return; seen[r[0]] = 1; pts.push(r); });
+        var s = '<line class="axis" x1="' + x0 + '" y1="' + y0 + '" x2="' + x1 + '" y2="' + y0 + '" stroke="#c7d6e2"/>';
+        [0.2, 0.6, 1.0, 1.4].forEach(function (g) { s += '<line x1="' + gx(g).toFixed(1) + '" y1="' + y0 + '" x2="' + gx(g).toFixed(1) + '" y2="' + (y0 + 4) + '" stroke="#c7d6e2"/><text class="lbl" x="' + gx(g).toFixed(1) + '" y="' + (y0 + 16) + '" text-anchor="middle">' + g.toFixed(1) + '</text>'; });
+        s += '<text class="lbl" x="' + ((x0 + x1) / 2) + '" y="' + (y0 + 30) + '" text-anchor="middle">' + L('γ (exponente de decaimiento)', 'γ (decay exponent)') + '</text>';
+        s += '<line x1="' + gx(1).toFixed(1) + '" y1="' + y1 + '" x2="' + gx(1).toFixed(1) + '" y2="' + y0 + '" stroke="rgb(213,94,0)" stroke-dasharray="5 4"/><text class="lbl" x="' + (gx(1) + 4).toFixed(1) + '" y="' + (y1 + 10) + '" fill="rgb(213,94,0)">γ=1 Hagedorn</text>';
+        pts.forEach(function (r, i) {
+          var t = Math.sin((i + 1) * 12.9898) * 43758.5, jy = t - Math.floor(t), y = y1 + 12 + jy * (y0 - y1 - 24);
+          var col = r[3] < 1 ? 'rgb(0,114,178)' : 'rgb(213,94,0)';
+          s += '<circle cx="' + gx(r[3]).toFixed(1) + '" cy="' + y.toFixed(1) + '" r="0" fill="' + col + '" fill-opacity="0" data-i="' + i + '"><title>' + r[0] + ' · γ=' + r[3].toFixed(2) + (r[2] ? ' · θ=' + fgFmt(r[2]) : '') + '</title></circle>';
+        });
+        svg.innerHTML = s;
+        read.innerHTML = pts.length + L(' modelos · ', ' models · ') + pts.filter(function (r) { return r[3] < 1; }).length + L(' en Fase A (γ&lt;1)', ' in Phase A (γ&lt;1)');
+        var cs = svg.querySelectorAll('circle');
+        cs.forEach(function (c, i) {
+          setTimeout(function () { c.setAttribute('r', '5'); c.setAttribute('fill-opacity', '0.78'); }, 90 + i * 14);
+          c.addEventListener('mouseenter', function () { var r = pts[+c.dataset.i]; read.innerHTML = '<b>' + r[0] + '</b> · γ=' + r[3].toFixed(2) + (r[2] ? ' · θ=' + fgFmt(r[2]) : '') + (r[4] ? ' · R²=' + r[4].toFixed(2) : '') + ' · ' + (r[3] < 1 ? L('Fase A', 'Phase A') : L('Fase B', 'Phase B')); });
+        });
+      }
+      box.querySelectorAll('button[data-c]').forEach(function (b) { b.addEventListener('click', function () { corpus = b.dataset.c; box.querySelectorAll('button[data-c]').forEach(function (x) { x.classList.toggle('on', x === b); }); render(); }); });
+      render();
+    });
+  } catch (e) {}
+
+  // ---- 1r. Build .fg-atlas3d: the γ atlas in 3D (γ × θ × R²), WebGL ----
+  try {
+    var a3nodes = document.querySelectorAll('.fg-atlas3d');
+    if (a3nodes.length) {
+      var loadT3 = function (cb) { if (window.THREE) { cb(true); return; } var sc = document.createElement('script'); sc.src = '../vendor/three.min.js'; sc.onload = function () { cb(!!window.THREE); }; sc.onerror = function () { cb(false); }; document.head.appendChild(sc); };
+      loadT3(function (ok) { a3nodes.forEach(function (box) { initAtlas3d(box, ok); }); });
+    }
+    function initAtlas3d(box, ok) {
+      box.className = 'fg-atlas3d fg-sch';
+      var hd = document.createElement('div'); hd.className = 'fg-sch-h'; hd.textContent = L('El atlas en 3D: γ × θ × R²', 'The atlas in 3D: γ × θ × R²'); box.appendChild(hd);
+      var canvas = document.createElement('canvas'); canvas.className = 'fg-g3d-canvas';
+      var read = document.createElement('div'); read.className = 'fg-atlas-read'; read.textContent = L('Arrastra para girar · pasa el ratón por un modelo', 'Drag to rotate · hover over a model');
+      var cap = document.createElement('div'); cap.className = 'fg-sch-cap'; cap.innerHTML = L('Los mismos modelos, en <b>3D</b>: eje X = <b>γ</b>, eje Z = <b>θ</b> (base RoPE, log), eje Y = <b>R²</b> (calidad del ajuste). El plano naranja es <b>γ=1</b>. Arrastra para girar.', 'The same models, in <b>3D</b>: X axis = <b>γ</b>, Z axis = <b>θ</b> (RoPE base, log), Y axis = <b>R²</b> (goodness of fit). The orange plane is <b>γ=1</b>. Drag to rotate.');
+      var ctx = null; try { ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl'); } catch (e) { }
+      if (!ok || !ctx) { var fb = document.createElement('div'); fb.className = 'fg-rope3d-fallback'; fb.innerHTML = L('El atlas 3D requiere WebGL — usa el atlas 2D de arriba.', 'The 3D atlas requires WebGL — use the 2D atlas above.'); box.appendChild(fb); box.appendChild(cap); return; }
+      box.appendChild(canvas); box.appendChild(read); box.appendChild(cap);
+      var THREE = window.THREE, scene = new THREE.Scene();
+      var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true }); renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+      var camera = new THREE.PerspectiveCamera(45, 2, 0.1, 100);
+      function MX(g) { return (g - 0.85) * 3.4; }
+      function MZ(th) { var l = th > 0 ? Math.log(th) / Math.LN10 : 3.4; return (l - 5) * 1.3; }
+      function MY(r2) { return (r2 - 0.85) * 6; }
+      var seen = {}, pts = []; FG_ATLAS.forEach(function (r) { if (r[1] !== 'm' || seen[r[0]]) return; seen[r[0]] = 1; pts.push(r); });
+      var meshes = [];
+      pts.forEach(function (r) {
+        var col = r[3] < 1 ? 0x0072b2 : 0xd55e00;
+        var m = new THREE.Mesh(new THREE.SphereGeometry(0.09, 14, 14), new THREE.MeshBasicMaterial({ color: col }));
+        m.position.set(MX(r[3]), MY(r[4] || 0.95), MZ(r[2])); m.scale.set(0.001, 0.001, 0.001); m.userData = r; scene.add(m); meshes.push(m);
+      });
+      var pl = new THREE.Mesh(new THREE.PlaneGeometry(4.2, 4.2), new THREE.MeshBasicMaterial({ color: 0xd55e00, transparent: true, opacity: 0.10, side: THREE.DoubleSide }));
+      pl.rotation.y = Math.PI / 2; pl.position.x = MX(1); scene.add(pl);
+      function axis(a, b, c) { var g = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(a[0], a[1], a[2]), new THREE.Vector3(b[0], b[1], b[2])]); scene.add(new THREE.Line(g, new THREE.LineBasicMaterial({ color: c, transparent: true, opacity: 0.5 }))); }
+      axis([-2.6, -1, 0], [2.6, -1, 0], 0xb9c8d6); axis([-2.6, -1, -2.2], [-2.6, 1.5, -2.2], 0xb9c8d6); axis([-2.6, -1, -2.2], [-2.6, -1, 2.2], 0xb9c8d6);
+      var target = new THREE.Vector3(0, 0, 0), camR = 8.2, az = 0.7, pol = 1.1;
+      function placeCam() { camera.position.set(target.x + camR * Math.sin(pol) * Math.cos(az), target.y + camR * Math.cos(pol), target.z + camR * Math.sin(pol) * Math.sin(az)); camera.lookAt(target); }
+      var dragging = false, lx = 0, ly = 0, moved = false;
+      canvas.addEventListener('pointerdown', function (e) { dragging = true; moved = false; lx = e.clientX; ly = e.clientY; canvas.setPointerCapture(e.pointerId); });
+      canvas.addEventListener('pointerup', function () { dragging = false; });
+      var ray = new THREE.Raycaster(), mouse = new THREE.Vector2(-9, -9);
+      canvas.addEventListener('pointermove', function (e) {
+        var r = canvas.getBoundingClientRect(); mouse.x = (e.clientX - r.left) / r.width * 2 - 1; mouse.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+        if (dragging) { az -= (e.clientX - lx) * 0.008; pol -= (e.clientY - ly) * 0.008; pol = Math.max(0.3, Math.min(Math.PI - 0.3, pol)); lx = e.clientX; ly = e.clientY; }
+      });
+      canvas.addEventListener('pointerleave', function () { mouse.set(-9, -9); });
+      function resize() { var w = box.clientWidth || 600, h = 340; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+      window.addEventListener('resize', resize); resize();
+      var f = 0, hov = null;
+      function loop() {
+        requestAnimationFrame(loop);
+        var rb = box.getBoundingClientRect(); if (rb.bottom < 0 || rb.top > (window.innerHeight || 9999)) return;
+        f++;
+        meshes.forEach(function (m, i) { var sc = Math.max(0.001, Math.min(1, (f - 6 - i * 1.1) / 12)); m.scale.set(sc, sc, sc); });
+        if (!dragging) az += 0.0014;
+        placeCam();
+        ray.setFromCamera(mouse, camera); var hit = ray.intersectObjects(meshes);
+        if (hit.length) { if (hov !== hit[0].object) { if (hov) hov.scale.multiplyScalar(1); hov = hit[0].object; var r = hov.userData; read.innerHTML = '<b>' + r[0] + '</b> · γ=' + r[3].toFixed(2) + (r[2] ? ' · θ=' + fgFmt(r[2]) : '') + ' · R²=' + r[4].toFixed(2) + ' · ' + (r[3] < 1 ? L('Fase A', 'Phase A') : L('Fase B', 'Phase B')); } hov.scale.set(1.7, 1.7, 1.7); }
+        else if (hov) { hov = null; }
+        renderer.render(scene, camera);
+      }
+      loop();
+    }
+  } catch (e) {}
+
+  // ---- 2. Scroll-trigger: play diagrams only when in view ----
+  try {
+    var nodes = document.querySelectorAll('.fg-flow, .fg-attn-fig, .fg-demo');
+    if (!nodes.length || !('IntersectionObserver' in window)) return;
+    document.documentElement.classList.add('fg-armed');
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) e.target.classList.add('fg-inview');
+        else e.target.classList.remove('fg-inview');
+      });
+    }, { threshold: 0.2 });
+    nodes.forEach(function (f) { io.observe(f); });
+  } catch (err) {
+    document.documentElement.classList.remove('fg-armed');
+  }
+})();
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
