@@ -11,7 +11,7 @@
 ## Español
 
 Guía de campo y **referencia completa** sobre transformers: de los tokens al contexto largo,
-en **8 partes / 40 capítulos + apéndices**. Doble público por capas: la **superficie** la
+en **8 partes / 41 capítulos + apéndices**. Doble público por capas: la **superficie** la
 entiende cualquiera (prosa llana + analogía + ejemplo); la **profundidad** es una joya para el
 técnico (fórmulas término a término, datos reales, pruebas formales en Lean, el atlas de
 modelos y la app interactiva).
@@ -26,7 +26,7 @@ lente termodinámica, y el *audit* honesto "verificado vs folclore vs numerolog�
 ## English
 
 A field guide and **complete reference** on transformers: from tokens to long context, across
-**8 parts / 40 chapters + appendices**. Dual audience by layers: the **surface** is readable by
+**8 parts / 41 chapters + appendices**. Dual audience by layers: the **surface** is readable by
 anyone (plain prose + analogy + example); the **depth** is a gem for the practitioner
 (term-by-term formulas, real data, formal Lean proofs, the model atlas, and the interactive app).
 
@@ -48,6 +48,15 @@ The topic is intensely visual, so key chapters now embed **interactive, self-con
 - **The γ atlas — interactive + 3D** (Ch. 16) — compare real models on one γ axis (and in 3D: γ × θ × R²), colored by phase, hover to identify each model; text vs random-token toggle.
 - **Live formula plots** — γ_Padé(θ,T), `A(d)=d⁻ᵞ` (linear/log-log), softmax temperature, `1/√d_k` — move a slider and watch the formula respond, computed live from the real math.
 - **Concept schemas** — Q/K/V as a soft dictionary lookup (real worked example), LayerNorm step by step, KV-cache compressibility (`Σ d⁻ᵞ`), the causal mask (−∞ → softmax), attention "who-attends-to-whom" arcs, and animated step timelines across many chapters.
+
+## Updated — July 2026 · Actualizado — julio 2026
+
+A major content + freshness pass (both languages) · Gran tanda de contenido y actualización (ambos idiomas):
+
+- **New chapter — *Evaluation: measuring without fooling yourself*** (Part VII, now 41 chapters): perplexity & bits-per-byte, capability benchmarks (MMLU/GPQA/HumanEval/SWE-bench/GSM8K/RULER), data **contamination** & **Goodhart's law**, the **LLM-as-judge** and its biases, and statistical rigor. · **Nuevo capítulo de *Evaluación*.**
+- **Brought up to date to mid-2026:** **MoE** as the frontier default (+ an open *gpt-oss* X-ray), **FP4** quantization (MXFP4/NVFP4), **DeepSeek Sparse Attention**, **reasoning models & test-time compute** (RLVR), **circuit tracing / attribution graphs**, **benchmark saturation** (ARC-AGI-2, Humanity's Last Exam, FrontierMath), **GGUF & KV-cache quantization**, the inference **engine zoo** (vLLM/SGLang/llama.cpp/Ollama), **MCP/A2A**, SigLIP, Matryoshka, GraphRAG, EAGLE/Medusa, diffusion LLMs. *Every claim verified against primary sources; version-number rumors excluded.*
+- **New interactive graphics:** a **Mixture-of-Experts router** and a **benchmark-contamination "mirage"** widget, plus **7 new animated flow diagrams** (training loop, encoder→decoder, classification, LoRA, FlashAttention, quantization, prefill→decode).
+- **Honesty pass:** rigor/consistency fixes verified against the data (γ atlas, Lévy vs fractional integration, model counts, R² floor).
 
 ## What's in this repo
 

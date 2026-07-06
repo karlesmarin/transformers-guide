@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>41&nbsp; Ética, seguridad y limitaciones – Cómo Atienden los Transformers</title>
+<title>42&nbsp; Ética, seguridad y limitaciones – Cómo Atienden los Transformers</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -52,7 +52,7 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
 <link href="../chapters/R1-formulario.html" rel="next">
-<link href="../chapters/39-mapa2026.html" rel="prev">
+<link href="../chapters/40-evaluacion.html" rel="prev">
 <link href="../icon.png" rel="icon" type="image/png">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -512,6 +512,38 @@ div.csl-indent {
 .fg-g3d-canvas{ width:100%; height:340px; display:block; border:1px solid #dce7f0; border-radius:.7rem;
   background:radial-gradient(120% 120% at 50% 25%, #fbfdff, #e9f1f9); cursor:grab; touch-action:none; }
 .fg-g3d-canvas:active{ cursor:grabbing; }
+
+/* fg-moe — Mixture-of-Experts router: only k of N experts light up (sparse activation) */
+.fg-moe-svg{ width:100%; height:auto; display:block; font-family:Georgia,"Times New Roman",serif; }
+.fg-moe-tok{ fill:rgb(var(--blue)); }
+.fg-moe-tl{ font-size:10px; fill:#fff; font-weight:700; }
+.fg-moe-router{ fill:#fff; stroke:rgb(var(--blue)); stroke-width:2; }
+.fg-moe-rl{ font-size:15px; fill:rgb(var(--blue)); }
+.fg-moe-feed{ stroke:rgb(var(--blue)); stroke-width:2; }
+.fg-moe-wire{ fill:none; stroke:#d3dde6; stroke-width:1.5; transition:stroke .4s, stroke-width .4s; }
+.fg-moe-wire.on{ stroke:rgb(var(--blue)); stroke-width:2.5; stroke-dasharray:6 6;
+  filter:drop-shadow(0 0 3px rgba(0,114,178,.5)); animation:fg-moe-flow 1s linear infinite; }
+.fg-moe-exp{ fill:#f0f3f6; stroke:#dce7f0; stroke-width:1; transition:fill .4s, stroke .4s, filter .4s; }
+.fg-moe-exp.on{ fill:rgba(0,114,178,.16); stroke:rgb(var(--blue)); stroke-width:1.5;
+  filter:drop-shadow(0 0 5px rgba(0,114,178,.35)); }
+.fg-moe-el{ font-size:10px; fill:#93a3b4; transition:fill .4s, font-weight .4s; }
+.fg-moe-el.on{ fill:rgb(var(--blue)); font-weight:700; }
+.fg-moe-ctrl{ display:flex; align-items:center; gap:.6rem; justify-content:center; margin:.5rem 0 .2rem; font-size:.8rem; color:#5b7790; }
+.fg-moe-read{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.8rem; } .fg-moe-read b{ color:rgb(var(--blue)); }
+@keyframes fg-moe-flow{ to { stroke-dashoffset:-12; } }
+@media (prefers-reduced-motion:reduce){ .fg-moe-wire.on{ animation:none; stroke-dasharray:none; } }
+
+/* fg-mirage — benchmark contamination inflates the score, not the real ability */
+.fg-mirage-svg{ width:100%; height:auto; display:block; font-family:Georgia,"Times New Roman",serif; }
+.fg-mirage-svg .grid{ stroke:#eef3f7; stroke-width:1; }
+.fg-mirage-svg .lbl{ font-size:10px; fill:#9bb4c9; }
+.fg-mirage-svg .bar-real{ fill:rgb(var(--blue)); }
+.fg-mirage-svg .blbl{ font-size:11px; fill:#5b7790; }
+.fg-mirage-svg .bval{ font-size:12px; font-weight:700; fill:#33536e; }
+.fg-mirage-svg .mlbl{ font-size:11px; font-weight:700; fill:rgb(var(--red)); }
+.fg-mirage-ctrl{ display:flex; align-items:center; gap:.55rem; justify-content:center; margin:.5rem 0 .2rem; font-size:.8rem; color:#5b7790; }
+.fg-mirage-ctrl input[type=range]{ accent-color:rgb(var(--red)); width:200px; max-width:60%; }
+.fg-mirage-ctrl .cv{ font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:700; color:rgb(var(--red)); min-width:34px; }
 </style>
 
 
@@ -553,7 +585,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/37-interpretabilidad.html">Parte VII — Interpretabilidad y qué es real</a></li><li class="breadcrumb-item"><a href="../chapters/40-etica.html"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Ética, seguridad y limitaciones</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/37-interpretabilidad.html">Parte VII — Interpretabilidad y qué es real</a></li><li class="breadcrumb-item"><a href="../chapters/41-etica.html"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Ética, seguridad y limitaciones</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -905,8 +937,14 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/40-etica.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Ética, seguridad y limitaciones</span></span></a>
+  <a href="../chapters/40-evaluacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Evaluación: medir sin engañarte</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/41-etica.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Ética, seguridad y limitaciones</span></span></a>
   </div>
 </li>
       </ul>
@@ -923,37 +961,37 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R1-formulario.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">R1 · Formulario maestro</span></span></a>
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R1 · Formulario maestro</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R2-cookbook.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R3-glosario.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R3 · Glosario</span></span></a>
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R3 · Glosario</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R4-medir-gamma.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R4 · Medir tu propio γ (y reproducir el atlas)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R4 · Medir tu propio γ (y reproducir el atlas)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R9-tafagent.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R9 · Manual de tafagent</span></span></a>
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R9 · Manual de tafagent</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R10-soluciones.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R10 · Soluciones de los ejercicios</span></span></a>
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">R10 · Soluciones de los ejercicios</span></span></a>
   </div>
 </li>
       </ul>
@@ -968,15 +1006,15 @@ div.csl-indent {
     <h2 id="toc-title">En esta página</h2>
    
   <ul>
-  <li><a href="#la-idea-en-una-frase" id="toc-la-idea-en-una-frase" class="nav-link active" data-scroll-target="#la-idea-en-una-frase"><span class="header-section-number">41.1</span> La idea en una frase</a></li>
-  <li><a href="#conceptos-clave-y-su-papel-en-el-transformer" id="toc-conceptos-clave-y-su-papel-en-el-transformer" class="nav-link" data-scroll-target="#conceptos-clave-y-su-papel-en-el-transformer"><span class="header-section-number">41.2</span> Conceptos clave y su papel en el transformer</a></li>
-  <li><a href="#cubo-1-daños-por-cómo-funcionan-los-modelos" id="toc-cubo-1-daños-por-cómo-funcionan-los-modelos" class="nav-link" data-scroll-target="#cubo-1-daños-por-cómo-funcionan-los-modelos"><span class="header-section-number">41.3</span> Cubo 1 — Daños por cómo funcionan los modelos</a></li>
-  <li><a href="#cubo-2-mal-uso-y-seguridad" id="toc-cubo-2-mal-uso-y-seguridad" class="nav-link" data-scroll-target="#cubo-2-mal-uso-y-seguridad"><span class="header-section-number">41.4</span> Cubo 2 — Mal uso y seguridad</a></li>
-  <li><a href="#cubo-3-alineamiento-profundo-e-incógnitas" id="toc-cubo-3-alineamiento-profundo-e-incógnitas" class="nav-link" data-scroll-target="#cubo-3-alineamiento-profundo-e-incógnitas"><span class="header-section-number">41.5</span> Cubo 3 — Alineamiento profundo e incógnitas</a></li>
-  <li><a href="#uso-responsable-sin-sermón" id="toc-uso-responsable-sin-sermón" class="nav-link" data-scroll-target="#uso-responsable-sin-sermón"><span class="header-section-number">41.6</span> Uso responsable (sin sermón)</a></li>
-  <li><a href="#lo-que-no-sabemos-el-cierre-honesto-del-libro" id="toc-lo-que-no-sabemos-el-cierre-honesto-del-libro" class="nav-link" data-scroll-target="#lo-que-no-sabemos-el-cierre-honesto-del-libro"><span class="header-section-number">41.7</span> Lo que NO sabemos (el cierre honesto del libro)</a></li>
-  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">41.8</span> Resumen</a></li>
-  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">41.9</span> Ejercicios</a></li>
+  <li><a href="#la-idea-en-una-frase" id="toc-la-idea-en-una-frase" class="nav-link active" data-scroll-target="#la-idea-en-una-frase"><span class="header-section-number">42.1</span> La idea en una frase</a></li>
+  <li><a href="#conceptos-clave-y-su-papel-en-el-transformer" id="toc-conceptos-clave-y-su-papel-en-el-transformer" class="nav-link" data-scroll-target="#conceptos-clave-y-su-papel-en-el-transformer"><span class="header-section-number">42.2</span> Conceptos clave y su papel en el transformer</a></li>
+  <li><a href="#cubo-1-daños-por-cómo-funcionan-los-modelos" id="toc-cubo-1-daños-por-cómo-funcionan-los-modelos" class="nav-link" data-scroll-target="#cubo-1-daños-por-cómo-funcionan-los-modelos"><span class="header-section-number">42.3</span> Cubo 1 — Daños por cómo funcionan los modelos</a></li>
+  <li><a href="#cubo-2-mal-uso-y-seguridad" id="toc-cubo-2-mal-uso-y-seguridad" class="nav-link" data-scroll-target="#cubo-2-mal-uso-y-seguridad"><span class="header-section-number">42.4</span> Cubo 2 — Mal uso y seguridad</a></li>
+  <li><a href="#cubo-3-alineamiento-profundo-e-incógnitas" id="toc-cubo-3-alineamiento-profundo-e-incógnitas" class="nav-link" data-scroll-target="#cubo-3-alineamiento-profundo-e-incógnitas"><span class="header-section-number">42.5</span> Cubo 3 — Alineamiento profundo e incógnitas</a></li>
+  <li><a href="#uso-responsable-sin-sermón" id="toc-uso-responsable-sin-sermón" class="nav-link" data-scroll-target="#uso-responsable-sin-sermón"><span class="header-section-number">42.6</span> Uso responsable (sin sermón)</a></li>
+  <li><a href="#lo-que-no-sabemos-el-cierre-honesto-del-libro" id="toc-lo-que-no-sabemos-el-cierre-honesto-del-libro" class="nav-link" data-scroll-target="#lo-que-no-sabemos-el-cierre-honesto-del-libro"><span class="header-section-number">42.7</span> Lo que NO sabemos (el cierre honesto del libro)</a></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">42.8</span> Resumen</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">42.9</span> Ejercicios</a></li>
   <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias">Referencias</a></li>
   </ul>
 </nav>
@@ -984,9 +1022,9 @@ div.csl-indent {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/37-interpretabilidad.html">Parte VII — Interpretabilidad y qué es real</a></li><li class="breadcrumb-item"><a href="../chapters/40-etica.html"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Ética, seguridad y limitaciones</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/37-interpretabilidad.html">Parte VII — Interpretabilidad y qué es real</a></li><li class="breadcrumb-item"><a href="../chapters/41-etica.html"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Ética, seguridad y limitaciones</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-etica" class="quarto-section-identifier"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Ética, seguridad y limitaciones</span></span></h1>
+<h1 class="title"><span id="sec-etica" class="quarto-section-identifier"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Ética, seguridad y limitaciones</span></span></h1>
 </div>
 
 
@@ -1013,12 +1051,12 @@ div.csl-indent {
 </div>
 </div>
 </div>
-<section id="la-idea-en-una-frase" class="level2" data-number="41.1">
-<h2 data-number="41.1" class="anchored" data-anchor-id="la-idea-en-una-frase"><span class="header-section-number">41.1</span> La idea en una frase</h2>
+<section id="la-idea-en-una-frase" class="level2" data-number="42.1">
+<h2 data-number="42.1" class="anchored" data-anchor-id="la-idea-en-una-frase"><span class="header-section-number">42.1</span> La idea en una frase</h2>
 <p>Un modelo puede ser <strong>muy capaz y a la vez poco fiable o inseguro</strong>; usarlo con responsabilidad exige conocer sus <strong>modos de fallo</strong> (todo este libro) y ser honesto sobre lo que la ciencia <strong>todavía no sabe</strong>.</p>
 </section>
-<section id="conceptos-clave-y-su-papel-en-el-transformer" class="level2" data-number="41.2">
-<h2 data-number="41.2" class="anchored" data-anchor-id="conceptos-clave-y-su-papel-en-el-transformer"><span class="header-section-number">41.2</span> Conceptos clave y su papel en el transformer</h2>
+<section id="conceptos-clave-y-su-papel-en-el-transformer" class="level2" data-number="42.2">
+<h2 data-number="42.2" class="anchored" data-anchor-id="conceptos-clave-y-su-papel-en-el-transformer"><span class="header-section-number">42.2</span> Conceptos clave y su papel en el transformer</h2>
 <p>Antes de entrar en detalle, definimos los términos de este capítulo y <strong>para qué importa cada uno</strong>:</p>
 <ul>
 <li><strong>Capacidad ≠ seguridad.</strong> <em>Definición:</em> que un modelo <strong>sepa hacer</strong> algo no implica que sea <strong>fiable o seguro</strong> haciéndolo. <em>En el transformer:</em> es la distinción que organiza todo el capítulo.</li>
@@ -1032,8 +1070,8 @@ div.csl-indent {
 </ul>
 <p>Lo organizamos en tres cubos: cómo fallan <strong>por su funcionamiento</strong>, el <strong>mal uso</strong>, y el <strong>alineamiento/incógnitas</strong>.</p>
 </section>
-<section id="cubo-1-daños-por-cómo-funcionan-los-modelos" class="level2" data-number="41.3">
-<h2 data-number="41.3" class="anchored" data-anchor-id="cubo-1-daños-por-cómo-funcionan-los-modelos"><span class="header-section-number">41.3</span> Cubo 1 — Daños por cómo funcionan los modelos</h2>
+<section id="cubo-1-daños-por-cómo-funcionan-los-modelos" class="level2" data-number="42.3">
+<h2 data-number="42.3" class="anchored" data-anchor-id="cubo-1-daños-por-cómo-funcionan-los-modelos"><span class="header-section-number">42.3</span> Cubo 1 — Daños por cómo funcionan los modelos</h2>
 <p><strong>Sesgo y daño representacional.</strong> El modelo <strong>refleja</strong> los sesgos de sus datos —y puede <strong>amplificarlos</strong>—. La crítica fundacional (“loros estocásticos” <span class="citation" data-cites="bender2021parrots">(<a href="#ref-bender2021parrots" role="doc-biblioref">Bender et&nbsp;al. 2021</a>)</span>) señaló el coste de la escala, el sesgo de los datos y que el modelo manipula <strong>forma</strong> sin <strong>significado</strong>. Una taxonomía útil de riesgos (21 riesgos en 6 áreas <span class="citation" data-cites="weidinger2021risks">(<a href="#ref-weidinger2021risks" role="doc-biblioref"><span class="nocase">Weidinger et&nbsp;al.</span> 2021</a>)</span>) ordena el terreno; y <em>benchmarks</em> concretos como <strong>BBQ</strong> <span class="citation" data-cites="parrish2021bbq">(<a href="#ref-parrish2021bbq" role="doc-biblioref"><span class="nocase">Parrish et&nbsp;al.</span> 2022</a>)</span> muestran lo importante: cuando el contexto es <strong>poco informativo</strong>, los modelos <strong>recaen en estereotipos</strong>. <em>(Cautela: una sola métrica de sesgo no “certifica” nada.)</em></p>
 <div class="analogia">
 <p><strong>🧩 Analogía — el espejo que amplifica.</strong> Un modelo es un <strong>espejo</strong> de sus datos de entrenamiento: refleja lo que hay —y, al generar a escala, puede <strong>agrandar</strong> lo que refleja—. No “inventa” el sesgo; lo <strong>hereda y lo proyecta</strong>.</p>
@@ -1057,16 +1095,16 @@ div.csl-indent {
 </div>
 <p><strong>Memorización y privacidad.</strong> Los modelos <strong>retienen</strong> trozos literales del entrenamiento, y se pueden <strong>extraer</strong> consultándolos (incluida información personal <span class="citation" data-cites="carlini2021extracting">(<a href="#ref-carlini2021extracting" role="doc-biblioref"><span class="nocase">Carlini et&nbsp;al.</span> 2021</a>)</span>). Y empeora con la escala: la memorización crece <strong>log-lineal</strong> con el tamaño, la duplicación de datos y la longitud de contexto <span class="citation" data-cites="carlini2022memorization">(<a href="#ref-carlini2022memorization" role="doc-biblioref"><span class="nocase">Carlini et&nbsp;al.</span> 2023</a>)</span>.</p>
 </section>
-<section id="cubo-2-mal-uso-y-seguridad" class="level2" data-number="41.4">
-<h2 data-number="41.4" class="anchored" data-anchor-id="cubo-2-mal-uso-y-seguridad"><span class="header-section-number">41.4</span> Cubo 2 — Mal uso y seguridad</h2>
+<section id="cubo-2-mal-uso-y-seguridad" class="level2" data-number="42.4">
+<h2 data-number="42.4" class="anchored" data-anchor-id="cubo-2-mal-uso-y-seguridad"><span class="header-section-number">42.4</span> Cubo 2 — Mal uso y seguridad</h2>
 <p><strong>Jailbreaks.</strong> El entrenamiento de seguridad <strong>se puede sortear</strong>. El análisis de referencia <span class="citation" data-cites="wei2023jailbroken">(<a href="#ref-wei2023jailbroken" role="doc-biblioref">Wei et&nbsp;al. 2023</a>)</span> identifica dos fallos: <strong>objetivos en conflicto</strong> (ser útil choca con ser seguro) y <strong>generalización desajustada</strong> (las capacidades llegan a dominios que la seguridad no cubrió). Peor: hay <strong>sufijos adversarios universales</strong> generados automáticamente que <strong>transfieren</strong> entre modelos abiertos y comerciales <span class="citation" data-cites="zou2023adversarial">(<a href="#ref-zou2023adversarial" role="doc-biblioref">Zou et&nbsp;al. 2023</a>)</span> → las “barreras” no son robustas a ataques de optimización.</p>
 <div class="analogia">
 <p><strong>🧩 Analogía — la ingeniería social al guardia.</strong> Un <em>jailbreak</em> es <strong>convencer al modelo de saltarse sus propias reglas</strong>, como quien habla con un guardia hasta que deja de seguir el protocolo. No rompe el muro: <strong>engaña al portero</strong>.</p>
 </div>
 <p><strong>Inyección de prompts</strong> (Caps. 30, 32 <span class="citation" data-cites="greshake2023injection">(<a href="#ref-greshake2023injection" role="doc-biblioref">Greshake et&nbsp;al. 2023</a>)</span>): instrucciones hostiles <strong>escondidas en datos</strong> que el modelo luego recupera —y que se <strong>agrava</strong> cuando el modelo puede <strong>actuar</strong> (agentes)—. <strong>Desinformación a escala</strong> y otros usos maliciosos entran en las categorías de la taxonomía; conviene sobriedad: la evidencia empírica de impacto real (p.&nbsp;ej. persuasión) <strong>aún es escasa</strong>.</p>
 </section>
-<section id="cubo-3-alineamiento-profundo-e-incógnitas" class="level2" data-number="41.5">
-<h2 data-number="41.5" class="anchored" data-anchor-id="cubo-3-alineamiento-profundo-e-incógnitas"><span class="header-section-number">41.5</span> Cubo 3 — Alineamiento profundo e incógnitas</h2>
+<section id="cubo-3-alineamiento-profundo-e-incógnitas" class="level2" data-number="42.5">
+<h2 data-number="42.5" class="anchored" data-anchor-id="cubo-3-alineamiento-profundo-e-incógnitas"><span class="header-section-number">42.5</span> Cubo 3 — Alineamiento profundo e incógnitas</h2>
 <ul>
 <li><strong>Reward hacking / specification gaming</strong> (Cap. 27): el modelo optimiza la <strong>medida</strong>, no la intención.</li>
 <li><strong>Adulación (<em>sycophancy</em>)</strong> <span class="citation" data-cites="sharma2023sycophancy">(<a href="#ref-sharma2023sycophancy" role="doc-biblioref"><span class="nocase">Sharma et&nbsp;al.</span> 2023</a>)</span>: prefiere <strong>coincidir con tus creencias</strong> sobre decir la verdad —inducido en parte por los datos de preferencia—.</li>
@@ -1089,12 +1127,12 @@ div.csl-indent {
 <li><strong>Evaluar es difícil.</strong> La evaluación <strong>holística</strong> <span class="citation" data-cites="liang2022helm">(<a href="#ref-liang2022helm" role="doc-biblioref"><span class="nocase">Liang et&nbsp;al.</span> 2023</a>)</span> mide más allá de la <em>accuracy</em> (robustez, sesgo, toxicidad…). Y acecha la <strong>contaminación de benchmarks</strong> (datos de test que se cuelan en el entrenamiento e <strong>inflan</strong> las cifras) → desconfía de los números de portada.</li>
 </ul>
 </section>
-<section id="uso-responsable-sin-sermón" class="level2" data-number="41.6">
-<h2 data-number="41.6" class="anchored" data-anchor-id="uso-responsable-sin-sermón"><span class="header-section-number">41.6</span> Uso responsable (sin sermón)</h2>
+<section id="uso-responsable-sin-sermón" class="level2" data-number="42.6">
+<h2 data-number="42.6" class="anchored" data-anchor-id="uso-responsable-sin-sermón"><span class="header-section-number">42.6</span> Uso responsable (sin sermón)</h2>
 <p>En la práctica: <strong>supervisión humana</strong> en decisiones consecuentes; conoce los <strong>modos de fallo</strong> documentados (el resto del libro <strong>es</strong> tu modelo de amenazas); <strong>nunca trates la fluidez como corrección</strong>; <strong>ancla y verifica</strong> con recuperación y citas (Cap. 31) —recordando que la propia recuperación tiene fallos e inyección (Cubo 2)—; haz <strong>red-teaming</strong> y <strong>evals</strong> antes de desplegar (estilo HELM, con control de contaminación); y trata las “barreras” como <strong>fricción, no como contención</strong> —los <em>jailbreaks</em> muestran que el entrenamiento de seguridad es <strong>sorteable</strong>, no una garantía—.</p>
 </section>
-<section id="lo-que-no-sabemos-el-cierre-honesto-del-libro" class="level2" data-number="41.7">
-<h2 data-number="41.7" class="anchored" data-anchor-id="lo-que-no-sabemos-el-cierre-honesto-del-libro"><span class="header-section-number">41.7</span> Lo que NO sabemos (el cierre honesto del libro)</h2>
+<section id="lo-que-no-sabemos-el-cierre-honesto-del-libro" class="level2" data-number="42.7">
+<h2 data-number="42.7" class="anchored" data-anchor-id="lo-que-no-sabemos-el-cierre-honesto-del-libro"><span class="header-section-number">42.7</span> Lo que NO sabemos (el cierre honesto del libro)</h2>
 <p>Y aquí, fieles al Cap. 38, cerramos nombrando las <strong>preguntas abiertas</strong> en vez de fingir que las hemos cerrado:</p>
 <ul>
 <li><strong>No hay teoría acordada de por qué la escala funciona</strong> ni de <strong>cuándo</strong> emergen las capacidades: las leyes de escala ajustan la <strong>pérdida</strong>, no el <strong>inicio</strong> de una capacidad (o de un riesgo).</li>
@@ -1121,8 +1159,8 @@ div.csl-indent {
 </div>
 </div>
 </section>
-<section id="resumen" class="level2" data-number="41.8">
-<h2 data-number="41.8" class="anchored" data-anchor-id="resumen"><span class="header-section-number">41.8</span> Resumen</h2>
+<section id="resumen" class="level2" data-number="42.8">
+<h2 data-number="42.8" class="anchored" data-anchor-id="resumen"><span class="header-section-number">42.8</span> Resumen</h2>
 <ul>
 <li><strong>Capacidad ≠ seguridad/fiabilidad.</strong> Tres cubos: por <strong>cómo funcionan</strong> (sesgo, alucinación, memorización), <strong>mal uso</strong> (jailbreaks, inyección, extracción) y <strong>alineamiento/incógnitas</strong>.</li>
 <li><strong>Sesgo:</strong> el modelo es un <strong>espejo amplificador</strong> de sus datos (<span class="citation" data-cites="bender2021parrots">(<a href="#ref-bender2021parrots" role="doc-biblioref">Bender et&nbsp;al. 2021</a>)</span>; taxonomía <span class="citation" data-cites="weidinger2021risks">(<a href="#ref-weidinger2021risks" role="doc-biblioref"><span class="nocase">Weidinger et&nbsp;al.</span> 2021</a>)</span>; BBQ <span class="citation" data-cites="parrish2021bbq">(<a href="#ref-parrish2021bbq" role="doc-biblioref"><span class="nocase">Parrish et&nbsp;al.</span> 2022</a>)</span>).</li>
@@ -1134,8 +1172,8 @@ div.csl-indent {
 </ul>
 <p><strong>Cierre del cuerpo del libro.</strong> Hemos ido del token (Cap. 2) a la frontera de 2026 (Cap. 39) y a sus límites éticos (este). Lo que queda —la <strong>Parte VIII</strong>— es el <strong>aparato de referencia</strong> (la tabla maestra de fórmulas con sus recibos, el <em>cookbook</em>, el glosario, el manual de tafagent) y la <strong>Parte 0</strong> de orientación, que escribimos al final. La honestidad no fue un adorno: fue el método.</p>
 </section>
-<section id="ejercicios" class="level2" data-number="41.9">
-<h2 data-number="41.9" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">41.9</span> Ejercicios</h2>
+<section id="ejercicios" class="level2" data-number="42.9">
+<h2 data-number="42.9" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">42.9</span> Ejercicios</h2>
 <ol type="1">
 <li><strong>Capacidad ≠ seguridad.</strong> Da un ejemplo de un modelo <strong>capaz</strong> que sea <strong>poco fiable</strong> o <strong>inseguro</strong>, y explica por qué no es lo mismo.</li>
 <li><strong>Alucinación.</strong> ¿Por qué la <strong>calibración parcial</strong> no resuelve la alucinación? ¿Por qué es “en parte intrínseca”?</li>
@@ -1329,6 +1367,95 @@ Zou, Andy, Zifan Wang, Nicholas Carlini, Milad Nasr, J. Zico Kolter, y Matt Fred
         render(g);
       });
       render(1.35); start();
+    });
+  } catch (e) {}
+
+  // ---- 1c-moe. Build .fg-moe — Mixture-of-Experts router: only k of N experts light up ----
+  try {
+    var reduceMoe = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll('.fg-moe').forEach(function (box) {
+      var N = +(box.dataset.experts || 8), K = +(box.dataset.topk || 2);
+      var rnd = function (s) { var x = Math.sin(s * 12.9898) * 43758.5453; return x - Math.floor(x); };
+      var SVGNS = 'http://www.w3.org/2000/svg';
+      var W = 460, H = Math.max(190, N * 28 + 24), padT = 16;
+      var xTok = 38, xRouter = 150, xExp = 296, expW = 128, expH = 18;
+      var gap = N > 1 ? (H - padT * 2 - N * expH) / (N - 1) : 0;
+      function expY(i) { return padT + i * (expH + gap); }
+      var yMid = H / 2;
+      box.className = 'fg-moe fg-sch';
+      box.innerHTML = '<div class="fg-sch-h">' + L('Mixture of Experts: el router enciende solo k de N', 'Mixture of Experts: the router lights up only k of N') + '</div>' +
+        '<svg class="fg-moe-svg" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet"></svg>' +
+        '<div class="fg-moe-ctrl"><button class="fg-sch-btn" data-act="pp" type="button">⏸</button><span class="fg-moe-read"></span></div>' +
+        '<div class="fg-sch-cap">' + L('Cada token pasa por el <b>router</b>, que elige los <b>' + K + ' expertos</b> más adecuados (de ' + N + '). El resto <span class="hot">ni se encienden</span>: por eso el <b>cómputo</b> por token es bajo aunque el modelo tenga muchísimos parámetros.', 'Each token goes through the <b>router</b>, which picks the <b>' + K + ' best experts</b> (of ' + N + '). The rest <span class="hot">stay off</span>: that is why per-token <b>compute</b> stays low even with a huge parameter count.') + '</div>';
+      var svg = box.querySelector('.fg-moe-svg'), read = box.querySelector('.fg-moe-read'), btn = box.querySelector('[data-act="pp"]');
+      function mk(tag, a) { var e = document.createElementNS(SVGNS, tag); for (var k in a) e.setAttribute(k, a[k]); return e; }
+      svg.appendChild(mk('line', { x1: xTok + 13, y1: yMid, x2: xRouter - 15, y2: yMid, class: 'fg-moe-feed' }));
+      svg.appendChild(mk('circle', { cx: xTok, cy: yMid, r: 13, class: 'fg-moe-tok' }));
+      var tl = mk('text', { x: xTok, y: yMid + 3.5, class: 'fg-moe-tl', 'text-anchor': 'middle' }); tl.textContent = 'tok'; svg.appendChild(tl);
+      svg.appendChild(mk('rect', { x: xRouter - 15, y: yMid - 15, width: 30, height: 30, rx: 4, transform: 'rotate(45 ' + xRouter + ' ' + yMid + ')', class: 'fg-moe-router' }));
+      var rl = mk('text', { x: xRouter, y: yMid + 5, class: 'fg-moe-rl', 'text-anchor': 'middle' }); rl.textContent = '⇄'; svg.appendChild(rl);
+      var lines = [], experts = [], elabels = [];
+      for (var i = 0; i < N; i++) {
+        var y = expY(i) + expH / 2;
+        lines.push(svg.appendChild(mk('path', { d: 'M' + (xRouter + 15) + ' ' + yMid + ' C ' + (xRouter + 62) + ' ' + yMid + ', ' + (xExp - 46) + ' ' + y + ', ' + xExp + ' ' + y, class: 'fg-moe-wire' })));
+        experts.push(svg.appendChild(mk('rect', { x: xExp, y: expY(i), width: expW, height: expH, rx: 4, class: 'fg-moe-exp' })));
+        var t = mk('text', { x: xExp + expW / 2, y: expY(i) + expH / 2 + 3.5, class: 'fg-moe-el', 'text-anchor': 'middle' }); t.textContent = L('experto ', 'expert ') + (i + 1); svg.appendChild(t); elabels.push(t);
+      }
+      function chosen(s) { var sc = [], set = {}; for (var i = 0; i < N; i++) sc.push([rnd(s * 3.1 + i * 1.7 + 1), i]); sc.sort(function (a, b) { return b[0] - a[0]; }); for (var j = 0; j < K; j++) set[sc[j][1]] = 1; return set; }
+      var step = 0, timer = null;
+      function render() {
+        var set = chosen(step), names = [];
+        for (var i = 0; i < N; i++) {
+          var on = !!set[i];
+          experts[i].classList.toggle('on', on); lines[i].classList.toggle('on', on); elabels[i].classList.toggle('on', on);
+          if (on) names.push('#' + (i + 1));
+        }
+        read.innerHTML = L('token ', 'token ') + (step + 1) + ' → <b>' + names.join(', ') + '</b> · ' + K + '/' + N + ' ' + L('activos', 'active');
+      }
+      render();
+      function play() { if (timer) return; timer = setInterval(function () { var r = box.getBoundingClientRect(); if (r.bottom < 0 || r.top > (window.innerHeight || 9999)) return; step = (step + 1) % 6; render(); }, 1700); btn.textContent = '⏸'; }
+      function stop() { if (timer) { clearInterval(timer); timer = null; } btn.textContent = '▶'; }
+      btn.addEventListener('click', function () { timer ? stop() : play(); });
+      if (reduceMoe) { btn.textContent = '▶'; } else play();
+    });
+  } catch (e) {}
+
+  // ---- 1c-mirage. Build .fg-mirage — benchmark contamination inflates the score, not the ability ----
+  try {
+    document.querySelectorAll('.fg-mirage').forEach(function (box) {
+      box.className = 'fg-mirage fg-sch';
+      box.innerHTML = '<div class="fg-sch-h">' + L('El espejismo del benchmark: la contaminación infla la nota, no la capacidad', 'The benchmark mirage: contamination inflates the score, not the ability') + '</div>' +
+        '<svg class="fg-mirage-svg" viewBox="0 0 420 210" preserveAspectRatio="xMidYMid meet"></svg>' +
+        '<div class="fg-mirage-ctrl"><span>' + L('contaminación', 'contamination') + '</span><input type="range" min="0" max="100" step="1" value="0" aria-label="' + L('porcentaje de contaminación', 'contamination percentage') + '"><span class="cv">0%</span></div>' +
+        '<div class="fg-sch-cap"></div>';
+      var svg = box.querySelector('svg'), range = box.querySelector('input'), cv = box.querySelector('.cv'), cap = box.querySelector('.fg-sch-cap');
+      var W = 420, H = 210, padB = 34, padT = 16, base = 52;
+      var y0 = H - padB, y1 = padT, HH = y0 - y1;
+      function Y(p) { return y0 - p / 100 * HH; }
+      var b0 = { x: 100, w: 88 }, b1 = { x: 240, w: 88 };
+      function draw(c) {
+        var app = base + c / 100 * (98 - base), s = '';
+        [0, 25, 50, 75, 100].forEach(function (p) {
+          s += '<line class="grid" x1="62" y1="' + Y(p) + '" x2="' + (W - 14) + '" y2="' + Y(p) + '"/>';
+          s += '<text class="lbl" x="54" y="' + (Y(p) + 4) + '" text-anchor="end">' + p + '</text>';
+        });
+        s += '<rect class="bar-real" x="' + b0.x + '" y="' + Y(base) + '" width="' + b0.w + '" height="' + (y0 - Y(base)) + '"/>';
+        s += '<text class="blbl" x="' + (b0.x + b0.w / 2) + '" y="' + (y0 + 16) + '" text-anchor="middle">' + L('capacidad real', 'real ability') + '</text>';
+        s += '<text class="bval" x="' + (b0.x + b0.w / 2) + '" y="' + (Y(base) - 6) + '" text-anchor="middle">' + Math.round(base) + '%</text>';
+        s += '<rect class="bar-real" x="' + b1.x + '" y="' + Y(base) + '" width="' + b1.w + '" height="' + (y0 - Y(base)) + '"/>';
+        if (app > base + 0.5) s += '<rect fill="url(#fgmh)" stroke="rgb(213,94,0)" stroke-width="1" x="' + b1.x + '" y="' + Y(app) + '" width="' + b1.w + '" height="' + (Y(base) - Y(app)) + '"/>';
+        s += '<text class="blbl" x="' + (b1.x + b1.w / 2) + '" y="' + (y0 + 16) + '" text-anchor="middle">' + L('nota aparente', 'apparent score') + '</text>';
+        s += '<text class="bval" x="' + (b1.x + b1.w / 2) + '" y="' + (Y(app) - 6) + '" text-anchor="middle">' + Math.round(app) + '%</text>';
+        if (app > base + 7) s += '<text class="mlbl" x="' + (b1.x + b1.w + 5) + '" y="' + ((Y(app) + Y(base)) / 2 + 4) + '">← ' + L('espejismo', 'mirage') + '</text>';
+        svg.innerHTML = '<defs><pattern id="fgmh" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="rgba(213,94,0,0.12)"/><line x1="0" y1="0" x2="0" y2="7" stroke="rgb(213,94,0)" stroke-width="2.5"/></pattern></defs>' + s;
+        cv.textContent = c + '%';
+        var gap = Math.round(app - base);
+        cap.innerHTML = (+c === 0)
+          ? L('Sin contaminación: la nota <b>es</b> la capacidad real (' + Math.round(base) + '%).', 'No contamination: the score <b>is</b> the real ability (' + Math.round(base) + '%).')
+          : L('Con <b>' + c + '%</b> de contaminación, la nota sube a <b>' + Math.round(app) + '%</b>, pero la capacidad real sigue en <b>' + Math.round(base) + '%</b>. Ese hueco de <span class="hot">' + gap + ' puntos</span> es <span class="hot">espejismo</span>: el modelo no aprendió más, solo <b>vio el examen antes</b>.', 'With <b>' + c + '%</b> contamination, the score climbs to <b>' + Math.round(app) + '%</b>, but real ability stays at <b>' + Math.round(base) + '%</b>. That <span class="hot">' + gap + '-point</span> gap is a <span class="hot">mirage</span>: the model did not learn more, it just <b>saw the exam beforehand</b>.');
+      }
+      range.addEventListener('input', function () { draw(+range.value); });
+      draw(0);
     });
   } catch (e) {}
 
@@ -2510,13 +2637,13 @@ Zou, Andy, Zifan Wang, Nicholas Carlini, Milad Nasr, J. Zico Kolter, y Matt Fred
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../chapters/39-mapa2026.html" class="pagination-link" aria-label="El mapa del paisaje de colapso 2026">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">El mapa del paisaje de colapso 2026</span></span>
+      <a href="../chapters/40-evaluacion.html" class="pagination-link" aria-label="Evaluación: medir sin engañarte">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Evaluación: medir sin engañarte</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../chapters/R1-formulario.html" class="pagination-link" aria-label="R1 · Formulario maestro">
-        <span class="nav-page-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">R1 · Formulario maestro</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R1 · Formulario maestro</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

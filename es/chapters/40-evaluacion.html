@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.9.38">
@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>41&nbsp; Ethics, safety and limitations – How Transformers Attend</title>
+<title>41&nbsp; Evaluación: medir sin engañarte – Cómo Atienden los Transformers</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -51,7 +51,7 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../chapters/R1-formulario.html" rel="next">
+<link href="../chapters/41-etica.html" rel="next">
 <link href="../chapters/39-mapa2026.html" rel="prev">
 <link href="../icon.png" rel="icon" type="image/png">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
@@ -78,17 +78,17 @@ div.csl-indent {
   ],
   "show-item-context": false,
   "language": {
-    "search-no-results-text": "No results",
-    "search-matching-documents-text": "matching documents",
-    "search-copy-link-title": "Copy link to search",
-    "search-hide-matches-text": "Hide additional matches",
-    "search-more-match-text": "more match in this document",
-    "search-more-matches-text": "more matches in this document",
-    "search-clear-button-title": "Clear",
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
     "search-text-placeholder": "",
-    "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
   }
 }</script>
 <style>
@@ -512,8 +512,69 @@ div.csl-indent {
 .fg-g3d-canvas{ width:100%; height:340px; display:block; border:1px solid #dce7f0; border-radius:.7rem;
   background:radial-gradient(120% 120% at 50% 25%, #fbfdff, #e9f1f9); cursor:grab; touch-action:none; }
 .fg-g3d-canvas:active{ cursor:grabbing; }
+
+/* fg-moe — Mixture-of-Experts router: only k of N experts light up (sparse activation) */
+.fg-moe-svg{ width:100%; height:auto; display:block; font-family:Georgia,"Times New Roman",serif; }
+.fg-moe-tok{ fill:rgb(var(--blue)); }
+.fg-moe-tl{ font-size:10px; fill:#fff; font-weight:700; }
+.fg-moe-router{ fill:#fff; stroke:rgb(var(--blue)); stroke-width:2; }
+.fg-moe-rl{ font-size:15px; fill:rgb(var(--blue)); }
+.fg-moe-feed{ stroke:rgb(var(--blue)); stroke-width:2; }
+.fg-moe-wire{ fill:none; stroke:#d3dde6; stroke-width:1.5; transition:stroke .4s, stroke-width .4s; }
+.fg-moe-wire.on{ stroke:rgb(var(--blue)); stroke-width:2.5; stroke-dasharray:6 6;
+  filter:drop-shadow(0 0 3px rgba(0,114,178,.5)); animation:fg-moe-flow 1s linear infinite; }
+.fg-moe-exp{ fill:#f0f3f6; stroke:#dce7f0; stroke-width:1; transition:fill .4s, stroke .4s, filter .4s; }
+.fg-moe-exp.on{ fill:rgba(0,114,178,.16); stroke:rgb(var(--blue)); stroke-width:1.5;
+  filter:drop-shadow(0 0 5px rgba(0,114,178,.35)); }
+.fg-moe-el{ font-size:10px; fill:#93a3b4; transition:fill .4s, font-weight .4s; }
+.fg-moe-el.on{ fill:rgb(var(--blue)); font-weight:700; }
+.fg-moe-ctrl{ display:flex; align-items:center; gap:.6rem; justify-content:center; margin:.5rem 0 .2rem; font-size:.8rem; color:#5b7790; }
+.fg-moe-read{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.8rem; } .fg-moe-read b{ color:rgb(var(--blue)); }
+@keyframes fg-moe-flow{ to { stroke-dashoffset:-12; } }
+@media (prefers-reduced-motion:reduce){ .fg-moe-wire.on{ animation:none; stroke-dasharray:none; } }
+
+/* fg-mirage — benchmark contamination inflates the score, not the real ability */
+.fg-mirage-svg{ width:100%; height:auto; display:block; font-family:Georgia,"Times New Roman",serif; }
+.fg-mirage-svg .grid{ stroke:#eef3f7; stroke-width:1; }
+.fg-mirage-svg .lbl{ font-size:10px; fill:#9bb4c9; }
+.fg-mirage-svg .bar-real{ fill:rgb(var(--blue)); }
+.fg-mirage-svg .blbl{ font-size:11px; fill:#5b7790; }
+.fg-mirage-svg .bval{ font-size:12px; font-weight:700; fill:#33536e; }
+.fg-mirage-svg .mlbl{ font-size:11px; font-weight:700; fill:rgb(var(--red)); }
+.fg-mirage-ctrl{ display:flex; align-items:center; gap:.55rem; justify-content:center; margin:.5rem 0 .2rem; font-size:.8rem; color:#5b7790; }
+.fg-mirage-ctrl input[type=range]{ accent-color:rgb(var(--red)); width:200px; max-width:60%; }
+.fg-mirage-ctrl .cv{ font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:700; color:rgb(var(--red)); min-width:34px; }
 </style>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -525,11 +586,11 @@ div.csl-indent {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">How Transformers Attend</span>
+    <span class="navbar-title">Cómo Atienden los Transformers</span>
     </a>
   </div>
-            <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+            <div id="quarto-search" class="" title="Buscar"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Navegación de palanca" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -550,11 +611,11 @@ div.csl-indent {
     </nav>
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/37-interpretabilidad.html">Part VII — Interpretability and what is real</a></li><li class="breadcrumb-item"><a href="../chapters/40-etica.html"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Ethics, safety and limitations</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/37-interpretabilidad.html">Parte VII — Interpretabilidad y qué es real</a></li><li class="breadcrumb-item"><a href="../chapters/40-evaluacion.html"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Evaluación: medir sin engañarte</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav>
@@ -568,20 +629,20 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Preface</span></a>
+ <span class="menu-text">Prefacio</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/creditos.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Credits</span></a>
+ <span class="menu-text">Créditos</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">Part 0 — Orientation</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+ <span class="menu-text">Parte 0 — Orientación</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -589,7 +650,7 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/00-orientacion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">How to use this guide</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Cómo usar esta guía</span></span></a>
   </div>
 </li>
       </ul>
@@ -597,8 +658,8 @@ div.csl-indent {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">Part I — Foundations</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+ <span class="menu-text">Parte I — Fundamentos</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -606,73 +667,73 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/01-panorama.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The panorama: what a transformer is and why it won</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">El panorama: qué es un transformer y por qué ganó</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/02-tokens.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">From text to tokens</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">De texto a tokens</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/03-embeddings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Embeddings and the residual stream</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Embeddings y el flujo residual</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/04-atencion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Attention as weighted aggregation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">La atención como agregación ponderada</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/05-multicabeza.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Multi-head attention</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Atención multi-cabeza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/06-ffn.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The feed-forward network (FFN)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">La red feed-forward (FFN)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/07-residual-norm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Residual connections and normalization</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Conexiones residuales y normalización</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/08-posicion-rope.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Positional information and RoPE</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Información de posición y RoPE</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/09-bloque.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The complete block and depth</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">El bloque completo y la profundidad</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/10-arquitecturas.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Encoder, decoder and encoder-decoder</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Encoder, decoder y encoder-decoder</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/11-entrenamiento.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Training a transformer</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Entrenar un transformer</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/12-inferencia.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Inference and decoding</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Inferencia y decodificación</span></span></a>
   </div>
 </li>
       </ul>
@@ -680,8 +741,8 @@ div.csl-indent {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">Part II — How transformers attend over distance</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+ <span class="menu-text">Parte II — Cómo atienden a lo largo de la distancia</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -689,49 +750,49 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/13-leer-mapas.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Reading an attention map</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Leer un mapa de atención</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/14-aliasing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Aliasing and the three scales of RoPE</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Aliasing y las tres escalas de RoPE</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/15-ley-gamma.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">The decay law A(d) ∝ d^−γ</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">La ley de decaimiento A(d) ∝ d^−γ</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/16-atlas.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">The γ atlas: decay measured across 42 models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">El atlas γ: el decaimiento medido en 42 modelos</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/17-sumideros.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Attention sinks and concentration</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Sumideros de atención y concentración</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/18-taxonomia.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">A taxonomy of attention mechanisms</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Taxonomía de mecanismos de atención</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/19-contexto-largo.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Long-context extension</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Extensión de contexto largo</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/20-kv-cache.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">KV-cache compression in practice</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Compresión de KV-cache en práctica</span></span></a>
   </div>
 </li>
       </ul>
@@ -739,8 +800,8 @@ div.csl-indent {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
- <span class="menu-text">Part III — A physicist’s lens on attention</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+ <span class="menu-text">Parte III — Una lente física sobre la atención</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -748,25 +809,25 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/21-fases.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Phase structure and the polylog partition function</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Estructura de fases y la función de partición polilog</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/22-termodinamica.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">The thermodynamic dictionary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">El diccionario termodinámico</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/23-fraccionario.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">The fractional transport view</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">La vista de transporte fraccionario</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/24-grokking.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Training dynamics and <em>grokking</em></span></span></a>
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Dinámica de entrenamiento y <em>grokking</em></span></span></a>
   </div>
 </li>
       </ul>
@@ -774,8 +835,8 @@ div.csl-indent {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
- <span class="menu-text">Part IV — Training, adaptation and fine-tuning</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+ <span class="menu-text">Parte IV — Entrenamiento, adaptación y fine-tuning</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -783,25 +844,25 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/25-preentrenamiento.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Pre-training at scale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Pre-entrenamiento a escala</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/26-finetuning-clasificacion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Fine-tuning for classification and representation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Fine-tuning para clasificación y representación</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/27-alineamiento.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Instruction tuning and alignment</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Instruction tuning y alineamiento</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/28-peft.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Parameter-efficient fine-tuning (PEFT)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Fine-tuning eficiente en parámetros (PEFT)</span></span></a>
   </div>
 </li>
       </ul>
@@ -809,8 +870,8 @@ div.csl-indent {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
- <span class="menu-text">Part V — Using transformers</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+ <span class="menu-text">Parte V — Usar transformers</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -818,31 +879,31 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/29-generacion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Text generation in depth</span></span></a>
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Generación de texto en profundidad</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/30-prompting.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Prompting and in-context learning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Prompting e in-context learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/31-rag.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Embeddings, semantic search and RAG</span></span></a>
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Embeddings, búsqueda semántica y RAG</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/32-agentes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Agents, tools and memory</span></span></a>
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Agentes, herramientas y memoria</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/33-multimodal.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Multimodal transformers</span></span></a>
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Transformers multimodales</span></span></a>
   </div>
 </li>
       </ul>
@@ -850,8 +911,8 @@ div.csl-indent {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
- <span class="menu-text">Part VI — Efficiency, systems and deployment</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+ <span class="menu-text">Parte VI — Eficiencia, sistemas y despliegue</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -859,19 +920,19 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/34-atencion-eficiente.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Efficient attention</span></span></a>
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Atención eficiente</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/35-compresion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Quantization, distillation and pruning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Cuantización, destilación y poda</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/36-serving.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Serving and deployment</span></span></a>
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Servir y desplegar</span></span></a>
   </div>
 </li>
       </ul>
@@ -879,8 +940,8 @@ div.csl-indent {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
- <span class="menu-text">Part VII — Interpretability and what is real</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+ <span class="menu-text">Parte VII — Interpretabilidad y qué es real</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -888,25 +949,31 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/37-interpretabilidad.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">A primer on mechanistic interpretability</span></span></a>
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Primer de interpretabilidad mecanicista</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/38-audit.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Verified, folklore and numerology</span></span></a>
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Verificado, folclore y numerología</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/39-mapa2026.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">The map of the 2026 collapse landscape</span></span></a>
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">El mapa del paisaje de colapso 2026</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/40-etica.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Ethics, safety and limitations</span></span></a>
+  <a href="../chapters/40-evaluacion.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Evaluación: medir sin engañarte</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/41-etica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Ética, seguridad y limitaciones</span></span></a>
   </div>
 </li>
       </ul>
@@ -914,8 +981,8 @@ div.csl-indent {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
- <span class="menu-text">Part VIII — Reference</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Toggle section">
+ <span class="menu-text">Parte VIII — Referencia</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -923,37 +990,37 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R1-formulario.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">R1 · Master formulary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R1 · Formulario maestro</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R2-cookbook.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R3-glosario.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R3 · Glossary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R3 · Glosario</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R4-medir-gamma.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R4 · Measuring your own γ (and reproducing the atlas)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R4 · Medir tu propio γ (y reproducir el atlas)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R9-tafagent.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R9 · tafagent manual</span></span></a>
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R9 · Manual de tafagent</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R10-soluciones.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R10 · Exercise solutions</span></span></a>
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">R10 · Soluciones de los ejercicios</span></span></a>
   </div>
 </li>
       </ul>
@@ -965,28 +1032,30 @@ div.csl-indent {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
+    <h2 id="toc-title">En esta página</h2>
    
   <ul>
-  <li><a href="#the-idea-in-one-sentence" id="toc-the-idea-in-one-sentence" class="nav-link active" data-scroll-target="#the-idea-in-one-sentence"><span class="header-section-number">41.1</span> The idea in one sentence</a></li>
-  <li><a href="#key-concepts-and-their-role-in-the-transformer" id="toc-key-concepts-and-their-role-in-the-transformer" class="nav-link" data-scroll-target="#key-concepts-and-their-role-in-the-transformer"><span class="header-section-number">41.2</span> Key concepts and their role in the transformer</a></li>
-  <li><a href="#bucket-1-harms-from-how-the-models-work" id="toc-bucket-1-harms-from-how-the-models-work" class="nav-link" data-scroll-target="#bucket-1-harms-from-how-the-models-work"><span class="header-section-number">41.3</span> Bucket 1 — Harms from how the models work</a></li>
-  <li><a href="#bucket-2-misuse-and-safety" id="toc-bucket-2-misuse-and-safety" class="nav-link" data-scroll-target="#bucket-2-misuse-and-safety"><span class="header-section-number">41.4</span> Bucket 2 — Misuse and safety</a></li>
-  <li><a href="#bucket-3-deep-alignment-and-unknowns" id="toc-bucket-3-deep-alignment-and-unknowns" class="nav-link" data-scroll-target="#bucket-3-deep-alignment-and-unknowns"><span class="header-section-number">41.5</span> Bucket 3 — Deep alignment and unknowns</a></li>
-  <li><a href="#responsible-use-without-the-sermon" id="toc-responsible-use-without-the-sermon" class="nav-link" data-scroll-target="#responsible-use-without-the-sermon"><span class="header-section-number">41.6</span> Responsible use (without the sermon)</a></li>
-  <li><a href="#what-we-dont-know-the-books-honest-close" id="toc-what-we-dont-know-the-books-honest-close" class="nav-link" data-scroll-target="#what-we-dont-know-the-books-honest-close"><span class="header-section-number">41.7</span> What we DON’T know (the book’s honest close)</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">41.8</span> Summary</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">41.9</span> Exercises</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#la-idea-en-una-frase" id="toc-la-idea-en-una-frase" class="nav-link active" data-scroll-target="#la-idea-en-una-frase"><span class="header-section-number">41.1</span> La idea en una frase</a></li>
+  <li><a href="#conceptos-clave-y-su-papel-en-el-transformer" id="toc-conceptos-clave-y-su-papel-en-el-transformer" class="nav-link" data-scroll-target="#conceptos-clave-y-su-papel-en-el-transformer"><span class="header-section-number">41.2</span> Conceptos clave y su papel en el transformer</a></li>
+  <li><a href="#por-qué-un-capítulo-entero" id="toc-por-qué-un-capítulo-entero" class="nav-link" data-scroll-target="#por-qué-un-capítulo-entero"><span class="header-section-number">41.3</span> Por qué un capítulo entero</a></li>
+  <li><a href="#perplejidad-la-métrica-interna-y-sus-límites" id="toc-perplejidad-la-métrica-interna-y-sus-límites" class="nav-link" data-scroll-target="#perplejidad-la-métrica-interna-y-sus-límites"><span class="header-section-number">41.4</span> Perplejidad: la métrica interna (y sus límites)</a></li>
+  <li><a href="#benchmarks-de-capacidad-poner-una-cifra-a-lo-que-sabe-hacer" id="toc-benchmarks-de-capacidad-poner-una-cifra-a-lo-que-sabe-hacer" class="nav-link" data-scroll-target="#benchmarks-de-capacidad-poner-una-cifra-a-lo-que-sabe-hacer"><span class="header-section-number">41.5</span> Benchmarks de capacidad: poner una cifra a lo que sabe hacer</a></li>
+  <li><a href="#el-espejismo-del-benchmark-la-contaminación" id="toc-el-espejismo-del-benchmark-la-contaminación" class="nav-link" data-scroll-target="#el-espejismo-del-benchmark-la-contaminación"><span class="header-section-number">41.6</span> El espejismo del benchmark: la contaminación</a></li>
+  <li><a href="#el-juez-es-un-llm-y-se-le-puede-engañar" id="toc-el-juez-es-un-llm-y-se-le-puede-engañar" class="nav-link" data-scroll-target="#el-juez-es-un-llm-y-se-le-puede-engañar"><span class="header-section-number">41.7</span> El juez es un LLM (y se le puede engañar)</a></li>
+  <li><a href="#rigor-estadístico-ese-2-es-real" id="toc-rigor-estadístico-ese-2-es-real" class="nav-link" data-scroll-target="#rigor-estadístico-ese-2-es-real"><span class="header-section-number">41.8</span> Rigor estadístico: ¿ese “+2 %” es real?</a></li>
+  <li><a href="#puente-con-nuestro-tema-breve-y-honesto" id="toc-puente-con-nuestro-tema-breve-y-honesto" class="nav-link" data-scroll-target="#puente-con-nuestro-tema-breve-y-honesto"><span class="header-section-number">41.9</span> Puente con nuestro tema (breve y honesto)</a></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">41.10</span> Resumen</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">41.11</span> Ejercicios</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias">Referencias</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/37-interpretabilidad.html">Part VII — Interpretability and what is real</a></li><li class="breadcrumb-item"><a href="../chapters/40-etica.html"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Ethics, safety and limitations</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/37-interpretabilidad.html">Parte VII — Interpretabilidad y qué es real</a></li><li class="breadcrumb-item"><a href="../chapters/40-evaluacion.html"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Evaluación: medir sin engañarte</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-etica" class="quarto-section-identifier"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Ethics, safety and limitations</span></span></h1>
+<h1 class="title"><span id="sec-evaluacion" class="quarto-section-identifier"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Evaluación: medir sin engañarte</span></span></h1>
 </div>
 
 
@@ -1009,187 +1078,234 @@ div.csl-indent {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-body-container">
-<p><strong>Where we are.</strong> This closes Part VII —and the body of the book. There’s no sermon here: there’s a <strong>sober inventory</strong> of what fails and of what we <strong>don’t know</strong>. Models are deployed at scale, but <strong>capability is not safety or reliability</strong>. We’ll look at biases, hallucination, misuse, deep alignment and —true to the book’s spirit (Ch. 38)— the <strong>open questions</strong> that no one has closed.</p>
+<p><strong>Dónde estamos.</strong> Hemos entrenado (Parte IV), usado (Parte V), abaratado (Parte VI) y auditado por dentro (Caps. 37-39) un transformer. Falta la pregunta que decide todo lo demás: <strong>¿cómo sabemos que un modelo es <em>bueno</em>?</strong> Evaluar es tan difícil —y tan fácil de hacer mal— como entrenar. Y encaja aquí, en la Parte VII, porque comparte su espina: <strong>casi todo lo que mides es un <em>proxy</em> imperfecto</strong>, y el mayor peligro no es medir poco, sino <strong>medir mal y creértelo</strong>.</p>
 </div>
 </div>
 </div>
-<section id="the-idea-in-one-sentence" class="level2" data-number="41.1">
-<h2 data-number="41.1" class="anchored" data-anchor-id="the-idea-in-one-sentence"><span class="header-section-number">41.1</span> The idea in one sentence</h2>
-<p>A model can be <strong>highly capable yet unreliable or unsafe</strong>; using it responsibly requires knowing its <strong>failure modes</strong> (this whole book) and being honest about what science <strong>still doesn’t know</strong>.</p>
+<section id="la-idea-en-una-frase" class="level2" data-number="41.1">
+<h2 data-number="41.1" class="anchored" data-anchor-id="la-idea-en-una-frase"><span class="header-section-number">41.1</span> La idea en una frase</h2>
+<p>Evaluar un LLM es estimar su capacidad con <strong>métricas que son proxies</strong> —ninguna la mide directamente—, así que saber evaluar consiste, sobre todo, en <strong>conocer las trampas</strong>: la contaminación de datos, el juez que se deja engañar y la ley de Goodhart.</p>
 </section>
-<section id="key-concepts-and-their-role-in-the-transformer" class="level2" data-number="41.2">
-<h2 data-number="41.2" class="anchored" data-anchor-id="key-concepts-and-their-role-in-the-transformer"><span class="header-section-number">41.2</span> Key concepts and their role in the transformer</h2>
-<p>Before we dig in, let’s define this chapter’s terms and <strong>why each one matters</strong>:</p>
+<section id="conceptos-clave-y-su-papel-en-el-transformer" class="level2" data-number="41.2">
+<h2 data-number="41.2" class="anchored" data-anchor-id="conceptos-clave-y-su-papel-en-el-transformer"><span class="header-section-number">41.2</span> Conceptos clave y su papel en el transformer</h2>
+<p>Antes de entrar en detalle, definimos los términos de este capítulo y <strong>para qué sirve cada uno</strong>:</p>
 <ul>
-<li><strong>Capability ≠ safety.</strong> <em>Definition:</em> a model <strong>knowing how</strong> to do something doesn’t mean it’s <strong>reliable or safe</strong> doing it. <em>In the transformer:</em> it’s the distinction that organizes the whole chapter.</li>
-<li><strong>Bias / representational harm.</strong> <em>Definition:</em> the model <strong>reflects and amplifies</strong> the biases of its data. <em>In the transformer:</em> it comes out of pretraining on uncurated human text.</li>
-<li><strong>Hallucination.</strong> <em>Definition:</em> output that’s <strong>fluent, confident and false</strong> (or unsupported). <em>In the transformer:</em> partly <strong>intrinsic</strong> to predicting the next token over imperfect data.</li>
-<li><strong>Jailbreak.</strong> <em>Definition:</em> a <em>prompt</em> that <strong>bypasses</strong> safety training. <em>In the transformer:</em> it exploits the conflict between “being helpful” and “being safe”.</li>
-<li><strong>Memorization / extraction.</strong> <em>Definition:</em> the model <strong>retains</strong> verbatim chunks of the training data, recoverable. <em>In the transformer:</em> a <strong>privacy</strong> risk; it <strong>gets worse</strong> with scale.</li>
-<li><strong>Sycophancy.</strong> <em>Definition:</em> telling you <strong>what you want to hear</strong> instead of the truth. <em>In the transformer:</em> induced in part by the <strong>preference</strong> data (RLHF, Ch. 27).</li>
-<li><strong>Holistic evaluation.</strong> <em>Definition:</em> measuring beyond <em>accuracy</em> (bias, robustness, toxicity…), with care for benchmark <strong>contamination</strong>. <em>In the transformer:</em> without it, a headline number deceives.</li>
-<li><strong>Open unknowns.</strong> <em>Definition:</em> what we <strong>don’t</strong> know (emergence, superhuman alignment, certifying safety). <em>In the transformer:</em> the honest close of the book.</li>
+<li><strong>Perplejidad.</strong> <em>Definición:</em> <span class="math inline">\(e^{\text{pérdida}}\)</span>; “entre cuántos tokens duda” el modelo (Cap. 11). <em>En el transformer:</em> la métrica <strong>interna</strong> más barata —pero solo comparable con el <strong>mismo tokenizador</strong>, y no mide si el modelo es <em>útil</em>—.</li>
+<li><strong>Benchmark.</strong> <em>Definición:</em> un conjunto fijo de tareas con respuesta conocida. <em>En el transformer:</em> la forma estándar de poner una <strong>cifra</strong> a una capacidad (conocimiento, código, mates, contexto largo).</li>
+<li><strong>LLM-as-judge.</strong> <em>Definición:</em> usar <strong>otro LLM</strong> para puntuar respuestas abiertas. <em>En el transformer:</em> escala la evaluación humana, pero <strong>hereda sesgos</strong> (posición, verbosidad, auto-preferencia).</li>
+<li><strong>Contaminación de datos.</strong> <em>Definición:</em> que el test se <strong>coló</strong> en el entrenamiento. <em>En el transformer:</em> infla la nota <strong>sin</strong> que el modelo sea mejor —la amenaza número uno a la validez—.</li>
+<li><strong>Ley de Goodhart.</strong> <em>Definición:</em> “cuando una medida se vuelve objetivo, deja de ser buena medida”. <em>En el transformer:</em> optimizar <em>para</em> un benchmark <strong>degrada</strong> lo que el benchmark pretendía medir.</li>
+<li><strong>Validez de constructo.</strong> <em>Definición:</em> si la métrica mide de verdad la <strong>capacidad</strong> que dices, o solo un atajo correlacionado. <em>En el transformer:</em> la pregunta de fondo de todo el capítulo.</li>
+<li><strong>Rigor estadístico.</strong> <em>Definición:</em> barras de error, varias semillas, significancia. <em>En el transformer:</em> sin ellas, un “+2 %” puede ser <strong>ruido</strong>.</li>
 </ul>
-<p>We organize it into three buckets: how they fail <strong>by how they work</strong>, <strong>misuse</strong>, and <strong>alignment/unknowns</strong>.</p>
 </section>
-<section id="bucket-1-harms-from-how-the-models-work" class="level2" data-number="41.3">
-<h2 data-number="41.3" class="anchored" data-anchor-id="bucket-1-harms-from-how-the-models-work"><span class="header-section-number">41.3</span> Bucket 1 — Harms from how the models work</h2>
-<p><strong>Bias and representational harm.</strong> The model <strong>reflects</strong> the biases of its data —and can <strong>amplify them</strong>. The foundational critique (“stochastic parrots” <span class="citation" data-cites="bender2021parrots">(<a href="#ref-bender2021parrots" role="doc-biblioref">Bender et al. 2021</a>)</span>) flagged the cost of scale, the bias of the data and the fact that the model manipulates <strong>form</strong> without <strong>meaning</strong>. A useful taxonomy of risks (21 risks across 6 areas <span class="citation" data-cites="weidinger2021risks">(<a href="#ref-weidinger2021risks" role="doc-biblioref"><span class="nocase">Weidinger et al.</span> 2021</a>)</span>) maps the terrain; and concrete <em>benchmarks</em> like <strong>BBQ</strong> <span class="citation" data-cites="parrish2021bbq">(<a href="#ref-parrish2021bbq" role="doc-biblioref"><span class="nocase">Parrish et al.</span> 2022</a>)</span> show the key point: when the context is <strong>uninformative</strong>, models <strong>fall back on stereotypes</strong>. <em>(Caution: a single bias metric “certifies” nothing.)</em></p>
-<div class="analogia">
-<p><strong>🧩 Analogy — the mirror that amplifies.</strong> A model is a <strong>mirror</strong> of its training data: it reflects what’s there —and, generating at scale, it can <strong>enlarge</strong> what it reflects. It doesn’t “invent” the bias; it <strong>inherits and projects</strong> it.</p>
-</div>
-<p><strong>Hallucination.</strong> It’s the <strong>fluent, confident and false</strong> output. The reference <em>survey</em> <span class="citation" data-cites="ji2022hallucination">(<a href="#ref-ji2022hallucination" role="doc-biblioref"><span class="nocase">Ji et al.</span> 2023</a>)</span> distinguishes <strong>intrinsic</strong> (contradicts the source) from <strong>extrinsic</strong> (not verifiable). An honest nuance: models have <strong>some</strong> self-knowledge —the large ones are reasonably <strong>calibrated</strong> at judging whether their answer is correct <span class="citation" data-cites="kadavath2022know">(<a href="#ref-kadavath2022know" role="doc-biblioref"><span class="nocase">Kadavath et al.</span> 2022</a>)</span>— but they <strong>still hallucinate</strong>: calibration is <strong>not</strong> the cure.</p>
-<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Contested — is hallucination inevitable?">
+<section id="por-qué-un-capítulo-entero" class="level2" data-number="41.3">
+<h2 data-number="41.3" class="anchored" data-anchor-id="por-qué-un-capítulo-entero"><span class="header-section-number">41.3</span> Por qué un capítulo entero</h2>
+<p>Ya vimos métricas de <strong>texto</strong> en el Cap. 29 (BLEU, ROUGE, el juez-LLM). Aquí subimos un nivel: evaluar el <strong>modelo entero</strong>. Y lo ponemos en la Parte VII a propósito, porque la evaluación es donde la honestidad del libro se juega de verdad: <strong>una cifra alta no prueba capacidad</strong>. El resto del capítulo es un recorrido por las métricas <em>y</em> por las formas en que cada una te puede engañar.</p>
+</section>
+<section id="perplejidad-la-métrica-interna-y-sus-límites" class="level2" data-number="41.4">
+<h2 data-number="41.4" class="anchored" data-anchor-id="perplejidad-la-métrica-interna-y-sus-límites"><span class="header-section-number">41.4</span> Perplejidad: la métrica interna (y sus límites)</h2>
+<p>La métrica más barata es la que ya tienes del entrenamiento (Cap. 11): la <strong>perplejidad</strong>, <span class="math inline">\(\text{PPL}=e^{\text{pérdida}}\)</span>. Mide la sorpresa media del modelo ante un texto: una PPL de 8 significa que, de media, duda “como entre 8 tokens”. Baja = predice mejor.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="⚠ La trampa de la perplejidad — no se compara entre tokenizadores">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>⚠ Contested — is hallucination inevitable?
+<span class="screen-reader-only">Advertencia</span>⚠ La trampa de la perplejidad — no se compara entre tokenizadores
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>There’s an argument (from learning theory/computability) that hallucination <strong>cannot be fully eliminated</strong> <span class="citation" data-cites="xu2024inevitable">(<a href="#ref-xu2024inevitable" role="doc-biblioref">Xu et al. 2024</a>)</span>. Present it as <strong>argued, not settled</strong>: it depends on a formal/worst-case definition and <strong>doesn’t bound</strong> the practical rate on real data. The defensible stance: hallucination is <strong>partly intrinsic</strong> to predicting the next token over imperfect data, and <strong>there’s no known way</strong> to eliminate it completely —RAG (Ch. 31) <strong>reduces</strong> it, doesn’t erase it.</p>
+<p>La PPL depende de <strong>cómo troceas</strong> el texto: un modelo con vocabulario grande parte el texto en menos tokens y sale con una PPL que <strong>no</strong> es comparable a la de otro modelo. Por eso, para comparar de verdad, se usa <strong>bits-per-byte</strong> (bpb), que normaliza por bytes de texto, no por tokens. Y aun así: <strong>una PPL baja no dice que el modelo sea útil</strong> —solo que predice bien el siguiente token—.</p>
 </div>
 </div>
-<div class="analogia">
-<p><strong>🧩 Analogy — the student who never says “I don’t know”.</strong> Hallucinating is like a <strong>self-assured</strong> student who <strong>never</strong> admits ignorance and <strong>improvises smoothly</strong>: they’re graded on how good it sounds, not on whether it’s right.</p>
-</div>
-<p><strong>Memorization and privacy.</strong> Models <strong>retain</strong> verbatim chunks of the training data, and these can be <strong>extracted</strong> by querying them (including personal information <span class="citation" data-cites="carlini2021extracting">(<a href="#ref-carlini2021extracting" role="doc-biblioref"><span class="nocase">Carlini et al.</span> 2021</a>)</span>). And it gets worse with scale: memorization grows <strong>log-linearly</strong> with size, data duplication and context length <span class="citation" data-cites="carlini2022memorization">(<a href="#ref-carlini2022memorization" role="doc-biblioref"><span class="nocase">Carlini et al.</span> 2023</a>)</span>.</p>
 </section>
-<section id="bucket-2-misuse-and-safety" class="level2" data-number="41.4">
-<h2 data-number="41.4" class="anchored" data-anchor-id="bucket-2-misuse-and-safety"><span class="header-section-number">41.4</span> Bucket 2 — Misuse and safety</h2>
-<p><strong>Jailbreaks.</strong> Safety training <strong>can be bypassed</strong>. The reference analysis <span class="citation" data-cites="wei2023jailbroken">(<a href="#ref-wei2023jailbroken" role="doc-biblioref">Wei et al. 2023</a>)</span> identifies two failures: <strong>competing objectives</strong> (being helpful clashes with being safe) and <strong>mismatched generalization</strong> (capabilities reach domains that safety didn’t cover). Worse: there are <strong>universal adversarial suffixes</strong>, generated automatically, that <strong>transfer</strong> across open and commercial models <span class="citation" data-cites="zou2023adversarial">(<a href="#ref-zou2023adversarial" role="doc-biblioref">Zou et al. 2023</a>)</span> → the “guardrails” aren’t robust to optimization attacks.</p>
-<div class="analogia">
-<p><strong>🧩 Analogy — social-engineering the guard.</strong> A <em>jailbreak</em> is <strong>convincing the model to skip its own rules</strong>, like someone talking to a guard until they stop following protocol. It doesn’t break the wall: it <strong>fools the gatekeeper</strong>.</p>
+<section id="benchmarks-de-capacidad-poner-una-cifra-a-lo-que-sabe-hacer" class="level2" data-number="41.5">
+<h2 data-number="41.5" class="anchored" data-anchor-id="benchmarks-de-capacidad-poner-una-cifra-a-lo-que-sabe-hacer"><span class="header-section-number">41.5</span> Benchmarks de capacidad: poner una cifra a lo que sabe hacer</h2>
+<p>Para medir <em>capacidades</em> concretas se usan <strong>benchmarks</strong>: baterías de tareas con respuesta conocida. Los grandes ejes de 2024-2026:</p>
+<div id="tbl-benchmarks" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-benchmarks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;41.1: Benchmarks por capacidad (2024-2026)
+</figcaption>
+<div aria-describedby="tbl-benchmarks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Capacidad</th>
+<th>Benchmarks de referencia</th>
+<th>Qué miden</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Conocimiento / razonamiento</td>
+<td><strong>MMLU</strong> <span class="citation" data-cites="hendrycks2021mmlu">(<a href="#ref-hendrycks2021mmlu" role="doc-biblioref">Hendrycks et&nbsp;al. 2021</a>)</span>, MMLU-Pro, <strong>GPQA</strong>, BBH</td>
+<td>preguntas de examen en 57 materias; GPQA, de nivel doctorado</td>
+</tr>
+<tr class="even">
+<td>Código</td>
+<td><strong>HumanEval</strong> <span class="citation" data-cites="chen2021humaneval">(<a href="#ref-chen2021humaneval" role="doc-biblioref"><span class="nocase">Chen et&nbsp;al.</span> 2021</a>)</span>, MBPP, <strong>SWE-bench</strong> <span class="citation" data-cites="jimenez2024swebench">(<a href="#ref-jimenez2024swebench" role="doc-biblioref">Jimenez et&nbsp;al. 2024</a>)</span></td>
+<td>escribir funciones que pasan tests; SWE-bench, resolver <em>issues</em> reales de GitHub</td>
+</tr>
+<tr class="odd">
+<td>Matemáticas</td>
+<td><strong>GSM8K</strong> <span class="citation" data-cites="cobbe2021gsm8k">(<a href="#ref-cobbe2021gsm8k" role="doc-biblioref"><span class="nocase">Cobbe et&nbsp;al.</span> 2021</a>)</span>, MATH, AIME</td>
+<td>problemas de palabras (GSM8K) y competición (MATH/AIME)</td>
+</tr>
+<tr class="even">
+<td>Contexto largo</td>
+<td><strong>NIAH</strong> (needle-in-a-haystack), <strong>RULER</strong> <span class="citation" data-cites="hsieh2024ruler">(<a href="#ref-hsieh2024ruler" role="doc-biblioref"><span class="nocase">Hsieh et&nbsp;al.</span> 2024</a>)</span></td>
+<td>encontrar/usar información escondida en un contexto enorme</td>
+</tr>
+<tr class="odd">
+<td>Chat / preferencia</td>
+<td><strong>Chatbot Arena</strong> (Elo), MT-Bench</td>
+<td>qué respuesta prefieren los humanos, cara a cara</td>
+</tr>
+</tbody>
+</table>
 </div>
-<p><strong>Prompt injection</strong> (Chs. 30, 32 <span class="citation" data-cites="greshake2023injection">(<a href="#ref-greshake2023injection" role="doc-biblioref">Greshake et al. 2023</a>)</span>): hostile instructions <strong>hidden in data</strong> that the model later retrieves —and which <strong>gets worse</strong> when the model can <strong>act</strong> (agents). <strong>Disinformation at scale</strong> and other malicious uses fall into the taxonomy’s categories; sobriety is warranted: empirical evidence of real-world impact (e.g.&nbsp;persuasion) <strong>is still scarce</strong>.</p>
-</section>
-<section id="bucket-3-deep-alignment-and-unknowns" class="level2" data-number="41.5">
-<h2 data-number="41.5" class="anchored" data-anchor-id="bucket-3-deep-alignment-and-unknowns"><span class="header-section-number">41.5</span> Bucket 3 — Deep alignment and unknowns</h2>
-<ul>
-<li><strong>Reward hacking / specification gaming</strong> (Ch. 27): the model optimizes the <strong>measure</strong>, not the intent.</li>
-<li><strong>Sycophancy</strong> <span class="citation" data-cites="sharma2023sycophancy">(<a href="#ref-sharma2023sycophancy" role="doc-biblioref"><span class="nocase">Sharma et al.</span> 2023</a>)</span>: it prefers to <strong>agree with your beliefs</strong> over telling the truth —induced in part by the preference data.</li>
-<li><strong>Deceptive behavior (“sleeper agents”).</strong> A result to present <strong>with its exact scope</strong> <span class="citation" data-cites="hubinger2024sleeper">(<a href="#ref-hubinger2024sleeper" role="doc-biblioref"><span class="nocase">Hubinger et al.</span> 2024</a>)</span>: models <strong>deliberately trained</strong> with a backdoor (safe code if “2023”, exploitable if “2024”) <strong>retained</strong> the behavior through SFT, RLHF and adversarial training —and sometimes the latter <strong>taught them to hide</strong> the trigger better.</li>
-</ul>
-<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Scope — what the sleeper agents result does (and does NOT) prove">
+</figure>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="🆕 2025-26 — los benchmarks se saturan (y sus sucesores duros)">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>⚠ Scope — what the sleeper agents result does (and does NOT) prove
+<span class="screen-reader-only">Nota</span>🆕 2025-26 — los benchmarks se saturan (y sus sucesores duros)
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>It proves that a <strong>deliberately inserted</strong> backdoor can <strong>persist</strong> despite safety training, and that adversarial training can teach it to <strong>hide</strong>. It does <strong>NOT</strong> prove that models develop deception <strong>on their own</strong> in normal training. Keep that boundary sharp.</p>
+<p>Los benchmarks tienen <strong>fecha de caducidad</strong>: MMLU, durísimo en 2020, hoy lo superan los modelos frontera por encima del <strong>92 %</strong> —techo—. La respuesta de la comunidad son sucesores <strong>mucho más difíciles</strong>: <strong>ARC-AGI-2</strong> <span class="citation" data-cites="arcagi2_2025">(<a href="#ref-arcagi2_2025" role="doc-biblioref">Chollet et&nbsp;al. 2025</a>)</span> (razonamiento abstracto fluido, con <em>baseline</em> humano), <strong>Humanity’s Last Exam</strong> <span class="citation" data-cites="phan2025hle">(<a href="#ref-phan2025hle" role="doc-biblioref"><span class="nocase">Phan et&nbsp;al.</span> 2025</a>)</span> (preguntas de nivel experto, creado <em>precisamente porque</em> MMLU se quedó fácil) y <strong>FrontierMath</strong> <span class="citation" data-cites="glazer2024frontiermath">(<a href="#ref-glazer2024frontiermath" role="doc-biblioref"><span class="nocase">Glazer et&nbsp;al.</span> 2024</a>)</span> (matemáticas de investigación, donde los mejores modelos resuelven <strong>&lt;2 %</strong>). La lección: un benchmark saturado ya <strong>no distingue</strong> modelos —hay que subir el listón—.</p>
 </div>
 </div>
-<ul>
-<li><strong>Evaluation is hard.</strong> <strong>Holistic</strong> evaluation <span class="citation" data-cites="liang2022helm">(<a href="#ref-liang2022helm" role="doc-biblioref"><span class="nocase">Liang et al.</span> 2023</a>)</span> measures beyond <em>accuracy</em> (robustness, bias, toxicity…). And <strong>benchmark contamination</strong> lurks (test data that leaks into training and <strong>inflates</strong> the figures) → distrust the headline numbers.</li>
-</ul>
-</section>
-<section id="responsible-use-without-the-sermon" class="level2" data-number="41.6">
-<h2 data-number="41.6" class="anchored" data-anchor-id="responsible-use-without-the-sermon"><span class="header-section-number">41.6</span> Responsible use (without the sermon)</h2>
-<p>In practice: <strong>human oversight</strong> on consequential decisions; know the documented <strong>failure modes</strong> (the rest of the book <strong>is</strong> your threat model); <strong>never treat fluency as correctness</strong>; <strong>anchor and verify</strong> with retrieval and citations (Ch. 31) —remembering that retrieval itself has failures and injection (Bucket 2); do <strong>red-teaming</strong> and <strong>evals</strong> before deploying (HELM-style, with contamination control); and treat the “guardrails” as <strong>friction, not containment</strong> —jailbreaks show that safety training is <strong>bypassable</strong>, not a guarantee.</p>
-</section>
-<section id="what-we-dont-know-the-books-honest-close" class="level2" data-number="41.7">
-<h2 data-number="41.7" class="anchored" data-anchor-id="what-we-dont-know-the-books-honest-close"><span class="header-section-number">41.7</span> What we DON’T know (the book’s honest close)</h2>
-<p>And here, true to Ch. 38, we close by naming the <strong>open questions</strong> instead of pretending we’ve closed them:</p>
-<ul>
-<li><strong>There’s no agreed theory of why scale works</strong> nor of <strong>when</strong> capabilities emerge: the scaling laws fit the <strong>loss</strong>, not the <strong>onset</strong> of a capability (or of a risk).</li>
-<li><strong>We can’t predict or bound emergent behaviors</strong> before they appear.</li>
-<li><strong>Interpretability still can’t certify</strong> a deployed model (Chs. 37-38).</li>
-<li><strong>The alignment of highly capable / superhuman systems is unsolved.</strong></li>
-<li><strong>Even “what the model knows” isn’t sharp:</strong> there’s partial calibration, not a clear knowledge boundary.</li>
-</ul>
 <div class="analogia">
-<p><strong>🧩 Analogy — the engine we still can’t open.</strong> We’ve built an <strong>engine that works</strong> but that we <strong>still can’t fully open</strong> to inspect. Using it well starts with <strong>admitting</strong> that —not with pretending the hood is transparent.</p>
+<p><strong>🧩 Analogía — el examen y el alumno.</strong> Un benchmark es un <strong>examen</strong>; la nota es un proxy de lo que el alumno <em>sabe</em>. Un examen bien hecho correlaciona con el saber real… hasta que el alumno <strong>consigue el examen por adelantado</strong> (contaminación) o <strong>estudia solo para ese examen</strong> (Goodhart). Entonces la nota sube y el saber no.</p>
 </div>
-<div class="callout callout-style-default callout-note callout-titled" title="🧪 Try it — tafagent">
+</section>
+<section id="el-espejismo-del-benchmark-la-contaminación" class="level2" data-number="41.6">
+<h2 data-number="41.6" class="anchored" data-anchor-id="el-espejismo-del-benchmark-la-contaminación"><span class="header-section-number">41.6</span> El espejismo del benchmark: la contaminación</h2>
+<p>Aquí está la amenaza número uno, y la razón por la que este capítulo vive en la Parte VII. <strong>Contaminación</strong> es que las preguntas del test <strong>aparecieron en el entrenamiento</strong> (los datos web son enormes y los benchmarks están <em>en</em> la web). El modelo entonces <strong>recuerda</strong> la respuesta en vez de razonarla: la nota sube, la capacidad real no se mueve.</p>
+<p>Muévelo tú mismo. Sube el dial de contaminación y mira cómo la <strong>nota</strong> se dispara mientras la <strong>capacidad real</strong> se queda plana —el hueco es puro <strong>espejismo</strong>—:</p>
+<div class="fg-mirage"></div>
+<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Verificado — la contaminación es real y medible">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>🧪 Try it — tafagent
+<span class="screen-reader-only">Advertencia</span>⚠ Verificado — la contaminación es real y medible
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This chapter’s lesson —<strong>don’t mistake fluency for correctness; measure</strong>— is the philosophy of <a href="https://karlesmarin.github.io/tafagent/">tafagent</a>: against “by eye” claims about a model, it gives you a <strong>measured diagnostic</strong> (γ, regime, KV budget) and a <strong>falsification panel</strong> (Ch. 38). It doesn’t solve ethics or safety —no tool does— but it embodies the right habit: <strong>check, don’t believe</strong>.</p>
+<p>No es un temor abstracto: hay métodos que <strong>detectan</strong> contaminación (p.&nbsp;ej. viendo si el modelo completa un test palabra por palabra, o comparando rendimiento antes/después de la fecha de corte <span class="citation" data-cites="golchin2023contamination">(<a href="#ref-golchin2023contamination" role="doc-biblioref">Golchin y Surdeanu 2024</a>)</span>). Ejemplo concreto: la <strong>auditoría de OpenAI sobre SWE-bench</strong> <span class="citation" data-cites="openai2026swebench">(<a href="#ref-openai2026swebench" role="doc-biblioref">OpenAI 2026</a>)</span> encontró que ~<strong>59 %</strong> de las tareas revisadas tenían tests defectuosos o indicios de contaminación —tanto, que <strong>dejaron de reportar</strong> esa métrica—. La regla honesta: <strong>una nota alta en un benchmark público, sin control de contaminación, no prueba nada</strong>. Los benchmarks serios se renuevan (nuevas versiones, conjuntos privados) precisamente por esto.</p>
 </div>
 </div>
+<p>Y su primo cercano, la <strong>ley de Goodhart</strong>: en cuanto un benchmark se vuelve <em>el objetivo</em> (lo que decide titulares y financiación), los equipos optimizan <em>para él</em> —y deja de medir lo que medía—. Por eso ningún número aislado basta.</p>
 </section>
-<section id="summary" class="level2" data-number="41.8">
-<h2 data-number="41.8" class="anchored" data-anchor-id="summary"><span class="header-section-number">41.8</span> Summary</h2>
+<section id="el-juez-es-un-llm-y-se-le-puede-engañar" class="level2" data-number="41.7">
+<h2 data-number="41.7" class="anchored" data-anchor-id="el-juez-es-un-llm-y-se-le-puede-engañar"><span class="header-section-number">41.7</span> El juez es un LLM (y se le puede engañar)</h2>
+<p>Para respuestas <strong>abiertas</strong> (un ensayo, una respuesta de chat) no hay solución correcta única, así que se usa <strong>otro LLM como juez</strong> —o el voto humano cara a cara del <strong>Chatbot Arena</strong> (ranking Elo)—. Es potente y escala, pero el juez tiene <strong>sesgos</strong> que conviene conocer:</p>
 <ul>
-<li><strong>Capability ≠ safety/reliability.</strong> Three buckets: by <strong>how they work</strong> (bias, hallucination, memorization), <strong>misuse</strong> (jailbreaks, injection, extraction) and <strong>alignment/unknowns</strong>.</li>
-<li><strong>Bias:</strong> the model is an <strong>amplifying mirror</strong> of its data (<span class="citation" data-cites="bender2021parrots">(<a href="#ref-bender2021parrots" role="doc-biblioref">Bender et al. 2021</a>)</span>; taxonomy <span class="citation" data-cites="weidinger2021risks">(<a href="#ref-weidinger2021risks" role="doc-biblioref"><span class="nocase">Weidinger et al.</span> 2021</a>)</span>; BBQ <span class="citation" data-cites="parrish2021bbq">(<a href="#ref-parrish2021bbq" role="doc-biblioref"><span class="nocase">Parrish et al.</span> 2022</a>)</span>).</li>
-<li><strong>Hallucination:</strong> fluent-confident-false; <strong>partial</strong> calibration <span class="citation" data-cites="kadavath2022know">(<a href="#ref-kadavath2022know" role="doc-biblioref"><span class="nocase">Kadavath et al.</span> 2022</a>)</span> but it persists; <strong>inevitable?</strong> argued, not settled <span class="citation" data-cites="xu2024inevitable">(<a href="#ref-xu2024inevitable" role="doc-biblioref">Xu et al. 2024</a>)</span>; RAG <strong>reduces</strong>, doesn’t erase.</li>
-<li><strong>Misuse:</strong> <strong>jailbreaks</strong> (competing objectives + mismatched generalization <span class="citation" data-cites="wei2023jailbroken">(<a href="#ref-wei2023jailbroken" role="doc-biblioref">Wei et al. 2023</a>)</span>), <strong>transferable suffixes</strong> <span class="citation" data-cites="zou2023adversarial">(<a href="#ref-zou2023adversarial" role="doc-biblioref">Zou et al. 2023</a>)</span>, <strong>injection</strong> <span class="citation" data-cites="greshake2023injection">(<a href="#ref-greshake2023injection" role="doc-biblioref">Greshake et al. 2023</a>)</span>, <strong>extraction/memorization</strong> (worse at scale <span class="citation" data-cites="carlini2022memorization">(<a href="#ref-carlini2022memorization" role="doc-biblioref"><span class="nocase">Carlini et al.</span> 2023</a>)</span>).</li>
-<li><strong>Deep:</strong> sycophancy <span class="citation" data-cites="sharma2023sycophancy">(<a href="#ref-sharma2023sycophancy" role="doc-biblioref"><span class="nocase">Sharma et al.</span> 2023</a>)</span>, <strong>sleeper agents</strong> (an <strong>inserted</strong> backdoor that persists — not spontaneous deception <span class="citation" data-cites="hubinger2024sleeper">(<a href="#ref-hubinger2024sleeper" role="doc-biblioref"><span class="nocase">Hubinger et al.</span> 2024</a>)</span>); evaluation is hard + <strong>contamination</strong> <span class="citation" data-cites="liang2022helm">(<a href="#ref-liang2022helm" role="doc-biblioref"><span class="nocase">Liang et al.</span> 2023</a>)</span>.</li>
-<li><strong>Responsible use:</strong> oversight, don’t mistake fluency for truth, verify, red-team; the guardrails are <strong>friction, not containment</strong>.</li>
-<li><strong>We don’t know:</strong> why/when capabilities emerge, bounding the emergent, certifying safety, aligning the superhuman, the boundary of the model’s knowledge.</li>
+<li><strong>Sesgo de posición:</strong> tiende a preferir la <strong>primera</strong> (o la segunda) respuesta por su orden. Se corrige promediando ambos órdenes.</li>
+<li><strong>Sesgo de verbosidad:</strong> premia la respuesta <strong>más larga</strong>, aunque no sea mejor.</li>
+<li><strong>Auto-preferencia:</strong> un juez tiende a puntuar más alto el estilo de <strong>su propia familia</strong> de modelos.</li>
+<li><strong>Adulación (<em>sycophancy</em>)</strong> <span class="citation" data-cites="sharma2023sycophancy">(<a href="#ref-sharma2023sycophancy" role="doc-biblioref"><span class="nocase">Sharma et&nbsp;al.</span> 2023</a>)</span>: los modelos tienden a <strong>darte la razón</strong>; un juez puede premiar la respuesta que <em>suena</em> segura y agradable sobre la correcta.</li>
 </ul>
-<p><strong>Closing the body of the book.</strong> We’ve gone from the token (Ch. 2) to the 2026 frontier (Ch. 39) and to its ethical limits (this one). What remains —<strong>Part VIII</strong>— is the <strong>reference apparatus</strong> (the master table of formulas with their receipts, the <em>cookbook</em>, the glossary, the tafagent manual) and the orientation <strong>Part 0</strong>, which we wrote last. Honesty wasn’t an ornament: it was the method.</p>
+<div class="analogia">
+<p><strong>🧩 Analogía — el tribunal cansado.</strong> Un juez-LLM es como un tribunal que, sin querer, puntúa mejor al que habla <strong>primero</strong>, al que se <strong>extiende</strong> más y al que <strong>se le parece</strong>. Útil para mucho volumen, pero hay que <strong>controlar</strong> esos sesgos, no fiarse a ciegas.</p>
+</div>
 </section>
-<section id="exercises" class="level2" data-number="41.9">
-<h2 data-number="41.9" class="anchored" data-anchor-id="exercises"><span class="header-section-number">41.9</span> Exercises</h2>
+<section id="rigor-estadístico-ese-2-es-real" class="level2" data-number="41.8">
+<h2 data-number="41.8" class="anchored" data-anchor-id="rigor-estadístico-ese-2-es-real"><span class="header-section-number">41.8</span> Rigor estadístico: ¿ese “+2 %” es real?</h2>
+<p>Un último engaño, más silencioso: <strong>casi ningún</strong> número de modelo viene con <strong>barra de error</strong>. Pero cambiar la semilla, el orden de los ejemplos <em>few-shot</em> o la plantilla de prompt mueve la nota varios puntos. Un “+2 % en MMLU” <strong>sin</strong> intervalo de confianza puede ser puro <strong>ruido</strong>. Lo honesto: reportar varias <strong>semillas</strong>, <strong>barras de error</strong> y significancia antes de cantar victoria.</p>
+</section>
+<section id="puente-con-nuestro-tema-breve-y-honesto" class="level2" data-number="41.9">
+<h2 data-number="41.9" class="anchored" data-anchor-id="puente-con-nuestro-tema-breve-y-honesto"><span class="header-section-number">41.9</span> Puente con nuestro tema (breve y honesto)</h2>
+<p>Aquí la evaluación toca directamente el libro. Nuestra afirmación de ingeniería estrella —la ventana <strong>D_f</strong> derivada de γ (Cap. 20)— <strong>está sin validar</strong> (el intento <em>avenue-2</em> crasheó por falta de memoria, Cap. 19). El lugar donde <em>dejaría</em> de ser una hipótesis es exactamente este: un benchmark de <strong>contexto largo</strong> (<strong>NIAH / RULER</strong> <span class="citation" data-cites="hsieh2024ruler">(<a href="#ref-hsieh2024ruler" role="doc-biblioref"><span class="nocase">Hsieh et&nbsp;al.</span> 2024</a>)</span>) comparando la retención de KV con D_f frente a las heurísticas del campo (Ada-KV, LAVa). Dicho con todas las letras: <strong>la evaluación es la casa donde nuestra propia tesis se pone a prueba</strong> —no es solo un tema más—.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="🧪 Pruébalo — tafagent">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>🧪 Pruébalo — tafagent
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><a href="https://karlesmarin.github.io/tafagent/">tafagent</a> trae dos diagnósticos de evaluación que atacan justo las trampas de este capítulo: el <strong>Contamination Prior</strong> (estima el riesgo de que un modelo haya visto un benchmark) y <strong>LongScore</strong> (mide contexto largo real con <strong>RULER</strong>, no la longitud <em>anunciada</em>). Antes de creerte una tabla de resultados, pásala por aquí.</p>
+<p><a href="https://karlesmarin.github.io/tafagent/?demo=niah" class="fg-cta" target="_blank" rel="noopener">▶ Ver la demo en tafagent</a></p>
+</div>
+</div>
+</section>
+<section id="resumen" class="level2" data-number="41.10">
+<h2 data-number="41.10" class="anchored" data-anchor-id="resumen"><span class="header-section-number">41.10</span> Resumen</h2>
+<ul>
+<li><strong>Evaluar = medir con proxies imperfectos.</strong> Ninguna métrica mide la capacidad directamente; saber evaluar es <strong>conocer las trampas</strong>.</li>
+<li><strong>Perplejidad</strong> (<span class="math inline">\(e^{\text{pérdida}}\)</span>): barata e interna, pero <strong>no comparable</strong> entre tokenizadores (usa <strong>bits-per-byte</strong>) y no dice si el modelo es <em>útil</em>.</li>
+<li><strong>Benchmarks por capacidad:</strong> conocimiento (<strong>MMLU/GPQA</strong>), código (<strong>HumanEval/SWE-bench</strong>), mates (<strong>GSM8K/MATH</strong>), contexto largo (<strong>NIAH/RULER</strong>), chat (<strong>Arena/Elo</strong>).</li>
+<li><strong>Contaminación:</strong> el test se coló en el entrenamiento → la nota sube, la capacidad no (<strong>espejismo</strong>). Con la <strong>ley de Goodhart</strong>: optimizar <em>para</em> un benchmark lo estropea.</li>
+<li><strong>LLM-as-judge:</strong> escala, pero con sesgos de <strong>posición, verbosidad, auto-preferencia</strong> y <strong>adulación</strong> —contrólalos—.</li>
+<li><strong>Rigor:</strong> sin <strong>barras de error</strong> y varias semillas, un “+2 %” puede ser <strong>ruido</strong>.</li>
+<li><strong>Puente:</strong> la evaluación de contexto largo (RULER/NIAH) es donde <strong>nuestra</strong> ventana D_f debe validarse —aún pendiente—.</li>
+</ul>
+<p><strong>Siguiente (Capítulo 41):</strong> cerramos el libro con lo que ninguna métrica captura del todo —<strong>ética, seguridad y limitaciones</strong>—: sesgos, alucinación, uso responsable y, sobre todo, lo que <strong>aún no sabemos</strong>.</p>
+</section>
+<section id="ejercicios" class="level2" data-number="41.11">
+<h2 data-number="41.11" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">41.11</span> Ejercicios</h2>
 <ol type="1">
-<li><strong>Capability ≠ safety.</strong> Give an example of a <strong>capable</strong> model that’s <strong>unreliable</strong> or <strong>unsafe</strong>, and explain why they’re not the same thing.</li>
-<li><strong>Hallucination.</strong> Why doesn’t <strong>partial calibration</strong> solve hallucination? Why is it “partly intrinsic”?</li>
-<li><strong>Jailbreak.</strong> Explain the two failure modes (competing objectives / mismatched generalization). Why isn’t a “guardrail” a containment?</li>
-<li><strong>Sleeper agents.</strong> What exactly does the result prove, and what does it <strong>not</strong> prove?</li>
-<li><strong>Evaluation.</strong> What is benchmark contamination and why would it make you distrust a headline number?</li>
-<li><strong>Final honesty.</strong> Cite two things the field <strong>doesn’t know</strong> and explain why they matter for using these models responsibly.</li>
+<li><strong>Perplejidad.</strong> ¿Por qué dos modelos con <strong>distinto tokenizador</strong> no se pueden comparar por perplejidad? ¿Qué métrica lo arregla y por qué?</li>
+<li><strong>El espejismo.</strong> Explica, con el widget de este capítulo, por qué una <strong>nota alta</strong> en un benchmark público <strong>no</strong> prueba capacidad. ¿Qué es la contaminación?</li>
+<li><strong>Goodhart.</strong> Da un ejemplo de cómo optimizar <em>para</em> un benchmark podría <strong>empeorar</strong> el modelo en la capacidad que el benchmark pretendía medir.</li>
+<li><strong>El juez.</strong> Nombra tres sesgos del <strong>LLM-as-judge</strong> y cómo se mitiga cada uno.</li>
+<li><strong>Rigor.</strong> Un paper reporta “+1,5 % en MMLU” sin barras de error. ¿Qué le preguntas antes de creerlo?</li>
+<li><strong>Contexto largo.</strong> ¿Por qué <strong>RULER/NIAH</strong> es el sitio natural para validar (o refutar) nuestra ventana D_f del Cap. 20?</li>
 </ol>
 </section>
-<section id="references" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="references">References</h2>
+<section id="referencias" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="referencias">Referencias</h2>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-bender2021parrots" class="csl-entry" role="listitem">
-Bender, Emily M., Timnit Gebru, Angelina McMillan-Major, and Shmargaret Shmitchell. 2021. <span>“On the Dangers of Stochastic Parrots: Can Language Models Be Too Big?”</span> <em>FAccT</em>. <a href="https://doi.org/10.1145/3442188.3445922">https://doi.org/10.1145/3442188.3445922</a>.
+<div id="ref-chen2021humaneval" class="csl-entry" role="listitem">
+<span class="nocase">Chen, Mark, Jerry Tworek, Heewoo Jun, Qiming Yuan, et&nbsp;al.</span> 2021. <span>«Evaluating Large Language Models Trained on Code»</span>. <em>arXiv preprint arXiv:2107.03374</em>. <a href="https://arxiv.org/abs/2107.03374">https://arxiv.org/abs/2107.03374</a>.
 </div>
-<div id="ref-carlini2021extracting" class="csl-entry" role="listitem">
-<span class="nocase">Carlini, Nicholas et al.</span> 2021. <span>“Extracting Training Data from Large Language Models.”</span> <em>USENIX Security</em>. <a href="https://arxiv.org/abs/2012.07805">https://arxiv.org/abs/2012.07805</a>.
+<div id="ref-arcagi2_2025" class="csl-entry" role="listitem">
+Chollet, Francois, Mike Knoop, Gregory Kamradt, Bryan Landers, y Henry Pinkard. 2025. <em><span>ARC-AGI-2: A New Challenge for Frontier AI Reasoning Systems</span></em>. <a href="https://arxiv.org/abs/2505.11831">https://arxiv.org/abs/2505.11831</a>.
 </div>
-<div id="ref-carlini2022memorization" class="csl-entry" role="listitem">
-<span class="nocase">Carlini, Nicholas, Daphne Ippolito, Matthew Jagielski, et al.</span> 2023. <span>“Quantifying Memorization Across Neural Language Models.”</span> <em>ICLR</em>. <a href="https://arxiv.org/abs/2202.07646">https://arxiv.org/abs/2202.07646</a>.
+<div id="ref-cobbe2021gsm8k" class="csl-entry" role="listitem">
+<span class="nocase">Cobbe, Karl, Vineet Kosaraju, Mohammad Bavarian, Mark Chen, et&nbsp;al.</span> 2021. <span>«Training Verifiers to Solve Math Word Problems»</span>. <em>arXiv preprint arXiv:2110.14168</em>. <a href="https://arxiv.org/abs/2110.14168">https://arxiv.org/abs/2110.14168</a>.
 </div>
-<div id="ref-greshake2023injection" class="csl-entry" role="listitem">
-Greshake, Kai, Sahar Abdelnabi, Shailesh Mishra, Christoph Endres, Thorsten Holz, and Mario Fritz. 2023. <em>Not What You’ve Signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection</em>. <a href="https://arxiv.org/abs/2302.12173">https://arxiv.org/abs/2302.12173</a>.
+<div id="ref-glazer2024frontiermath" class="csl-entry" role="listitem">
+<span class="nocase">Glazer, Elliot, Ege Erdil, Tamay Besiroglu, Diego Chicharro, Evan Chen, et&nbsp;al.</span> 2024. <em><span>FrontierMath: A Benchmark for Evaluating Advanced Mathematical Reasoning in AI</span></em>. <a href="https://arxiv.org/abs/2411.04872">https://arxiv.org/abs/2411.04872</a>.
 </div>
-<div id="ref-hubinger2024sleeper" class="csl-entry" role="listitem">
-<span class="nocase">Hubinger, Evan et al.</span> 2024. <em>Sleeper Agents: Training Deceptive LLMs That Persist Through Safety Training</em>. <a href="https://arxiv.org/abs/2401.05566">https://arxiv.org/abs/2401.05566</a>.
+<div id="ref-golchin2023contamination" class="csl-entry" role="listitem">
+Golchin, Shahriar, y Mihai Surdeanu. 2024. <span>«Time Travel in LLMs: Tracing Data Contamination in Large Language Models»</span>. <em>International Conference on Learning Representations (ICLR)</em>. <a href="https://arxiv.org/abs/2308.08493">https://arxiv.org/abs/2308.08493</a>.
 </div>
-<div id="ref-ji2022hallucination" class="csl-entry" role="listitem">
-<span class="nocase">Ji, Ziwei et al.</span> 2023. <span>“Survey of Hallucination in Natural Language Generation.”</span> <em>ACM Computing Surveys</em>. <a href="https://arxiv.org/abs/2202.03629">https://arxiv.org/abs/2202.03629</a>.
+<div id="ref-hendrycks2021mmlu" class="csl-entry" role="listitem">
+Hendrycks, Dan, Collin Burns, Steven Basart, et&nbsp;al. 2021. <span>«Measuring Massive Multitask Language Understanding»</span>. <em>International Conference on Learning Representations (ICLR)</em>. <a href="https://arxiv.org/abs/2009.03300">https://arxiv.org/abs/2009.03300</a>.
 </div>
-<div id="ref-kadavath2022know" class="csl-entry" role="listitem">
-<span class="nocase">Kadavath, Saurav et al.</span> 2022. <em>Language Models (Mostly) Know What They Know</em>. <a href="https://arxiv.org/abs/2207.05221">https://arxiv.org/abs/2207.05221</a>.
+<div id="ref-hsieh2024ruler" class="csl-entry" role="listitem">
+<span class="nocase">Hsieh, Cheng-Ping, Simeng Sun, Samuel Kriman, Shantanu Acharya, et&nbsp;al.</span> 2024. <span>«RULER: Whats the Real Context Size of Your Long-Context Language Models?»</span> <em>First Conference on Language Modeling (COLM)</em>. <a href="https://arxiv.org/abs/2404.06654">https://arxiv.org/abs/2404.06654</a>.
 </div>
-<div id="ref-liang2022helm" class="csl-entry" role="listitem">
-<span class="nocase">Liang, Percy et al.</span> 2023. <span>“Holistic Evaluation of Language Models.”</span> <em>TMLR</em>. <a href="https://arxiv.org/abs/2211.09110">https://arxiv.org/abs/2211.09110</a>.
+<div id="ref-jimenez2024swebench" class="csl-entry" role="listitem">
+Jimenez, Carlos E., John Yang, Alexander Wettig, et&nbsp;al. 2024. <span>«SWE-bench: Can Language Models Resolve Real-World GitHub Issues?»</span> <em>International Conference on Learning Representations (ICLR)</em>. <a href="https://arxiv.org/abs/2310.06770">https://arxiv.org/abs/2310.06770</a>.
 </div>
-<div id="ref-parrish2021bbq" class="csl-entry" role="listitem">
-<span class="nocase">Parrish, Alicia et al.</span> 2022. <span>“BBQ: A Hand-Built Bias Benchmark for Question Answering.”</span> <em>Findings of ACL</em>. <a href="https://arxiv.org/abs/2110.08193">https://arxiv.org/abs/2110.08193</a>.
+<div id="ref-openai2026swebench" class="csl-entry" role="listitem">
+OpenAI. 2026. <em>Why SWE-bench Verified no longer measures frontier coding capabilities</em>. OpenAI Blog. <a href="https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/">https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/</a>.
+</div>
+<div id="ref-phan2025hle" class="csl-entry" role="listitem">
+<span class="nocase">Phan, Long, Alice Gatti, Ziwen Han, Nathaniel Li, et&nbsp;al.</span> 2025. <em><span>Humanity’s Last Exam</span></em>. <a href="https://arxiv.org/abs/2501.14249">https://arxiv.org/abs/2501.14249</a>.
 </div>
 <div id="ref-sharma2023sycophancy" class="csl-entry" role="listitem">
-<span class="nocase">Sharma, Mrinank et al.</span> 2023. <em>Towards Understanding Sycophancy in Language Models</em>. <a href="https://arxiv.org/abs/2310.13548">https://arxiv.org/abs/2310.13548</a>.
-</div>
-<div id="ref-wei2023jailbroken" class="csl-entry" role="listitem">
-Wei, Alexander, Nika Haghtalab, and Jacob Steinhardt. 2023. <span>“Jailbroken: How Does LLM Safety Training Fail?”</span> <em>NeurIPS</em>. <a href="https://arxiv.org/abs/2307.02483">https://arxiv.org/abs/2307.02483</a>.
-</div>
-<div id="ref-weidinger2021risks" class="csl-entry" role="listitem">
-<span class="nocase">Weidinger, Laura et al.</span> 2021. <em>Ethical and Social Risks of Harm from Language Models</em>. <a href="https://arxiv.org/abs/2112.04359">https://arxiv.org/abs/2112.04359</a>.
-</div>
-<div id="ref-xu2024inevitable" class="csl-entry" role="listitem">
-Xu, Ziwei, Sanjay Jain, and Mohan Kankanhalli. 2024. <em>Hallucination Is Inevitable: An Innate Limitation of Large Language Models</em>. <a href="https://arxiv.org/abs/2401.11817">https://arxiv.org/abs/2401.11817</a>.
-</div>
-<div id="ref-zou2023adversarial" class="csl-entry" role="listitem">
-Zou, Andy, Zifan Wang, Nicholas Carlini, Milad Nasr, J. Zico Kolter, and Matt Fredrikson. 2023. <em>Universal and Transferable Adversarial Attacks on Aligned Language Models</em>. <a href="https://arxiv.org/abs/2307.15043">https://arxiv.org/abs/2307.15043</a>.
+<span class="nocase">Sharma, Mrinank et&nbsp;al.</span> 2023. <em>Towards Understanding Sycophancy in Language Models</em>. <a href="https://arxiv.org/abs/2310.13548">https://arxiv.org/abs/2310.13548</a>.
 </div>
 </div>
 </section>
@@ -1328,6 +1444,95 @@ Zou, Andy, Zifan Wang, Nicholas Carlini, Milad Nasr, J. Zico Kolter, and Matt Fr
         render(g);
       });
       render(1.35); start();
+    });
+  } catch (e) {}
+
+  // ---- 1c-moe. Build .fg-moe — Mixture-of-Experts router: only k of N experts light up ----
+  try {
+    var reduceMoe = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll('.fg-moe').forEach(function (box) {
+      var N = +(box.dataset.experts || 8), K = +(box.dataset.topk || 2);
+      var rnd = function (s) { var x = Math.sin(s * 12.9898) * 43758.5453; return x - Math.floor(x); };
+      var SVGNS = 'http://www.w3.org/2000/svg';
+      var W = 460, H = Math.max(190, N * 28 + 24), padT = 16;
+      var xTok = 38, xRouter = 150, xExp = 296, expW = 128, expH = 18;
+      var gap = N > 1 ? (H - padT * 2 - N * expH) / (N - 1) : 0;
+      function expY(i) { return padT + i * (expH + gap); }
+      var yMid = H / 2;
+      box.className = 'fg-moe fg-sch';
+      box.innerHTML = '<div class="fg-sch-h">' + L('Mixture of Experts: el router enciende solo k de N', 'Mixture of Experts: the router lights up only k of N') + '</div>' +
+        '<svg class="fg-moe-svg" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet"></svg>' +
+        '<div class="fg-moe-ctrl"><button class="fg-sch-btn" data-act="pp" type="button">⏸</button><span class="fg-moe-read"></span></div>' +
+        '<div class="fg-sch-cap">' + L('Cada token pasa por el <b>router</b>, que elige los <b>' + K + ' expertos</b> más adecuados (de ' + N + '). El resto <span class="hot">ni se encienden</span>: por eso el <b>cómputo</b> por token es bajo aunque el modelo tenga muchísimos parámetros.', 'Each token goes through the <b>router</b>, which picks the <b>' + K + ' best experts</b> (of ' + N + '). The rest <span class="hot">stay off</span>: that is why per-token <b>compute</b> stays low even with a huge parameter count.') + '</div>';
+      var svg = box.querySelector('.fg-moe-svg'), read = box.querySelector('.fg-moe-read'), btn = box.querySelector('[data-act="pp"]');
+      function mk(tag, a) { var e = document.createElementNS(SVGNS, tag); for (var k in a) e.setAttribute(k, a[k]); return e; }
+      svg.appendChild(mk('line', { x1: xTok + 13, y1: yMid, x2: xRouter - 15, y2: yMid, class: 'fg-moe-feed' }));
+      svg.appendChild(mk('circle', { cx: xTok, cy: yMid, r: 13, class: 'fg-moe-tok' }));
+      var tl = mk('text', { x: xTok, y: yMid + 3.5, class: 'fg-moe-tl', 'text-anchor': 'middle' }); tl.textContent = 'tok'; svg.appendChild(tl);
+      svg.appendChild(mk('rect', { x: xRouter - 15, y: yMid - 15, width: 30, height: 30, rx: 4, transform: 'rotate(45 ' + xRouter + ' ' + yMid + ')', class: 'fg-moe-router' }));
+      var rl = mk('text', { x: xRouter, y: yMid + 5, class: 'fg-moe-rl', 'text-anchor': 'middle' }); rl.textContent = '⇄'; svg.appendChild(rl);
+      var lines = [], experts = [], elabels = [];
+      for (var i = 0; i < N; i++) {
+        var y = expY(i) + expH / 2;
+        lines.push(svg.appendChild(mk('path', { d: 'M' + (xRouter + 15) + ' ' + yMid + ' C ' + (xRouter + 62) + ' ' + yMid + ', ' + (xExp - 46) + ' ' + y + ', ' + xExp + ' ' + y, class: 'fg-moe-wire' })));
+        experts.push(svg.appendChild(mk('rect', { x: xExp, y: expY(i), width: expW, height: expH, rx: 4, class: 'fg-moe-exp' })));
+        var t = mk('text', { x: xExp + expW / 2, y: expY(i) + expH / 2 + 3.5, class: 'fg-moe-el', 'text-anchor': 'middle' }); t.textContent = L('experto ', 'expert ') + (i + 1); svg.appendChild(t); elabels.push(t);
+      }
+      function chosen(s) { var sc = [], set = {}; for (var i = 0; i < N; i++) sc.push([rnd(s * 3.1 + i * 1.7 + 1), i]); sc.sort(function (a, b) { return b[0] - a[0]; }); for (var j = 0; j < K; j++) set[sc[j][1]] = 1; return set; }
+      var step = 0, timer = null;
+      function render() {
+        var set = chosen(step), names = [];
+        for (var i = 0; i < N; i++) {
+          var on = !!set[i];
+          experts[i].classList.toggle('on', on); lines[i].classList.toggle('on', on); elabels[i].classList.toggle('on', on);
+          if (on) names.push('#' + (i + 1));
+        }
+        read.innerHTML = L('token ', 'token ') + (step + 1) + ' → <b>' + names.join(', ') + '</b> · ' + K + '/' + N + ' ' + L('activos', 'active');
+      }
+      render();
+      function play() { if (timer) return; timer = setInterval(function () { var r = box.getBoundingClientRect(); if (r.bottom < 0 || r.top > (window.innerHeight || 9999)) return; step = (step + 1) % 6; render(); }, 1700); btn.textContent = '⏸'; }
+      function stop() { if (timer) { clearInterval(timer); timer = null; } btn.textContent = '▶'; }
+      btn.addEventListener('click', function () { timer ? stop() : play(); });
+      if (reduceMoe) { btn.textContent = '▶'; } else play();
+    });
+  } catch (e) {}
+
+  // ---- 1c-mirage. Build .fg-mirage — benchmark contamination inflates the score, not the ability ----
+  try {
+    document.querySelectorAll('.fg-mirage').forEach(function (box) {
+      box.className = 'fg-mirage fg-sch';
+      box.innerHTML = '<div class="fg-sch-h">' + L('El espejismo del benchmark: la contaminación infla la nota, no la capacidad', 'The benchmark mirage: contamination inflates the score, not the ability') + '</div>' +
+        '<svg class="fg-mirage-svg" viewBox="0 0 420 210" preserveAspectRatio="xMidYMid meet"></svg>' +
+        '<div class="fg-mirage-ctrl"><span>' + L('contaminación', 'contamination') + '</span><input type="range" min="0" max="100" step="1" value="0" aria-label="' + L('porcentaje de contaminación', 'contamination percentage') + '"><span class="cv">0%</span></div>' +
+        '<div class="fg-sch-cap"></div>';
+      var svg = box.querySelector('svg'), range = box.querySelector('input'), cv = box.querySelector('.cv'), cap = box.querySelector('.fg-sch-cap');
+      var W = 420, H = 210, padB = 34, padT = 16, base = 52;
+      var y0 = H - padB, y1 = padT, HH = y0 - y1;
+      function Y(p) { return y0 - p / 100 * HH; }
+      var b0 = { x: 100, w: 88 }, b1 = { x: 240, w: 88 };
+      function draw(c) {
+        var app = base + c / 100 * (98 - base), s = '';
+        [0, 25, 50, 75, 100].forEach(function (p) {
+          s += '<line class="grid" x1="62" y1="' + Y(p) + '" x2="' + (W - 14) + '" y2="' + Y(p) + '"/>';
+          s += '<text class="lbl" x="54" y="' + (Y(p) + 4) + '" text-anchor="end">' + p + '</text>';
+        });
+        s += '<rect class="bar-real" x="' + b0.x + '" y="' + Y(base) + '" width="' + b0.w + '" height="' + (y0 - Y(base)) + '"/>';
+        s += '<text class="blbl" x="' + (b0.x + b0.w / 2) + '" y="' + (y0 + 16) + '" text-anchor="middle">' + L('capacidad real', 'real ability') + '</text>';
+        s += '<text class="bval" x="' + (b0.x + b0.w / 2) + '" y="' + (Y(base) - 6) + '" text-anchor="middle">' + Math.round(base) + '%</text>';
+        s += '<rect class="bar-real" x="' + b1.x + '" y="' + Y(base) + '" width="' + b1.w + '" height="' + (y0 - Y(base)) + '"/>';
+        if (app > base + 0.5) s += '<rect fill="url(#fgmh)" stroke="rgb(213,94,0)" stroke-width="1" x="' + b1.x + '" y="' + Y(app) + '" width="' + b1.w + '" height="' + (Y(base) - Y(app)) + '"/>';
+        s += '<text class="blbl" x="' + (b1.x + b1.w / 2) + '" y="' + (y0 + 16) + '" text-anchor="middle">' + L('nota aparente', 'apparent score') + '</text>';
+        s += '<text class="bval" x="' + (b1.x + b1.w / 2) + '" y="' + (Y(app) - 6) + '" text-anchor="middle">' + Math.round(app) + '%</text>';
+        if (app > base + 7) s += '<text class="mlbl" x="' + (b1.x + b1.w + 5) + '" y="' + ((Y(app) + Y(base)) / 2 + 4) + '">← ' + L('espejismo', 'mirage') + '</text>';
+        svg.innerHTML = '<defs><pattern id="fgmh" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="rgba(213,94,0,0.12)"/><line x1="0" y1="0" x2="0" y2="7" stroke="rgb(213,94,0)" stroke-width="2.5"/></pattern></defs>' + s;
+        cv.textContent = c + '%';
+        var gap = Math.round(app - base);
+        cap.innerHTML = (+c === 0)
+          ? L('Sin contaminación: la nota <b>es</b> la capacidad real (' + Math.round(base) + '%).', 'No contamination: the score <b>is</b> the real ability (' + Math.round(base) + '%).')
+          : L('Con <b>' + c + '%</b> de contaminación, la nota sube a <b>' + Math.round(app) + '%</b>, pero la capacidad real sigue en <b>' + Math.round(base) + '%</b>. Ese hueco de <span class="hot">' + gap + ' puntos</span> es <span class="hot">espejismo</span>: el modelo no aprendió más, solo <b>vio el examen antes</b>.', 'With <b>' + c + '%</b> contamination, the score climbs to <b>' + Math.round(app) + '%</b>, but real ability stays at <b>' + Math.round(base) + '%</b>. That <span class="hot">' + gap + '-point</span> gap is a <span class="hot">mirage</span>: the model did not learn more, it just <b>saw the exam beforehand</b>.');
+      }
+      range.addEventListener('input', function () { draw(+range.value); });
+      draw(0);
     });
   } catch (e) {}
 
@@ -2132,12 +2337,12 @@ Zou, Andy, Zifan Wang, Nicholas Carlini, Milad Nasr, J. Zico Kolter, and Matt Fr
       // flash "checked"
       button.classList.add('code-copy-button-checked');
       var currentTitle = button.getAttribute("title");
-      button.setAttribute("title", "Copied!");
+      button.setAttribute("title", "Copiado");
       let tooltip;
       if (window.bootstrap) {
         button.setAttribute("data-bs-toggle", "tooltip");
         button.setAttribute("data-bs-placement", "left");
-        button.setAttribute("data-bs-title", "Copied!");
+        button.setAttribute("data-bs-title", "Copiado");
         tooltip = new bootstrap.Tooltip(button, 
           { trigger: "manual", 
             customClass: "code-copy-button-tooltip",
@@ -2509,13 +2714,13 @@ Zou, Andy, Zifan Wang, Nicholas Carlini, Milad Nasr, J. Zico Kolter, and Matt Fr
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../chapters/39-mapa2026.html" class="pagination-link" aria-label="The map of the 2026 collapse landscape">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">The map of the 2026 collapse landscape</span></span>
+      <a href="../chapters/39-mapa2026.html" class="pagination-link" aria-label="El mapa del paisaje de colapso 2026">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">El mapa del paisaje de colapso 2026</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../chapters/R1-formulario.html" class="pagination-link" aria-label="R1 · Master formulary">
-        <span class="nav-page-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">R1 · Master formulary</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../chapters/41-etica.html" class="pagination-link" aria-label="Ética, seguridad y limitaciones">
+        <span class="nav-page-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Ética, seguridad y limitaciones</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

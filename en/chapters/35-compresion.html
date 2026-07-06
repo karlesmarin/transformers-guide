@@ -512,6 +512,38 @@ div.csl-indent {
 .fg-g3d-canvas{ width:100%; height:340px; display:block; border:1px solid #dce7f0; border-radius:.7rem;
   background:radial-gradient(120% 120% at 50% 25%, #fbfdff, #e9f1f9); cursor:grab; touch-action:none; }
 .fg-g3d-canvas:active{ cursor:grabbing; }
+
+/* fg-moe — Mixture-of-Experts router: only k of N experts light up (sparse activation) */
+.fg-moe-svg{ width:100%; height:auto; display:block; font-family:Georgia,"Times New Roman",serif; }
+.fg-moe-tok{ fill:rgb(var(--blue)); }
+.fg-moe-tl{ font-size:10px; fill:#fff; font-weight:700; }
+.fg-moe-router{ fill:#fff; stroke:rgb(var(--blue)); stroke-width:2; }
+.fg-moe-rl{ font-size:15px; fill:rgb(var(--blue)); }
+.fg-moe-feed{ stroke:rgb(var(--blue)); stroke-width:2; }
+.fg-moe-wire{ fill:none; stroke:#d3dde6; stroke-width:1.5; transition:stroke .4s, stroke-width .4s; }
+.fg-moe-wire.on{ stroke:rgb(var(--blue)); stroke-width:2.5; stroke-dasharray:6 6;
+  filter:drop-shadow(0 0 3px rgba(0,114,178,.5)); animation:fg-moe-flow 1s linear infinite; }
+.fg-moe-exp{ fill:#f0f3f6; stroke:#dce7f0; stroke-width:1; transition:fill .4s, stroke .4s, filter .4s; }
+.fg-moe-exp.on{ fill:rgba(0,114,178,.16); stroke:rgb(var(--blue)); stroke-width:1.5;
+  filter:drop-shadow(0 0 5px rgba(0,114,178,.35)); }
+.fg-moe-el{ font-size:10px; fill:#93a3b4; transition:fill .4s, font-weight .4s; }
+.fg-moe-el.on{ fill:rgb(var(--blue)); font-weight:700; }
+.fg-moe-ctrl{ display:flex; align-items:center; gap:.6rem; justify-content:center; margin:.5rem 0 .2rem; font-size:.8rem; color:#5b7790; }
+.fg-moe-read{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.8rem; } .fg-moe-read b{ color:rgb(var(--blue)); }
+@keyframes fg-moe-flow{ to { stroke-dashoffset:-12; } }
+@media (prefers-reduced-motion:reduce){ .fg-moe-wire.on{ animation:none; stroke-dasharray:none; } }
+
+/* fg-mirage — benchmark contamination inflates the score, not the real ability */
+.fg-mirage-svg{ width:100%; height:auto; display:block; font-family:Georgia,"Times New Roman",serif; }
+.fg-mirage-svg .grid{ stroke:#eef3f7; stroke-width:1; }
+.fg-mirage-svg .lbl{ font-size:10px; fill:#9bb4c9; }
+.fg-mirage-svg .bar-real{ fill:rgb(var(--blue)); }
+.fg-mirage-svg .blbl{ font-size:11px; fill:#5b7790; }
+.fg-mirage-svg .bval{ font-size:12px; font-weight:700; fill:#33536e; }
+.fg-mirage-svg .mlbl{ font-size:11px; font-weight:700; fill:rgb(var(--red)); }
+.fg-mirage-ctrl{ display:flex; align-items:center; gap:.55rem; justify-content:center; margin:.5rem 0 .2rem; font-size:.8rem; color:#5b7790; }
+.fg-mirage-ctrl input[type=range]{ accent-color:rgb(var(--red)); width:200px; max-width:60%; }
+.fg-mirage-ctrl .cv{ font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:700; color:rgb(var(--red)); min-width:34px; }
 </style>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
@@ -934,8 +966,14 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/40-etica.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Ethics, safety and limitations</span></span></a>
+  <a href="../chapters/40-evaluacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Evaluation: measuring without fooling yourself</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/41-etica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Ethics, safety and limitations</span></span></a>
   </div>
 </li>
       </ul>
@@ -952,37 +990,37 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R1-formulario.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">R1 · Master formulary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R1 · Master formulary</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R2-cookbook.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R3-glosario.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R3 · Glossary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R3 · Glossary</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R4-medir-gamma.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R4 · Measuring your own γ (and reproducing the atlas)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R4 · Measuring your own γ (and reproducing the atlas)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R9-tafagent.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R9 · tafagent manual</span></span></a>
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R9 · tafagent manual</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R10-soluciones.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R10 · Exercise solutions</span></span></a>
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">R10 · Exercise solutions</span></span></a>
   </div>
 </li>
       </ul>
@@ -1001,12 +1039,13 @@ window.Quarto = {
   <li><a href="#key-concepts-and-their-role-in-the-transformer" id="toc-key-concepts-and-their-role-in-the-transformer" class="nav-link" data-scroll-target="#key-concepts-and-their-role-in-the-transformer"><span class="header-section-number">36.2</span> Key concepts and their role in the transformer</a></li>
   <li><a href="#why-compress" id="toc-why-compress" class="nav-link" data-scroll-target="#why-compress"><span class="header-section-number">36.3</span> Why compress</a></li>
   <li><a href="#quantization-fewer-bits-per-weight" id="toc-quantization-fewer-bits-per-weight" class="nav-link" data-scroll-target="#quantization-fewer-bits-per-weight"><span class="header-section-number">36.4</span> Quantization: fewer bits per weight</a></li>
-  <li><a href="#distillation-teaching-a-small-student" id="toc-distillation-teaching-a-small-student" class="nav-link" data-scroll-target="#distillation-teaching-a-small-student"><span class="header-section-number">36.5</span> Distillation: teaching a small student</a></li>
-  <li><a href="#pruning-removing-whats-redundant" id="toc-pruning-removing-whats-redundant" class="nav-link" data-scroll-target="#pruning-removing-whats-redundant"><span class="header-section-number">36.6</span> Pruning: removing what’s redundant</a></li>
-  <li><a href="#how-they-combine-and-the-honest-trade-off" id="toc-how-they-combine-and-the-honest-trade-off" class="nav-link" data-scroll-target="#how-they-combine-and-the-honest-trade-off"><span class="header-section-number">36.7</span> How they combine, and the honest trade-off</a></li>
-  <li><a href="#bridge-to-our-theme-brief-and-honest" id="toc-bridge-to-our-theme-brief-and-honest" class="nav-link" data-scroll-target="#bridge-to-our-theme-brief-and-honest"><span class="header-section-number">36.8</span> Bridge to our theme (brief and honest)</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">36.9</span> Summary</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">36.10</span> Exercises</a></li>
+  <li><a href="#quantizing-the-kv-cache-not-just-the-weights" id="toc-quantizing-the-kv-cache-not-just-the-weights" class="nav-link" data-scroll-target="#quantizing-the-kv-cache-not-just-the-weights"><span class="header-section-number">36.5</span> Quantizing the KV cache (not just the weights)</a></li>
+  <li><a href="#distillation-teaching-a-small-student" id="toc-distillation-teaching-a-small-student" class="nav-link" data-scroll-target="#distillation-teaching-a-small-student"><span class="header-section-number">36.6</span> Distillation: teaching a small student</a></li>
+  <li><a href="#pruning-removing-whats-redundant" id="toc-pruning-removing-whats-redundant" class="nav-link" data-scroll-target="#pruning-removing-whats-redundant"><span class="header-section-number">36.7</span> Pruning: removing what’s redundant</a></li>
+  <li><a href="#how-they-combine-and-the-honest-trade-off" id="toc-how-they-combine-and-the-honest-trade-off" class="nav-link" data-scroll-target="#how-they-combine-and-the-honest-trade-off"><span class="header-section-number">36.8</span> How they combine, and the honest trade-off</a></li>
+  <li><a href="#bridge-to-our-theme-brief-and-honest" id="toc-bridge-to-our-theme-brief-and-honest" class="nav-link" data-scroll-target="#bridge-to-our-theme-brief-and-honest"><span class="header-section-number">36.9</span> Bridge to our theme (brief and honest)</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">36.10</span> Summary</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">36.11</span> Exercises</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
@@ -1056,6 +1095,7 @@ window.Quarto = {
 Z)\)</span> that translate between the real and the integer values. <em>In the transformer:</em> they define <strong>how</strong> each weight is rounded to few bits without losing its range.</li>
 <li><strong>PTQ vs QAT.</strong> <em>Definition:</em> quantizing <strong>after</strong> training (cheap) vs <strong>simulating</strong> quantization <strong>during</strong> training (better at very low bits, expensive). <em>In the transformer:</em> PTQ is the norm; QAT, for extreme cases.</li>
 <li><strong>Activation <em>outliers</em>.</strong> <em>Definition:</em> a few dimensions with <strong>enormous</strong> values that break naive quantization. <em>In the transformer:</em> they appear <strong>at scale</strong> (~6,700M parameters) and force you to handle them separately (LLM.int8, SmoothQuant).</li>
+<li><strong>KV cache quantization.</strong> <em>Definition:</em> applying quantization not to the weights but to the <strong>KV cache</strong> (the keys/values stored during generation). <em>In the transformer:</em> it attacks the memory hog of <strong>long context</strong>; it’s <strong>orthogonal</strong> to compressing the weights.</li>
 <li><strong>Distillation.</strong> <em>Definition:</em> training a small <strong>student</strong> model to imitate the distribution of a large <strong>teacher</strong>. <em>In the transformer:</em> it transfers capability to a model that’s cheaper to serve.</li>
 <li><strong>Soft targets and temperature.</strong> <em>Definition:</em> the teacher’s full probability distribution (not just the answer), softened with a temperature <span class="math inline">\(T\)</span>. <em>In the transformer:</em> it’s the “dark knowledge” that teaches <strong>more</strong> than the hard label.</li>
 <li><strong>Pruning (structured vs unstructured).</strong> <em>Definition:</em> removing individual weights (unstructured) or whole blocks —heads, neurons, layers— (structured). <em>In the transformer:</em> the structured kind <strong>actually speeds things up</strong> on ordinary hardware; the unstructured kind needs specific support.</li>
@@ -1082,6 +1122,30 @@ Z)\)</span> that translate between the real and the integer values. <em>In the t
 <p>Quantizing is approximating a real value by <strong>scale × integer</strong>: <span class="math inline">\(x \approx S\,(x_q - Z)\)</span>, where <strong><span class="math inline">\(S\)</span></strong> (the <em>scale</em>) sets the step size and <strong><span class="math inline">\(Z\)</span></strong> (the <em>zero-point</em>) marks which integer represents the real zero <span class="citation" data-cites="jacob2017quant">(<a href="#ref-jacob2017quant" role="doc-biblioref"><span class="nocase">Jacob et al.</span> 2018</a>)</span>. It can be applied <strong>per tensor</strong> (one <span class="math inline">\(S\)</span> for everything), <strong>per channel</strong> (one per row/column) or <strong>per group</strong> (blocks of, say, 128 weights, each with its own scale) —the finer, the more faithful, the more metadata— <span class="citation" data-cites="nagel2021whitepaper">(<a href="#ref-nagel2021whitepaper" role="doc-biblioref"><span class="nocase">Nagel et al.</span> 2021</a>)</span>.</p>
 </div>
 </div>
+<p>A weight’s journey, from real to compressed and back:</p>
+<div class="fg-flow" style="--steps:5" role="img" aria-label="Quantizing a weight: start from the real value, choose a scale and a zero-point per group, round to few bits, store it taking up far less, and when using it reconstruct it approximately.">
+  <span class="fg-spark" aria-hidden="true"></span>
+  <div class="fg-step" style="--i:0">
+    <span class="fg-chip">📥</span>
+    <div class="fg-card"><b>Real weight</b><span>FP16/FP32 (high precision, lots of memory)</span></div>
+  </div>
+  <div class="fg-step" style="--i:1">
+    <span class="fg-chip">📐</span>
+    <div class="fg-card"><b>Pick scale S and zero-point Z</b><span>per group of weights</span></div>
+  </div>
+  <div class="fg-step" style="--i:2">
+    <span class="fg-chip">🎯</span>
+    <div class="fg-card"><b>Round to few bits</b><span>INT8 / INT4 / FP4</span></div>
+  </div>
+  <div class="fg-step" style="--i:3">
+    <span class="fg-chip">💾</span>
+    <div class="fg-card"><b>Store</b><span>takes up 2-8× less</span></div>
+  </div>
+  <div class="fg-step is-out" style="--i:4">
+    <span class="fg-chip">♻️</span>
+    <div class="fg-card"><b>On use: reconstruct</b><span>value ≈ S·(q − Z)</span></div>
+  </div>
+</div>
 <p>The key method distinction is <strong>when</strong> you quantize: <strong>PTQ</strong> (<em>post-training quantization</em>) quantizes an <strong>already-trained</strong> model —cheap, no retraining— and <strong>QAT</strong> (<em>quantization-aware training</em>) <strong>simulates</strong> quantization during training —better at very low bits, but expensive.</p>
 <div class="analogia">
 <p><strong>🧩 Analogy — 16 pencils instead of a million shades.</strong> Quantizing is describing colors with <strong>16 colored pencils</strong> instead of a million shades: for almost everything it looks <strong>just as good</strong> and weighs far less. The <em>scale</em> is how far apart the shades in your box are; the <em>zero-point</em>, which of them is the “white”.</p>
@@ -1097,6 +1161,32 @@ Z)\)</span> that translate between the real and the integer values. <em>In the t
 <p><strong>🧩 Analogy — the voices that distort.</strong> <em>Outliers</em> are like <strong>a few very loud voices</strong> in a choir: if you record them with the same mic as everyone else, they <strong>saturate</strong> the whole mix. You have to give them <strong>a separate high-fidelity track</strong> (the 16 bits of LLM.int8) and record the rest normally.</p>
 </div>
 <p><strong>The bit frontier:</strong> 8 bits ≈ <strong>no loss</strong>; 4 bits <strong>almost no loss</strong> with good methods (protecting the ~1%); below ~3-4 bits there’s a “cliff” that disproportionately damages math and code.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="🆕 2025-26 — the leap to 4-bit *floating point* (MXFP4 / NVFP4)">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>🆕 2025-26 — the leap to 4-bit <em>floating point</em> (MXFP4 / NVFP4)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Classic 4-bit (INT4) spreads the values over a <strong>uniform</strong> grid of integers, which is why it struggles with <em>outliers</em>. The 2025-26 novelty is to quantize to 4 bits in <strong>floating point</strong>: the <strong>E2M1</strong> format (1 sign bit, 2 exponent, 1 mantissa) plus a <strong>block-shared scale</strong>. Having an exponent, it covers the <strong>dynamic range</strong> far better than an integer grid. Two variants: <strong>MXFP4</strong> (blocks of 32 → 4.25 bits/weight) and <strong>NVFP4</strong> <span class="citation" data-cites="nvidia2025nvfp4">(<a href="#ref-nvidia2025nvfp4" role="doc-biblioref">NVIDIA 2025</a>)</span> (blocks of 16, a finer scale → more precision). With <strong>native hardware</strong> support (Blackwell GPUs) and in vLLM/TensorRT-LLM, it delivers <strong>up to ~2–2.3×</strong> over BF16 with minimal degradation. In fact, <strong>gpt-oss</strong> <span class="citation" data-cites="openai2025gptoss">(<a href="#ref-openai2025gptoss" role="doc-biblioref">OpenAI 2025</a>)</span> —OpenAI’s open-weights model— ships its MoE weights <strong>directly in MXFP4</strong>. It’s the real successor to INT4 for inference.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="🔧 In practice — GGUF and *k-quants*">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>🔧 In practice — GGUF and <em>k-quants</em>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you ever download a model to run on your own computer (with llama.cpp, Ollama or LM Studio), you’ll bump into <strong>GGUF</strong>: a file format that packages the model <strong>already quantized</strong>, ready to use <span class="citation" data-cites="gerganov2023gguf">(<a href="#ref-gerganov2023gguf" role="doc-biblioref"><span class="nocase">Gerganov and llama.cpp contributors</span> 2023</a>)</span>. You’ll see names like <strong>Q4_K_M</strong>, <strong>Q5_K_M</strong> or <strong>Q8_0</strong>. Read them like this: the number (<strong>4</strong>, <strong>5</strong>, <strong>8</strong>) is the <strong>bits per weight</strong>; the <strong>K</strong> flags that it’s <strong>per-group</strong> quantization (the so-called <em>k-quants</em>, more faithful); and the final letter (<strong>S</strong>/<strong>M</strong>/<strong>L</strong>) is how much extra precision it reserves for the <strong>sensitive</strong> layers (M = “medium”). Rule of thumb in the local world: <strong>Q4_K_M</strong> is the size/quality sweet spot for almost everything; <strong>Q8_0</strong> if you have memory to spare; below Q3 the quality already suffers. At heart it’s nothing new —it’s “per-group + protect the sensitive parts” (what you already saw above) with user-facing <strong>brand names</strong>. <em>(How low can your model go before it falls apart? The <strong>Quant-regime Classifier</strong> in <a href="https://karlesmarin.github.io/tafagent/?demo=quant">tafagent</a> estimates it from the model’s profile.)</em></p>
+</div>
+</div>
 <div class="callout callout-style-default callout-warning callout-titled" title="⚠ Contested — 1.58-bit LLMs?">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1111,8 +1201,22 @@ Z)\)</span> that translate between the real and the integer values. <em>In the t
 </div>
 </div>
 </section>
-<section id="distillation-teaching-a-small-student" class="level2" data-number="36.5">
-<h2 data-number="36.5" class="anchored" data-anchor-id="distillation-teaching-a-small-student"><span class="header-section-number">36.5</span> Distillation: teaching a small student</h2>
+<section id="quantizing-the-kv-cache-not-just-the-weights" class="level2" data-number="36.5">
+<h2 data-number="36.5" class="anchored" data-anchor-id="quantizing-the-kv-cache-not-just-the-weights"><span class="header-section-number">36.5</span> Quantizing the KV cache (not just the weights)</h2>
+<p>Everything above shrinks the model’s <strong>weights</strong>. But there’s a second memory hog the weights don’t touch at all: when <strong>generating at long context</strong>, what eats everything is the <strong>KV cache</strong> (Ch. 20) —the keys and values of every token already read, which the model stores so it doesn’t recompute them. With a very long prompt, that cache can <strong>take up more than the model itself</strong>. Good news: it can be quantized too.</p>
+<p><strong>KVQuant</strong> <span class="citation" data-cites="hooper2024kvquant">(<a href="#ref-hooper2024kvquant" role="doc-biblioref">Hooper et al. 2024</a>)</span> brings the cache down to <strong>~4 bits or less</strong> with two tricks worth understanding, because they explain <em>why</em> the cache is special:</p>
+<ul>
+<li>The <strong>keys</strong> are quantized <strong>per channel</strong> (one scale per dimension), not per token —because, just like activations, they have their own <em>outliers</em> that would ruin a crude rounding (the same idea as with the weights, above).</li>
+<li>The <strong>first token</strong> (the attention <em>sink</em>, Ch. 17) is handled <strong>separately</strong>, in high precision, because it accumulates a great deal of mass and quantizing it crudely hurts.</li>
+</ul>
+<p>With that, a context that didn’t fit now does, stretching the viable length to millions of tokens on the same GPU. And you don’t have to go exotic: the usual serving engines (vLLM, TensorRT-LLM) already offer <strong>8-bit KV cache almost for free</strong> (Ch. 36).</p>
+<div class="analogia">
+<p><strong>🧩 Analogy.</strong> Quantizing the <strong>weights</strong> is buying a <strong>smaller bookshelf</strong>; quantizing the <strong>KV cache</strong> is using <strong>smaller boxes for what you jot down as you read</strong>. In a short text the bookshelf dominates; in a very long one, the boxes end up taking more room than the bookshelf —which is why, at long context, quantizing the KV is as important as quantizing the model.</p>
+</div>
+<p>And here’s the hook to <strong>our theme</strong>: quantizing the KV makes it <strong>smaller per token</strong> (fewer bits per entry). Our <strong>γ-based D_f window</strong> (Ch. 20) decides something different: <strong>how many</strong> KV tokens are worth keeping (fewer entries). They’re two <strong>orthogonal</strong> levers —bits per entry × number of entries— and that’s why they <strong>multiply</strong>: you can apply both at once.</p>
+</section>
+<section id="distillation-teaching-a-small-student" class="level2" data-number="36.6">
+<h2 data-number="36.6" class="anchored" data-anchor-id="distillation-teaching-a-small-student"><span class="header-section-number">36.6</span> Distillation: teaching a small student</h2>
 <div class="callout callout-style-default callout-tip callout-titled" title="✓ What knowledge distillation is">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1132,8 +1236,8 @@ Z)\)</span> that translate between the real and the integer values. <em>In the t
 </div>
 <p>The canonical case is <strong>DistilBERT</strong> <span class="citation" data-cites="sanh2019distilbert">(<a href="#ref-sanh2019distilbert" role="doc-biblioref">Sanh et al. 2019</a>)</span>: <strong>40% smaller, 60% faster and retains ~97%</strong> of BERT’s capability, with a <strong>triple loss</strong> (language modeling + distillation + cosine distance). <strong>TinyBERT</strong> <span class="citation" data-cites="jiao2019tinybert">(<a href="#ref-jiao2019tinybert" role="doc-biblioref"><span class="nocase">Jiao et al.</span> 2020</a>)</span> goes further and also distills the <strong>attention matrices and intermediate states</strong> (7.5× smaller). For generation, <strong>sequence-level distillation</strong> <span class="citation" data-cites="kim2016seqkd">(<a href="#ref-kim2016seqkd" role="doc-biblioref">Kim and Rush 2016</a>)</span> trains the student on the teacher’s <strong>outputs</strong> —the basis for “distilling” a large LLM into a small one. <strong>Honest:</strong> beware the loose sense of “distilling” = training on a better model’s outputs; as we saw (Ch. 27 <span class="citation" data-cites="gudibande2023falsepromise">(<a href="#ref-gudibande2023falsepromise" role="doc-biblioref"><span class="nocase">Gudibande et al.</span> 2023</a>)</span>), that <strong>copies the style, not the capability</strong>.</p>
 </section>
-<section id="pruning-removing-whats-redundant" class="level2" data-number="36.6">
-<h2 data-number="36.6" class="anchored" data-anchor-id="pruning-removing-whats-redundant"><span class="header-section-number">36.6</span> Pruning: removing what’s redundant</h2>
+<section id="pruning-removing-whats-redundant" class="level2" data-number="36.7">
+<h2 data-number="36.7" class="anchored" data-anchor-id="pruning-removing-whats-redundant"><span class="header-section-number">36.7</span> Pruning: removing what’s redundant</h2>
 <div class="callout callout-style-default callout-tip callout-titled" title="✓ What pruning is">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1166,8 +1270,8 @@ Z)\)</span> that translate between the real and the integer values. <em>In the t
 </div>
 </div>
 </section>
-<section id="how-they-combine-and-the-honest-trade-off" class="level2" data-number="36.7">
-<h2 data-number="36.7" class="anchored" data-anchor-id="how-they-combine-and-the-honest-trade-off"><span class="header-section-number">36.7</span> How they combine, and the honest trade-off</h2>
+<section id="how-they-combine-and-the-honest-trade-off" class="level2" data-number="36.8">
+<h2 data-number="36.8" class="anchored" data-anchor-id="how-they-combine-and-the-honest-trade-off"><span class="header-section-number">36.8</span> How they combine, and the honest trade-off</h2>
 <p>The typical order of “reach”: <strong>quantization</strong> (cheapest and most used) → <strong>distillation</strong> (if you can train) → <strong>pruning</strong> (a change of shape). And they <strong>compose</strong>: SparseGPT combines with quantization; QLoRA (Ch. 28) is a 4-bit base + LoRA. The universal, honest rule: <strong>all compression trades some quality for size/speed</strong>; the art is finding the <strong>knee of the curve</strong>.</p>
 <div class="callout callout-style-default callout-warning callout-titled" title="⚠ Evaluate compression properly">
 <div class="callout-header d-flex align-content-center">
@@ -1183,9 +1287,9 @@ Z)\)</span> that translate between the real and the integer values. <em>In the t
 </div>
 </div>
 </section>
-<section id="bridge-to-our-theme-brief-and-honest" class="level2" data-number="36.8">
-<h2 data-number="36.8" class="anchored" data-anchor-id="bridge-to-our-theme-brief-and-honest"><span class="header-section-number">36.8</span> Bridge to our theme (brief and honest)</h2>
-<p>Quantization and pruning are <strong>content-agnostic</strong> reductions (smaller weights, fewer weights). Our <strong>γ-based D_f window</strong> (Ch. 20) reduces a <strong>different</strong> object —the <strong>KV cache</strong>, not the weights— in a <strong>content-aware</strong> way: it’s an <strong>orthogonal axis</strong>, not a rival method. And <strong>head pruning</strong> fits our observation that <strong>different heads decay differently</strong> (their per-head γ): some matter more than others —consistent both with head pruning and with our per-head γ, without claiming causality.</p>
+<section id="bridge-to-our-theme-brief-and-honest" class="level2" data-number="36.9">
+<h2 data-number="36.9" class="anchored" data-anchor-id="bridge-to-our-theme-brief-and-honest"><span class="header-section-number">36.9</span> Bridge to our theme (brief and honest)</h2>
+<p>Weight quantization and pruning are <strong>content-agnostic</strong> reductions. Even quantizing the <strong>KV cache</strong> (the section above) is agnostic: it shrinks <em>every</em> entry equally, without looking at which one matters. Our <strong>γ-based D_f window</strong> (Ch. 20) does something <strong>different and complementary</strong> —it decides <em>which</em> cache tokens to keep, in a <strong>content-aware</strong> way—: it’s an <strong>orthogonal axis</strong>, not a rival method, and it combines with quantizing the KV (fewer bits × fewer entries). And <strong>head pruning</strong> fits our observation that <strong>different heads decay differently</strong> (their per-head γ): some matter more than others —consistent both with head pruning and with our per-head γ, without claiming causality.</p>
 <div class="callout callout-style-default callout-note callout-titled" title="🧪 Try it — tafagent">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1200,11 +1304,12 @@ Z)\)</span> that translate between the real and the integer values. <em>In the t
 </div>
 </div>
 </section>
-<section id="summary" class="level2" data-number="36.9">
-<h2 data-number="36.9" class="anchored" data-anchor-id="summary"><span class="header-section-number">36.9</span> Summary</h2>
+<section id="summary" class="level2" data-number="36.10">
+<h2 data-number="36.10" class="anchored" data-anchor-id="summary"><span class="header-section-number">36.10</span> Summary</h2>
 <ul>
 <li><strong>Three composable families:</strong> <strong>quantization</strong> (fewer bits), <strong>distillation</strong> (small student), <strong>pruning</strong> (remove weights). All compression <strong>trades quality for size/speed</strong>.</li>
 <li><strong>Quantization:</strong> map <span class="math inline">\(x\approx S(x_q-Z)\)</span>; <strong>PTQ</strong> (cheap) vs <strong>QAT</strong> (better at low bits). The challenge at scale is the <strong>outliers</strong> → <strong>LLM.int8</strong> (16 bits aside), <strong>SmoothQuant</strong> (migrate to weights), <strong>GPTQ</strong> (3-4 bits, Hessian), <strong>AWQ</strong> (protect the ~1%). 8 bits ≈ no loss; 4 bits almost; sub-4-bit <strong>contested</strong> (BitNet, QAT from scratch).</li>
+<li><strong>Local format (GGUF/<em>k-quants</em>):</strong> <strong>Q4_K_M</strong> is the sweet spot for running on your own machine. And it’s not only weights that get quantized: the <strong>KV cache</strong> too (<strong>KVQuant</strong> <span class="citation" data-cites="hooper2024kvquant">(<a href="#ref-hooper2024kvquant" role="doc-biblioref">Hooper et al. 2024</a>)</span>; 8-bit almost free in vLLM), key at <strong>long context</strong> and <strong>orthogonal</strong> to D_f (γ), which picks <em>which</em> tokens to keep.</li>
 <li><strong>Distillation</strong> <span class="citation" data-cites="hinton2015distill">(<a href="#ref-hinton2015distill" role="doc-biblioref">Hinton et al. 2015</a>)</span>: the student imitates the teacher’s <strong>soft targets</strong> (temperature <span class="math inline">\(T\)</span>, “dark knowledge”). <strong>DistilBERT</strong> (40% smaller, 97% of quality). Honest: imitating outputs <strong>copies style, not capability</strong>.</li>
 <li><strong>Pruning:</strong> <strong>structured</strong> (speeds up on normal HW) vs <strong>unstructured</strong> (needs support); <strong>SparseGPT/Wanda</strong> prune ~50% one-shot; <strong>head</strong> pruning (Ch. 5). Scattered sparsity <strong>doesn’t always speed up</strong> (hence the 2:4 pattern).</li>
 <li><strong>Evaluate:</strong> not just perplexity — compression damages the <strong>rare</strong> stuff (math/code).</li>
@@ -1212,8 +1317,8 @@ Z)\)</span> that translate between the real and the integer values. <em>In the t
 </ul>
 <p><strong>Next (Chapter 36):</strong> with the model now efficient and compressed, we close Part VI with <strong>serving and deployment</strong> —<em>throughput</em>, continuous <em>batching</em>, KV-cache paging, latency vs cost.</p>
 </section>
-<section id="exercises" class="level2" data-number="36.10">
-<h2 data-number="36.10" class="anchored" data-anchor-id="exercises"><span class="header-section-number">36.10</span> Exercises</h2>
+<section id="exercises" class="level2" data-number="36.11">
+<h2 data-number="36.11" class="anchored" data-anchor-id="exercises"><span class="header-section-number">36.11</span> Exercises</h2>
 <ol type="1">
 <li><strong>The map.</strong> In <span class="math inline">\(x \approx S\,(x_q - Z)\)</span>, what role do <span class="math inline">\(S\)</span> and <span class="math inline">\(Z\)</span> play? What does <strong>per-group</strong> quantization gain over <strong>per-tensor</strong>?</li>
 <li><strong>PTQ vs QAT.</strong> When is the cost of QAT worth it over the convenience of PTQ?</li>
@@ -1221,6 +1326,7 @@ Z)\)</span> that translate between the real and the integer values. <em>In the t
 <li><strong>Soft targets.</strong> What does the teacher’s full distribution teach that the hard label doesn’t? What is the temperature <span class="math inline">\(T\)</span> for?</li>
 <li><strong>Pruning.</strong> Why does <strong>structured</strong> pruning usually speed things up more than <strong>unstructured</strong> on an ordinary GPU?</li>
 <li><strong>Honesty.</strong> Why isn’t perplexity enough to evaluate a compressed model?</li>
+<li><strong>Two memory hogs.</strong> In long-context generation, which grows faster with length: the memory of the <strong>weights</strong> or that of the <strong>KV cache</strong>? Why are quantizing the KV and using D_f (γ) not rivals but rather <strong>additive</strong>?</li>
 </ol>
 </section>
 <section id="references" class="level2 unnumbered">
@@ -1240,11 +1346,17 @@ Frantar, Elias, and Dan Alistarh. 2023. <span>“SparseGPT: Massive Language Mod
 <div id="ref-frantar2022gptq" class="csl-entry" role="listitem">
 Frantar, Elias, Saleh Ashkboos, Torsten Hoefler, and Dan Alistarh. 2023. <span>“GPTQ: Accurate Post-Training Quantization for Generative Pre-Trained Transformers.”</span> <em>ICLR</em>. <a href="https://arxiv.org/abs/2210.17323">https://arxiv.org/abs/2210.17323</a>.
 </div>
+<div id="ref-gerganov2023gguf" class="csl-entry" role="listitem">
+<span class="nocase">Gerganov, Georgi, and llama.cpp contributors</span>. 2023. <em>Llama.cpp: LLM Inference in c/c++ (GGUF Format)</em>. <a href="https://github.com/ggerganov/llama.cpp" class="uri">Https://github.com/ggerganov/llama.cpp</a>.
+</div>
 <div id="ref-gudibande2023falsepromise" class="csl-entry" role="listitem">
 <span class="nocase">Gudibande, Arnav et al.</span> 2023. <em>The False Promise of Imitating Proprietary LLMs</em>. <a href="https://arxiv.org/abs/2305.15717">https://arxiv.org/abs/2305.15717</a>.
 </div>
 <div id="ref-hinton2015distill" class="csl-entry" role="listitem">
 Hinton, Geoffrey, Oriol Vinyals, and Jeff Dean. 2015. <em>Distilling the Knowledge in a Neural Network</em>. <a href="https://arxiv.org/abs/1503.02531">https://arxiv.org/abs/1503.02531</a>.
+</div>
+<div id="ref-hooper2024kvquant" class="csl-entry" role="listitem">
+Hooper, Coleman, Sehoon Kim, Hiva Mohammadzadeh, et al. 2024. <span>“KVQuant: Towards 10 Million Context Length LLM Inference with KV Cache Quantization.”</span> <em>Advances in Neural Information Processing Systems (NeurIPS)</em>. <a href="https://arxiv.org/abs/2401.18079">https://arxiv.org/abs/2401.18079</a>.
 </div>
 <div id="ref-jacob2017quant" class="csl-entry" role="listitem">
 <span class="nocase">Jacob, Benoit, Skirmantas Kligys, Bo Chen, et al.</span> 2018. <span>“Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference.”</span> <em>CVPR</em>. <a href="https://arxiv.org/abs/1712.05877">https://arxiv.org/abs/1712.05877</a>.
@@ -1266,6 +1378,12 @@ Michel, Paul, Omer Levy, and Graham Neubig. 2019. <span>“Are Sixteen Heads Rea
 </div>
 <div id="ref-nagel2021whitepaper" class="csl-entry" role="listitem">
 <span class="nocase">Nagel, Markus, Marios Fournarakis, Rana Ali Amjad, et al.</span> 2021. <em>A White Paper on Neural Network Quantization</em>. <a href="https://arxiv.org/abs/2106.08295">https://arxiv.org/abs/2106.08295</a>.
+</div>
+<div id="ref-nvidia2025nvfp4" class="csl-entry" role="listitem">
+NVIDIA. 2025. <em>Introducing NVFP4 for Efficient and Accurate Low-Precision Inference</em>. NVIDIA Technical Blog. <a href="https://developer.nvidia.com/blog/introducing-nvfp4-for-efficient-and-accurate-low-precision-inference/">https://developer.nvidia.com/blog/introducing-nvfp4-for-efficient-and-accurate-low-precision-inference/</a>.
+</div>
+<div id="ref-openai2025gptoss" class="csl-entry" role="listitem">
+OpenAI. 2025. <em><span class="nocase">gpt-oss-120b and gpt-oss-20b Model Card</span></em>. <a href="https://arxiv.org/abs/2508.10925">https://arxiv.org/abs/2508.10925</a>.
 </div>
 <div id="ref-sanh2019distilbert" class="csl-entry" role="listitem">
 Sanh, Victor, Lysandre Debut, Julien Chaumond, and Thomas Wolf. 2019. <em>DistilBERT, a Distilled Version of BERT: Smaller, Faster, Cheaper and Lighter</em>. <a href="https://arxiv.org/abs/1910.01108">https://arxiv.org/abs/1910.01108</a>.
@@ -1416,6 +1534,95 @@ Voita, Elena, David Talbot, Fedor Moiseev, Rico Sennrich, and Ivan Titov. 2019. 
         render(g);
       });
       render(1.35); start();
+    });
+  } catch (e) {}
+
+  // ---- 1c-moe. Build .fg-moe — Mixture-of-Experts router: only k of N experts light up ----
+  try {
+    var reduceMoe = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll('.fg-moe').forEach(function (box) {
+      var N = +(box.dataset.experts || 8), K = +(box.dataset.topk || 2);
+      var rnd = function (s) { var x = Math.sin(s * 12.9898) * 43758.5453; return x - Math.floor(x); };
+      var SVGNS = 'http://www.w3.org/2000/svg';
+      var W = 460, H = Math.max(190, N * 28 + 24), padT = 16;
+      var xTok = 38, xRouter = 150, xExp = 296, expW = 128, expH = 18;
+      var gap = N > 1 ? (H - padT * 2 - N * expH) / (N - 1) : 0;
+      function expY(i) { return padT + i * (expH + gap); }
+      var yMid = H / 2;
+      box.className = 'fg-moe fg-sch';
+      box.innerHTML = '<div class="fg-sch-h">' + L('Mixture of Experts: el router enciende solo k de N', 'Mixture of Experts: the router lights up only k of N') + '</div>' +
+        '<svg class="fg-moe-svg" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet"></svg>' +
+        '<div class="fg-moe-ctrl"><button class="fg-sch-btn" data-act="pp" type="button">⏸</button><span class="fg-moe-read"></span></div>' +
+        '<div class="fg-sch-cap">' + L('Cada token pasa por el <b>router</b>, que elige los <b>' + K + ' expertos</b> más adecuados (de ' + N + '). El resto <span class="hot">ni se encienden</span>: por eso el <b>cómputo</b> por token es bajo aunque el modelo tenga muchísimos parámetros.', 'Each token goes through the <b>router</b>, which picks the <b>' + K + ' best experts</b> (of ' + N + '). The rest <span class="hot">stay off</span>: that is why per-token <b>compute</b> stays low even with a huge parameter count.') + '</div>';
+      var svg = box.querySelector('.fg-moe-svg'), read = box.querySelector('.fg-moe-read'), btn = box.querySelector('[data-act="pp"]');
+      function mk(tag, a) { var e = document.createElementNS(SVGNS, tag); for (var k in a) e.setAttribute(k, a[k]); return e; }
+      svg.appendChild(mk('line', { x1: xTok + 13, y1: yMid, x2: xRouter - 15, y2: yMid, class: 'fg-moe-feed' }));
+      svg.appendChild(mk('circle', { cx: xTok, cy: yMid, r: 13, class: 'fg-moe-tok' }));
+      var tl = mk('text', { x: xTok, y: yMid + 3.5, class: 'fg-moe-tl', 'text-anchor': 'middle' }); tl.textContent = 'tok'; svg.appendChild(tl);
+      svg.appendChild(mk('rect', { x: xRouter - 15, y: yMid - 15, width: 30, height: 30, rx: 4, transform: 'rotate(45 ' + xRouter + ' ' + yMid + ')', class: 'fg-moe-router' }));
+      var rl = mk('text', { x: xRouter, y: yMid + 5, class: 'fg-moe-rl', 'text-anchor': 'middle' }); rl.textContent = '⇄'; svg.appendChild(rl);
+      var lines = [], experts = [], elabels = [];
+      for (var i = 0; i < N; i++) {
+        var y = expY(i) + expH / 2;
+        lines.push(svg.appendChild(mk('path', { d: 'M' + (xRouter + 15) + ' ' + yMid + ' C ' + (xRouter + 62) + ' ' + yMid + ', ' + (xExp - 46) + ' ' + y + ', ' + xExp + ' ' + y, class: 'fg-moe-wire' })));
+        experts.push(svg.appendChild(mk('rect', { x: xExp, y: expY(i), width: expW, height: expH, rx: 4, class: 'fg-moe-exp' })));
+        var t = mk('text', { x: xExp + expW / 2, y: expY(i) + expH / 2 + 3.5, class: 'fg-moe-el', 'text-anchor': 'middle' }); t.textContent = L('experto ', 'expert ') + (i + 1); svg.appendChild(t); elabels.push(t);
+      }
+      function chosen(s) { var sc = [], set = {}; for (var i = 0; i < N; i++) sc.push([rnd(s * 3.1 + i * 1.7 + 1), i]); sc.sort(function (a, b) { return b[0] - a[0]; }); for (var j = 0; j < K; j++) set[sc[j][1]] = 1; return set; }
+      var step = 0, timer = null;
+      function render() {
+        var set = chosen(step), names = [];
+        for (var i = 0; i < N; i++) {
+          var on = !!set[i];
+          experts[i].classList.toggle('on', on); lines[i].classList.toggle('on', on); elabels[i].classList.toggle('on', on);
+          if (on) names.push('#' + (i + 1));
+        }
+        read.innerHTML = L('token ', 'token ') + (step + 1) + ' → <b>' + names.join(', ') + '</b> · ' + K + '/' + N + ' ' + L('activos', 'active');
+      }
+      render();
+      function play() { if (timer) return; timer = setInterval(function () { var r = box.getBoundingClientRect(); if (r.bottom < 0 || r.top > (window.innerHeight || 9999)) return; step = (step + 1) % 6; render(); }, 1700); btn.textContent = '⏸'; }
+      function stop() { if (timer) { clearInterval(timer); timer = null; } btn.textContent = '▶'; }
+      btn.addEventListener('click', function () { timer ? stop() : play(); });
+      if (reduceMoe) { btn.textContent = '▶'; } else play();
+    });
+  } catch (e) {}
+
+  // ---- 1c-mirage. Build .fg-mirage — benchmark contamination inflates the score, not the ability ----
+  try {
+    document.querySelectorAll('.fg-mirage').forEach(function (box) {
+      box.className = 'fg-mirage fg-sch';
+      box.innerHTML = '<div class="fg-sch-h">' + L('El espejismo del benchmark: la contaminación infla la nota, no la capacidad', 'The benchmark mirage: contamination inflates the score, not the ability') + '</div>' +
+        '<svg class="fg-mirage-svg" viewBox="0 0 420 210" preserveAspectRatio="xMidYMid meet"></svg>' +
+        '<div class="fg-mirage-ctrl"><span>' + L('contaminación', 'contamination') + '</span><input type="range" min="0" max="100" step="1" value="0" aria-label="' + L('porcentaje de contaminación', 'contamination percentage') + '"><span class="cv">0%</span></div>' +
+        '<div class="fg-sch-cap"></div>';
+      var svg = box.querySelector('svg'), range = box.querySelector('input'), cv = box.querySelector('.cv'), cap = box.querySelector('.fg-sch-cap');
+      var W = 420, H = 210, padB = 34, padT = 16, base = 52;
+      var y0 = H - padB, y1 = padT, HH = y0 - y1;
+      function Y(p) { return y0 - p / 100 * HH; }
+      var b0 = { x: 100, w: 88 }, b1 = { x: 240, w: 88 };
+      function draw(c) {
+        var app = base + c / 100 * (98 - base), s = '';
+        [0, 25, 50, 75, 100].forEach(function (p) {
+          s += '<line class="grid" x1="62" y1="' + Y(p) + '" x2="' + (W - 14) + '" y2="' + Y(p) + '"/>';
+          s += '<text class="lbl" x="54" y="' + (Y(p) + 4) + '" text-anchor="end">' + p + '</text>';
+        });
+        s += '<rect class="bar-real" x="' + b0.x + '" y="' + Y(base) + '" width="' + b0.w + '" height="' + (y0 - Y(base)) + '"/>';
+        s += '<text class="blbl" x="' + (b0.x + b0.w / 2) + '" y="' + (y0 + 16) + '" text-anchor="middle">' + L('capacidad real', 'real ability') + '</text>';
+        s += '<text class="bval" x="' + (b0.x + b0.w / 2) + '" y="' + (Y(base) - 6) + '" text-anchor="middle">' + Math.round(base) + '%</text>';
+        s += '<rect class="bar-real" x="' + b1.x + '" y="' + Y(base) + '" width="' + b1.w + '" height="' + (y0 - Y(base)) + '"/>';
+        if (app > base + 0.5) s += '<rect fill="url(#fgmh)" stroke="rgb(213,94,0)" stroke-width="1" x="' + b1.x + '" y="' + Y(app) + '" width="' + b1.w + '" height="' + (Y(base) - Y(app)) + '"/>';
+        s += '<text class="blbl" x="' + (b1.x + b1.w / 2) + '" y="' + (y0 + 16) + '" text-anchor="middle">' + L('nota aparente', 'apparent score') + '</text>';
+        s += '<text class="bval" x="' + (b1.x + b1.w / 2) + '" y="' + (Y(app) - 6) + '" text-anchor="middle">' + Math.round(app) + '%</text>';
+        if (app > base + 7) s += '<text class="mlbl" x="' + (b1.x + b1.w + 5) + '" y="' + ((Y(app) + Y(base)) / 2 + 4) + '">← ' + L('espejismo', 'mirage') + '</text>';
+        svg.innerHTML = '<defs><pattern id="fgmh" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="rgba(213,94,0,0.12)"/><line x1="0" y1="0" x2="0" y2="7" stroke="rgb(213,94,0)" stroke-width="2.5"/></pattern></defs>' + s;
+        cv.textContent = c + '%';
+        var gap = Math.round(app - base);
+        cap.innerHTML = (+c === 0)
+          ? L('Sin contaminación: la nota <b>es</b> la capacidad real (' + Math.round(base) + '%).', 'No contamination: the score <b>is</b> the real ability (' + Math.round(base) + '%).')
+          : L('Con <b>' + c + '%</b> de contaminación, la nota sube a <b>' + Math.round(app) + '%</b>, pero la capacidad real sigue en <b>' + Math.round(base) + '%</b>. Ese hueco de <span class="hot">' + gap + ' puntos</span> es <span class="hot">espejismo</span>: el modelo no aprendió más, solo <b>vio el examen antes</b>.', 'With <b>' + c + '%</b> contamination, the score climbs to <b>' + Math.round(app) + '%</b>, but real ability stays at <b>' + Math.round(base) + '%</b>. That <span class="hot">' + gap + '-point</span> gap is a <span class="hot">mirage</span>: the model did not learn more, it just <b>saw the exam beforehand</b>.');
+      }
+      range.addEventListener('input', function () { draw(+range.value); });
+      draw(0);
     });
   } catch (e) {}
 

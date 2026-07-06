@@ -512,6 +512,38 @@ div.csl-indent {
 .fg-g3d-canvas{ width:100%; height:340px; display:block; border:1px solid #dce7f0; border-radius:.7rem;
   background:radial-gradient(120% 120% at 50% 25%, #fbfdff, #e9f1f9); cursor:grab; touch-action:none; }
 .fg-g3d-canvas:active{ cursor:grabbing; }
+
+/* fg-moe — Mixture-of-Experts router: only k of N experts light up (sparse activation) */
+.fg-moe-svg{ width:100%; height:auto; display:block; font-family:Georgia,"Times New Roman",serif; }
+.fg-moe-tok{ fill:rgb(var(--blue)); }
+.fg-moe-tl{ font-size:10px; fill:#fff; font-weight:700; }
+.fg-moe-router{ fill:#fff; stroke:rgb(var(--blue)); stroke-width:2; }
+.fg-moe-rl{ font-size:15px; fill:rgb(var(--blue)); }
+.fg-moe-feed{ stroke:rgb(var(--blue)); stroke-width:2; }
+.fg-moe-wire{ fill:none; stroke:#d3dde6; stroke-width:1.5; transition:stroke .4s, stroke-width .4s; }
+.fg-moe-wire.on{ stroke:rgb(var(--blue)); stroke-width:2.5; stroke-dasharray:6 6;
+  filter:drop-shadow(0 0 3px rgba(0,114,178,.5)); animation:fg-moe-flow 1s linear infinite; }
+.fg-moe-exp{ fill:#f0f3f6; stroke:#dce7f0; stroke-width:1; transition:fill .4s, stroke .4s, filter .4s; }
+.fg-moe-exp.on{ fill:rgba(0,114,178,.16); stroke:rgb(var(--blue)); stroke-width:1.5;
+  filter:drop-shadow(0 0 5px rgba(0,114,178,.35)); }
+.fg-moe-el{ font-size:10px; fill:#93a3b4; transition:fill .4s, font-weight .4s; }
+.fg-moe-el.on{ fill:rgb(var(--blue)); font-weight:700; }
+.fg-moe-ctrl{ display:flex; align-items:center; gap:.6rem; justify-content:center; margin:.5rem 0 .2rem; font-size:.8rem; color:#5b7790; }
+.fg-moe-read{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.8rem; } .fg-moe-read b{ color:rgb(var(--blue)); }
+@keyframes fg-moe-flow{ to { stroke-dashoffset:-12; } }
+@media (prefers-reduced-motion:reduce){ .fg-moe-wire.on{ animation:none; stroke-dasharray:none; } }
+
+/* fg-mirage — benchmark contamination inflates the score, not the real ability */
+.fg-mirage-svg{ width:100%; height:auto; display:block; font-family:Georgia,"Times New Roman",serif; }
+.fg-mirage-svg .grid{ stroke:#eef3f7; stroke-width:1; }
+.fg-mirage-svg .lbl{ font-size:10px; fill:#9bb4c9; }
+.fg-mirage-svg .bar-real{ fill:rgb(var(--blue)); }
+.fg-mirage-svg .blbl{ font-size:11px; fill:#5b7790; }
+.fg-mirage-svg .bval{ font-size:12px; font-weight:700; fill:#33536e; }
+.fg-mirage-svg .mlbl{ font-size:11px; font-weight:700; fill:rgb(var(--red)); }
+.fg-mirage-ctrl{ display:flex; align-items:center; gap:.55rem; justify-content:center; margin:.5rem 0 .2rem; font-size:.8rem; color:#5b7790; }
+.fg-mirage-ctrl input[type=range]{ accent-color:rgb(var(--red)); width:200px; max-width:60%; }
+.fg-mirage-ctrl .cv{ font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:700; color:rgb(var(--red)); min-width:34px; }
 </style>
 
 
@@ -905,8 +937,14 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/40-etica.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Ethics, safety and limitations</span></span></a>
+  <a href="../chapters/40-evaluacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Evaluation: measuring without fooling yourself</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/41-etica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Ethics, safety and limitations</span></span></a>
   </div>
 </li>
       </ul>
@@ -923,37 +961,37 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R1-formulario.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">R1 · Master formulary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R1 · Master formulary</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R2-cookbook.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R3-glosario.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R3 · Glossary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R3 · Glossary</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R4-medir-gamma.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R4 · Measuring your own γ (and reproducing the atlas)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R4 · Measuring your own γ (and reproducing the atlas)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R9-tafagent.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R9 · tafagent manual</span></span></a>
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R9 · tafagent manual</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R10-soluciones.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R10 · Exercise solutions</span></span></a>
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">R10 · Exercise solutions</span></span></a>
   </div>
 </li>
       </ul>
@@ -977,10 +1015,11 @@ div.csl-indent {
   <li><a href="#disaggregated-and-chunked-prefill-2024" id="toc-disaggregated-and-chunked-prefill-2024" class="nav-link" data-scroll-target="#disaggregated-and-chunked-prefill-2024"><span class="header-section-number">37.7</span> Disaggregated and chunked prefill (2024)</a></li>
   <li><a href="#other-levers-that-you-already-know" id="toc-other-levers-that-you-already-know" class="nav-link" data-scroll-target="#other-levers-that-you-already-know"><span class="header-section-number">37.8</span> Other levers (that you already know)</a></li>
   <li><a href="#compilation-and-kernels-to-situate" id="toc-compilation-and-kernels-to-situate" class="nav-link" data-scroll-target="#compilation-and-kernels-to-situate"><span class="header-section-number">37.9</span> Compilation and kernels (to situate)</a></li>
-  <li><a href="#the-decision-framework-honest" id="toc-the-decision-framework-honest" class="nav-link" data-scroll-target="#the-decision-framework-honest"><span class="header-section-number">37.10</span> The decision framework (honest)</a></li>
-  <li><a href="#bridge-to-our-theme-brief-and-honest" id="toc-bridge-to-our-theme-brief-and-honest" class="nav-link" data-scroll-target="#bridge-to-our-theme-brief-and-honest"><span class="header-section-number">37.11</span> Bridge to our theme (brief and honest)</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">37.12</span> Summary</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">37.13</span> Exercises</a></li>
+  <li><a href="#what-do-you-serve-with-the-engine-zoo" id="toc-what-do-you-serve-with-the-engine-zoo" class="nav-link" data-scroll-target="#what-do-you-serve-with-the-engine-zoo"><span class="header-section-number">37.10</span> What do you serve with? The engine zoo</a></li>
+  <li><a href="#the-decision-framework-honest" id="toc-the-decision-framework-honest" class="nav-link" data-scroll-target="#the-decision-framework-honest"><span class="header-section-number">37.11</span> The decision framework (honest)</a></li>
+  <li><a href="#bridge-to-our-theme-brief-and-honest" id="toc-bridge-to-our-theme-brief-and-honest" class="nav-link" data-scroll-target="#bridge-to-our-theme-brief-and-honest"><span class="header-section-number">37.12</span> Bridge to our theme (brief and honest)</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">37.13</span> Summary</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">37.14</span> Exercises</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
@@ -1033,6 +1072,7 @@ div.csl-indent {
 <li><strong>Continuous batching.</strong> <em>Definition:</em> grouping requests at the <strong>iteration</strong> level (not a fixed batch), adding and removing requests every step. <em>In the transformer:</em> it keeps the GPU <strong>full</strong> even though responses finish at different moments.</li>
 <li><strong>KV cache (in serving).</strong> <em>Definition:</em> the memory of already-computed keys/values (Ch. 20). <em>In the transformer:</em> it <strong>grows with the batch and the length</strong> and competes with the weights for HBM → it <strong>limits</strong> how many requests fit.</li>
 <li><strong>Disaggregated / chunked prefill.</strong> <em>Definition:</em> separating or chunking the prefill so it doesn’t <strong>stall</strong> the decodes in flight. <em>In the transformer:</em> it meets the TTFT and TPOT targets at the same time.</li>
+<li><strong>Inference engine (<em>runtime</em>).</strong> <em>Definition:</em> the ready-made software that runs the model, applying all these optimizations for you. <em>In the transformer:</em> you <strong>pick</strong> one depending on the world —<strong>server</strong> (vLLM, TensorRT-LLM, SGLang) or <strong>local</strong> (llama.cpp/Ollama)—, you don’t hand-code it.</li>
 </ul>
 <p>With this in hand, let’s open the server’s box.</p>
 </section>
@@ -1046,6 +1086,31 @@ div.csl-indent {
 <p><strong>Decode is the serving bottleneck</strong>, and it’s exactly where the <strong>KV cache</strong> (Ch. 20) gets reread on every step. Hence the central tension: putting in <strong>more requests at once</strong> raises total <em>throughput</em>, but <strong>slows down</strong> each user’s token-by-token.</p>
 <div class="analogia">
 <p><strong>🧩 Analogy — reading the question vs writing the answer.</strong> <em>Prefill</em> is <strong>reading the whole question at a glance</strong> (fast, in parallel). <em>Decode</em> is <strong>writing the answer word by word, rereading your notes at each word</strong> (slow, sequential). The server gets stuck writing, not reading.</p>
+</div>
+<p>The two phases, as a flow —the <strong>decode</strong> is a loop, and that’s where the bottleneck is:</p>
+<div class="fg-flow" style="--steps:5" role="img" aria-label="Serving an LLM: the request arrives, the prefill processes the whole prompt in parallel and sets the time to the first token, the KV cache is filled, the decode generates one token at a time rereading the cache and sets the time per token, until it delivers the complete response.">
+  <span class="fg-spark" aria-hidden="true"></span>
+  <div class="fg-step" style="--i:0">
+    <span class="fg-chip">📥</span>
+    <div class="fg-card"><b>Request</b><span>the user's prompt</span></div>
+  </div>
+  <div class="fg-step" style="--i:1">
+    <span class="fg-chip">⚡</span>
+    <div class="fg-card"><b>Prefill</b><span>processes the whole prompt in parallel (compute-bound) → <b>TTFT</b></span></div>
+  </div>
+  <div class="fg-step" style="--i:2">
+    <span class="fg-chip">💾</span>
+    <div class="fg-card"><b>Fill the KV cache</b><span>the keys/values of each token</span></div>
+  </div>
+  <div class="fg-step is-loop" style="--i:3">
+    <span class="fg-chip">🔁</span>
+    <span class="fg-badge">× each token</span>
+    <div class="fg-card"><b>Decode</b><span>one token at a time, rereading the KV (bandwidth-bound) → <b>TPOT</b></span></div>
+  </div>
+  <div class="fg-step is-out" style="--i:4">
+    <span class="fg-chip">📤</span>
+    <div class="fg-card"><b>Complete response</b><span>token by token to the end</span></div>
+  </div>
 </div>
 </section>
 <section id="the-metrics-that-matter" class="level2" data-number="37.4">
@@ -1112,8 +1177,88 @@ div.csl-indent {
 <h2 data-number="37.9" class="anchored" data-anchor-id="compilation-and-kernels-to-situate"><span class="header-section-number">37.9</span> Compilation and kernels (to situate)</h2>
 <p>A cross-cutting layer of efficiency: <strong>graph compilation</strong> and <strong>kernel fusion</strong> combine several operations into a single optimized kernel → less launch overhead and fewer trips to memory. Tools: <strong>torch.compile</strong> (PyTorch), <strong>TensorRT-LLM</strong> (NVIDIA: fused kernels + in-flight batching + paged KV + quantization) and <strong>ONNX Runtime</strong> (cross-platform operator fusion). No need to go into detail: the idea is to <strong>generate kernels that move less data</strong>, consistent with decode being <em>bandwidth-bound</em>.</p>
 </section>
-<section id="the-decision-framework-honest" class="level2" data-number="37.10">
-<h2 data-number="37.10" class="anchored" data-anchor-id="the-decision-framework-honest"><span class="header-section-number">37.10</span> The decision framework (honest)</h2>
+<section id="what-do-you-serve-with-the-engine-zoo" class="level2" data-number="37.10">
+<h2 data-number="37.10" class="anchored" data-anchor-id="what-do-you-serve-with-the-engine-zoo"><span class="header-section-number">37.10</span> What do you serve with? The engine zoo</h2>
+<p>All this physics is implemented by ready-made <strong>inference engines</strong>: you don’t hand-code continuous batching, you <strong>pick the right engine</strong>. And there are <strong>two worlds</strong> depending on who you serve —<strong>many users</strong> or <strong>yourself</strong>:</p>
+<div id="tbl-engines" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-engines-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;37.1: Common inference engines (2024-2026)
+</figcaption>
+<div aria-describedby="tbl-engines-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Engine</th>
+<th>World</th>
+<th>What it’s best at</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>vLLM</strong></td>
+<td>Server / cloud</td>
+<td>PagedAttention + continuous batching; the open <em>throughput</em> standard</td>
+</tr>
+<tr class="even">
+<td><strong>TensorRT-LLM</strong></td>
+<td>Server (NVIDIA)</td>
+<td>Fused kernels + paged KV + quantization; peak performance on NVIDIA GPUs</td>
+</tr>
+<tr class="odd">
+<td><strong>SGLang</strong></td>
+<td>Server</td>
+<td><em>RadixAttention</em>: shares prefixes in a <strong>tree</strong> → shines with prompts that <strong>branch</strong> (agents, CoT)</td>
+</tr>
+<tr class="even">
+<td><strong>llama.cpp</strong></td>
+<td>Local</td>
+<td>C/C++ engine that runs on <strong>CPU, Mac or a modest GPU</strong>; reads <strong>GGUF</strong> (Ch. 35)</td>
+</tr>
+<tr class="odd">
+<td><strong>Ollama</strong></td>
+<td>Local</td>
+<td>Friendly wrapper over llama.cpp: <code>ollama run llama3</code> and you’re off</td>
+</tr>
+<tr class="even">
+<td><strong>LM Studio / MLX</strong></td>
+<td>Local</td>
+<td>Desktop app with a UI / native engine for <strong>Apple Silicon</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Two ideas to orient you in the table:</p>
+<ul>
+<li><strong>Server</strong> = squeezing out <em>throughput</em> for many users at once → <strong>vLLM</strong>, <strong>TensorRT-LLM</strong>, <strong>SGLang</strong>. Here the continuous batching and paged KV from above rule.</li>
+<li><strong>Local</strong> = a single user on your own machine → <strong>llama.cpp</strong> and its wrapper <strong>Ollama</strong> are the entry point: you download a quantized <strong>GGUF</strong> (Ch. 35) and run it <strong>without a data-center GPU</strong>. It’s by far the most common way to “have an LLM at home”.</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled" title="🔍 Going deeper — RadixAttention">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>🔍 Going deeper — RadixAttention
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>vLLM’s <em>prefix caching</em> shares the KV cache prefix when two requests <strong>start the same</strong>. <strong>SGLang</strong> takes it further: it organizes all the prefixes into a <strong>radix tree</strong> (hence the name), so that branches with a <strong>common trunk</strong> —a <em>system prompt</em>, some <em>few-shot</em> examples, the first steps of a reasoning chain— <strong>reuse</strong> that trunk automatically instead of recomputing it. That’s why it shines in <strong>branching</strong> workloads: an agent exploring several actions, <em>self-consistency</em> with many chains, a tree of reasoning. It’s the same “prefix sharing” idea, but taken from a couple of requests to <strong>a whole tree</strong>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="the-decision-framework-honest" class="level2" data-number="37.11">
+<h2 data-number="37.11" class="anchored" data-anchor-id="the-decision-framework-honest"><span class="header-section-number">37.11</span> The decision framework (honest)</h2>
 <p>Deploying is navigating a <strong>latency–cost–throughput triangle</strong> (with quality in the background). In practice:</p>
 <ul>
 <li>You have a <strong>latency budget</strong> and you maximize throughput within it.</li>
@@ -1134,8 +1279,8 @@ div.csl-indent {
 </div>
 </div>
 </section>
-<section id="bridge-to-our-theme-brief-and-honest" class="level2" data-number="37.11">
-<h2 data-number="37.11" class="anchored" data-anchor-id="bridge-to-our-theme-brief-and-honest"><span class="header-section-number">37.11</span> Bridge to our theme (brief and honest)</h2>
+<section id="bridge-to-our-theme-brief-and-honest" class="level2" data-number="37.12">
+<h2 data-number="37.12" class="anchored" data-anchor-id="bridge-to-our-theme-brief-and-honest"><span class="header-section-number">37.12</span> Bridge to our theme (brief and honest)</h2>
 <p>The decode bottleneck <strong>is</strong> the KV cache (it’s reread in HBM every step), and that cache is the <strong>binding constraint</strong> on how many requests fit in the batch. Our <strong>D_f window derived from γ</strong> (Ch. 20) bounds <strong>how much KV</strong> to retain per request → reducing the effective cache length means <strong>more requests in the same HBM</strong>, that is, it touches the serving constraint directly. <em>(Honest: this is an observation of the book’s own; the serving sources don’t talk about γ or D_f.)</em></p>
 <div class="callout callout-style-default callout-note callout-titled" title="🧪 Try it — tafagent">
 <div class="callout-header d-flex align-content-center">
@@ -1151,8 +1296,8 @@ div.csl-indent {
 </div>
 </div>
 </section>
-<section id="summary" class="level2" data-number="37.12">
-<h2 data-number="37.12" class="anchored" data-anchor-id="summary"><span class="header-section-number">37.12</span> Summary</h2>
+<section id="summary" class="level2" data-number="37.13">
+<h2 data-number="37.13" class="anchored" data-anchor-id="summary"><span class="header-section-number">37.13</span> Summary</h2>
 <ul>
 <li><strong>Two phases:</strong> <strong>prefill</strong> (compute-bound, sets <strong>TTFT</strong>) and <strong>decode</strong> (bandwidth-bound, sets <strong>TPOT</strong>) → <strong>decode</strong> is the bottleneck, and it’s where the <strong>KV cache</strong> gets reread.</li>
 <li><strong>Metrics:</strong> <em>throughput</em> vs <strong>goodput</strong> (meeting an SLO); latency ≈ TTFT + TPOT × tokens. Chat optimizes latency; batch, throughput.</li>
@@ -1160,12 +1305,13 @@ div.csl-indent {
 <li><strong>KV cache:</strong> the <strong>binding constraint</strong>; <strong>PagedAttention</strong> <span class="citation" data-cites="kwon2023paged">(<a href="#ref-kwon2023paged" role="doc-biblioref"><span class="nocase">Kwon et al.</span> 2023</a>)</span> almost zero waste + <strong>prefix sharing</strong> → more batch, more throughput.</li>
 <li><strong>Disaggregated</strong> (DistServe) or <strong>chunked</strong> (Sarathi-Serve) prefill: keep a long prefill from <strong>stalling</strong> the decodes → they meet TTFT and TPOT at once.</li>
 <li><strong>Composes:</strong> speculative (latency), quantization (capacity), parallelism (size), <strong>multi-LoRA</strong> (S-LoRA); compilation/kernel fusion.</li>
+<li><strong>You pick the engine, you don’t program it:</strong> <strong>server</strong> (vLLM / TensorRT-LLM / SGLang) for many users; <strong>local</strong> (llama.cpp / Ollama + GGUF) for your own machine.</li>
 <li><strong>Honest:</strong> the “X×” are <strong>workload-specific</strong> —measure on yours.</li>
 </ul>
 <p><strong>Next (Part VII):</strong> we leave the engineering behind and return to the book’s underlying question —<strong>what is <em>really</em> happening inside?</strong>—: mechanistic interpretability, our formula audit (verified/folklore/numerology), the map of the 2026 landscape, and ethics.</p>
 </section>
-<section id="exercises" class="level2" data-number="37.13">
-<h2 data-number="37.13" class="anchored" data-anchor-id="exercises"><span class="header-section-number">37.13</span> Exercises</h2>
+<section id="exercises" class="level2" data-number="37.14">
+<h2 data-number="37.14" class="anchored" data-anchor-id="exercises"><span class="header-section-number">37.14</span> Exercises</h2>
 <ol type="1">
 <li><strong>Two phases.</strong> Why is prefill <em>compute-bound</em> and decode <em>bandwidth-bound</em>? Which is the serving bottleneck and why?</li>
 <li><strong>Metrics.</strong> Define TTFT and TPOT and say which phase dominates each. Why is <em>goodput</em> more honest than <em>throughput</em>?</li>
@@ -1173,6 +1319,7 @@ div.csl-indent {
 <li><strong>KV cache.</strong> Why does the KV cache limit how many requests fit in the batch? What two things does PagedAttention bring to serving?</li>
 <li><strong>Interference.</strong> How does a long prefill stall the decodes in flight, and how do DistServe and Sarathi-Serve solve it?</li>
 <li><strong>Honesty.</strong> Why might a serving paper’s “5× faster” not hold up in your deployment?</li>
+<li><strong>Two worlds.</strong> Which engine would you choose to (a) serve a chatbot to 10,000 users at once and (b) run a model on your laptop without a dedicated GPU? What model <strong>format</strong> would you use in case (b)?</li>
 </ol>
 </section>
 <section id="references" class="level2 unnumbered">
@@ -1332,6 +1479,95 @@ Yu, Gyeong-In, Joo Seong Jeong, Geon-Woo Kim, Soojeong Kim, and Byung-Gon Chun. 
         render(g);
       });
       render(1.35); start();
+    });
+  } catch (e) {}
+
+  // ---- 1c-moe. Build .fg-moe — Mixture-of-Experts router: only k of N experts light up ----
+  try {
+    var reduceMoe = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll('.fg-moe').forEach(function (box) {
+      var N = +(box.dataset.experts || 8), K = +(box.dataset.topk || 2);
+      var rnd = function (s) { var x = Math.sin(s * 12.9898) * 43758.5453; return x - Math.floor(x); };
+      var SVGNS = 'http://www.w3.org/2000/svg';
+      var W = 460, H = Math.max(190, N * 28 + 24), padT = 16;
+      var xTok = 38, xRouter = 150, xExp = 296, expW = 128, expH = 18;
+      var gap = N > 1 ? (H - padT * 2 - N * expH) / (N - 1) : 0;
+      function expY(i) { return padT + i * (expH + gap); }
+      var yMid = H / 2;
+      box.className = 'fg-moe fg-sch';
+      box.innerHTML = '<div class="fg-sch-h">' + L('Mixture of Experts: el router enciende solo k de N', 'Mixture of Experts: the router lights up only k of N') + '</div>' +
+        '<svg class="fg-moe-svg" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet"></svg>' +
+        '<div class="fg-moe-ctrl"><button class="fg-sch-btn" data-act="pp" type="button">⏸</button><span class="fg-moe-read"></span></div>' +
+        '<div class="fg-sch-cap">' + L('Cada token pasa por el <b>router</b>, que elige los <b>' + K + ' expertos</b> más adecuados (de ' + N + '). El resto <span class="hot">ni se encienden</span>: por eso el <b>cómputo</b> por token es bajo aunque el modelo tenga muchísimos parámetros.', 'Each token goes through the <b>router</b>, which picks the <b>' + K + ' best experts</b> (of ' + N + '). The rest <span class="hot">stay off</span>: that is why per-token <b>compute</b> stays low even with a huge parameter count.') + '</div>';
+      var svg = box.querySelector('.fg-moe-svg'), read = box.querySelector('.fg-moe-read'), btn = box.querySelector('[data-act="pp"]');
+      function mk(tag, a) { var e = document.createElementNS(SVGNS, tag); for (var k in a) e.setAttribute(k, a[k]); return e; }
+      svg.appendChild(mk('line', { x1: xTok + 13, y1: yMid, x2: xRouter - 15, y2: yMid, class: 'fg-moe-feed' }));
+      svg.appendChild(mk('circle', { cx: xTok, cy: yMid, r: 13, class: 'fg-moe-tok' }));
+      var tl = mk('text', { x: xTok, y: yMid + 3.5, class: 'fg-moe-tl', 'text-anchor': 'middle' }); tl.textContent = 'tok'; svg.appendChild(tl);
+      svg.appendChild(mk('rect', { x: xRouter - 15, y: yMid - 15, width: 30, height: 30, rx: 4, transform: 'rotate(45 ' + xRouter + ' ' + yMid + ')', class: 'fg-moe-router' }));
+      var rl = mk('text', { x: xRouter, y: yMid + 5, class: 'fg-moe-rl', 'text-anchor': 'middle' }); rl.textContent = '⇄'; svg.appendChild(rl);
+      var lines = [], experts = [], elabels = [];
+      for (var i = 0; i < N; i++) {
+        var y = expY(i) + expH / 2;
+        lines.push(svg.appendChild(mk('path', { d: 'M' + (xRouter + 15) + ' ' + yMid + ' C ' + (xRouter + 62) + ' ' + yMid + ', ' + (xExp - 46) + ' ' + y + ', ' + xExp + ' ' + y, class: 'fg-moe-wire' })));
+        experts.push(svg.appendChild(mk('rect', { x: xExp, y: expY(i), width: expW, height: expH, rx: 4, class: 'fg-moe-exp' })));
+        var t = mk('text', { x: xExp + expW / 2, y: expY(i) + expH / 2 + 3.5, class: 'fg-moe-el', 'text-anchor': 'middle' }); t.textContent = L('experto ', 'expert ') + (i + 1); svg.appendChild(t); elabels.push(t);
+      }
+      function chosen(s) { var sc = [], set = {}; for (var i = 0; i < N; i++) sc.push([rnd(s * 3.1 + i * 1.7 + 1), i]); sc.sort(function (a, b) { return b[0] - a[0]; }); for (var j = 0; j < K; j++) set[sc[j][1]] = 1; return set; }
+      var step = 0, timer = null;
+      function render() {
+        var set = chosen(step), names = [];
+        for (var i = 0; i < N; i++) {
+          var on = !!set[i];
+          experts[i].classList.toggle('on', on); lines[i].classList.toggle('on', on); elabels[i].classList.toggle('on', on);
+          if (on) names.push('#' + (i + 1));
+        }
+        read.innerHTML = L('token ', 'token ') + (step + 1) + ' → <b>' + names.join(', ') + '</b> · ' + K + '/' + N + ' ' + L('activos', 'active');
+      }
+      render();
+      function play() { if (timer) return; timer = setInterval(function () { var r = box.getBoundingClientRect(); if (r.bottom < 0 || r.top > (window.innerHeight || 9999)) return; step = (step + 1) % 6; render(); }, 1700); btn.textContent = '⏸'; }
+      function stop() { if (timer) { clearInterval(timer); timer = null; } btn.textContent = '▶'; }
+      btn.addEventListener('click', function () { timer ? stop() : play(); });
+      if (reduceMoe) { btn.textContent = '▶'; } else play();
+    });
+  } catch (e) {}
+
+  // ---- 1c-mirage. Build .fg-mirage — benchmark contamination inflates the score, not the ability ----
+  try {
+    document.querySelectorAll('.fg-mirage').forEach(function (box) {
+      box.className = 'fg-mirage fg-sch';
+      box.innerHTML = '<div class="fg-sch-h">' + L('El espejismo del benchmark: la contaminación infla la nota, no la capacidad', 'The benchmark mirage: contamination inflates the score, not the ability') + '</div>' +
+        '<svg class="fg-mirage-svg" viewBox="0 0 420 210" preserveAspectRatio="xMidYMid meet"></svg>' +
+        '<div class="fg-mirage-ctrl"><span>' + L('contaminación', 'contamination') + '</span><input type="range" min="0" max="100" step="1" value="0" aria-label="' + L('porcentaje de contaminación', 'contamination percentage') + '"><span class="cv">0%</span></div>' +
+        '<div class="fg-sch-cap"></div>';
+      var svg = box.querySelector('svg'), range = box.querySelector('input'), cv = box.querySelector('.cv'), cap = box.querySelector('.fg-sch-cap');
+      var W = 420, H = 210, padB = 34, padT = 16, base = 52;
+      var y0 = H - padB, y1 = padT, HH = y0 - y1;
+      function Y(p) { return y0 - p / 100 * HH; }
+      var b0 = { x: 100, w: 88 }, b1 = { x: 240, w: 88 };
+      function draw(c) {
+        var app = base + c / 100 * (98 - base), s = '';
+        [0, 25, 50, 75, 100].forEach(function (p) {
+          s += '<line class="grid" x1="62" y1="' + Y(p) + '" x2="' + (W - 14) + '" y2="' + Y(p) + '"/>';
+          s += '<text class="lbl" x="54" y="' + (Y(p) + 4) + '" text-anchor="end">' + p + '</text>';
+        });
+        s += '<rect class="bar-real" x="' + b0.x + '" y="' + Y(base) + '" width="' + b0.w + '" height="' + (y0 - Y(base)) + '"/>';
+        s += '<text class="blbl" x="' + (b0.x + b0.w / 2) + '" y="' + (y0 + 16) + '" text-anchor="middle">' + L('capacidad real', 'real ability') + '</text>';
+        s += '<text class="bval" x="' + (b0.x + b0.w / 2) + '" y="' + (Y(base) - 6) + '" text-anchor="middle">' + Math.round(base) + '%</text>';
+        s += '<rect class="bar-real" x="' + b1.x + '" y="' + Y(base) + '" width="' + b1.w + '" height="' + (y0 - Y(base)) + '"/>';
+        if (app > base + 0.5) s += '<rect fill="url(#fgmh)" stroke="rgb(213,94,0)" stroke-width="1" x="' + b1.x + '" y="' + Y(app) + '" width="' + b1.w + '" height="' + (Y(base) - Y(app)) + '"/>';
+        s += '<text class="blbl" x="' + (b1.x + b1.w / 2) + '" y="' + (y0 + 16) + '" text-anchor="middle">' + L('nota aparente', 'apparent score') + '</text>';
+        s += '<text class="bval" x="' + (b1.x + b1.w / 2) + '" y="' + (Y(app) - 6) + '" text-anchor="middle">' + Math.round(app) + '%</text>';
+        if (app > base + 7) s += '<text class="mlbl" x="' + (b1.x + b1.w + 5) + '" y="' + ((Y(app) + Y(base)) / 2 + 4) + '">← ' + L('espejismo', 'mirage') + '</text>';
+        svg.innerHTML = '<defs><pattern id="fgmh" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="rgba(213,94,0,0.12)"/><line x1="0" y1="0" x2="0" y2="7" stroke="rgb(213,94,0)" stroke-width="2.5"/></pattern></defs>' + s;
+        cv.textContent = c + '%';
+        var gap = Math.round(app - base);
+        cap.innerHTML = (+c === 0)
+          ? L('Sin contaminación: la nota <b>es</b> la capacidad real (' + Math.round(base) + '%).', 'No contamination: the score <b>is</b> the real ability (' + Math.round(base) + '%).')
+          : L('Con <b>' + c + '%</b> de contaminación, la nota sube a <b>' + Math.round(app) + '%</b>, pero la capacidad real sigue en <b>' + Math.round(base) + '%</b>. Ese hueco de <span class="hot">' + gap + ' puntos</span> es <span class="hot">espejismo</span>: el modelo no aprendió más, solo <b>vio el examen antes</b>.', 'With <b>' + c + '%</b> contamination, the score climbs to <b>' + Math.round(app) + '%</b>, but real ability stays at <b>' + Math.round(base) + '%</b>. That <span class="hot">' + gap + '-point</span> gap is a <span class="hot">mirage</span>: the model did not learn more, it just <b>saw the exam beforehand</b>.');
+      }
+      range.addEventListener('input', function () { draw(+range.value); });
+      draw(0);
     });
   } catch (e) {}
 

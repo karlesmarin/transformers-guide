@@ -547,6 +547,38 @@ div.csl-indent {
 .fg-g3d-canvas{ width:100%; height:340px; display:block; border:1px solid #dce7f0; border-radius:.7rem;
   background:radial-gradient(120% 120% at 50% 25%, #fbfdff, #e9f1f9); cursor:grab; touch-action:none; }
 .fg-g3d-canvas:active{ cursor:grabbing; }
+
+/* fg-moe — Mixture-of-Experts router: only k of N experts light up (sparse activation) */
+.fg-moe-svg{ width:100%; height:auto; display:block; font-family:Georgia,"Times New Roman",serif; }
+.fg-moe-tok{ fill:rgb(var(--blue)); }
+.fg-moe-tl{ font-size:10px; fill:#fff; font-weight:700; }
+.fg-moe-router{ fill:#fff; stroke:rgb(var(--blue)); stroke-width:2; }
+.fg-moe-rl{ font-size:15px; fill:rgb(var(--blue)); }
+.fg-moe-feed{ stroke:rgb(var(--blue)); stroke-width:2; }
+.fg-moe-wire{ fill:none; stroke:#d3dde6; stroke-width:1.5; transition:stroke .4s, stroke-width .4s; }
+.fg-moe-wire.on{ stroke:rgb(var(--blue)); stroke-width:2.5; stroke-dasharray:6 6;
+  filter:drop-shadow(0 0 3px rgba(0,114,178,.5)); animation:fg-moe-flow 1s linear infinite; }
+.fg-moe-exp{ fill:#f0f3f6; stroke:#dce7f0; stroke-width:1; transition:fill .4s, stroke .4s, filter .4s; }
+.fg-moe-exp.on{ fill:rgba(0,114,178,.16); stroke:rgb(var(--blue)); stroke-width:1.5;
+  filter:drop-shadow(0 0 5px rgba(0,114,178,.35)); }
+.fg-moe-el{ font-size:10px; fill:#93a3b4; transition:fill .4s, font-weight .4s; }
+.fg-moe-el.on{ fill:rgb(var(--blue)); font-weight:700; }
+.fg-moe-ctrl{ display:flex; align-items:center; gap:.6rem; justify-content:center; margin:.5rem 0 .2rem; font-size:.8rem; color:#5b7790; }
+.fg-moe-read{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.8rem; } .fg-moe-read b{ color:rgb(var(--blue)); }
+@keyframes fg-moe-flow{ to { stroke-dashoffset:-12; } }
+@media (prefers-reduced-motion:reduce){ .fg-moe-wire.on{ animation:none; stroke-dasharray:none; } }
+
+/* fg-mirage — benchmark contamination inflates the score, not the real ability */
+.fg-mirage-svg{ width:100%; height:auto; display:block; font-family:Georgia,"Times New Roman",serif; }
+.fg-mirage-svg .grid{ stroke:#eef3f7; stroke-width:1; }
+.fg-mirage-svg .lbl{ font-size:10px; fill:#9bb4c9; }
+.fg-mirage-svg .bar-real{ fill:rgb(var(--blue)); }
+.fg-mirage-svg .blbl{ font-size:11px; fill:#5b7790; }
+.fg-mirage-svg .bval{ font-size:12px; font-weight:700; fill:#33536e; }
+.fg-mirage-svg .mlbl{ font-size:11px; font-weight:700; fill:rgb(var(--red)); }
+.fg-mirage-ctrl{ display:flex; align-items:center; gap:.55rem; justify-content:center; margin:.5rem 0 .2rem; font-size:.8rem; color:#5b7790; }
+.fg-mirage-ctrl input[type=range]{ accent-color:rgb(var(--red)); width:200px; max-width:60%; }
+.fg-mirage-ctrl .cv{ font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:700; color:rgb(var(--red)); min-width:34px; }
 </style>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
@@ -969,8 +1001,14 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/40-etica.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Ética, seguridad y limitaciones</span></span></a>
+  <a href="../chapters/40-evaluacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Evaluación: medir sin engañarte</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/41-etica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Ética, seguridad y limitaciones</span></span></a>
   </div>
 </li>
       </ul>
@@ -987,37 +1025,37 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R1-formulario.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">R1 · Formulario maestro</span></span></a>
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R1 · Formulario maestro</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R2-cookbook.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R3-glosario.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R3 · Glosario</span></span></a>
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R3 · Glosario</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R4-medir-gamma.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R4 · Medir tu propio γ (y reproducir el atlas)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R4 · Medir tu propio γ (y reproducir el atlas)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R9-tafagent.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R9 · Manual de tafagent</span></span></a>
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R9 · Manual de tafagent</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R10-soluciones.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R10 · Soluciones de los ejercicios</span></span></a>
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">R10 · Soluciones de los ejercicios</span></span></a>
   </div>
 </li>
       </ul>
@@ -1040,11 +1078,12 @@ window.Quarto = {
   <li><a href="#las-activaciones-relu-gelu-swiglu" id="toc-las-activaciones-relu-gelu-swiglu" class="nav-link" data-scroll-target="#las-activaciones-relu-gelu-swiglu"><span class="header-section-number">7.6</span> Las activaciones: ReLU → GELU → SwiGLU</a></li>
   <li><a href="#un-detalle-que-se-confunde-mucho" id="toc-un-detalle-que-se-confunde-mucho" class="nav-link" data-scroll-target="#un-detalle-que-se-confunde-mucho"><span class="header-section-number">7.7</span> Un detalle que se confunde mucho</a></li>
   <li><a href="#la-ffn-se-lleva-la-mayor-parte-de-los-parámetros" id="toc-la-ffn-se-lleva-la-mayor-parte-de-los-parámetros" class="nav-link" data-scroll-target="#la-ffn-se-lleva-la-mayor-parte-de-los-parámetros"><span class="header-section-number">7.8</span> La FFN se lleva la mayor parte de los parámetros</a></li>
-  <li><a href="#lo-fascinante-la-ffn-es-una-memoria" id="toc-lo-fascinante-la-ffn-es-una-memoria" class="nav-link" data-scroll-target="#lo-fascinante-la-ffn-es-una-memoria"><span class="header-section-number">7.9</span> Lo fascinante: la FFN es una “memoria”</a></li>
-  <li><a href="#y-las-neuronas-se-entienden" id="toc-y-las-neuronas-se-entienden" class="nav-link" data-scroll-target="#y-las-neuronas-se-entienden"><span class="header-section-number">7.10</span> ¿Y las “neuronas” se entienden?</a></li>
-  <li><a href="#en-código" id="toc-en-código" class="nav-link" data-scroll-target="#en-código"><span class="header-section-number">7.11</span> En código</a></li>
-  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">7.12</span> Resumen</a></li>
-  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">7.13</span> Ejercicios</a></li>
+  <li><a href="#la-ffn-moderna-dispersa-mixture-of-experts" id="toc-la-ffn-moderna-dispersa-mixture-of-experts" class="nav-link" data-scroll-target="#la-ffn-moderna-dispersa-mixture-of-experts"><span class="header-section-number">7.9</span> La FFN moderna: dispersa (Mixture of Experts)</a></li>
+  <li><a href="#lo-fascinante-la-ffn-es-una-memoria" id="toc-lo-fascinante-la-ffn-es-una-memoria" class="nav-link" data-scroll-target="#lo-fascinante-la-ffn-es-una-memoria"><span class="header-section-number">7.10</span> Lo fascinante: la FFN es una “memoria”</a></li>
+  <li><a href="#y-las-neuronas-se-entienden" id="toc-y-las-neuronas-se-entienden" class="nav-link" data-scroll-target="#y-las-neuronas-se-entienden"><span class="header-section-number">7.11</span> ¿Y las “neuronas” se entienden?</a></li>
+  <li><a href="#en-código" id="toc-en-código" class="nav-link" data-scroll-target="#en-código"><span class="header-section-number">7.12</span> En código</a></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">7.13</span> Resumen</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">7.14</span> Ejercicios</a></li>
   <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias">Referencias</a></li>
   </ul>
 </nav>
@@ -1096,6 +1135,7 @@ window.Quarto = {
 <li><strong>Gating (SwiGLU).</strong> <em>Definición:</em> una segunda proyección que decide, elemento a elemento, <strong>cuánto dejar pasar</strong> de la primera. <em>En el transformer:</em> actúa como un filtro aprendido sobre la activación; por la tabla extra, los modelos que lo usan reducen el ancho a ≈2,7× para no aumentar parámetros.</li>
 <li><strong>Memoria clave-valor.</strong> <em>Definición:</em> lectura de la FFN según la cual las filas de <span class="math inline">\(W_1\)</span> <strong>detectan patrones</strong> (claves) y <span class="math inline">\(W_2\)</span> guarda lo que esos patrones <strong>escriben</strong> (valores). <em>En el transformer:</em> convierte la FFN en un almacén de asociaciones “si veo este patrón → escribo esto”.</li>
 <li><strong>Conocimiento localizado (ROME).</strong> <em>Definición:</em> los hechos concretos viven sobre todo en las <strong>FFN intermedias</strong> y se pueden editar tocando esos pesos. <em>En el transformer:</em> hace de la FFN el almacén editable de conocimiento del modelo.</li>
+<li><strong>Mezcla de expertos (MoE).</strong> <em>Definición:</em> sustituir la única FFN por <strong>varias</strong> (expertos) más un <strong>router</strong> que activa solo unas pocas por token. <em>En el transformer:</em> separa <strong>capacidad</strong> (parámetros totales) de <strong>cómputo</strong> (parámetros activos) — es la forma que toma la FFN en los modelos frontera dispersos.</li>
 <li><strong>Superposición / polisemia.</strong> <em>Definición:</em> el modelo empaqueta más características que neuronas disponibles, así que muchas neuronas se activan con cosas no relacionadas. <em>En el transformer:</em> es la razón de que “una neurona = un concepto” sea la excepción, no la regla.</li>
 </ul>
 <p>Con esto en mente, veamos qué papel cumple la FFN frente a la atención.</p>
@@ -1202,8 +1242,53 @@ window.Quarto = {
 </div>
 </div>
 </section>
-<section id="lo-fascinante-la-ffn-es-una-memoria" class="level2" data-number="7.9">
-<h2 data-number="7.9" class="anchored" data-anchor-id="lo-fascinante-la-ffn-es-una-memoria"><span class="header-section-number">7.9</span> Lo fascinante: la FFN es una “memoria”</h2>
+<section id="la-ffn-moderna-dispersa-mixture-of-experts" class="level2" data-number="7.9">
+<h2 data-number="7.9" class="anchored" data-anchor-id="la-ffn-moderna-dispersa-mixture-of-experts"><span class="header-section-number">7.9</span> La FFN moderna: dispersa (Mixture of Experts)</h2>
+<p>Si la FFN se lleva ~2/3 de los parámetros, es también <strong>la pieza más cara de agrandar</strong>. La idea de los modelos frontera de 2024-2026 (Mixtral, DeepSeek, Grok, Llama-4) no es hacer la FFN más grande, sino <strong>tener muchas</strong>: se sustituye la única FFN por <strong>N “expertos”</strong> (N redes feed-forward independientes) y un pequeño <strong>enrutador (<em>router</em>)</strong> que, para cada token, enciende solo <strong>k</strong> de ellos (típicamente k=2). Es la <strong>mezcla de expertos</strong> (<em>Mixture of Experts</em>, MoE) <span class="citation" data-cites="shazeer2017moe fedus2022switch">(<a href="#ref-shazeer2017moe" role="doc-biblioref">Shazeer et&nbsp;al. 2017</a>; <a href="#ref-fedus2022switch" role="doc-biblioref">Fedus et&nbsp;al. 2022</a>)</span>.</p>
+<div class="analogia">
+<p><strong>🧩 Analogía.</strong> En vez de que cada token pase por el mismo generalista, hay una <strong>recepcionista</strong> (el router) que lo mira y lo manda a los <strong>2 especialistas</strong> que le convienen —de entre 8, 64 o 256—. El resto de expertos, para ese token, ni se encienden.</p>
+</div>
+<p>Míralo en marcha: cada token enciende solo <strong>2 de 8</strong> expertos. Fíjate sobre todo en <strong>cuántos quedan apagados</strong> en cada paso —esa es la clave de por qué sale barato—:</p>
+<div class="fg-moe" data-experts="8" data-topk="2"></div>
+<p>El truco está en <strong>separar dos cosas que normalmente van juntas</strong>:</p>
+<ul>
+<li><strong>Parámetros totales (capacidad)</strong> ↑↑: son la suma de todos los expertos. Mixtral 8×7B <span class="citation" data-cites="jiang2024mixtral">(<a href="#ref-jiang2024mixtral" role="doc-biblioref"><span class="nocase">Jiang et&nbsp;al.</span> 2024</a>)</span> tiene <strong>≈47.000 M</strong> de parámetros.</li>
+<li><strong>Parámetros <em>activos</em> por token (cómputo)</strong> ≈ constante: como solo se encienden k expertos, cada token solo “paga” por ~2. Mixtral activa <strong>≈13.000 M</strong> por token —el coste de un modelo casi 4× más pequeño—.</li>
+</ul>
+<p>Es decir: <strong>MoE compra capacidad sin pagar el cómputo proporcional</strong>. Por eso los modelos abiertos más capaces de esta era son dispersos.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="⚠ No es gratis — disperso en cómputo, denso en memoria">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>⚠ No es gratis — disperso en cómputo, denso en memoria
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>El MoE tiene su letra pequeña: (1) <strong>todos</strong> los expertos deben estar cargados en memoria aunque en cada paso solo se usen 2 → el ahorro es en <em>FLOPs</em>, no en <em>VRAM</em>; (2) hay que <strong>equilibrar la carga</strong> entre expertos (con una pérdida auxiliar) para que el router no mande todo a los mismos; (3) el enrutado añade inestabilidad al entrenamiento. La frase para recordarlo: <strong>disperso en cómputo, denso en memoria</strong>. En el serving, repartir los expertos entre GPUs se llama <em>expert parallelism</em> (Cap. 36).</p>
+</div>
+</div>
+<p>Así que “la FFN es 2/3 de los parámetros” describe a los modelos <strong>densos</strong>; en uno disperso, los expertos (FFN) pueden ser el <strong>90 %</strong> del total —solo que la mayoría duerme en cada paso—.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="🔬 Una radiografía abierta: gpt-oss">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>🔬 Una radiografía abierta: gpt-oss
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Si quieres ver <strong>todas</strong> estas piezas juntas en un modelo real y documentado, mira <strong>gpt-oss</strong> <span class="citation" data-cites="openai2025gptoss">(<a href="#ref-openai2025gptoss" role="doc-biblioref">OpenAI 2025</a>)</span>, los pesos abiertos de OpenAI (ago-2025). Es un MoE de manual: <strong>128 expertos</strong> (versión 120B) o <strong>32</strong> (versión 20B), con el router eligiendo <strong>4 por token</strong>. Y combina casi todo lo moderno de este libro: sus pesos MoE van en <strong>MXFP4 nativo</strong> (4 bits de coma flotante, Cap. 35) —por eso el 120B cabe en <strong>una sola GPU de 80 GB</strong>—, usa <strong>SwiGLU</strong> (lo vimos arriba) y añade un <strong>sumidero de atención aprendido por cabeza</strong> (Cap. 17). Es, hoy, la mejor “radiografía” pública de cómo se arma un LLM frontera moderno.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="lo-fascinante-la-ffn-es-una-memoria" class="level2" data-number="7.10">
+<h2 data-number="7.10" class="anchored" data-anchor-id="lo-fascinante-la-ffn-es-una-memoria"><span class="header-section-number">7.10</span> Lo fascinante: la FFN es una “memoria”</h2>
 <p>¿Qué <em>guarda</em> realmente la FFN? Una respuesta preciosa: funciona como una <strong>memoria clave-valor</strong> <span class="citation" data-cites="geva2021ffn">(<a href="#ref-geva2021ffn" role="doc-biblioref">Geva et&nbsp;al. 2021</a>)</span>. Las filas de <span class="math inline">\(W_1\)</span> actúan como <strong>claves</strong> que <em>detectan patrones</em> en la entrada (en las capas bajas, patrones superficiales/ sintácticos; en las altas, semánticos), y <span class="math inline">\(W_2\)</span> guarda los <strong>valores</strong> que esos patrones <em>escriben</em> hacia la salida. La FFN no es un revoltijo: es un almacén de asociaciones “si veo este patrón → escribo esto”.</p>
 <div class="callout callout-style-default callout-note callout-titled" title="🧠 Curiosidad — los hechos viven en la FFN">
 <div class="callout-header d-flex align-content-center">
@@ -1216,15 +1301,16 @@ window.Quarto = {
 </div>
 <div class="callout-body-container callout-body">
 <p>Si esto es una memoria, ¿se puede <em>editar</em>? Sí. Los hechos del tipo “la capital de Francia es París” están <strong>localizados sobre todo en las FFN de las capas intermedias</strong>, y se puede <strong>cambiar un hecho concreto editando directamente esos pesos</strong> —es lo que hace el método ROME <span class="citation" data-cites="meng2022rome">(<a href="#ref-meng2022rome" role="doc-biblioref">Meng et&nbsp;al. 2022</a>)</span>—. La FFN es, en buena medida, el almacén editable de conocimiento del modelo.</p>
+<p>⚠ <em>Con una salvedad honesta:</em> que un hecho se pueda <strong>localizar</strong> en unas FFN no implica que editarlo <em>ahí</em> sea lo correcto. Hase et al. <span class="citation" data-cites="hase2023localization">(<a href="#ref-hase2023localization" role="doc-biblioref">Hase et&nbsp;al. 2023</a>)</span> mostraron que a menudo se edita con éxito en capas <strong>distintas</strong> de donde el rastreo causal “ubica” el hecho —<strong>localizar ≠ editar</strong>—. La lectura de memoria clave-valor es sólida; la de “edita justo donde está localizado” es más resbaladiza de lo que parece.</p>
 </div>
 </div>
 </section>
-<section id="y-las-neuronas-se-entienden" class="level2" data-number="7.10">
-<h2 data-number="7.10" class="anchored" data-anchor-id="y-las-neuronas-se-entienden"><span class="header-section-number">7.10</span> ¿Y las “neuronas” se entienden?</h2>
+<section id="y-las-neuronas-se-entienden" class="level2" data-number="7.11">
+<h2 data-number="7.11" class="anchored" data-anchor-id="y-las-neuronas-se-entienden"><span class="header-section-number">7.11</span> ¿Y las “neuronas” se entienden?</h2>
 <p>Sería bonito que cada neurona de la capa ancha representara un concepto limpio. En la práctica, <strong>muchas son <em>polisémicas</em></strong> (se activan con cosas no relacionadas), por un fenómeno llamado <em>superposición</em>: el modelo empaqueta más características que neuronas disponibles. Algunas neuronas sí son interpretables, pero <strong>conviene no exagerar</strong>: “una neurona = un concepto” es la excepción, no la regla. (Lo retomamos en la Parte VII, interpretabilidad.)</p>
 </section>
-<section id="en-código" class="level2" data-number="7.11">
-<h2 data-number="7.11" class="anchored" data-anchor-id="en-código"><span class="header-section-number">7.11</span> En código</h2>
+<section id="en-código" class="level2" data-number="7.12">
+<h2 data-number="7.12" class="anchored" data-anchor-id="en-código"><span class="header-section-number">7.12</span> En código</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, torch.nn <span class="im">as</span> nn</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>d_model, d_ff <span class="op">=</span> <span class="dv">768</span>, <span class="dv">3072</span>          <span class="co"># GPT-2 small: expansión 4×</span></span>
@@ -1237,19 +1323,20 @@ window.Quarto = {
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ffn(x).shape)                <span class="co"># (5, 768): mismo tamaño, listo para el residual</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Fíjate: entra y sale con el mismo tamaño (<span class="math inline">\(d_{model}\)</span>), porque su salida se <strong>suma</strong> al flujo residual (Cap. 3). Y se aplica a los 5 tokens por igual, cada uno por su cuenta.</p>
 </section>
-<section id="resumen" class="level2" data-number="7.12">
-<h2 data-number="7.12" class="anchored" data-anchor-id="resumen"><span class="header-section-number">7.12</span> Resumen</h2>
+<section id="resumen" class="level2" data-number="7.13">
+<h2 data-number="7.13" class="anchored" data-anchor-id="resumen"><span class="header-section-number">7.13</span> Resumen</h2>
 <ul>
 <li>La <strong>FFN</strong> es una red de dos capas (<strong>ensanchar → no linealidad → comprimir</strong>) que procesa <strong>cada token por separado</strong>.</li>
 <li><strong>Función:</strong> mientras la atención mueve info <em>entre</em> tokens, la FFN la <em>procesa dentro</em> de cada uno; el bloque alterna mezclar→procesar. Sin su no linealidad, no habría cálculo complejo.</li>
 <li>La capa intermedia es <strong>~4× más ancha</strong> (convención; SwiGLU usa ≈2,7×).</li>
-<li>La FFN concentra <strong>~2/3 de los parámetros</strong>.</li>
-<li>Funciona como <strong>memoria clave-valor</strong> <span class="citation" data-cites="geva2021ffn">(<a href="#ref-geva2021ffn" role="doc-biblioref">Geva et&nbsp;al. 2021</a>)</span> y es donde <strong>viven los hechos</strong> (editables, ROME <span class="citation" data-cites="meng2022rome">(<a href="#ref-meng2022rome" role="doc-biblioref">Meng et&nbsp;al. 2022</a>)</span>). Sus neuronas suelen ser <strong>polisémicas</strong> (superposición).</li>
+<li>La FFN concentra <strong>~2/3 de los parámetros</strong> (en modelos densos).</li>
+<li>Los modelos frontera <strong>dispersos</strong> cambian la FFN única por <strong>muchos expertos + un router</strong> (<strong>MoE</strong>): capacidad alta, cómputo por token bajo —<em>disperso en cómputo, denso en memoria</em>—.</li>
+<li>Funciona como <strong>memoria clave-valor</strong> <span class="citation" data-cites="geva2021ffn">(<a href="#ref-geva2021ffn" role="doc-biblioref">Geva et&nbsp;al. 2021</a>)</span> y es donde <strong>viven los hechos</strong> (editables, ROME <span class="citation" data-cites="meng2022rome">(<a href="#ref-meng2022rome" role="doc-biblioref">Meng et&nbsp;al. 2022</a>)</span>; con el matiz <em>localizar ≠ editar</em> <span class="citation" data-cites="hase2023localization">(<a href="#ref-hase2023localization" role="doc-biblioref">Hase et&nbsp;al. 2023</a>)</span>). Sus neuronas suelen ser <strong>polisémicas</strong> (superposición).</li>
 </ul>
 <p><strong>Siguiente (Capítulo 7):</strong> ya tenemos atención (mezclar) y FFN (procesar). Falta el andamiaje que mantiene todo en pie al apilar muchas capas: <strong>conexiones residuales y normalización</strong>.</p>
 </section>
-<section id="ejercicios" class="level2" data-number="7.13">
-<h2 data-number="7.13" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">7.13</span> Ejercicios</h2>
+<section id="ejercicios" class="level2" data-number="7.14">
+<h2 data-number="7.14" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">7.14</span> Ejercicios</h2>
 <ol type="1">
 <li><strong>La no linealidad.</strong> Explica por qué, si quitas <span class="math inline">\(\sigma\)</span>, las dos capas <span class="math inline">\(W_1\)</span> y <span class="math inline">\(W_2\)</span> equivalen a una sola. ¿Qué pierde el modelo?</li>
 <li><strong>La cuenta.</strong> Con <span class="math inline">\(d_{model}=1024\)</span> y expansión 4×, ¿cuántos parámetros tiene <span class="math inline">\(W_1\)</span>? ¿Y <span class="math inline">\(W_2\)</span>? (Ignora sesgos.)</li>
@@ -1258,6 +1345,7 @@ window.Quarto = {
 <li>conectar “ella” con su referente; (b) decidir que un token activa el concepto “capital de país”; (c) promediar información de tokens lejanos.</li>
 </ol></li>
 <li><strong>Editar un hecho.</strong> Si los hechos viven en las FFN intermedias, ¿por qué tendría sentido editar ahí y no en la capa de embeddings? (Piensa en qué guarda cada una.)</li>
+<li><strong>Denso vs disperso.</strong> Mixtral 8×7B tiene ≈47.000 M de parámetros pero activa ≈13.000 M por token. Explica por qué su coste de <em>cómputo</em> se parece al de un modelo de ~13.000 M pero su coste de <em>memoria</em> al de uno de ~47.000 M. (Pista: ¿qué tiene que estar cargado y qué se enciende?)</li>
 </ol>
 </section>
 <section id="referencias" class="level2 unnumbered">
@@ -1265,11 +1353,26 @@ window.Quarto = {
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-fedus2022switch" class="csl-entry" role="listitem">
+Fedus, William, Barret Zoph, y Noam Shazeer. 2022. <span>«Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity»</span>. <em>Journal of Machine Learning Research (JMLR)</em> 23 (120): 1-39. <a href="https://arxiv.org/abs/2101.03961">https://arxiv.org/abs/2101.03961</a>.
+</div>
 <div id="ref-geva2021ffn" class="csl-entry" role="listitem">
 Geva, Mor, Roei Schuster, Jonathan Berant, y Omer Levy. 2021. <span>«Transformer Feed-Forward Layers Are Key-Value Memories»</span>. <em>EMNLP</em>. <a href="https://arxiv.org/abs/2012.14913">https://arxiv.org/abs/2012.14913</a>.
 </div>
+<div id="ref-hase2023localization" class="csl-entry" role="listitem">
+Hase, Peter, Mohit Bansal, Been Kim, y Asma Ghandeharioun. 2023. <span>«Does Localization Inform Editing? Surprising Differences in Causality-Based Localization vs. Knowledge Editing in Language Models»</span>. <em>Advances in Neural Information Processing Systems (NeurIPS)</em>. <a href="https://arxiv.org/abs/2301.04213">https://arxiv.org/abs/2301.04213</a>.
+</div>
+<div id="ref-jiang2024mixtral" class="csl-entry" role="listitem">
+<span class="nocase">Jiang, Albert Q., Alexandre Sablayrolles, Antoine Roux, Arthur Mensch, et&nbsp;al.</span> 2024. <span>«Mixtral of Experts»</span>. <em>arXiv preprint arXiv:2401.04088</em>. <a href="https://arxiv.org/abs/2401.04088">https://arxiv.org/abs/2401.04088</a>.
+</div>
 <div id="ref-meng2022rome" class="csl-entry" role="listitem">
 Meng, Kevin, David Bau, Alex Andonian, y Yonatan Belinkov. 2022. <span>«Locating and Editing Factual Associations in GPT»</span>. <em>NeurIPS</em>. <a href="https://arxiv.org/abs/2202.05262">https://arxiv.org/abs/2202.05262</a>.
+</div>
+<div id="ref-openai2025gptoss" class="csl-entry" role="listitem">
+OpenAI. 2025. <em><span>gpt-oss-120b and gpt-oss-20b Model Card</span></em>. <a href="https://arxiv.org/abs/2508.10925">https://arxiv.org/abs/2508.10925</a>.
+</div>
+<div id="ref-shazeer2017moe" class="csl-entry" role="listitem">
+Shazeer, Noam, Azalia Mirhoseini, Krzysztof Maziarz, et&nbsp;al. 2017. <span>«Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer»</span>. <em>International Conference on Learning Representations (ICLR)</em>. <a href="https://arxiv.org/abs/1701.06538">https://arxiv.org/abs/1701.06538</a>.
 </div>
 </div>
 </section>
@@ -1408,6 +1511,95 @@ Meng, Kevin, David Bau, Alex Andonian, y Yonatan Belinkov. 2022. <span>«Locatin
         render(g);
       });
       render(1.35); start();
+    });
+  } catch (e) {}
+
+  // ---- 1c-moe. Build .fg-moe — Mixture-of-Experts router: only k of N experts light up ----
+  try {
+    var reduceMoe = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll('.fg-moe').forEach(function (box) {
+      var N = +(box.dataset.experts || 8), K = +(box.dataset.topk || 2);
+      var rnd = function (s) { var x = Math.sin(s * 12.9898) * 43758.5453; return x - Math.floor(x); };
+      var SVGNS = 'http://www.w3.org/2000/svg';
+      var W = 460, H = Math.max(190, N * 28 + 24), padT = 16;
+      var xTok = 38, xRouter = 150, xExp = 296, expW = 128, expH = 18;
+      var gap = N > 1 ? (H - padT * 2 - N * expH) / (N - 1) : 0;
+      function expY(i) { return padT + i * (expH + gap); }
+      var yMid = H / 2;
+      box.className = 'fg-moe fg-sch';
+      box.innerHTML = '<div class="fg-sch-h">' + L('Mixture of Experts: el router enciende solo k de N', 'Mixture of Experts: the router lights up only k of N') + '</div>' +
+        '<svg class="fg-moe-svg" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet"></svg>' +
+        '<div class="fg-moe-ctrl"><button class="fg-sch-btn" data-act="pp" type="button">⏸</button><span class="fg-moe-read"></span></div>' +
+        '<div class="fg-sch-cap">' + L('Cada token pasa por el <b>router</b>, que elige los <b>' + K + ' expertos</b> más adecuados (de ' + N + '). El resto <span class="hot">ni se encienden</span>: por eso el <b>cómputo</b> por token es bajo aunque el modelo tenga muchísimos parámetros.', 'Each token goes through the <b>router</b>, which picks the <b>' + K + ' best experts</b> (of ' + N + '). The rest <span class="hot">stay off</span>: that is why per-token <b>compute</b> stays low even with a huge parameter count.') + '</div>';
+      var svg = box.querySelector('.fg-moe-svg'), read = box.querySelector('.fg-moe-read'), btn = box.querySelector('[data-act="pp"]');
+      function mk(tag, a) { var e = document.createElementNS(SVGNS, tag); for (var k in a) e.setAttribute(k, a[k]); return e; }
+      svg.appendChild(mk('line', { x1: xTok + 13, y1: yMid, x2: xRouter - 15, y2: yMid, class: 'fg-moe-feed' }));
+      svg.appendChild(mk('circle', { cx: xTok, cy: yMid, r: 13, class: 'fg-moe-tok' }));
+      var tl = mk('text', { x: xTok, y: yMid + 3.5, class: 'fg-moe-tl', 'text-anchor': 'middle' }); tl.textContent = 'tok'; svg.appendChild(tl);
+      svg.appendChild(mk('rect', { x: xRouter - 15, y: yMid - 15, width: 30, height: 30, rx: 4, transform: 'rotate(45 ' + xRouter + ' ' + yMid + ')', class: 'fg-moe-router' }));
+      var rl = mk('text', { x: xRouter, y: yMid + 5, class: 'fg-moe-rl', 'text-anchor': 'middle' }); rl.textContent = '⇄'; svg.appendChild(rl);
+      var lines = [], experts = [], elabels = [];
+      for (var i = 0; i < N; i++) {
+        var y = expY(i) + expH / 2;
+        lines.push(svg.appendChild(mk('path', { d: 'M' + (xRouter + 15) + ' ' + yMid + ' C ' + (xRouter + 62) + ' ' + yMid + ', ' + (xExp - 46) + ' ' + y + ', ' + xExp + ' ' + y, class: 'fg-moe-wire' })));
+        experts.push(svg.appendChild(mk('rect', { x: xExp, y: expY(i), width: expW, height: expH, rx: 4, class: 'fg-moe-exp' })));
+        var t = mk('text', { x: xExp + expW / 2, y: expY(i) + expH / 2 + 3.5, class: 'fg-moe-el', 'text-anchor': 'middle' }); t.textContent = L('experto ', 'expert ') + (i + 1); svg.appendChild(t); elabels.push(t);
+      }
+      function chosen(s) { var sc = [], set = {}; for (var i = 0; i < N; i++) sc.push([rnd(s * 3.1 + i * 1.7 + 1), i]); sc.sort(function (a, b) { return b[0] - a[0]; }); for (var j = 0; j < K; j++) set[sc[j][1]] = 1; return set; }
+      var step = 0, timer = null;
+      function render() {
+        var set = chosen(step), names = [];
+        for (var i = 0; i < N; i++) {
+          var on = !!set[i];
+          experts[i].classList.toggle('on', on); lines[i].classList.toggle('on', on); elabels[i].classList.toggle('on', on);
+          if (on) names.push('#' + (i + 1));
+        }
+        read.innerHTML = L('token ', 'token ') + (step + 1) + ' → <b>' + names.join(', ') + '</b> · ' + K + '/' + N + ' ' + L('activos', 'active');
+      }
+      render();
+      function play() { if (timer) return; timer = setInterval(function () { var r = box.getBoundingClientRect(); if (r.bottom < 0 || r.top > (window.innerHeight || 9999)) return; step = (step + 1) % 6; render(); }, 1700); btn.textContent = '⏸'; }
+      function stop() { if (timer) { clearInterval(timer); timer = null; } btn.textContent = '▶'; }
+      btn.addEventListener('click', function () { timer ? stop() : play(); });
+      if (reduceMoe) { btn.textContent = '▶'; } else play();
+    });
+  } catch (e) {}
+
+  // ---- 1c-mirage. Build .fg-mirage — benchmark contamination inflates the score, not the ability ----
+  try {
+    document.querySelectorAll('.fg-mirage').forEach(function (box) {
+      box.className = 'fg-mirage fg-sch';
+      box.innerHTML = '<div class="fg-sch-h">' + L('El espejismo del benchmark: la contaminación infla la nota, no la capacidad', 'The benchmark mirage: contamination inflates the score, not the ability') + '</div>' +
+        '<svg class="fg-mirage-svg" viewBox="0 0 420 210" preserveAspectRatio="xMidYMid meet"></svg>' +
+        '<div class="fg-mirage-ctrl"><span>' + L('contaminación', 'contamination') + '</span><input type="range" min="0" max="100" step="1" value="0" aria-label="' + L('porcentaje de contaminación', 'contamination percentage') + '"><span class="cv">0%</span></div>' +
+        '<div class="fg-sch-cap"></div>';
+      var svg = box.querySelector('svg'), range = box.querySelector('input'), cv = box.querySelector('.cv'), cap = box.querySelector('.fg-sch-cap');
+      var W = 420, H = 210, padB = 34, padT = 16, base = 52;
+      var y0 = H - padB, y1 = padT, HH = y0 - y1;
+      function Y(p) { return y0 - p / 100 * HH; }
+      var b0 = { x: 100, w: 88 }, b1 = { x: 240, w: 88 };
+      function draw(c) {
+        var app = base + c / 100 * (98 - base), s = '';
+        [0, 25, 50, 75, 100].forEach(function (p) {
+          s += '<line class="grid" x1="62" y1="' + Y(p) + '" x2="' + (W - 14) + '" y2="' + Y(p) + '"/>';
+          s += '<text class="lbl" x="54" y="' + (Y(p) + 4) + '" text-anchor="end">' + p + '</text>';
+        });
+        s += '<rect class="bar-real" x="' + b0.x + '" y="' + Y(base) + '" width="' + b0.w + '" height="' + (y0 - Y(base)) + '"/>';
+        s += '<text class="blbl" x="' + (b0.x + b0.w / 2) + '" y="' + (y0 + 16) + '" text-anchor="middle">' + L('capacidad real', 'real ability') + '</text>';
+        s += '<text class="bval" x="' + (b0.x + b0.w / 2) + '" y="' + (Y(base) - 6) + '" text-anchor="middle">' + Math.round(base) + '%</text>';
+        s += '<rect class="bar-real" x="' + b1.x + '" y="' + Y(base) + '" width="' + b1.w + '" height="' + (y0 - Y(base)) + '"/>';
+        if (app > base + 0.5) s += '<rect fill="url(#fgmh)" stroke="rgb(213,94,0)" stroke-width="1" x="' + b1.x + '" y="' + Y(app) + '" width="' + b1.w + '" height="' + (Y(base) - Y(app)) + '"/>';
+        s += '<text class="blbl" x="' + (b1.x + b1.w / 2) + '" y="' + (y0 + 16) + '" text-anchor="middle">' + L('nota aparente', 'apparent score') + '</text>';
+        s += '<text class="bval" x="' + (b1.x + b1.w / 2) + '" y="' + (Y(app) - 6) + '" text-anchor="middle">' + Math.round(app) + '%</text>';
+        if (app > base + 7) s += '<text class="mlbl" x="' + (b1.x + b1.w + 5) + '" y="' + ((Y(app) + Y(base)) / 2 + 4) + '">← ' + L('espejismo', 'mirage') + '</text>';
+        svg.innerHTML = '<defs><pattern id="fgmh" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="rgba(213,94,0,0.12)"/><line x1="0" y1="0" x2="0" y2="7" stroke="rgb(213,94,0)" stroke-width="2.5"/></pattern></defs>' + s;
+        cv.textContent = c + '%';
+        var gap = Math.round(app - base);
+        cap.innerHTML = (+c === 0)
+          ? L('Sin contaminación: la nota <b>es</b> la capacidad real (' + Math.round(base) + '%).', 'No contamination: the score <b>is</b> the real ability (' + Math.round(base) + '%).')
+          : L('Con <b>' + c + '%</b> de contaminación, la nota sube a <b>' + Math.round(app) + '%</b>, pero la capacidad real sigue en <b>' + Math.round(base) + '%</b>. Ese hueco de <span class="hot">' + gap + ' puntos</span> es <span class="hot">espejismo</span>: el modelo no aprendió más, solo <b>vio el examen antes</b>.', 'With <b>' + c + '%</b> contamination, the score climbs to <b>' + Math.round(app) + '%</b>, but real ability stays at <b>' + Math.round(base) + '%</b>. That <span class="hot">' + gap + '-point</span> gap is a <span class="hot">mirage</span>: the model did not learn more, it just <b>saw the exam beforehand</b>.');
+      }
+      range.addEventListener('input', function () { draw(+range.value); });
+      draw(0);
     });
   } catch (e) {}
 

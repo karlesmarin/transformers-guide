@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>17&nbsp; The γ atlas: decay measured across 42 models – How Transformers Attend</title>
+<title>41&nbsp; Evaluation: measuring without fooling yourself – How Transformers Attend</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -51,8 +51,8 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../chapters/17-sumideros.html" rel="next">
-<link href="../chapters/15-ley-gamma.html" rel="prev">
+<link href="../chapters/41-etica.html" rel="next">
+<link href="../chapters/39-mapa2026.html" rel="prev">
 <link href="../icon.png" rel="icon" type="image/png">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -546,6 +546,35 @@ div.csl-indent {
 .fg-mirage-ctrl .cv{ font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:700; color:rgb(var(--red)); min-width:34px; }
 </style>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -585,7 +614,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/13-leer-mapas.html">Part II — How transformers attend over distance</a></li><li class="breadcrumb-item"><a href="../chapters/16-atlas.html"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">The γ atlas: decay measured across 42 models</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/37-interpretabilidad.html">Part VII — Interpretability and what is real</a></li><li class="breadcrumb-item"><a href="../chapters/40-evaluacion.html"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Evaluation: measuring without fooling yourself</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -738,7 +767,7 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/16-atlas.html" class="sidebar-item-text sidebar-link active">
+  <a href="../chapters/16-atlas.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">The γ atlas: decay measured across 42 models</span></span></a>
   </div>
 </li>
@@ -937,7 +966,7 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/40-evaluacion.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/40-evaluacion.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Evaluation: measuring without fooling yourself</span></span></a>
   </div>
 </li>
@@ -1006,15 +1035,17 @@ div.csl-indent {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#the-idea-in-one-sentence" id="toc-the-idea-in-one-sentence" class="nav-link active" data-scroll-target="#the-idea-in-one-sentence"><span class="header-section-number">17.1</span> The idea in one sentence</a></li>
-  <li><a href="#key-concepts-and-their-role-in-the-transformer" id="toc-key-concepts-and-their-role-in-the-transformer" class="nav-link" data-scroll-target="#key-concepts-and-their-role-in-the-transformer"><span class="header-section-number">17.2</span> Key concepts and their role in the transformer</a></li>
-  <li><a href="#what-an-atlas-is-for" id="toc-what-an-atlas-is-for" class="nav-link" data-scroll-target="#what-an-atlas-is-for"><span class="header-section-number">17.3</span> What an atlas is for</a></li>
-  <li><a href="#the-map" id="toc-the-map" class="nav-link" data-scroll-target="#the-map"><span class="header-section-number">17.4</span> The map</a></li>
-  <li><a href="#what-the-map-tells-us-calmly" id="toc-what-the-map-tells-us-calmly" class="nav-link" data-scroll-target="#what-the-map-tells-us-calmly"><span class="header-section-number">17.5</span> What the map tells us (calmly)</a></li>
-  <li><a href="#the-unique-piece-its-cross-architecture" id="toc-the-unique-piece-its-cross-architecture" class="nav-link" data-scroll-target="#the-unique-piece-its-cross-architecture"><span class="header-section-number">17.6</span> The unique piece: it’s cross-architecture</a></li>
-  <li><a href="#where-the-data-come-from" id="toc-where-the-data-come-from" class="nav-link" data-scroll-target="#where-the-data-come-from"><span class="header-section-number">17.7</span> Where the data come from</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">17.8</span> Summary</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">17.9</span> Exercises</a></li>
+  <li><a href="#the-idea-in-one-sentence" id="toc-the-idea-in-one-sentence" class="nav-link active" data-scroll-target="#the-idea-in-one-sentence"><span class="header-section-number">41.1</span> The idea in one sentence</a></li>
+  <li><a href="#key-concepts-and-their-role-in-the-transformer" id="toc-key-concepts-and-their-role-in-the-transformer" class="nav-link" data-scroll-target="#key-concepts-and-their-role-in-the-transformer"><span class="header-section-number">41.2</span> Key concepts and their role in the transformer</a></li>
+  <li><a href="#why-a-whole-chapter" id="toc-why-a-whole-chapter" class="nav-link" data-scroll-target="#why-a-whole-chapter"><span class="header-section-number">41.3</span> Why a whole chapter</a></li>
+  <li><a href="#perplexity-the-internal-metric-and-its-limits" id="toc-perplexity-the-internal-metric-and-its-limits" class="nav-link" data-scroll-target="#perplexity-the-internal-metric-and-its-limits"><span class="header-section-number">41.4</span> Perplexity: the internal metric (and its limits)</a></li>
+  <li><a href="#capability-benchmarks-putting-a-number-on-what-it-can-do" id="toc-capability-benchmarks-putting-a-number-on-what-it-can-do" class="nav-link" data-scroll-target="#capability-benchmarks-putting-a-number-on-what-it-can-do"><span class="header-section-number">41.5</span> Capability benchmarks: putting a number on what it can do</a></li>
+  <li><a href="#the-benchmark-mirage-contamination" id="toc-the-benchmark-mirage-contamination" class="nav-link" data-scroll-target="#the-benchmark-mirage-contamination"><span class="header-section-number">41.6</span> The benchmark mirage: contamination</a></li>
+  <li><a href="#the-judge-is-an-llm-and-it-can-be-fooled" id="toc-the-judge-is-an-llm-and-it-can-be-fooled" class="nav-link" data-scroll-target="#the-judge-is-an-llm-and-it-can-be-fooled"><span class="header-section-number">41.7</span> The judge is an LLM (and it can be fooled)</a></li>
+  <li><a href="#statistical-rigor-is-that-2-real" id="toc-statistical-rigor-is-that-2-real" class="nav-link" data-scroll-target="#statistical-rigor-is-that-2-real"><span class="header-section-number">41.8</span> Statistical rigor: is that “+2%” real?</a></li>
+  <li><a href="#bridge-to-our-theme-brief-and-honest" id="toc-bridge-to-our-theme-brief-and-honest" class="nav-link" data-scroll-target="#bridge-to-our-theme-brief-and-honest"><span class="header-section-number">41.9</span> Bridge to our theme (brief and honest)</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">41.10</span> Summary</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">41.11</span> Exercises</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
@@ -1022,9 +1053,9 @@ div.csl-indent {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/13-leer-mapas.html">Part II — How transformers attend over distance</a></li><li class="breadcrumb-item"><a href="../chapters/16-atlas.html"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">The γ atlas: decay measured across 42 models</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/37-interpretabilidad.html">Part VII — Interpretability and what is real</a></li><li class="breadcrumb-item"><a href="../chapters/40-evaluacion.html"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Evaluation: measuring without fooling yourself</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-atlas" class="quarto-section-identifier"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">The γ atlas: decay measured across 42 models</span></span></h1>
+<h1 class="title"><span id="sec-evaluacion" class="quarto-section-identifier"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Evaluation: measuring without fooling yourself</span></span></h1>
 </div>
 
 
@@ -1047,76 +1078,158 @@ div.csl-indent {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-body-container">
-<p><strong>Where we are.</strong> In Ch. 15 we learned to <em>measure</em> (and to predict) a model’s decay exponent γ. The natural question: if we can measure it in one, <strong>let’s measure it in many</strong>. That’s the <strong>γ atlas</strong> —γ measured across 42 models from four architecture families <span class="citation" data-cites="marin2026attend">(<a href="#ref-marin2026attend" role="doc-biblioref">Marín 2026</a>)</span>— and it’s something <strong>no other manual has</strong>: a common map where to place any transformer by <em>how it attends across distance</em>. This chapter explains the map calmly, what it tells us, and —with the same honesty as always— what we <em>cannot</em> conclude from it.</p>
+<p><strong>Where we are.</strong> We have trained (Part IV), used (Part V), made cheaper (Part VI) and audited from the inside (Chs. 37-39) a transformer. What’s left is the question that decides everything else: <strong>how do we know a model is <em>good</em>?</strong> Evaluation is as hard —and as easy to get wrong— as training. And it belongs here, in Part VII, because it shares its backbone: <strong>almost everything you measure is an imperfect <em>proxy</em></strong>, and the biggest danger is not measuring too little, but <strong>measuring wrong and believing it</strong>.</p>
 </div>
 </div>
 </div>
-<section id="the-idea-in-one-sentence" class="level2" data-number="17.1">
-<h2 data-number="17.1" class="anchored" data-anchor-id="the-idea-in-one-sentence"><span class="header-section-number">17.1</span> The idea in one sentence</h2>
-<p>With γ measured across 42 different models, a <strong>map</strong> emerges: most trained transformers <strong>look far</strong> (γ&lt;1), with a median near —but below— the boundary γ=1.</p>
+<section id="the-idea-in-one-sentence" class="level2" data-number="41.1">
+<h2 data-number="41.1" class="anchored" data-anchor-id="the-idea-in-one-sentence"><span class="header-section-number">41.1</span> The idea in one sentence</h2>
+<p>Evaluating an LLM means estimating its capability with <strong>metrics that are proxies</strong> —none measures it directly— so knowing how to evaluate is, above all, <strong>knowing the traps</strong>: data contamination, the judge that gets fooled, and Goodhart’s law.</p>
 </section>
-<section id="key-concepts-and-their-role-in-the-transformer" class="level2" data-number="17.2">
-<h2 data-number="17.2" class="anchored" data-anchor-id="key-concepts-and-their-role-in-the-transformer"><span class="header-section-number">17.2</span> Key concepts and their role in the transformer</h2>
-<p>Before getting into detail, we define this chapter’s terms and <strong>what each one is for</strong> inside a transformer:</p>
+<section id="key-concepts-and-their-role-in-the-transformer" class="level2" data-number="41.2">
+<h2 data-number="41.2" class="anchored" data-anchor-id="key-concepts-and-their-role-in-the-transformer"><span class="header-section-number">41.2</span> Key concepts and their role in the transformer</h2>
+<p>Before the details, we define this chapter’s terms and <strong>what each is for</strong>:</p>
 <ul>
-<li><strong>γ atlas.</strong> <em>Definition:</em> the decay exponent γ <strong>measured across 42 models</strong> from four architecture families. <em>In the transformer:</em> it turns γ from a property of <em>one</em> model into a <strong>common map</strong> where to place and compare them all.</li>
-<li><strong>γ as a comparable coordinate.</strong> <em>Definition:</em> a single number that places very different models (dense, GQA, MoE, SSM) on the <strong>same axis</strong>. <em>In the transformer:</em> it lets you compare <em>how they attend across distance</em> regardless of architecture.</li>
-<li><strong>Phase A (γ&lt;1) and Phase B (γ&gt;1).</strong> <em>Definition:</em> a heavy tail that <strong>looks far</strong> (Phase A) versus attention that <strong>concentrates</strong> close (Phase B). <em>In the transformer:</em> it indicates whether the model exploits broad context or not — key for KV-cache compression (Ch. 20).</li>
-<li><strong>Hagedorn boundary (γ=1).</strong> <em>Definition:</em> the line that separates the two phases. <em>In the transformer:</em> models <strong>cluster just below</strong> it (median ≈0.885), a pattern that doesn’t look accidental and is revisited in Ch. 21.</li>
-<li><strong>Cross-architecture.</strong> <em>Definition:</em> that γ is <strong>the same kind of measurement</strong> for dense, GQA, MoE and SSM models. <em>In the transformer:</em> it’s what makes the atlas unique — it puts a Mamba and a GPT on the same axis.</li>
-<li><strong>R² of the fit.</strong> <em>Definition:</em> how well <code>A(d)∝d^−γ</code> describes the real attention of each model (high = good fit). <em>In the transformer:</em> it signals when γ is a reliable summary and when it’s coarser (R² that can drop as low as ~0.64).</li>
-<li><strong>Raw γ vs.&nbsp;within-model control.</strong> <em>Definition:</em> comparing γ as-is across models <strong>mixes factors</strong> (θ, data, architecture); the clean experiment varies θ <strong>within the same model</strong>. <em>In the transformer:</em> the atlas <em>describes</em> the landscape but doesn’t isolate causes on its own.</li>
+<li><strong>Perplexity.</strong> <em>Definition:</em> <span class="math inline">\(e^{\text{loss}}\)</span>; “how many tokens the model is hesitating between” (Ch. 11). <em>In the transformer:</em> the cheapest <strong>internal</strong> metric —but only comparable with the <strong>same tokenizer</strong>, and it doesn’t tell you whether the model is <em>useful</em>—.</li>
+<li><strong>Benchmark.</strong> <em>Definition:</em> a fixed set of tasks with known answers. <em>In the transformer:</em> the standard way to put a <strong>number</strong> on a capability (knowledge, code, math, long context).</li>
+<li><strong>LLM-as-judge.</strong> <em>Definition:</em> using <strong>another LLM</strong> to score open-ended answers. <em>In the transformer:</em> it scales human evaluation, but <strong>inherits biases</strong> (position, verbosity, self-preference).</li>
+<li><strong>Data contamination.</strong> <em>Definition:</em> the test <strong>leaked</strong> into the training data. <em>In the transformer:</em> it inflates the score <strong>without</strong> the model being any better —the number-one threat to validity—.</li>
+<li><strong>Goodhart’s law.</strong> <em>Definition:</em> “when a measure becomes a target, it stops being a good measure.” <em>In the transformer:</em> optimizing <em>for</em> a benchmark <strong>degrades</strong> what the benchmark was meant to measure.</li>
+<li><strong>Construct validity.</strong> <em>Definition:</em> whether the metric really measures the <strong>capability</strong> you claim, or just a correlated shortcut. <em>In the transformer:</em> the underlying question of the whole chapter.</li>
+<li><strong>Statistical rigor.</strong> <em>Definition:</em> error bars, several seeds, significance. <em>In the transformer:</em> without them, a “+2%” can be <strong>noise</strong>.</li>
 </ul>
-<p>In short: the atlas is a <strong>reproducible snapshot</strong> of the γ landscape, not an eternal law nor a causal proof.</p>
 </section>
-<section id="what-an-atlas-is-for" class="level2" data-number="17.3">
-<h2 data-number="17.3" class="anchored" data-anchor-id="what-an-atlas-is-for"><span class="header-section-number">17.3</span> What an atlas is for</h2>
-<p>Up to now γ was a property of <em>one</em> model. But measuring it across many turns it into a <strong>comparable coordinate</strong>: a single number that places models as different as a dense GPT, one with GQA, a Mixture-of-Experts or even a state-space model (Mamba) <strong>on the same axis</strong>. It’s like going from measuring the temperature of a city to having the weather map of a whole country: what’s interesting isn’t a point, it’s the <strong>pattern</strong> they all draw together.</p>
+<section id="why-a-whole-chapter" class="level2" data-number="41.3">
+<h2 data-number="41.3" class="anchored" data-anchor-id="why-a-whole-chapter"><span class="header-section-number">41.3</span> Why a whole chapter</h2>
+<p>We already saw <strong>text</strong> metrics in Ch. 29 (BLEU, ROUGE, the LLM judge). Here we go up a level: evaluating the <strong>whole model</strong>. And we put it in Part VII on purpose, because evaluation is where the book’s honesty is really tested: <strong>a high number does not prove capability</strong>. The rest of the chapter is a tour of the metrics <em>and</em> of the ways each one can fool you.</p>
 </section>
-<section id="the-map" class="level2" data-number="17.4">
-<h2 data-number="17.4" class="anchored" data-anchor-id="the-map"><span class="header-section-number">17.4</span> The map</h2>
-<div id="fig-atlas" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-atlas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig16_atlas.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-atlas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;17.1: Distribution of the decay exponent γ measured across 42 models (real data; averaged per model). The dashed line marks the <strong>γ=1 (Hagedorn)</strong> boundary: to its left, <strong>Phase A</strong> (γ&lt;1, look far); to its right, <strong>Phase B</strong> (γ&gt;1, concentrate). The vast majority fall in Phase A. Reproducible: <code>figures/make_fig16_atlas.py</code> over <code>data/gamma_atlas.csv</code>.
-</figcaption>
-</figure>
-</div>
-<p>And the same atlas, <strong>interactive</strong>: each point is a real model; hover over it to identify it and compare where each falls relative to the γ=1 boundary. Switch between the γ measured on <strong>text</strong> and on <strong>random</strong> tokens (the pure geometry, without the effect of training):</p>
-<div class="fg-atlas"></div>
-<p>And in <strong>3D</strong> (spin it with the mouse): the same models placed by their <strong>γ</strong> (X axis), their <strong>θ</strong> (Z axis, log) and the goodness of fit <strong>R²</strong> (Y axis). The orange plane marks γ=1:</p>
-<div class="fg-atlas3d"></div>
-</section>
-<section id="what-the-map-tells-us-calmly" class="level2" data-number="17.5">
-<h2 data-number="17.5" class="anchored" data-anchor-id="what-the-map-tells-us-calmly"><span class="header-section-number">17.5</span> What the map tells us (calmly)</h2>
-<p>Three readings, and what each one means:</p>
-<p><strong>1. Almost all look far (38 of 42 in Phase A, γ&lt;1).</strong> This is telling. Recall (Ch. 15) that γ&lt;1 means <strong>heavy tail</strong>: attention falls off <em>slowly</em> with distance, so the model also spreads weight to far-off tokens. That the vast majority of trained models end up there suggests that <strong>exploiting broad context is the norm</strong>, not the exception —transformers, left to their own devices, tend toward the long gaze, not tunnel vision—.</p>
-<p><strong>2. The median (γ≈0.885) is near the boundary, but below it.</strong> Models don’t distribute at random: they <strong>cluster just below γ=1</strong>. It’s as if training pushed them toward the edge of the “look far” regime without quite crossing it. That closeness to the boundary (the “Hagedorn transition” of Ch. 21) is no coincidence and we’ll revisit it.</p>
-<p><strong>3. There’s real diversity (range γ ≈ 0.15 → 1.34).</strong> Not all are alike: there are very heavy-tailed models (γ≈0.15, extremely long gaze) and a few in Phase B (γ&gt;1) that <strong>concentrate</strong> close. That range is what connects with practical decisions: how much context a model truly exploits, how much its KV-cache can be compressed (Ch. 20).</p>
-</section>
-<section id="the-unique-piece-its-cross-architecture" class="level2" data-number="17.6">
-<h2 data-number="17.6" class="anchored" data-anchor-id="the-unique-piece-its-cross-architecture"><span class="header-section-number">17.6</span> The unique piece: it’s cross-architecture</h2>
-<p>What makes the atlas special is not just the number of models, but that γ is <strong>the same kind of measurement</strong> for very different architectures —dense, GQA, MoE and SSM—. Few diagnostics let you put a Mamba and a GPT on the same axis. γ does.</p>
-<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Honesty — what NOT to conclude from the atlas">
+<section id="perplexity-the-internal-metric-and-its-limits" class="level2" data-number="41.4">
+<h2 data-number="41.4" class="anchored" data-anchor-id="perplexity-the-internal-metric-and-its-limits"><span class="header-section-number">41.4</span> Perplexity: the internal metric (and its limits)</h2>
+<p>The cheapest metric is the one you already have from training (Ch. 11): <strong>perplexity</strong>, <span class="math inline">\(\text{PPL}=e^{\text{loss}}\)</span>. It measures the model’s average surprise on a text: a PPL of 8 means it hesitates, on average, “as if among 8 tokens”. Lower = predicts better.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="⚠ The perplexity trap — not comparable across tokenizers">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>⚠ Honesty — what NOT to conclude from the atlas
+<span class="screen-reader-only">Warning</span>⚠ The perplexity trap — not comparable across tokenizers
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Three cautions, so as not to over-interpret: 1. <strong>Comparing <em>raw</em> γ across very different models mixes factors.</strong> Two 7-8B models can differ in γ because of their θ, their data <em>and</em> their architecture all at once (the decomposition of Ch. 15). The <em>clean</em> experiment —which does control everything— is to vary θ <strong>within the same model</strong> (we’ll see it with sinks, Ch. 17). The atlas <em>describes</em>; it doesn’t isolate causes on its own. 2. <strong>The quality of the fit varies —and it’s worth looking at.</strong> The law <code>d^−γ</code> fits very well in general (R²&gt;0.95 in most), but the real floor drops to <strong>R²≈0.64</strong> (pythia-2.8B), and —let’s be honest— several of the most extreme γ values that carry the narrative have only mediocre fits: the γ≈0.15 “extremely long gaze” (deepseek) sits at <strong>R²≈0.85</strong>. Where the R² is weak, γ is a <strong>coarser</strong> summary: use it with the reservation its fit dictates. We indicate it model by model (the <code>R2</code> column of the dataset). 3. <strong>It’s a snapshot, not a universal law.</strong> 42 models at a given moment; an atlas gets expanded and corrected. The data are published so anyone can reproduce it and discuss it.</p>
+<p>PPL depends on <strong>how you split</strong> the text: a model with a large vocabulary cuts the same text into fewer tokens and comes out with a PPL that is <strong>not</strong> comparable to another model’s. That’s why, to really compare, we use <strong>bits-per-byte</strong> (bpb), which normalizes by bytes of text, not tokens. And even so: <strong>a low PPL doesn’t say the model is useful</strong> —only that it predicts the next token well—.</p>
 </div>
 </div>
 </section>
-<section id="where-the-data-come-from" class="level2" data-number="17.7">
-<h2 data-number="17.7" class="anchored" data-anchor-id="where-the-data-come-from"><span class="header-section-number">17.7</span> Where the data come from</h2>
-<p>The atlas is measured with a reproducible procedure (fitting <code>A(d)∝d^−γ</code> over the real attention of each model) and is published as an <strong>open dataset</strong> —so you don’t have to take anything on faith: it can be downloaded, reproduced, criticized—. (The detail of how to measure your own γ is in the reference cookbook, R4.)</p>
+<section id="capability-benchmarks-putting-a-number-on-what-it-can-do" class="level2" data-number="41.5">
+<h2 data-number="41.5" class="anchored" data-anchor-id="capability-benchmarks-putting-a-number-on-what-it-can-do"><span class="header-section-number">41.5</span> Capability benchmarks: putting a number on what it can do</h2>
+<p>To measure specific <em>capabilities</em> we use <strong>benchmarks</strong>: batteries of tasks with known answers. The big axes of 2024-2026:</p>
+<div id="tbl-benchmarks" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-benchmarks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;41.1: Benchmarks by capability (2024-2026)
+</figcaption>
+<div aria-describedby="tbl-benchmarks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Capability</th>
+<th>Reference benchmarks</th>
+<th>What they measure</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Knowledge / reasoning</td>
+<td><strong>MMLU</strong> <span class="citation" data-cites="hendrycks2021mmlu">(<a href="#ref-hendrycks2021mmlu" role="doc-biblioref">Hendrycks et al. 2021</a>)</span>, MMLU-Pro, <strong>GPQA</strong>, BBH</td>
+<td>exam questions across 57 subjects; GPQA at PhD level</td>
+</tr>
+<tr class="even">
+<td>Code</td>
+<td><strong>HumanEval</strong> <span class="citation" data-cites="chen2021humaneval">(<a href="#ref-chen2021humaneval" role="doc-biblioref"><span class="nocase">Chen et al.</span> 2021</a>)</span>, MBPP, <strong>SWE-bench</strong> <span class="citation" data-cites="jimenez2024swebench">(<a href="#ref-jimenez2024swebench" role="doc-biblioref">Jimenez et al. 2024</a>)</span></td>
+<td>writing functions that pass tests; SWE-bench, solving real GitHub <em>issues</em></td>
+</tr>
+<tr class="odd">
+<td>Math</td>
+<td><strong>GSM8K</strong> <span class="citation" data-cites="cobbe2021gsm8k">(<a href="#ref-cobbe2021gsm8k" role="doc-biblioref"><span class="nocase">Cobbe et al.</span> 2021</a>)</span>, MATH, AIME</td>
+<td>word problems (GSM8K) and competition math (MATH/AIME)</td>
+</tr>
+<tr class="even">
+<td>Long context</td>
+<td><strong>NIAH</strong> (needle-in-a-haystack), <strong>RULER</strong> <span class="citation" data-cites="hsieh2024ruler">(<a href="#ref-hsieh2024ruler" role="doc-biblioref"><span class="nocase">Hsieh et al.</span> 2024</a>)</span></td>
+<td>finding/using information hidden in a huge context</td>
+</tr>
+<tr class="odd">
+<td>Chat / preference</td>
+<td><strong>Chatbot Arena</strong> (Elo), MT-Bench</td>
+<td>which answer humans prefer, head to head</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="🆕 2025-26 — benchmarks saturate (and their hard successors)">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>🆕 2025-26 — benchmarks saturate (and their hard successors)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Benchmarks have an <strong>expiry date</strong>: MMLU, brutal in 2020, is now beaten by frontier models by over <strong>92%</strong> —a ceiling—. The community’s answer is <strong>much harder</strong> successors: <strong>ARC-AGI-2</strong> <span class="citation" data-cites="arcagi2_2025">(<a href="#ref-arcagi2_2025" role="doc-biblioref">Chollet et al. 2025</a>)</span> (fluid abstract reasoning, with a human <em>baseline</em>), <strong>Humanity’s Last Exam</strong> <span class="citation" data-cites="phan2025hle">(<a href="#ref-phan2025hle" role="doc-biblioref"><span class="nocase">Phan et al.</span> 2025</a>)</span> (expert-level questions, created <em>precisely because</em> MMLU got easy) and <strong>FrontierMath</strong> <span class="citation" data-cites="glazer2024frontiermath">(<a href="#ref-glazer2024frontiermath" role="doc-biblioref"><span class="nocase">Glazer et al.</span> 2024</a>)</span> (research mathematics, where the best models solve <strong>&lt;2%</strong>). The lesson: a saturated benchmark <strong>no longer distinguishes</strong> models —you have to raise the bar—.</p>
+</div>
+</div>
+<div class="analogia">
+<p><strong>🧩 Analogy — the exam and the student.</strong> A benchmark is an <strong>exam</strong>; the score is a proxy for what the student <em>knows</em>. A well-made exam correlates with real knowledge… until the student <strong>gets the exam in advance</strong> (contamination) or <strong>studies only for that exam</strong> (Goodhart). Then the score rises and the knowledge doesn’t.</p>
+</div>
+</section>
+<section id="the-benchmark-mirage-contamination" class="level2" data-number="41.6">
+<h2 data-number="41.6" class="anchored" data-anchor-id="the-benchmark-mirage-contamination"><span class="header-section-number">41.6</span> The benchmark mirage: contamination</h2>
+<p>Here is the number-one threat, and the reason this chapter lives in Part VII. <strong>Contamination</strong> is when the test questions <strong>appeared in the training data</strong> (web data is enormous and benchmarks are <em>on</em> the web). The model then <strong>remembers</strong> the answer instead of reasoning it out: the score goes up, real capability doesn’t move.</p>
+<p>Move it yourself. Turn up the contamination dial and watch the <strong>score</strong> shoot up while <strong>real ability</strong> stays flat —the gap is pure <strong>mirage</strong>:</p>
+<div class="fg-mirage"></div>
+<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Verified — contamination is real and measurable">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>⚠ Verified — contamination is real and measurable
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>It’s not an abstract fear: there are methods that <strong>detect</strong> contamination (e.g.&nbsp;checking whether the model completes a test word for word, or comparing performance before/after the cutoff date <span class="citation" data-cites="golchin2023contamination">(<a href="#ref-golchin2023contamination" role="doc-biblioref">Golchin and Surdeanu 2024</a>)</span>). A concrete example: <strong>OpenAI’s audit of SWE-bench</strong> <span class="citation" data-cites="openai2026swebench">(<a href="#ref-openai2026swebench" role="doc-biblioref">OpenAI 2026</a>)</span> found that ~<strong>59%</strong> of the reviewed tasks had defective tests or signs of contamination —so much so that they <strong>stopped reporting</strong> that metric—. The honest rule: <strong>a high score on a public benchmark, with no contamination control, proves nothing</strong>. Serious benchmarks renew themselves (new versions, private sets) precisely because of this.</p>
+</div>
+</div>
+<p>And its close cousin, <strong>Goodhart’s law</strong>: as soon as a benchmark becomes <em>the target</em> (what drives headlines and funding), teams optimize <em>for it</em> —and it stops measuring what it measured—. That’s why no single number is enough.</p>
+</section>
+<section id="the-judge-is-an-llm-and-it-can-be-fooled" class="level2" data-number="41.7">
+<h2 data-number="41.7" class="anchored" data-anchor-id="the-judge-is-an-llm-and-it-can-be-fooled"><span class="header-section-number">41.7</span> The judge is an LLM (and it can be fooled)</h2>
+<p>For <strong>open-ended</strong> answers (an essay, a chat reply) there is no single correct solution, so we use <strong>another LLM as judge</strong> —or the head-to-head human vote of the <strong>Chatbot Arena</strong> (Elo ranking)—. It’s powerful and it scales, but the judge has <strong>biases</strong> worth knowing:</p>
+<ul>
+<li><strong>Position bias:</strong> it tends to prefer the <strong>first</strong> (or the second) answer because of its order. Fixed by averaging both orders.</li>
+<li><strong>Verbosity bias:</strong> it rewards the <strong>longer</strong> answer, even when it isn’t better.</li>
+<li><strong>Self-preference:</strong> a judge tends to score its own model <strong>family</strong>’s style higher.</li>
+<li><strong>Sycophancy</strong> <span class="citation" data-cites="sharma2023sycophancy">(<a href="#ref-sharma2023sycophancy" role="doc-biblioref"><span class="nocase">Sharma et al.</span> 2023</a>)</span>: models tend to <strong>agree with you</strong>; a judge can reward the answer that <em>sounds</em> confident and agreeable over the correct one.</li>
+</ul>
+<div class="analogia">
+<p><strong>🧩 Analogy — the tired panel.</strong> An LLM judge is like a panel that, without meaning to, scores the one who speaks <strong>first</strong> higher, the one who <strong>goes on</strong> longer, and the one who <strong>resembles</strong> it. Useful for high volume, but you have to <strong>control</strong> those biases, not trust it blindly.</p>
+</div>
+</section>
+<section id="statistical-rigor-is-that-2-real" class="level2" data-number="41.8">
+<h2 data-number="41.8" class="anchored" data-anchor-id="statistical-rigor-is-that-2-real"><span class="header-section-number">41.8</span> Statistical rigor: is that “+2%” real?</h2>
+<p>One last, quieter trap: <strong>almost no</strong> model number comes with an <strong>error bar</strong>. But changing the seed, the order of the <em>few-shot</em> examples, or the prompt template moves the score by several points. A “+2% on MMLU” <strong>without</strong> a confidence interval can be pure <strong>noise</strong>. The honest move: report several <strong>seeds</strong>, <strong>error bars</strong> and significance before claiming victory.</p>
+</section>
+<section id="bridge-to-our-theme-brief-and-honest" class="level2" data-number="41.9">
+<h2 data-number="41.9" class="anchored" data-anchor-id="bridge-to-our-theme-brief-and-honest"><span class="header-section-number">41.9</span> Bridge to our theme (brief and honest)</h2>
+<p>Here evaluation touches the book directly. Our headline engineering claim —the <strong>D_f</strong> window derived from γ (Ch. 20)— <strong>is unvalidated</strong> (the <em>avenue-2</em> attempt crashed for lack of memory, Ch. 19). The place where it <em>would</em> stop being a hypothesis is exactly this one: a <strong>long-context</strong> benchmark (<strong>NIAH / RULER</strong> <span class="citation" data-cites="hsieh2024ruler">(<a href="#ref-hsieh2024ruler" role="doc-biblioref"><span class="nocase">Hsieh et al.</span> 2024</a>)</span>) comparing KV retention under D_f against the field’s heuristics (Ada-KV, LAVa). Put plainly: <strong>evaluation is the home where our own thesis gets tested</strong> —it’s not just one more topic—.</p>
 <div class="callout callout-style-default callout-note callout-titled" title="🧪 Try it — tafagent">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1127,50 +1240,72 @@ Figure&nbsp;17.1: Distribution of the decay exponent γ measured across 42 model
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><a href="https://karlesmarin.github.io/tafagent/">tafagent</a> has a <strong>Phase diagram</strong> mode that places a panel of models on the γ axis (Phase A vs Phase B), and when you <strong>profile</strong> your model it tells you where in the atlas it falls. It’s the atlas made interactive: add yours and compare it.</p>
-<p><a href="https://karlesmarin.github.io/tafagent/?demo=phase" class="fg-cta" target="_blank" rel="noopener">▶ See the demo in tafagent</a></p>
+<p><a href="https://karlesmarin.github.io/tafagent/">tafagent</a> ships two evaluation diagnostics that attack exactly this chapter’s traps: the <strong>Contamination Prior</strong> (estimates the risk that a model has seen a benchmark) and <strong>LongScore</strong> (measures real long context with <strong>RULER</strong>, not the <em>advertised</em> length). Before you believe a results table, run it through here.</p>
+<p><a href="https://karlesmarin.github.io/tafagent/?demo=niah" class="fg-cta" target="_blank" rel="noopener">▶ See the demo in tafagent</a></p>
 </div>
 </div>
 </section>
-<section id="summary" class="level2" data-number="17.8">
-<h2 data-number="17.8" class="anchored" data-anchor-id="summary"><span class="header-section-number">17.8</span> Summary</h2>
+<section id="summary" class="level2" data-number="41.10">
+<h2 data-number="41.10" class="anchored" data-anchor-id="summary"><span class="header-section-number">41.10</span> Summary</h2>
 <ul>
-<li>The <strong>γ atlas</strong> measures the decay exponent across <strong>42 models</strong> from 4 families —a cross-architecture coordinate nobody else has—.</li>
-<li><strong>Reading:</strong> <strong>38 of 42 in Phase A</strong> (γ&lt;1, look far) → exploiting broad context is the norm; <strong>median ≈0.885</strong> (they cluster just below the γ=1 boundary); <strong>range 0.15–1.34</strong> (real diversity).</li>
-<li><strong>Unique:</strong> γ puts dense, GQA, MoE and SSM on the <strong>same axis</strong>.</li>
-<li><strong>Honest:</strong> raw cross-model γ <strong>mixes factors</strong> (the clean control is within-model, Ch. 17); the R² varies; it’s a reproducible snapshot, not an eternal law.</li>
+<li><strong>Evaluating = measuring with imperfect proxies.</strong> No metric measures capability directly; knowing how to evaluate is <strong>knowing the traps</strong>.</li>
+<li><strong>Perplexity</strong> (<span class="math inline">\(e^{\text{loss}}\)</span>): cheap and internal, but <strong>not comparable</strong> across tokenizers (use <strong>bits-per-byte</strong>) and it doesn’t say whether the model is <em>useful</em>.</li>
+<li><strong>Benchmarks by capability:</strong> knowledge (<strong>MMLU/GPQA</strong>), code (<strong>HumanEval/SWE-bench</strong>), math (<strong>GSM8K/MATH</strong>), long context (<strong>NIAH/RULER</strong>), chat (<strong>Arena/Elo</strong>).</li>
+<li><strong>Contamination:</strong> the test leaked into training → the score rises, capability doesn’t (<strong>mirage</strong>). With <strong>Goodhart’s law</strong>: optimizing <em>for</em> a benchmark spoils it.</li>
+<li><strong>LLM-as-judge:</strong> it scales, but with biases of <strong>position, verbosity, self-preference</strong> and <strong>sycophancy</strong> —control them—.</li>
+<li><strong>Rigor:</strong> without <strong>error bars</strong> and several seeds, a “+2%” can be <strong>noise</strong>.</li>
+<li><strong>Bridge:</strong> long-context evaluation (RULER/NIAH) is where <strong>our</strong> D_f window must be validated —still pending—.</li>
 </ul>
-<p><strong>Next (Chapter 17):</strong> one of those “raw readings” is misleading —<strong>concentration</strong> (sinks)—. We’ll see it’s <strong>independent</strong> of γ, with the clean experiment that controls everything: the θ-rescale within the same model.</p>
+<p><strong>Next (Chapter 41):</strong> we close the book with what no metric fully captures —<strong>ethics, safety and limitations</strong>—: biases, hallucination, responsible use and, above all, what we <strong>still don’t know</strong>.</p>
 </section>
-<section id="exercises" class="level2" data-number="17.9">
-<h2 data-number="17.9" class="anchored" data-anchor-id="exercises"><span class="header-section-number">17.9</span> Exercises</h2>
+<section id="exercises" class="level2" data-number="41.11">
+<h2 data-number="41.11" class="anchored" data-anchor-id="exercises"><span class="header-section-number">41.11</span> Exercises</h2>
 <ol type="1">
-<li><strong>Reading the map.</strong> If 38 of 42 models have γ&lt;1, what do trained transformers tend to do: look far or concentrate close? Why?</li>
-<li><strong>The median.</strong> What’s striking about models clustering <em>just below</em> γ=1 instead of spreading across the whole range?</li>
-<li><strong>Honesty.</strong> Why is comparing the γ of two different models not enough to say “this one looks farther <em>because of its architecture</em>”? What experiment would isolate it?</li>
-<li><strong>Fit.</strong> If a model has R²=0.85 in its γ fit, how much confidence would you place in its γ versus another with R²=0.98?</li>
+<li><strong>Perplexity.</strong> Why can’t two models with <strong>different tokenizers</strong> be compared by perplexity? What metric fixes it, and why?</li>
+<li><strong>The mirage.</strong> Explain, using this chapter’s widget, why a <strong>high score</strong> on a public benchmark does <strong>not</strong> prove capability. What is contamination?</li>
+<li><strong>Goodhart.</strong> Give an example of how optimizing <em>for</em> a benchmark could <strong>worsen</strong> the model on the capability the benchmark was meant to measure.</li>
+<li><strong>The judge.</strong> Name three biases of the <strong>LLM-as-judge</strong> and how each is mitigated.</li>
+<li><strong>Rigor.</strong> A paper reports “+1.5% on MMLU” with no error bars. What do you ask before believing it?</li>
+<li><strong>Long context.</strong> Why is <strong>RULER/NIAH</strong> the natural place to validate (or refute) our D_f window from Ch. 20?</li>
 </ol>
-<div class="callout callout-style-default callout-tip callout-titled" title="📄 Our paper — data and details">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>📄 Our paper — data and details
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The complete γ atlas and the per-model data on which this chapter is based are open: <strong><a href="https://zenodo.org/records/20314038"><em>Predicting How Transformers Attend</em></a></strong> (Zenodo).</p>
-</div>
-</div>
 </section>
 <section id="references" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="references">References</h2>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-marin2026attend" class="csl-entry" role="listitem">
-Marín, Carles. 2026. <em>Predicting How Transformers Attend: Analytic Power-Law Theory, Phase Transitions, and Practical Compression Tools</em>. <a href="https://zenodo.org/records/20314038">https://zenodo.org/records/20314038</a>.
+<div id="ref-chen2021humaneval" class="csl-entry" role="listitem">
+<span class="nocase">Chen, Mark, Jerry Tworek, Heewoo Jun, Qiming Yuan, et al.</span> 2021. <span>“Evaluating Large Language Models Trained on Code.”</span> <em>arXiv Preprint arXiv:2107.03374</em>. <a href="https://arxiv.org/abs/2107.03374">https://arxiv.org/abs/2107.03374</a>.
+</div>
+<div id="ref-arcagi2_2025" class="csl-entry" role="listitem">
+Chollet, Francois, Mike Knoop, Gregory Kamradt, Bryan Landers, and Henry Pinkard. 2025. <em><span class="nocase">ARC-AGI-2: A New Challenge for Frontier AI Reasoning Systems</span></em>. <a href="https://arxiv.org/abs/2505.11831">https://arxiv.org/abs/2505.11831</a>.
+</div>
+<div id="ref-cobbe2021gsm8k" class="csl-entry" role="listitem">
+<span class="nocase">Cobbe, Karl, Vineet Kosaraju, Mohammad Bavarian, Mark Chen, et al.</span> 2021. <span>“Training Verifiers to Solve Math Word Problems.”</span> <em>arXiv Preprint arXiv:2110.14168</em>. <a href="https://arxiv.org/abs/2110.14168">https://arxiv.org/abs/2110.14168</a>.
+</div>
+<div id="ref-glazer2024frontiermath" class="csl-entry" role="listitem">
+<span class="nocase">Glazer, Elliot, Ege Erdil, Tamay Besiroglu, Diego Chicharro, Evan Chen, et al.</span> 2024. <em><span class="nocase">FrontierMath: A Benchmark for Evaluating Advanced Mathematical Reasoning in AI</span></em>. <a href="https://arxiv.org/abs/2411.04872">https://arxiv.org/abs/2411.04872</a>.
+</div>
+<div id="ref-golchin2023contamination" class="csl-entry" role="listitem">
+Golchin, Shahriar, and Mihai Surdeanu. 2024. <span>“Time Travel in LLMs: Tracing Data Contamination in Large Language Models.”</span> <em>International Conference on Learning Representations (ICLR)</em>. <a href="https://arxiv.org/abs/2308.08493">https://arxiv.org/abs/2308.08493</a>.
+</div>
+<div id="ref-hendrycks2021mmlu" class="csl-entry" role="listitem">
+Hendrycks, Dan, Collin Burns, Steven Basart, et al. 2021. <span>“Measuring Massive Multitask Language Understanding.”</span> <em>International Conference on Learning Representations (ICLR)</em>. <a href="https://arxiv.org/abs/2009.03300">https://arxiv.org/abs/2009.03300</a>.
+</div>
+<div id="ref-hsieh2024ruler" class="csl-entry" role="listitem">
+<span class="nocase">Hsieh, Cheng-Ping, Simeng Sun, Samuel Kriman, Shantanu Acharya, et al.</span> 2024. <span>“RULER: Whats the Real Context Size of Your Long-Context Language Models?”</span> <em>First Conference on Language Modeling (COLM)</em>. <a href="https://arxiv.org/abs/2404.06654">https://arxiv.org/abs/2404.06654</a>.
+</div>
+<div id="ref-jimenez2024swebench" class="csl-entry" role="listitem">
+Jimenez, Carlos E., John Yang, Alexander Wettig, et al. 2024. <span>“SWE-Bench: Can Language Models Resolve Real-World GitHub Issues?”</span> <em>International Conference on Learning Representations (ICLR)</em>. <a href="https://arxiv.org/abs/2310.06770">https://arxiv.org/abs/2310.06770</a>.
+</div>
+<div id="ref-openai2026swebench" class="csl-entry" role="listitem">
+OpenAI. 2026. <em>Why SWE-Bench Verified No Longer Measures Frontier Coding Capabilities</em>. OpenAI Blog. <a href="https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/">https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/</a>.
+</div>
+<div id="ref-phan2025hle" class="csl-entry" role="listitem">
+<span class="nocase">Phan, Long, Alice Gatti, Ziwen Han, Nathaniel Li, et al.</span> 2025. <em><span class="nocase">Humanity’s Last Exam</span></em>. <a href="https://arxiv.org/abs/2501.14249">https://arxiv.org/abs/2501.14249</a>.
+</div>
+<div id="ref-sharma2023sycophancy" class="csl-entry" role="listitem">
+<span class="nocase">Sharma, Mrinank et al.</span> 2023. <em>Towards Understanding Sycophancy in Language Models</em>. <a href="https://arxiv.org/abs/2310.13548">https://arxiv.org/abs/2310.13548</a>.
 </div>
 </div>
 </section>
@@ -2579,13 +2714,13 @@ Marín, Carles. 2026. <em>Predicting How Transformers Attend: Analytic Power-Law
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../chapters/15-ley-gamma.html" class="pagination-link" aria-label="The decay law A(d) ∝ d^−γ">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">The decay law A(d) ∝ d^−γ</span></span>
+      <a href="../chapters/39-mapa2026.html" class="pagination-link" aria-label="The map of the 2026 collapse landscape">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">The map of the 2026 collapse landscape</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../chapters/17-sumideros.html" class="pagination-link" aria-label="Attention sinks and concentration">
-        <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Attention sinks and concentration</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../chapters/41-etica.html" class="pagination-link" aria-label="Ethics, safety and limitations">
+        <span class="nav-page-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Ethics, safety and limitations</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

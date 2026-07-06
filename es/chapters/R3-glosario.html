@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>44&nbsp; R3 · Glosario – Cómo Atienden los Transformers</title>
+<title>45&nbsp; R3 · Glosario – Cómo Atienden los Transformers</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -493,6 +493,38 @@ ul.task-list li input[type="checkbox"] {
 .fg-g3d-canvas{ width:100%; height:340px; display:block; border:1px solid #dce7f0; border-radius:.7rem;
   background:radial-gradient(120% 120% at 50% 25%, #fbfdff, #e9f1f9); cursor:grab; touch-action:none; }
 .fg-g3d-canvas:active{ cursor:grabbing; }
+
+/* fg-moe — Mixture-of-Experts router: only k of N experts light up (sparse activation) */
+.fg-moe-svg{ width:100%; height:auto; display:block; font-family:Georgia,"Times New Roman",serif; }
+.fg-moe-tok{ fill:rgb(var(--blue)); }
+.fg-moe-tl{ font-size:10px; fill:#fff; font-weight:700; }
+.fg-moe-router{ fill:#fff; stroke:rgb(var(--blue)); stroke-width:2; }
+.fg-moe-rl{ font-size:15px; fill:rgb(var(--blue)); }
+.fg-moe-feed{ stroke:rgb(var(--blue)); stroke-width:2; }
+.fg-moe-wire{ fill:none; stroke:#d3dde6; stroke-width:1.5; transition:stroke .4s, stroke-width .4s; }
+.fg-moe-wire.on{ stroke:rgb(var(--blue)); stroke-width:2.5; stroke-dasharray:6 6;
+  filter:drop-shadow(0 0 3px rgba(0,114,178,.5)); animation:fg-moe-flow 1s linear infinite; }
+.fg-moe-exp{ fill:#f0f3f6; stroke:#dce7f0; stroke-width:1; transition:fill .4s, stroke .4s, filter .4s; }
+.fg-moe-exp.on{ fill:rgba(0,114,178,.16); stroke:rgb(var(--blue)); stroke-width:1.5;
+  filter:drop-shadow(0 0 5px rgba(0,114,178,.35)); }
+.fg-moe-el{ font-size:10px; fill:#93a3b4; transition:fill .4s, font-weight .4s; }
+.fg-moe-el.on{ fill:rgb(var(--blue)); font-weight:700; }
+.fg-moe-ctrl{ display:flex; align-items:center; gap:.6rem; justify-content:center; margin:.5rem 0 .2rem; font-size:.8rem; color:#5b7790; }
+.fg-moe-read{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.8rem; } .fg-moe-read b{ color:rgb(var(--blue)); }
+@keyframes fg-moe-flow{ to { stroke-dashoffset:-12; } }
+@media (prefers-reduced-motion:reduce){ .fg-moe-wire.on{ animation:none; stroke-dasharray:none; } }
+
+/* fg-mirage — benchmark contamination inflates the score, not the real ability */
+.fg-mirage-svg{ width:100%; height:auto; display:block; font-family:Georgia,"Times New Roman",serif; }
+.fg-mirage-svg .grid{ stroke:#eef3f7; stroke-width:1; }
+.fg-mirage-svg .lbl{ font-size:10px; fill:#9bb4c9; }
+.fg-mirage-svg .bar-real{ fill:rgb(var(--blue)); }
+.fg-mirage-svg .blbl{ font-size:11px; fill:#5b7790; }
+.fg-mirage-svg .bval{ font-size:12px; font-weight:700; fill:#33536e; }
+.fg-mirage-svg .mlbl{ font-size:11px; font-weight:700; fill:rgb(var(--red)); }
+.fg-mirage-ctrl{ display:flex; align-items:center; gap:.55rem; justify-content:center; margin:.5rem 0 .2rem; font-size:.8rem; color:#5b7790; }
+.fg-mirage-ctrl input[type=range]{ accent-color:rgb(var(--red)); width:200px; max-width:60%; }
+.fg-mirage-ctrl .cv{ font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:700; color:rgb(var(--red)); min-width:34px; }
 </style>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
@@ -563,7 +595,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/R1-formulario.html">Parte VIII — Referencia</a></li><li class="breadcrumb-item"><a href="../chapters/R3-glosario.html"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R3 · Glosario</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/R1-formulario.html">Parte VIII — Referencia</a></li><li class="breadcrumb-item"><a href="../chapters/R3-glosario.html"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R3 · Glosario</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -915,8 +947,14 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/40-etica.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Ética, seguridad y limitaciones</span></span></a>
+  <a href="../chapters/40-evaluacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Evaluación: medir sin engañarte</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/41-etica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Ética, seguridad y limitaciones</span></span></a>
   </div>
 </li>
       </ul>
@@ -933,37 +971,37 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R1-formulario.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">R1 · Formulario maestro</span></span></a>
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R1 · Formulario maestro</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R2-cookbook.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R3-glosario.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R3 · Glosario</span></span></a>
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R3 · Glosario</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R4-medir-gamma.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R4 · Medir tu propio γ (y reproducir el atlas)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R4 · Medir tu propio γ (y reproducir el atlas)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R9-tafagent.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R9 · Manual de tafagent</span></span></a>
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R9 · Manual de tafagent</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R10-soluciones.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R10 · Soluciones de los ejercicios</span></span></a>
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">R10 · Soluciones de los ejercicios</span></span></a>
   </div>
 </li>
       </ul>
@@ -978,28 +1016,28 @@ window.Quarto = {
     <h2 id="toc-title">En esta página</h2>
    
   <ul>
-  <li><a href="#a" id="toc-a" class="nav-link active" data-scroll-target="#a"><span class="header-section-number">44.1</span> A</a></li>
-  <li><a href="#b" id="toc-b" class="nav-link" data-scroll-target="#b"><span class="header-section-number">44.2</span> B</a></li>
-  <li><a href="#c" id="toc-c" class="nav-link" data-scroll-target="#c"><span class="header-section-number">44.3</span> C</a></li>
-  <li><a href="#d" id="toc-d" class="nav-link" data-scroll-target="#d"><span class="header-section-number">44.4</span> D</a></li>
-  <li><a href="#e" id="toc-e" class="nav-link" data-scroll-target="#e"><span class="header-section-number">44.5</span> E</a></li>
-  <li><a href="#f" id="toc-f" class="nav-link" data-scroll-target="#f"><span class="header-section-number">44.6</span> F</a></li>
-  <li><a href="#g" id="toc-g" class="nav-link" data-scroll-target="#g"><span class="header-section-number">44.7</span> G</a></li>
-  <li><a href="#h" id="toc-h" class="nav-link" data-scroll-target="#h"><span class="header-section-number">44.8</span> H</a></li>
-  <li><a href="#i-l" id="toc-i-l" class="nav-link" data-scroll-target="#i-l"><span class="header-section-number">44.9</span> I — L</a></li>
-  <li><a href="#m-n" id="toc-m-n" class="nav-link" data-scroll-target="#m-n"><span class="header-section-number">44.10</span> M — N</a></li>
-  <li><a href="#o-p" id="toc-o-p" class="nav-link" data-scroll-target="#o-p"><span class="header-section-number">44.11</span> O — P</a></li>
-  <li><a href="#q-r" id="toc-q-r" class="nav-link" data-scroll-target="#q-r"><span class="header-section-number">44.12</span> Q — R</a></li>
-  <li><a href="#s-z" id="toc-s-z" class="nav-link" data-scroll-target="#s-z"><span class="header-section-number">44.13</span> S — Z</a></li>
+  <li><a href="#a" id="toc-a" class="nav-link active" data-scroll-target="#a"><span class="header-section-number">45.1</span> A</a></li>
+  <li><a href="#b" id="toc-b" class="nav-link" data-scroll-target="#b"><span class="header-section-number">45.2</span> B</a></li>
+  <li><a href="#c" id="toc-c" class="nav-link" data-scroll-target="#c"><span class="header-section-number">45.3</span> C</a></li>
+  <li><a href="#d" id="toc-d" class="nav-link" data-scroll-target="#d"><span class="header-section-number">45.4</span> D</a></li>
+  <li><a href="#e" id="toc-e" class="nav-link" data-scroll-target="#e"><span class="header-section-number">45.5</span> E</a></li>
+  <li><a href="#f" id="toc-f" class="nav-link" data-scroll-target="#f"><span class="header-section-number">45.6</span> F</a></li>
+  <li><a href="#g" id="toc-g" class="nav-link" data-scroll-target="#g"><span class="header-section-number">45.7</span> G</a></li>
+  <li><a href="#h" id="toc-h" class="nav-link" data-scroll-target="#h"><span class="header-section-number">45.8</span> H</a></li>
+  <li><a href="#i-l" id="toc-i-l" class="nav-link" data-scroll-target="#i-l"><span class="header-section-number">45.9</span> I — L</a></li>
+  <li><a href="#m-n" id="toc-m-n" class="nav-link" data-scroll-target="#m-n"><span class="header-section-number">45.10</span> M — N</a></li>
+  <li><a href="#o-p" id="toc-o-p" class="nav-link" data-scroll-target="#o-p"><span class="header-section-number">45.11</span> O — P</a></li>
+  <li><a href="#q-r" id="toc-q-r" class="nav-link" data-scroll-target="#q-r"><span class="header-section-number">45.12</span> Q — R</a></li>
+  <li><a href="#s-z" id="toc-s-z" class="nav-link" data-scroll-target="#s-z"><span class="header-section-number">45.13</span> S — Z</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/R1-formulario.html">Parte VIII — Referencia</a></li><li class="breadcrumb-item"><a href="../chapters/R3-glosario.html"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R3 · Glosario</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/R1-formulario.html">Parte VIII — Referencia</a></li><li class="breadcrumb-item"><a href="../chapters/R3-glosario.html"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R3 · Glosario</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-r3" class="quarto-section-identifier"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R3 · Glosario</span></span></h1>
+<h1 class="title"><span id="sec-r3" class="quarto-section-identifier"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R3 · Glosario</span></span></h1>
 </div>
 
 
@@ -1026,32 +1064,34 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<section id="a" class="level2" data-number="44.1">
-<h2 data-number="44.1" class="anchored" data-anchor-id="a"><span class="header-section-number">44.1</span> A</h2>
+<section id="a" class="level2" data-number="45.1">
+<h2 data-number="45.1" class="anchored" data-anchor-id="a"><span class="header-section-number">45.1</span> A</h2>
 <ul>
 <li><strong>Activación masiva (<em>massive activation</em>).</strong> Unas pocas coordenadas del flujo residual con valores enormes (~10⁵×); causa de los sumideros. (Cap. 17)</li>
 <li><strong>Activation patching (rastreo causal).</strong> Trasplantar una activación entre una pasada limpia y otra corrupta para aislar qué componente es <strong>causalmente</strong> responsable. (Cap. 37)</li>
 <li><strong>Adapter.</strong> Pequeño módulo cuello de botella insertado en cada capa; precursor de LoRA. Añade latencia. (Cap. 28)</li>
 <li><strong>Alineamiento.</strong> Hacer que el modelo <strong>siga instrucciones</strong> y se ajuste a lo que preferimos (SFT + RLHF/DPO). (Cap. 27)</li>
 <li><strong>Aliasing.</strong> Cuando un par de RoPE completa una vuelta y deja de distinguir distancias → pérdida de resolución posicional. (Cap. 14)</li>
-<li><strong>Alucinación.</strong> Salida fluida, segura y <strong>falsa</strong> (o no respaldada). En parte intrínseca al predecir el siguiente token. (Cap. 40)</li>
+<li><strong>Alucinación.</strong> Salida fluida, segura y <strong>falsa</strong> (o no respaldada). En parte intrínseca al predecir el siguiente token. (Cap. 41)</li>
 <li><strong>ANN (vecinos aproximados).</strong> Búsqueda de los vectores más cercanos sin comparar contra todos (HNSW, FAISS). (Cap. 31)</li>
 <li><strong>Atención.</strong> Mezcla ponderada en que cada token recoge información de los demás según afinidad (Q·K). (Cap. 4)</li>
 <li><strong>Atención lineal.</strong> Sustituir el softmax por un núcleo que permite reasociar el cálculo → coste O(n); pierde recuerdo. (Cap. 34)</li>
 <li><strong>Atlas γ.</strong> γ medido en 42 modelos de 4 familias: una coordenada cross-arquitectura. (Cap. 16)</li>
 </ul>
 </section>
-<section id="b" class="level2" data-number="44.2">
-<h2 data-number="44.2" class="anchored" data-anchor-id="b"><span class="header-section-number">44.2</span> B</h2>
+<section id="b" class="level2" data-number="45.2">
+<h2 data-number="45.2" class="anchored" data-anchor-id="b"><span class="header-section-number">45.2</span> B</h2>
 <ul>
 <li><strong>Batching continuo.</strong> Agrupar peticiones a nivel de iteración (meter/sacar cada paso) → mantiene la GPU llena. (Cap. 36)</li>
 <li><strong>Beam search.</strong> Decodificación que mantiene varias hipótesis; buena para tareas cerradas. (Cap. 12)</li>
 <li><strong>BPE (<em>Byte-Pair Encoding</em>).</strong> Tokenización que fusiona los pares de símbolos más frecuentes. (Cap. 2)</li>
+<li><strong>Benchmark.</strong> Conjunto fijo de tareas con respuesta conocida para poner una <strong>cifra</strong> a una capacidad (MMLU, HumanEval, RULER…). (Cap. 40)</li>
+<li><strong>Bits-per-byte (bpb).</strong> Perplejidad normalizada por <strong>bytes</strong>, no por tokens → comparable entre modelos con distinto tokenizador. (Cap. 40)</li>
 <li><strong>Bradley-Terry.</strong> Pérdida del modelo de recompensa: ordena respuestas según preferencias humanas. (Cap. 27)</li>
 </ul>
 </section>
-<section id="c" class="level2" data-number="44.3">
-<h2 data-number="44.3" class="anchored" data-anchor-id="c"><span class="header-section-number">44.3</span> C</h2>
+<section id="c" class="level2" data-number="45.3">
+<h2 data-number="45.3" class="anchored" data-anchor-id="c"><span class="header-section-number">45.3</span> C</h2>
 <ul>
 <li><strong>Cabeza (<em>head</em>).</strong> Una de las atenciones paralelas de la multi-cabeza; suele especializarse. (Cap. 5)</li>
 <li><strong>Cabeza de inducción.</strong> Cabeza que completa patrones “<a href="#b">A</a>…<a href="#a">A</a>→<a href="#b">B</a>”; mecanismo candidato del <em>in-context learning</em>. (Cap. 5, 30)</li>
@@ -1062,11 +1102,13 @@ window.Quarto = {
 <li><strong>CLIP.</strong> Encoders de imagen y texto entrenados contrastivamente en un espacio compartido → zero-shot. (Cap. 33)</li>
 <li><strong>Conexión residual.</strong> Sumar la entrada a la salida de un bloque; mantiene vivo el gradiente. (Cap. 7)</li>
 <li><strong>Contrastivo (aprendizaje).</strong> Acercar pares positivos y alejar negativos en el espacio de <em>embeddings</em>. (Cap. 26)</li>
+<li><strong>Circuito.</strong> Subgrafo de componentes (cabezas, FFN) que juntos implementan un comportamiento —la unidad de la interpretabilidad mecanicista—. (Cap. 37)</li>
+<li><strong>Contaminación (de benchmarks).</strong> Que el test se <strong>coló</strong> en el entrenamiento → infla la nota <strong>sin</strong> más capacidad real. (Cap. 40)</li>
 <li><strong>Cuantización.</strong> Representar pesos/activaciones con menos bits (escala + zero-point). (Cap. 35)</li>
 </ul>
 </section>
-<section id="d" class="level2" data-number="44.4">
-<h2 data-number="44.4" class="anchored" data-anchor-id="d"><span class="header-section-number">44.4</span> D</h2>
+<section id="d" class="level2" data-number="45.4">
+<h2 data-number="45.4" class="anchored" data-anchor-id="d"><span class="header-section-number">45.4</span> D</h2>
 <ul>
 <li><strong>D_f (ventana de KV).</strong> Número de tokens de KV que de verdad hace falta conservar, derivado de γ. (Cap. 20)</li>
 <li><strong>Decode.</strong> Fase de generación token a token; bandwidth-bound; cuello de botella del serving. (Cap. 36)</li>
@@ -1076,8 +1118,8 @@ window.Quarto = {
 <li><strong>DPO.</strong> Optimización directa de preferencias: el objetivo de RLHF <strong>sin</strong> RL ni modelo de recompensa. (Cap. 27)</li>
 </ul>
 </section>
-<section id="e" class="level2" data-number="44.5">
-<h2 data-number="44.5" class="anchored" data-anchor-id="e"><span class="header-section-number">44.5</span> E</h2>
+<section id="e" class="level2" data-number="45.5">
+<h2 data-number="45.5" class="anchored" data-anchor-id="e"><span class="header-section-number">45.5</span> E</h2>
 <ul>
 <li><strong>Embedding.</strong> Vector que representa el significado de un token o texto. (Cap. 3, 26)</li>
 <li><strong>Encoder / decoder.</strong> Codificador bidireccional (entender) / decodificador causal (generar). (Cap. 10)</li>
@@ -1085,46 +1127,50 @@ window.Quarto = {
 <li><strong>Escalado 1/√d_k.</strong> Factor que evita que los productos escalares saturen el softmax. (Cap. 4)</li>
 </ul>
 </section>
-<section id="f" class="level2" data-number="44.6">
-<h2 data-number="44.6" class="anchored" data-anchor-id="f"><span class="header-section-number">44.6</span> F</h2>
+<section id="f" class="level2" data-number="45.6">
+<h2 data-number="45.6" class="anchored" data-anchor-id="f"><span class="header-section-number">45.6</span> F</h2>
 <ul>
+<li><strong>Fase A / Fase B.</strong> Los dos regímenes de decaimiento: <strong>γ&lt;1</strong> (Fase A, mira lejos) y <strong>γ&gt;1</strong> (Fase B, concentra cerca); la frontera es Hagedorn (γ=1). (Cap. 15, 16)</li>
 <li><strong>FFN (<em>feed-forward</em>).</strong> Red que procesa cada token por separado; memoria clave-valor. (Cap. 6)</li>
+<li><strong>Fisher (información de).</strong> Sensibilidad de la atención a un cambio de la palanca; en la lente termo, <strong>Fisher = C_V/γ²</strong> (probado en Lean). (Cap. 22)</li>
 <li><strong>FlashAttention.</strong> Atención <strong>exacta</strong> sin materializar la matriz n×n (tiling + online softmax). (Cap. 34)</li>
 <li><strong>Flujo residual.</strong> El “carril” compartido del que cada componente lee y escribe; canal de comunicación. (Cap. 3, 37)</li>
 <li><strong>Folclore.</strong> Creencia popular pero <strong>no justificada</strong> (o ya contradicha). (Cap. 38)</li>
 <li><strong>Fraccionario (orden).</strong> Lente que lee la atención como difusión de Lévy de orden (γ−1)/2. (Cap. 23)</li>
 </ul>
 </section>
-<section id="g" class="level2" data-number="44.7">
-<h2 data-number="44.7" class="anchored" data-anchor-id="g"><span class="header-section-number">44.7</span> G</h2>
+<section id="g" class="level2" data-number="45.7">
+<h2 data-number="45.7" class="anchored" data-anchor-id="g"><span class="header-section-number">45.7</span> G</h2>
 <ul>
 <li><strong>γ (gamma).</strong> Exponente de decaimiento de la atención con la distancia: <span class="math inline">\(A(d)\propto d^{-\gamma}\)</span>. (Cap. 15)</li>
 <li><strong>γ_Padé.</strong> Predicción de γ desde la geometría (θ, T), sin entrenar. (Cap. 15)</li>
 <li><strong>GQA / MQA / MLA.</strong> Compartir K/V entre cabezas para reducir la caché (no el cómputo). (Cap. 18)</li>
+<li><strong>Goodhart (ley de).</strong> “Cuando una medida se vuelve objetivo, deja de ser buena medida”: optimizar <em>para</em> un benchmark lo estropea. (Cap. 40)</li>
 <li><strong>Grokking.</strong> Generalización <strong>tardía y repentina</strong> tras memorizar. (Cap. 24)</li>
 </ul>
 </section>
-<section id="h" class="level2" data-number="44.8">
-<h2 data-number="44.8" class="anchored" data-anchor-id="h"><span class="header-section-number">44.8</span> H</h2>
+<section id="h" class="level2" data-number="45.8">
+<h2 data-number="45.8" class="anchored" data-anchor-id="h"><span class="header-section-number">45.8</span> H</h2>
 <ul>
 <li><strong>Hagedorn (γ=1).</strong> La frontera de fase entre mirar lejos (Fase A) y concentrar (Fase B). (Cap. 21)</li>
 <li><strong>HBM / SRAM.</strong> Memoria grande y lenta / minúscula y rápida de la GPU; su tráfico domina la atención. (Cap. 34)</li>
 </ul>
 </section>
-<section id="i-l" class="level2" data-number="44.9">
-<h2 data-number="44.9" class="anchored" data-anchor-id="i-l"><span class="header-section-number">44.9</span> I — L</h2>
+<section id="i-l" class="level2" data-number="45.9">
+<h2 data-number="45.9" class="anchored" data-anchor-id="i-l"><span class="header-section-number">45.9</span> I — L</h2>
 <ul>
 <li><strong>In-context learning (ICL).</strong> Aprender una tarea de ejemplos en el prompt, <strong>sin actualizar pesos</strong>. (Cap. 30)</li>
-<li><strong>Jailbreak.</strong> Prompt que sortea el entrenamiento de seguridad. (Cap. 40)</li>
+<li><strong>Jailbreak.</strong> Prompt que sortea el entrenamiento de seguridad. (Cap. 41)</li>
 <li><strong>LayerNorm / RMSNorm.</strong> Normalización que reescala la activación → estabilidad. (Cap. 7)</li>
 <li><strong>Leyes de escala.</strong> La pérdida baja de forma predecible con tamaño, datos y cómputo (Kaplan, Chinchilla). (Cap. 11, 25)</li>
 <li><strong>Logit lens.</strong> Proyectar una activación intermedia por la salida para leer la “apuesta” del modelo por capa. (Cap. 37)</li>
 <li><strong>LoRA / QLoRA.</strong> Delta de <strong>rango bajo</strong> (<span class="math inline">\(B{=}0\)</span> al inicio, fusionable) / sobre base de 4 bits. (Cap. 28)</li>
+<li><strong>LLM-as-judge (juez-LLM).</strong> Usar otro LLM para puntuar respuestas abiertas; escala, pero hereda sesgos (posición, verbosidad, auto-preferencia). (Cap. 40)</li>
 <li><strong>“Lost in the middle”.</strong> Los modelos usan peor la información del <strong>medio</strong> del contexto. (Cap. 31)</li>
 </ul>
 </section>
-<section id="m-n" class="level2" data-number="44.10">
-<h2 data-number="44.10" class="anchored" data-anchor-id="m-n"><span class="header-section-number">44.10</span> M — N</h2>
+<section id="m-n" class="level2" data-number="45.10">
+<h2 data-number="45.10" class="anchored" data-anchor-id="m-n"><span class="header-section-number">45.10</span> M — N</h2>
 <ul>
 <li><strong>Máscara causal.</strong> Impide que un token mire a los futuros (generación). (Cap. 9, 10)</li>
 <li><strong>Memory-bound.</strong> Limitado por <strong>mover datos</strong>, no por calcular (caso de la atención). (Cap. 34)</li>
@@ -1132,8 +1178,8 @@ window.Quarto = {
 <li><strong>Numerología.</strong> Una fórmula que encaja con los datos <strong>sin mecanismo</strong> que lo explique. (Cap. 38)</li>
 </ul>
 </section>
-<section id="o-p" class="level2" data-number="44.11">
-<h2 data-number="44.11" class="anchored" data-anchor-id="o-p"><span class="header-section-number">44.11</span> O — P</h2>
+<section id="o-p" class="level2" data-number="45.11">
+<h2 data-number="45.11" class="anchored" data-anchor-id="o-p"><span class="header-section-number">45.11</span> O — P</h2>
 <ul>
 <li><strong>Online softmax.</strong> Calcular el softmax por bloques con máximo y suma móviles. (Cap. 34)</li>
 <li><strong>PagedAttention.</strong> Gestionar la caché KV en bloques estilo memoria virtual → cero desperdicio. (Cap. 34, 36)</li>
@@ -1142,11 +1188,11 @@ window.Quarto = {
 <li><strong>Poda (<em>pruning</em>).</strong> Quitar pesos (estructurada = bloques; no estructurada = sueltos). (Cap. 35)</li>
 <li><strong>Polisemanticidad.</strong> Una neurona dispara por muchos conceptos dispares (causada por superposición). (Cap. 37)</li>
 <li><strong>Prefill.</strong> Fase que procesa el prompt entero en paralelo; compute-bound; marca el TTFT. (Cap. 36)</li>
-<li><strong>Prompt injection.</strong> Instrucciones hostiles coladas como datos; se agrava en agentes. (Cap. 30, 40)</li>
+<li><strong>Prompt injection.</strong> Instrucciones hostiles coladas como datos; se agrava en agentes. (Cap. 30, 41)</li>
 </ul>
 </section>
-<section id="q-r" class="level2" data-number="44.12">
-<h2 data-number="44.12" class="anchored" data-anchor-id="q-r"><span class="header-section-number">44.12</span> Q — R</h2>
+<section id="q-r" class="level2" data-number="45.12">
+<h2 data-number="45.12" class="anchored" data-anchor-id="q-r"><span class="header-section-number">45.12</span> Q — R</h2>
 <ul>
 <li><strong>QK / OV (circuitos).</strong> QK decide <strong>dónde</strong> atender; OV decide <strong>qué</strong> escribir. (Cap. 37)</li>
 <li><strong>RAG.</strong> Recuperar evidencia y <strong>condicionar</strong> la generación sobre ella (memoria no-paramétrica). (Cap. 31)</li>
@@ -1154,10 +1200,11 @@ window.Quarto = {
 <li><strong>Recibo.</strong> La prueba que respalda una afirmación: Lean (álgebra) o datos. (Cap. 38)</li>
 <li><strong>RLHF.</strong> Alinear con un modelo de recompensa + PPO, con correa <strong>KL</strong>. (Cap. 27)</li>
 <li><strong>RoPE.</strong> Codificación posicional rotatoria: rota pares de dimensiones según la posición. (Cap. 8)</li>
+<li><strong>RULER / NIAH.</strong> Benchmarks de <strong>contexto largo</strong>: NIAH (<em>needle-in-a-haystack</em>) esconde un dato en un contexto enorme; RULER lo sistematiza para medir la longitud <strong>real</strong> (no la anunciada). (Cap. 40)</li>
 </ul>
 </section>
-<section id="s-z" class="level2" data-number="44.13">
-<h2 data-number="44.13" class="anchored" data-anchor-id="s-z"><span class="header-section-number">44.13</span> S — Z</h2>
+<section id="s-z" class="level2" data-number="45.13">
+<h2 data-number="45.13" class="anchored" data-anchor-id="s-z"><span class="header-section-number">45.13</span> S — Z</h2>
 <ul>
 <li><strong>SAE (autoencoder disperso).</strong> Diccionario que descompone activaciones en rasgos monosemánticos; deshace la superposición. (Cap. 37)</li>
 <li><strong>Self-consistency.</strong> Muestrear varias cadenas de razonamiento y votar la mayoritaria. (Cap. 30)</li>
@@ -1166,6 +1213,7 @@ window.Quarto = {
 <li><strong>Temperatura (τ).</strong> Reescala los logits antes del softmax: baja = prudente, alta = aventurado. (Cap. 12, 29)</li>
 <li><strong>Token.</strong> Identificador entero de un trozo de texto (subpalabra). (Cap. 2)</li>
 <li><strong>TTFT / TPOT.</strong> Tiempo al primer token (prefill) / tiempo por token de salida (decode). (Cap. 36)</li>
+<li><strong>Validez de constructo.</strong> Si una métrica mide de verdad la <strong>capacidad</strong> que dices, o solo un atajo correlacionado —la pregunta de fondo de la evaluación—. (Cap. 40)</li>
 <li><strong>Verificado / derivado.</strong> Afirmación con <strong>recibo</strong> (prueba formal o datos reproducibles). (Cap. 38)</li>
 <li><strong>ViT (<em>Vision Transformer</em>).</strong> Transformer sobre <strong>parches</strong> de imagen tratados como tokens. (Cap. 33)</li>
 <li><strong>Z (función de partición).</strong> <span class="math inline">\(Z=\mathrm{Li}_\gamma(e^{-\lambda})\)</span>, en la lente termodinámica. (Cap. 21)</li>
@@ -1309,6 +1357,95 @@ window.Quarto = {
         render(g);
       });
       render(1.35); start();
+    });
+  } catch (e) {}
+
+  // ---- 1c-moe. Build .fg-moe — Mixture-of-Experts router: only k of N experts light up ----
+  try {
+    var reduceMoe = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll('.fg-moe').forEach(function (box) {
+      var N = +(box.dataset.experts || 8), K = +(box.dataset.topk || 2);
+      var rnd = function (s) { var x = Math.sin(s * 12.9898) * 43758.5453; return x - Math.floor(x); };
+      var SVGNS = 'http://www.w3.org/2000/svg';
+      var W = 460, H = Math.max(190, N * 28 + 24), padT = 16;
+      var xTok = 38, xRouter = 150, xExp = 296, expW = 128, expH = 18;
+      var gap = N > 1 ? (H - padT * 2 - N * expH) / (N - 1) : 0;
+      function expY(i) { return padT + i * (expH + gap); }
+      var yMid = H / 2;
+      box.className = 'fg-moe fg-sch';
+      box.innerHTML = '<div class="fg-sch-h">' + L('Mixture of Experts: el router enciende solo k de N', 'Mixture of Experts: the router lights up only k of N') + '</div>' +
+        '<svg class="fg-moe-svg" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet"></svg>' +
+        '<div class="fg-moe-ctrl"><button class="fg-sch-btn" data-act="pp" type="button">⏸</button><span class="fg-moe-read"></span></div>' +
+        '<div class="fg-sch-cap">' + L('Cada token pasa por el <b>router</b>, que elige los <b>' + K + ' expertos</b> más adecuados (de ' + N + '). El resto <span class="hot">ni se encienden</span>: por eso el <b>cómputo</b> por token es bajo aunque el modelo tenga muchísimos parámetros.', 'Each token goes through the <b>router</b>, which picks the <b>' + K + ' best experts</b> (of ' + N + '). The rest <span class="hot">stay off</span>: that is why per-token <b>compute</b> stays low even with a huge parameter count.') + '</div>';
+      var svg = box.querySelector('.fg-moe-svg'), read = box.querySelector('.fg-moe-read'), btn = box.querySelector('[data-act="pp"]');
+      function mk(tag, a) { var e = document.createElementNS(SVGNS, tag); for (var k in a) e.setAttribute(k, a[k]); return e; }
+      svg.appendChild(mk('line', { x1: xTok + 13, y1: yMid, x2: xRouter - 15, y2: yMid, class: 'fg-moe-feed' }));
+      svg.appendChild(mk('circle', { cx: xTok, cy: yMid, r: 13, class: 'fg-moe-tok' }));
+      var tl = mk('text', { x: xTok, y: yMid + 3.5, class: 'fg-moe-tl', 'text-anchor': 'middle' }); tl.textContent = 'tok'; svg.appendChild(tl);
+      svg.appendChild(mk('rect', { x: xRouter - 15, y: yMid - 15, width: 30, height: 30, rx: 4, transform: 'rotate(45 ' + xRouter + ' ' + yMid + ')', class: 'fg-moe-router' }));
+      var rl = mk('text', { x: xRouter, y: yMid + 5, class: 'fg-moe-rl', 'text-anchor': 'middle' }); rl.textContent = '⇄'; svg.appendChild(rl);
+      var lines = [], experts = [], elabels = [];
+      for (var i = 0; i < N; i++) {
+        var y = expY(i) + expH / 2;
+        lines.push(svg.appendChild(mk('path', { d: 'M' + (xRouter + 15) + ' ' + yMid + ' C ' + (xRouter + 62) + ' ' + yMid + ', ' + (xExp - 46) + ' ' + y + ', ' + xExp + ' ' + y, class: 'fg-moe-wire' })));
+        experts.push(svg.appendChild(mk('rect', { x: xExp, y: expY(i), width: expW, height: expH, rx: 4, class: 'fg-moe-exp' })));
+        var t = mk('text', { x: xExp + expW / 2, y: expY(i) + expH / 2 + 3.5, class: 'fg-moe-el', 'text-anchor': 'middle' }); t.textContent = L('experto ', 'expert ') + (i + 1); svg.appendChild(t); elabels.push(t);
+      }
+      function chosen(s) { var sc = [], set = {}; for (var i = 0; i < N; i++) sc.push([rnd(s * 3.1 + i * 1.7 + 1), i]); sc.sort(function (a, b) { return b[0] - a[0]; }); for (var j = 0; j < K; j++) set[sc[j][1]] = 1; return set; }
+      var step = 0, timer = null;
+      function render() {
+        var set = chosen(step), names = [];
+        for (var i = 0; i < N; i++) {
+          var on = !!set[i];
+          experts[i].classList.toggle('on', on); lines[i].classList.toggle('on', on); elabels[i].classList.toggle('on', on);
+          if (on) names.push('#' + (i + 1));
+        }
+        read.innerHTML = L('token ', 'token ') + (step + 1) + ' → <b>' + names.join(', ') + '</b> · ' + K + '/' + N + ' ' + L('activos', 'active');
+      }
+      render();
+      function play() { if (timer) return; timer = setInterval(function () { var r = box.getBoundingClientRect(); if (r.bottom < 0 || r.top > (window.innerHeight || 9999)) return; step = (step + 1) % 6; render(); }, 1700); btn.textContent = '⏸'; }
+      function stop() { if (timer) { clearInterval(timer); timer = null; } btn.textContent = '▶'; }
+      btn.addEventListener('click', function () { timer ? stop() : play(); });
+      if (reduceMoe) { btn.textContent = '▶'; } else play();
+    });
+  } catch (e) {}
+
+  // ---- 1c-mirage. Build .fg-mirage — benchmark contamination inflates the score, not the ability ----
+  try {
+    document.querySelectorAll('.fg-mirage').forEach(function (box) {
+      box.className = 'fg-mirage fg-sch';
+      box.innerHTML = '<div class="fg-sch-h">' + L('El espejismo del benchmark: la contaminación infla la nota, no la capacidad', 'The benchmark mirage: contamination inflates the score, not the ability') + '</div>' +
+        '<svg class="fg-mirage-svg" viewBox="0 0 420 210" preserveAspectRatio="xMidYMid meet"></svg>' +
+        '<div class="fg-mirage-ctrl"><span>' + L('contaminación', 'contamination') + '</span><input type="range" min="0" max="100" step="1" value="0" aria-label="' + L('porcentaje de contaminación', 'contamination percentage') + '"><span class="cv">0%</span></div>' +
+        '<div class="fg-sch-cap"></div>';
+      var svg = box.querySelector('svg'), range = box.querySelector('input'), cv = box.querySelector('.cv'), cap = box.querySelector('.fg-sch-cap');
+      var W = 420, H = 210, padB = 34, padT = 16, base = 52;
+      var y0 = H - padB, y1 = padT, HH = y0 - y1;
+      function Y(p) { return y0 - p / 100 * HH; }
+      var b0 = { x: 100, w: 88 }, b1 = { x: 240, w: 88 };
+      function draw(c) {
+        var app = base + c / 100 * (98 - base), s = '';
+        [0, 25, 50, 75, 100].forEach(function (p) {
+          s += '<line class="grid" x1="62" y1="' + Y(p) + '" x2="' + (W - 14) + '" y2="' + Y(p) + '"/>';
+          s += '<text class="lbl" x="54" y="' + (Y(p) + 4) + '" text-anchor="end">' + p + '</text>';
+        });
+        s += '<rect class="bar-real" x="' + b0.x + '" y="' + Y(base) + '" width="' + b0.w + '" height="' + (y0 - Y(base)) + '"/>';
+        s += '<text class="blbl" x="' + (b0.x + b0.w / 2) + '" y="' + (y0 + 16) + '" text-anchor="middle">' + L('capacidad real', 'real ability') + '</text>';
+        s += '<text class="bval" x="' + (b0.x + b0.w / 2) + '" y="' + (Y(base) - 6) + '" text-anchor="middle">' + Math.round(base) + '%</text>';
+        s += '<rect class="bar-real" x="' + b1.x + '" y="' + Y(base) + '" width="' + b1.w + '" height="' + (y0 - Y(base)) + '"/>';
+        if (app > base + 0.5) s += '<rect fill="url(#fgmh)" stroke="rgb(213,94,0)" stroke-width="1" x="' + b1.x + '" y="' + Y(app) + '" width="' + b1.w + '" height="' + (Y(base) - Y(app)) + '"/>';
+        s += '<text class="blbl" x="' + (b1.x + b1.w / 2) + '" y="' + (y0 + 16) + '" text-anchor="middle">' + L('nota aparente', 'apparent score') + '</text>';
+        s += '<text class="bval" x="' + (b1.x + b1.w / 2) + '" y="' + (Y(app) - 6) + '" text-anchor="middle">' + Math.round(app) + '%</text>';
+        if (app > base + 7) s += '<text class="mlbl" x="' + (b1.x + b1.w + 5) + '" y="' + ((Y(app) + Y(base)) / 2 + 4) + '">← ' + L('espejismo', 'mirage') + '</text>';
+        svg.innerHTML = '<defs><pattern id="fgmh" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="rgba(213,94,0,0.12)"/><line x1="0" y1="0" x2="0" y2="7" stroke="rgb(213,94,0)" stroke-width="2.5"/></pattern></defs>' + s;
+        cv.textContent = c + '%';
+        var gap = Math.round(app - base);
+        cap.innerHTML = (+c === 0)
+          ? L('Sin contaminación: la nota <b>es</b> la capacidad real (' + Math.round(base) + '%).', 'No contamination: the score <b>is</b> the real ability (' + Math.round(base) + '%).')
+          : L('Con <b>' + c + '%</b> de contaminación, la nota sube a <b>' + Math.round(app) + '%</b>, pero la capacidad real sigue en <b>' + Math.round(base) + '%</b>. Ese hueco de <span class="hot">' + gap + ' puntos</span> es <span class="hot">espejismo</span>: el modelo no aprendió más, solo <b>vio el examen antes</b>.', 'With <b>' + c + '%</b> contamination, the score climbs to <b>' + Math.round(app) + '%</b>, but real ability stays at <b>' + Math.round(base) + '%</b>. That <span class="hot">' + gap + '-point</span> gap is a <span class="hot">mirage</span>: the model did not learn more, it just <b>saw the exam beforehand</b>.');
+      }
+      range.addEventListener('input', function () { draw(+range.value); });
+      draw(0);
     });
   } catch (e) {}
 
@@ -2491,12 +2628,12 @@ window.Quarto = {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../chapters/R2-cookbook.html" class="pagination-link" aria-label="R2 · Cookbook">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../chapters/R4-medir-gamma.html" class="pagination-link" aria-label="R4 · Medir tu propio γ (y reproducir el atlas)">
-        <span class="nav-page-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R4 · Medir tu propio γ (y reproducir el atlas)</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R4 · Medir tu propio γ (y reproducir el atlas)</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
