@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.9.38">
@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>47&nbsp; R9 · tafagent manual – How Transformers Attend</title>
+<title>47&nbsp; R5 · Manual de tafagent – Cómo Atienden los Transformers</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -32,7 +32,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../chapters/R10-soluciones.html" rel="next">
+<link href="../chapters/R6-soluciones.html" rel="next">
 <link href="../chapters/R4-medir-gamma.html" rel="prev">
 <link href="../icon.png" rel="icon" type="image/png">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
@@ -59,17 +59,17 @@ ul.task-list li input[type="checkbox"] {
   ],
   "show-item-context": false,
   "language": {
-    "search-no-results-text": "No results",
-    "search-matching-documents-text": "matching documents",
-    "search-copy-link-title": "Copy link to search",
-    "search-hide-matches-text": "Hide additional matches",
-    "search-more-match-text": "more match in this document",
-    "search-more-matches-text": "more matches in this document",
-    "search-clear-button-title": "Clear",
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
     "search-text-placeholder": "",
-    "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
   }
 }</script>
 <style>
@@ -538,11 +538,11 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">How Transformers Attend</span>
+    <span class="navbar-title">Cómo Atienden los Transformers</span>
     </a>
   </div>
-            <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+            <div id="quarto-search" class="" title="Buscar"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Navegación de palanca" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -563,11 +563,11 @@ ul.task-list li input[type="checkbox"] {
     </nav>
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/R1-formulario.html">Part VIII — Reference</a></li><li class="breadcrumb-item"><a href="../chapters/R9-tafagent.html"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R9 · tafagent manual</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/R1-formulario.html">Parte VIII — Referencia</a></li><li class="breadcrumb-item"><a href="../chapters/R5-tafagent.html"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R5 · Manual de tafagent</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav>
@@ -581,20 +581,20 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Preface</span></a>
+ <span class="menu-text">Prefacio</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/creditos.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Credits</span></a>
+ <span class="menu-text">Créditos</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">Part 0 — Orientation</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+ <span class="menu-text">Parte 0 — Orientación</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -602,7 +602,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/00-orientacion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">How to use this guide</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Cómo usar esta guía</span></span></a>
   </div>
 </li>
       </ul>
@@ -610,8 +610,8 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">Part I — Foundations</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+ <span class="menu-text">Parte I — Fundamentos</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -619,73 +619,73 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/01-panorama.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The panorama: what a transformer is and why it won</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">El panorama: qué es un transformer y por qué ganó</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/02-tokens.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">From text to tokens</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">De texto a tokens</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/03-embeddings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Embeddings and the residual stream</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Embeddings y el flujo residual</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/04-atencion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Attention as weighted aggregation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">La atención como agregación ponderada</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/05-multicabeza.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Multi-head attention</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Atención multi-cabeza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/06-ffn.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The feed-forward network (FFN)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">La red feed-forward (FFN)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/07-residual-norm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Residual connections and normalization</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Conexiones residuales y normalización</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/08-posicion-rope.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Positional information and RoPE</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Información de posición y RoPE</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/09-bloque.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The complete block and depth</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">El bloque completo y la profundidad</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/10-arquitecturas.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Encoder, decoder and encoder-decoder</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Encoder, decoder y encoder-decoder</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/11-entrenamiento.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Training a transformer</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Entrenar un transformer</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/12-inferencia.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Inference and decoding</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Inferencia y decodificación</span></span></a>
   </div>
 </li>
       </ul>
@@ -693,8 +693,8 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">Part II — How transformers attend over distance</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+ <span class="menu-text">Parte II — Cómo atienden a lo largo de la distancia</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -702,49 +702,49 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/13-leer-mapas.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Reading an attention map</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Leer un mapa de atención</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/14-aliasing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Aliasing and the three scales of RoPE</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Aliasing y las tres escalas de RoPE</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/15-ley-gamma.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">The decay law A(d) ∝ d^−γ</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">La ley de decaimiento A(d) ∝ d^−γ</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/16-atlas.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">The γ atlas: decay measured across 42 models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">El atlas γ: el decaimiento medido en 42 modelos</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/17-sumideros.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Attention sinks and concentration</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Sumideros de atención y concentración</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/18-taxonomia.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">A taxonomy of attention mechanisms</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Taxonomía de mecanismos de atención</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/19-contexto-largo.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Long-context extension</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Extensión de contexto largo</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/20-kv-cache.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">KV-cache compression in practice</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Compresión de KV-cache en práctica</span></span></a>
   </div>
 </li>
       </ul>
@@ -752,8 +752,8 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
- <span class="menu-text">Part III — A physicist’s lens on attention</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+ <span class="menu-text">Parte III — Una lente física sobre la atención</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -761,25 +761,25 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/21-fases.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Phase structure and the polylog partition function</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Estructura de fases y la función de partición polilog</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/22-termodinamica.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">The thermodynamic dictionary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">El diccionario termodinámico</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/23-fraccionario.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">The fractional transport view</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">La vista de transporte fraccionario</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/24-grokking.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Training dynamics and <em>grokking</em></span></span></a>
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Dinámica de entrenamiento y <em>grokking</em></span></span></a>
   </div>
 </li>
       </ul>
@@ -787,8 +787,8 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
- <span class="menu-text">Part IV — Training, adaptation and fine-tuning</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+ <span class="menu-text">Parte IV — Entrenamiento, adaptación y fine-tuning</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -796,25 +796,25 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/25-preentrenamiento.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Pre-training at scale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Pre-entrenamiento a escala</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/26-finetuning-clasificacion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Fine-tuning for classification and representation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Fine-tuning para clasificación y representación</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/27-alineamiento.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Instruction tuning and alignment</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Instruction tuning y alineamiento</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/28-peft.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Parameter-efficient fine-tuning (PEFT)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Fine-tuning eficiente en parámetros (PEFT)</span></span></a>
   </div>
 </li>
       </ul>
@@ -822,8 +822,8 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
- <span class="menu-text">Part V — Using transformers</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+ <span class="menu-text">Parte V — Usar transformers</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -831,31 +831,31 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/29-generacion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Text generation in depth</span></span></a>
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Generación de texto en profundidad</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/30-prompting.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Prompting and in-context learning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Prompting e in-context learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/31-rag.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Embeddings, semantic search and RAG</span></span></a>
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Embeddings, búsqueda semántica y RAG</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/32-agentes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Agents, tools and memory</span></span></a>
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Agentes, herramientas y memoria</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/33-multimodal.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Multimodal transformers</span></span></a>
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Transformers multimodales</span></span></a>
   </div>
 </li>
       </ul>
@@ -863,8 +863,8 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
- <span class="menu-text">Part VI — Efficiency, systems and deployment</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+ <span class="menu-text">Parte VI — Eficiencia, sistemas y despliegue</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -872,19 +872,19 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/34-atencion-eficiente.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Efficient attention</span></span></a>
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Atención eficiente</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/35-compresion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Quantization, distillation and pruning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Cuantización, destilación y poda</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/36-serving.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Serving and deployment</span></span></a>
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Servir y desplegar</span></span></a>
   </div>
 </li>
       </ul>
@@ -892,8 +892,8 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
- <span class="menu-text">Part VII — Interpretability and what is real</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+ <span class="menu-text">Parte VII — Interpretabilidad y qué es real</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -901,31 +901,31 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/37-interpretabilidad.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">A primer on mechanistic interpretability</span></span></a>
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Primer de interpretabilidad mecanicista</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/38-audit.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Verified, folklore and numerology</span></span></a>
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Verificado, folclore y numerología</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/39-mapa2026.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">The map of the 2026 collapse landscape</span></span></a>
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">El mapa del paisaje de colapso 2026</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/40-evaluacion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Evaluation: measuring without fooling yourself</span></span></a>
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Evaluación: medir sin engañarte</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/41-etica.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Ethics, safety and limitations</span></span></a>
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Ética, seguridad y limitaciones</span></span></a>
   </div>
 </li>
       </ul>
@@ -933,8 +933,8 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
- <span class="menu-text">Part VIII — Reference</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Toggle section">
+ <span class="menu-text">Parte VIII — Referencia</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -942,7 +942,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R1-formulario.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R1 · Master formulary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R1 · Formulario maestro</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -954,25 +954,25 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R3-glosario.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R3 · Glossary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R3 · Glosario</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R4-medir-gamma.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R4 · Measuring your own γ (and reproducing the atlas)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R4 · Medir tu propio γ (y reproducir el atlas)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/R9-tafagent.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R9 · tafagent manual</span></span></a>
+  <a href="../chapters/R5-tafagent.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R5 · Manual de tafagent</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/R10-soluciones.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">R10 · Exercise solutions</span></span></a>
+  <a href="../chapters/R6-soluciones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">R6 · Soluciones de los ejercicios</span></span></a>
   </div>
 </li>
       </ul>
@@ -984,25 +984,25 @@ ul.task-list li input[type="checkbox"] {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
+    <h2 id="toc-title">En esta página</h2>
    
   <ul>
-  <li><a href="#what-it-is-and-what-it-isnt" id="toc-what-it-is-and-what-it-isnt" class="nav-link active" data-scroll-target="#what-it-is-and-what-it-isnt"><span class="header-section-number">47.1</span> What it is and what it isn’t</a></li>
-  <li><a href="#the-metrics-it-computes" id="toc-the-metrics-it-computes" class="nav-link" data-scroll-target="#the-metrics-it-computes"><span class="header-section-number">47.2</span> The metrics it computes</a></li>
-  <li><a href="#the-7-modes" id="toc-the-7-modes" class="nav-link" data-scroll-target="#the-7-modes"><span class="header-section-number">47.3</span> The 7 modes</a></li>
-  <li><a href="#the-anti-bullshit-pack-11-tools" id="toc-the-anti-bullshit-pack-11-tools" class="nav-link" data-scroll-target="#the-anti-bullshit-pack-11-tools"><span class="header-section-number">47.4</span> The <em>Anti-Bullshit Pack</em> (11 tools)</a></li>
-  <li><a href="#the-recipes-8-core" id="toc-the-recipes-8-core" class="nav-link" data-scroll-target="#the-recipes-8-core"><span class="header-section-number">47.5</span> The recipes (8 core)</a></li>
-  <li><a href="#how-to-read-the-output-the-taf-card" id="toc-how-to-read-the-output-the-taf-card" class="nav-link" data-scroll-target="#how-to-read-the-output-the-taf-card"><span class="header-section-number">47.6</span> How to read the output: the <em>TAF Card</em></a></li>
-  <li><a href="#verification-the-receipts" id="toc-verification-the-receipts" class="nav-link" data-scroll-target="#verification-the-receipts"><span class="header-section-number">47.7</span> Verification (the receipts)</a></li>
+  <li><a href="#qué-es-y-qué-no-es" id="toc-qué-es-y-qué-no-es" class="nav-link active" data-scroll-target="#qué-es-y-qué-no-es"><span class="header-section-number">47.1</span> Qué es y qué no es</a></li>
+  <li><a href="#las-métricas-que-calcula" id="toc-las-métricas-que-calcula" class="nav-link" data-scroll-target="#las-métricas-que-calcula"><span class="header-section-number">47.2</span> Las métricas que calcula</a></li>
+  <li><a href="#los-7-modos" id="toc-los-7-modos" class="nav-link" data-scroll-target="#los-7-modos"><span class="header-section-number">47.3</span> Los 7 modos</a></li>
+  <li><a href="#el-anti-bullshit-pack-11-herramientas" id="toc-el-anti-bullshit-pack-11-herramientas" class="nav-link" data-scroll-target="#el-anti-bullshit-pack-11-herramientas"><span class="header-section-number">47.4</span> El <em>Anti-Bullshit Pack</em> (11 herramientas)</a></li>
+  <li><a href="#las-recetas-8-core" id="toc-las-recetas-8-core" class="nav-link" data-scroll-target="#las-recetas-8-core"><span class="header-section-number">47.5</span> Las recetas (8 core)</a></li>
+  <li><a href="#cómo-leer-la-salida-la-taf-card" id="toc-cómo-leer-la-salida-la-taf-card" class="nav-link" data-scroll-target="#cómo-leer-la-salida-la-taf-card"><span class="header-section-number">47.6</span> Cómo leer la salida: la <em>TAF Card</em></a></li>
+  <li><a href="#verificación-los-recibos" id="toc-verificación-los-recibos" class="nav-link" data-scroll-target="#verificación-los-recibos"><span class="header-section-number">47.7</span> Verificación (los recibos)</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/R1-formulario.html">Part VIII — Reference</a></li><li class="breadcrumb-item"><a href="../chapters/R9-tafagent.html"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R9 · tafagent manual</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/R1-formulario.html">Parte VIII — Referencia</a></li><li class="breadcrumb-item"><a href="../chapters/R5-tafagent.html"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R5 · Manual de tafagent</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-r9" class="quarto-section-identifier"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R9 · tafagent manual</span></span></h1>
+<h1 class="title"><span id="sec-r5" class="quarto-section-identifier"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R5 · Manual de tafagent</span></span></h1>
 </div>
 
 
@@ -1025,20 +1025,20 @@ ul.task-list li input[type="checkbox"] {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-body-container">
-<p><strong>What it is.</strong> The manual for <a href="https://karlesmarin.github.io/tafagent/"><strong>tafagent</strong></a>, the in-browser diagnostic tool that accompanies this book. Here are its <strong>modes</strong>, what <strong>metrics</strong> it computes, the <strong>recipes</strong>, and how to <strong>read</strong> its verdicts. The key point up front, no misunderstandings: tafagent <strong>does NOT draw attention maps</strong> —it is a <strong>diagnostic that PREDICTS metrics</strong> from the model’s config—. To <em>see</em> maps, use BertViz or Transformer Explainer; to <em>measure/predict</em> γ, horizon, regime, and KV, use tafagent.</p>
+<p><strong>Qué es.</strong> El manual de <a href="https://karlesmarin.github.io/tafagent/"><strong>tafagent</strong></a>, la herramienta de diagnóstico del navegador que acompaña a este libro. Aquí están sus <strong>modos</strong>, qué <strong>métricas</strong> calcula, las <strong>recetas</strong> y cómo <strong>leer</strong> sus veredictos. Lo importante de entrada, sin malentendidos: tafagent <strong>NO dibuja mapas de atención</strong> —es un <strong>diagnóstico que PREDICE métricas</strong> desde la config del modelo—. Para <em>ver</em> mapas, usa BertViz o Transformer Explainer; para <em>medir/predecir</em> γ, horizonte, régimen y KV, usa tafagent.</p>
 </div>
 </div>
 </div>
-<section id="what-it-is-and-what-it-isnt" class="level2" data-number="47.1">
-<h2 data-number="47.1" class="anchored" data-anchor-id="what-it-is-and-what-it-isnt"><span class="header-section-number">47.1</span> What it is and what it isn’t</h2>
+<section id="qué-es-y-qué-no-es" class="level2" data-number="47.1">
+<h2 data-number="47.1" class="anchored" data-anchor-id="qué-es-y-qué-no-es"><span class="header-section-number">47.1</span> Qué es y qué no es</h2>
 <ul>
-<li><strong>It is:</strong> a tool in the <strong>browser</strong> (zero install, zero GPU, no telemetry) that <strong>predicts the practical viability</strong> of an LLM <strong>before</strong> you spend GPU/€: real long context, quantization degradation, chat template, config errors.</li>
-<li><strong>It isn’t:</strong> an attention-map viewer, nor a service that runs the model. What you see are <strong>deterministic predictions</strong> (computed with Pyodide) plus a natural-language layer.</li>
-<li><strong>Input:</strong> an <strong>HF model id</strong> or a <code>config.json</code> (it reads θ, T_train, heads…); you set <strong>T_eval</strong> (the target length) and whether the model uses a <strong>sliding window</strong> (SWA).</li>
+<li><strong>Es:</strong> una herramienta en el <strong>navegador</strong> (cero instalación, cero GPU, sin telemetría) que <strong>predice la viabilidad práctica</strong> de un LLM <strong>antes</strong> de gastar GPU/€: contexto largo real, degradación por cuantización, plantilla de chat, errores de config.</li>
+<li><strong>No es:</strong> un visor de mapas de atención, ni un servicio que ejecute el modelo. Lo que ves son <strong>predicciones deterministas</strong> (calculadas con Pyodide) más una capa de lenguaje natural.</li>
+<li><strong>Entrada:</strong> un <strong>HF model id</strong> o un <code>config.json</code> (lee θ, T_train, cabezas…); tú fijas <strong>T_eval</strong> (la longitud objetivo) y si el modelo usa <strong>ventana deslizante</strong> (SWA).</li>
 </ul>
 </section>
-<section id="the-metrics-it-computes" class="level2" data-number="47.2">
-<h2 data-number="47.2" class="anchored" data-anchor-id="the-metrics-it-computes"><span class="header-section-number">47.2</span> The metrics it computes</h2>
+<section id="las-métricas-que-calcula" class="level2" data-number="47.2">
+<h2 data-number="47.2" class="anchored" data-anchor-id="las-métricas-que-calcula"><span class="header-section-number">47.2</span> Las métricas que calcula</h2>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 33%">
@@ -1047,78 +1047,78 @@ ul.task-list li input[type="checkbox"] {
 </colgroup>
 <thead>
 <tr class="header">
-<th>Metric</th>
-<th>What it tells you</th>
-<th>Ch.</th>
+<th>Métrica</th>
+<th>Qué dice</th>
+<th>Cap.</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td><strong>γ_Padé</strong></td>
-<td>γ predicted from geometry (θ, T)</td>
+<td>γ predicho desde la geometría (θ, T)</td>
 <td>15</td>
 </tr>
 <tr class="even">
-<td><strong>γ_observed</strong></td>
-<td>γ measured from real weights</td>
+<td><strong>γ_observado</strong></td>
+<td>γ medido de pesos reales</td>
 <td>15</td>
 </tr>
 <tr class="odd">
 <td><strong>d_horizon</strong></td>
-<td>effective attention horizon (how far it really attends)</td>
+<td>horizonte de atención efectivo (hasta dónde atiende de verdad)</td>
 <td>15, 19</td>
 </tr>
 <tr class="even">
 <td><strong>η</strong> (θ_eff_obs/θ_eff_Padé)</td>
-<td>regime: Normal / Fraud / Compressed / Over-Padé / SWA</td>
+<td>régimen: Normal / Fraude / Comprimido / Over-Padé / SWA</td>
 <td>16</td>
 </tr>
 <tr class="odd">
 <td><strong>KV memory</strong></td>
-<td>cache memory at length L</td>
+<td>memoria de caché a la longitud L</td>
 <td>20, 36</td>
 </tr>
 <tr class="even">
 <td><strong>L_NIAH</strong></td>
-<td>estimated <em>needle-in-haystack</em> ceiling</td>
+<td>techo estimado <em>needle-in-haystack</em></td>
 <td>19</td>
 </tr>
 <tr class="odd">
 <td><strong>Δγ</strong></td>
-<td>phase probe for <strong>induction heads</strong></td>
+<td>sonda de fase de <strong>cabezas de inducción</strong></td>
 <td>24, 30</td>
 </tr>
 <tr class="even">
 <td><strong>ΔPPL</strong></td>
-<td>perplexity shift from <strong>quantization</strong></td>
+<td>shift de perplejidad por <strong>cuantización</strong></td>
 <td>35</td>
 </tr>
 <tr class="odd">
-<td><strong>Phase A / Phase B</strong></td>
-<td>γ&lt;1 (global) vs γ&gt;1 (local collapse)</td>
+<td><strong>Fase A / Fase B</strong></td>
+<td>γ&lt;1 (global) vs γ&gt;1 (colapso local)</td>
 <td>21</td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="the-7-modes" class="level2" data-number="47.3">
-<h2 data-number="47.3" class="anchored" data-anchor-id="the-7-modes"><span class="header-section-number">47.3</span> The 7 modes</h2>
+<section id="los-7-modos" class="level2" data-number="47.3">
+<h2 data-number="47.3" class="anchored" data-anchor-id="los-7-modos"><span class="header-section-number">47.3</span> Los 7 modos</h2>
 <ol type="1">
-<li><strong>📇 Profile.</strong> Paste a <em>model id</em> → γ_Padé vs γ_observed, R², regime, horizon. <strong>The starting mode.</strong></li>
-<li><strong>🆚 Compare.</strong> Pits two models against each other on the same axes.</li>
-<li><strong>🔍 Inspect config.</strong> Reads and explains the <code>config.json</code> (θ, heads, SWA…).</li>
-<li><strong>💬 Ask plain English.</strong> Ask in natural language (handled by a small model <em>in-browser</em>).</li>
-<li><strong>📋 Pick recipe.</strong> Choose an X-* recipe (below).</li>
-<li><strong>🩺 Diagnose CLI.</strong> Command-line-style diagnosis.</li>
-<li><strong>📊 Phase diagram.</strong> Places a panel of models on the γ axis (Phase A/B) — the <strong>atlas</strong> interactive.</li>
+<li><strong>📇 Profile.</strong> Pega un <em>model id</em> → γ_Padé vs γ_observado, R², régimen, horizonte. <strong>El modo de partida.</strong></li>
+<li><strong>🆚 Compare.</strong> Enfrenta dos modelos en los mismos ejes.</li>
+<li><strong>🔍 Inspect config.</strong> Lee y explica el <code>config.json</code> (θ, cabezas, SWA…).</li>
+<li><strong>💬 Ask plain English.</strong> Pregunta en lenguaje natural (lo resuelve un modelo pequeño <em>in-browser</em>).</li>
+<li><strong>📋 Pick recipe.</strong> Elige una receta X-* (abajo).</li>
+<li><strong>🩺 Diagnose CLI.</strong> Diagnóstico estilo línea de comandos.</li>
+<li><strong>📊 Phase diagram.</strong> Sitúa un panel de modelos en el eje γ (Fase A/B) — el <strong>atlas</strong> interactivo.</li>
 </ol>
 </section>
-<section id="the-anti-bullshit-pack-11-tools" class="level2" data-number="47.4">
-<h2 data-number="47.4" class="anchored" data-anchor-id="the-anti-bullshit-pack-11-tools"><span class="header-section-number">47.4</span> The <em>Anti-Bullshit Pack</em> (11 tools)</h2>
-<p>Diagnostics that attack the “smoke” of model cards: <strong>Context Unmasker</strong> (real long context vs advertised), <strong>Chat-template Sniffer</strong>, <strong>Quant-regime Classifier</strong>, <strong>Multilingual Tokenizer Tax</strong> (tokenizes real text in 6 tokenizers → how much your language “costs”), <strong>Contamination Prior</strong>, <strong>LongScore</strong> (RULER+HELMET), <strong>PEFT Anti-Pattern</strong>, <strong>Spec-Decode</strong>, plus extension: <strong>YaRN/RoPE planner</strong>, <strong>GGUF Bridge</strong>, <strong>Launch-Flag Generator</strong>.</p>
+<section id="el-anti-bullshit-pack-11-herramientas" class="level2" data-number="47.4">
+<h2 data-number="47.4" class="anchored" data-anchor-id="el-anti-bullshit-pack-11-herramientas"><span class="header-section-number">47.4</span> El <em>Anti-Bullshit Pack</em> (11 herramientas)</h2>
+<p>Diagnósticos que atacan el “humo” de las fichas de modelo: <strong>Context Unmasker</strong> (contexto largo real vs anunciado), <strong>Chat-template Sniffer</strong>, <strong>Quant-regime Classifier</strong>, <strong>Multilingual Tokenizer Tax</strong> (tokeniza texto real en 6 tokenizadores → cuánto “cuesta” tu idioma), <strong>Contamination Prior</strong>, <strong>LongScore</strong> (RULER+HELMET), <strong>PEFT Anti-Pattern</strong>, <strong>Spec-Decode</strong>, y extensión: <strong>planificador YaRN/RoPE</strong>, <strong>GGUF Bridge</strong>, <strong>Launch-Flag Generator</strong>.</p>
 </section>
-<section id="the-recipes-8-core" class="level2" data-number="47.5">
-<h2 data-number="47.5" class="anchored" data-anchor-id="the-recipes-8-core"><span class="header-section-number">47.5</span> The recipes (8 core)</h2>
+<section id="las-recetas-8-core" class="level2" data-number="47.5">
+<h2 data-number="47.5" class="anchored" data-anchor-id="las-recetas-8-core"><span class="header-section-number">47.5</span> Las recetas (8 core)</h2>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 33%">
@@ -1127,9 +1127,9 @@ ul.task-list li input[type="checkbox"] {
 </colgroup>
 <thead>
 <tr class="header">
-<th>Recipe</th>
-<th>For</th>
-<th>Ch.</th>
+<th>Receta</th>
+<th>Para qué</th>
+<th>Cap.</th>
 </tr>
 </thead>
 <tbody>
@@ -1140,12 +1140,12 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="even">
 <td><strong>X-2</strong></td>
-<td>long-context viability</td>
+<td>viabilidad de contexto largo</td>
 <td>19</td>
 </tr>
 <tr class="odd">
 <td><strong>X-3</strong></td>
-<td>budget pre-flight</td>
+<td>pre-flight de presupuesto</td>
 <td>25</td>
 </tr>
 <tr class="even">
@@ -1155,53 +1155,53 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="odd">
 <td><strong>X-19</strong></td>
-<td>KV compression (soft-decay/cutoff)</td>
+<td>compresión de KV (soft-decay/cutoff)</td>
 <td>20</td>
 </tr>
 <tr class="even">
 <td><strong>X-21</strong></td>
-<td>training imprint on γ (γ_train) — ⚠ <em>descriptive; not the ν identity, refuted on data (Ch. 38)</em></td>
+<td>huella de entrenamiento en γ (γ_train) — ⚠ <em>descriptiva; no la identidad ν, refutada en datos (Cap. 38)</em></td>
 <td>15</td>
 </tr>
 <tr class="odd">
 <td><strong>X-22</strong></td>
-<td>compute-context invariant</td>
+<td>invariante cómputo-contexto</td>
 <td>34</td>
 </tr>
 <tr class="even">
 <td><strong>X-23</strong></td>
-<td>induction-head phase detector</td>
+<td>detector de fase de cabezas de inducción</td>
 <td>24, 30</td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="how-to-read-the-output-the-taf-card" class="level2" data-number="47.6">
-<h2 data-number="47.6" class="anchored" data-anchor-id="how-to-read-the-output-the-taf-card"><span class="header-section-number">47.6</span> How to read the output: the <em>TAF Card</em></h2>
-<p>The result is summarized in a <strong>TAF Card</strong> with <strong>✅ / ⚠ / ❌</strong> verdicts per dimension (context, quantization, template, regime). And there is a <strong>falsification dashboard (F1-F23)</strong>: it doesn’t just hand you numbers, it <strong>puts the claims to the test</strong> —the same philosophy as Ch. 38—.</p>
-<p><strong>A typical flow:</strong> <em>Profile</em> (paste the id) → read the <strong>verdict</strong> on the TAF Card → if something comes back ⚠/❌, open the specific <strong>diagnostic</strong> (e.g.&nbsp;<em>Context Unmasker</em> or <em>Quant-regime</em>) → use the matching <strong>recipe</strong> (X-2 context, X-19 KV) to decide.</p>
+<section id="cómo-leer-la-salida-la-taf-card" class="level2" data-number="47.6">
+<h2 data-number="47.6" class="anchored" data-anchor-id="cómo-leer-la-salida-la-taf-card"><span class="header-section-number">47.6</span> Cómo leer la salida: la <em>TAF Card</em></h2>
+<p>El resultado se resume en una <strong>TAF Card</strong> con veredictos <strong>✅ / ⚠ / ❌</strong> por dimensión (contexto, cuantización, plantilla, régimen). Y hay un <strong>dashboard de falsación (F1-F23)</strong>: no solo te da números, sino que <strong>somete las afirmaciones a prueba</strong> —la misma filosofía del Cap. 38—.</p>
+<p><strong>Un flujo típico:</strong> <em>Profile</em> (pega el id) → lee el <strong>veredicto</strong> de la TAF Card → si algo sale ⚠/❌, abre el <strong>diagnóstico</strong> concreto (p.&nbsp;ej. <em>Context Unmasker</em> o <em>Quant-regime</em>) → usa la <strong>receta</strong> correspondiente (X-2 contexto, X-19 KV) para decidir.</p>
 </section>
-<section id="verification-the-receipts" class="level2" data-number="47.7">
-<h2 data-number="47.7" class="anchored" data-anchor-id="verification-the-receipts"><span class="header-section-number">47.7</span> Verification (the receipts)</h2>
+<section id="verificación-los-recibos" class="level2" data-number="47.7">
+<h2 data-number="47.7" class="anchored" data-anchor-id="verificación-los-recibos"><span class="header-section-number">47.7</span> Verificación (los recibos)</h2>
 <ul>
-<li><strong>Pyodide</strong> for the math (deterministic), <strong>WebLLM</strong> for the natural language, <strong>transformers.js</strong> for the tokenizer.</li>
-<li><strong>Lean+Mathlib verification:</strong> 15 identities formally proved (<code>github.com/karlesmarin/lean-taf</code>).</li>
-<li><strong>Panel of 23 models</strong> open (<code>github.com/karlesmarin/tafagent-registry</code>).</li>
+<li><strong>Pyodide</strong> para las matemáticas (deterministas), <strong>WebLLM</strong> para el lenguaje natural, <strong>transformers.js</strong> para el tokenizador.</li>
+<li><strong>Verificación Lean+Mathlib:</strong> 15 identidades probadas formalmente (<code>github.com/karlesmarin/lean-taf</code>).</li>
+<li><strong>Panel de 23 modelos</strong> abierto (<code>github.com/karlesmarin/tafagent-registry</code>).</li>
 </ul>
-<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Honest — what is prediction and what is measurement">
+<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Honesto — qué es predicción y qué es medida">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>⚠ Honest — what is prediction and what is measurement
+<span class="screen-reader-only">Advertencia</span>⚠ Honesto — qué es predicción y qué es medida
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Many outputs (γ_Padé, estimated horizon, KV at length L) are <strong>predictions</strong> from the config —fast and useful for deciding <strong>before</strong> spending GPU—, not measurements of real attention. Once you have the model, contrast them with <strong>γ_observed</strong> (measured) and with your own measurement (R4). And remember the book’s limits: <strong>D_f</strong> and the context <em>headroom</em> are <strong>🟡 rules not fully validated</strong> (R1).</p>
+<p>Muchas salidas (γ_Padé, horizonte estimado, KV a longitud L) son <strong>predicciones</strong> desde la config —rápidas y útiles para decidir <strong>antes</strong> de gastar GPU—, no medidas sobre la atención real. Cuando tengas el modelo, contrasta con <strong>γ_observado</strong> (medido) y con tu propia medición (R4). Y recuerda los límites del libro: <strong>D_f</strong> y el <em>headroom</em> de contexto son <strong>🟡 reglas no validadas</strong> del todo (R1).</p>
 </div>
 </div>
-<p><strong>Next reference (R10):</strong> the <strong>suggested solutions</strong> to each chapter’s exercises.</p>
+<p><strong>Siguiente referencia (R6):</strong> las <strong>soluciones</strong> orientativas de los ejercicios de cada capítulo.</p>
 
 
 </section>
@@ -2233,12 +2233,12 @@ ul.task-list li input[type="checkbox"] {
       // flash "checked"
       button.classList.add('code-copy-button-checked');
       var currentTitle = button.getAttribute("title");
-      button.setAttribute("title", "Copied!");
+      button.setAttribute("title", "Copiado");
       let tooltip;
       if (window.bootstrap) {
         button.setAttribute("data-bs-toggle", "tooltip");
         button.setAttribute("data-bs-placement", "left");
-        button.setAttribute("data-bs-title", "Copied!");
+        button.setAttribute("data-bs-title", "Copiado");
         tooltip = new bootstrap.Tooltip(button, 
           { trigger: "manual", 
             customClass: "code-copy-button-tooltip",
@@ -2610,13 +2610,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../chapters/R4-medir-gamma.html" class="pagination-link" aria-label="R4 · Measuring your own γ (and reproducing the atlas)">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R4 · Measuring your own γ (and reproducing the atlas)</span></span>
+      <a href="../chapters/R4-medir-gamma.html" class="pagination-link" aria-label="R4 · Medir tu propio γ (y reproducir el atlas)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R4 · Medir tu propio γ (y reproducir el atlas)</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../chapters/R10-soluciones.html" class="pagination-link" aria-label="R10 · Exercise solutions">
-        <span class="nav-page-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">R10 · Exercise solutions</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../chapters/R6-soluciones.html" class="pagination-link" aria-label="R6 · Soluciones de los ejercicios">
+        <span class="nav-page-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">R6 · Soluciones de los ejercicios</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

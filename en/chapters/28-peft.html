@@ -1013,14 +1013,14 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/R9-tafagent.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R9 · tafagent manual</span></span></a>
+  <a href="../chapters/R5-tafagent.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R5 · tafagent manual</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/R10-soluciones.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">R10 · Exercise solutions</span></span></a>
+  <a href="../chapters/R6-soluciones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">R6 · Exercise solutions</span></span></a>
   </div>
 </li>
       </ul>
@@ -1240,6 +1240,7 @@ window.Quarto = {
 <div class="callout-body-container callout-body">
 <p><a href="https://karlesmarin.github.io/tafagent/">tafagent</a> profiles a model with LoRA <strong>already fused</strong> (<span class="math inline">\(W_0 + BA\)</span>): since the delta is <strong>low-rank</strong> and is added to the base weight, you’ll see that the <strong>attention profile across distance</strong> (γ, regime; Ch. 15-20) barely moves relative to the base —consistent with the adaptation being a thin layer, not a rewrite. Useful for confirming that your <em>fine-tuning</em> didn’t break the model’s long-range behavior.</p>
 <p>And the <strong>🔌 Adapter Reality</strong> mode acts <em>before</em> merging: paste the <code>adapter_config.json</code> of a published adapter and, from the config alone (no inference), it checks (a) <strong>compatibility</strong> with your base —match, <code>target_modules</code>, <span class="math inline">\(\alpha/r\)</span> scaling, embedding resize— and (b) the <strong>forgetting evidence</strong> for its <strong>rank</strong>, from the literature —including <em>LoRA Learns Less and Forgets Less</em> <span class="citation" data-cites="biderman2024loralearnsless">(<a href="#ref-biderman2024loralearnsless" role="doc-biblioref"><span class="nocase">Biderman et al.</span> 2024</a>)</span>—, shown as a <strong>Δ (percentage-point) range with its sources</strong>, never a fabricated per-adapter number.</p>
+<p><a href="https://karlesmarin.github.io/tafagent/?demo=adapter" class="fg-cta" target="_blank" rel="noopener">▶ See the demo in tafagent</a></p>
 </div>
 </div>
 </section>

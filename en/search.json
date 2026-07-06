@@ -66,7 +66,7 @@
     "href": "chapters/00-orientacion.html#how-its-organized",
     "title": "1  How to use this guide",
     "section": "1.3 How it’s organized",
-    "text": "1.3 How it’s organized\n\n\n\n\n\n\n\nPart\nWhat it covers\n\n\n\n\n0\nThis orientation.\n\n\nI — Foundations (1-12)\nFrom text to a working transformer: tokens, embeddings, attention, FFN, normalization, RoPE, the block, architectures, training, inference.\n\n\nII — Attention over distance (13-20)\nOur territory: reading maps, aliasing, the γ law, the atlas, sinks, taxonomy, long context, KV-cache.\n\n\nIII — Physical lens (21-24)\nPhases, thermodynamics, fractional dynamics, grokking.\n\n\nIV — Training and adapting (25-28)\nPre-training at scale, fine-tuning, alignment (RLHF/DPO), PEFT (LoRA).\n\n\nV — Using (29-33)\nGeneration, prompting, RAG, agents, multimodal.\n\n\nVI — Efficiency (34-36)\nEfficient attention, compression, serving.\n\n\nVII — What’s real (37-41)\nInterpretability, the audit, the 2026 map, evaluation, ethics.\n\n\nVIII — Reference (R1-R10)\nFormula sheet, cookbook, glossary, measuring your γ, the tafagent manual, solutions.",
+    "text": "1.3 How it’s organized\n\n\n\n\n\n\n\nPart\nWhat it covers\n\n\n\n\n0\nThis orientation.\n\n\nI — Foundations (1-12)\nFrom text to a working transformer: tokens, embeddings, attention, FFN, normalization, RoPE, the block, architectures, training, inference.\n\n\nII — Attention over distance (13-20)\nOur territory: reading maps, aliasing, the γ law, the atlas, sinks, taxonomy, long context, KV-cache.\n\n\nIII — Physical lens (21-24)\nPhases, thermodynamics, fractional dynamics, grokking.\n\n\nIV — Training and adapting (25-28)\nPre-training at scale, fine-tuning, alignment (RLHF/DPO), PEFT (LoRA).\n\n\nV — Using (29-33)\nGeneration, prompting, RAG, agents, multimodal.\n\n\nVI — Efficiency (34-36)\nEfficient attention, compression, serving.\n\n\nVII — What’s real (37-41)\nInterpretability, the audit, the 2026 map, evaluation, ethics.\n\n\nVIII — Reference (R1-R6)\nFormula sheet, cookbook, glossary, measuring your γ, the tafagent manual, solutions.",
     "crumbs": [
       "Part 0 — Orientation",
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>How to use this guide</span>"
@@ -418,7 +418,7 @@
     "href": "chapters/02-tokens.html#try-it",
     "title": "3  From text to tokens",
     "section": "3.15 Try it",
-    "text": "3.15 Try it\n# pip install tiktoken\nimport tiktoken\nenc = tiktoken.get_encoding(\"cl100k_base\")   # the one for GPT-3.5/4\n\nprint(enc.encode(\"tokenization\"))       # -&gt; [token, ization]  (2 tokens)\nprint(enc.encode(\" the\") == enc.encode(\"the\"))  # -&gt; False (the space matters!)\nfor t in enc.encode(\"Hola mundo!\"):\n    print(t, repr(enc.decode([t])))      # see each token and its text\n\n\n\n\n\n\nNote🧪 Try it live\n\n\n\nPaste any sentence (in Spanish, in English, or code) into a tokenization viewer like tiktokenizer and watch in real time how it’s chopped up and how many tokens it costs. You’ll see at a glance the penalty Spanish and code pay relative to English.",
+    "text": "3.15 Try it\n# pip install tiktoken\nimport tiktoken\nenc = tiktoken.get_encoding(\"cl100k_base\")   # the one for GPT-3.5/4\n\nprint(enc.encode(\"tokenization\"))       # -&gt; [token, ization]  (2 tokens)\nprint(enc.encode(\" the\") == enc.encode(\"the\"))  # -&gt; False (the space matters!)\nfor t in enc.encode(\"Hola mundo!\"):\n    print(t, repr(enc.decode([t])))      # see each token and its text\n\n\n\n\n\n\nNote🧪 Try it live\n\n\n\nPaste any sentence (in Spanish, in English, or code) into a tokenization viewer like tiktokenizer and watch in real time how it’s chopped up and how many tokens it costs. You’ll see at a glance the penalty Spanish and code pay relative to English.\n▶ See the demo in tafagent",
     "crumbs": [
       "Part I — Foundations",
       "<span class='chapter-number'>3</span>  <span class='chapter-title'>From text to tokens</span>"
@@ -2211,7 +2211,7 @@
     "href": "chapters/17-sumideros.html#the-practical-implication",
     "title": "18  Attention sinks and concentration",
     "section": "18.6 The practical implication",
-    "text": "18.6 The practical implication\nWhen you analyze a model’s attention, don’t mix two questions:\n\nHow concentrated is it? → the sink, the mass on a few tokens (a magnitude phenomenon; it’s managed, e.g., by keeping a few initial tokens as in StreamingLLM).\nHow does it decay with distance? → γ (a positional phenomenon; it’s what predicts the reach and the compressibility of the KV, Ch. 20).\n\nConfusing them leads to “fixing” one while believing you’re fixing the other.\n\n\n\n\n\n\nWarning⚠ Honest — an open question\n\n\n\nDo secondary sinks appear or disappear when sweeping θ? It’s an open question that the literature itself flags (large-θ models sometimes lack them, and “the underlying cause remains an open question”, (On the Discrepancy of Secondary Attention Sinks in Large-Theta Models 2025)). We have the apparatus to study it; we flag it as pending work, not as resolved.\n\n\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent reports signals tied to concentration (e.g. peak_max_share and the η-regime, which detects when behavior is sink/SWA-like) in addition to γ. You’ll see on your model that they’re distinct axes: a model can have high γ and little sink, or the other way around.",
+    "text": "18.6 The practical implication\nWhen you analyze a model’s attention, don’t mix two questions:\n\nHow concentrated is it? → the sink, the mass on a few tokens (a magnitude phenomenon; it’s managed, e.g., by keeping a few initial tokens as in StreamingLLM).\nHow does it decay with distance? → γ (a positional phenomenon; it’s what predicts the reach and the compressibility of the KV, Ch. 20).\n\nConfusing them leads to “fixing” one while believing you’re fixing the other.\n\n\n\n\n\n\nWarning⚠ Honest — an open question\n\n\n\nDo secondary sinks appear or disappear when sweeping θ? It’s an open question that the literature itself flags (large-θ models sometimes lack them, and “the underlying cause remains an open question”, (On the Discrepancy of Secondary Attention Sinks in Large-Theta Models 2025)). We have the apparatus to study it; we flag it as pending work, not as resolved.\n\n\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent reports signals tied to concentration (e.g. peak_max_share and the η-regime, which detects when behavior is sink/SWA-like) in addition to γ. You’ll see on your model that they’re distinct axes: a model can have high γ and little sink, or the other way around.\n▶ See the demo in tafagent",
     "crumbs": [
       "Part II — How transformers attend over distance",
       "<span class='chapter-number'>18</span>  <span class='chapter-title'>Attention sinks and concentration</span>"
@@ -2321,7 +2321,7 @@
     "href": "chapters/18-taxonomia.html#connection-to-our-part-ii",
     "title": "19  A taxonomy of attention mechanisms",
     "section": "19.7 Connection to our Part II",
-    "text": "19.7 Connection to our Part II\nAll of this is the engineering answer to the problem we’re studying: the cost of attention over distance. KV reduction (GQA/MLA) is exactly where our D_f window (the number of KV tokens you really need to keep, computed from γ) comes into play (Ch. 20): instead of picking the KV budget by eye or by heuristic, you derive it from the decay exponent.\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent detects whether a model uses a sliding window (its η-regime flags the SWA case) and computes the KV memory at your target length. Handy for anticipating the real cost before serving a model.",
+    "text": "19.7 Connection to our Part II\nAll of this is the engineering answer to the problem we’re studying: the cost of attention over distance. KV reduction (GQA/MLA) is exactly where our D_f window (the number of KV tokens you really need to keep, computed from γ) comes into play (Ch. 20): instead of picking the KV budget by eye or by heuristic, you derive it from the decay exponent.\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent detects whether a model uses a sliding window (its η-regime flags the SWA case) and computes the KV memory at your target length. Handy for anticipating the real cost before serving a model.\n▶ See the demo in tafagent",
     "crumbs": [
       "Part II — How transformers attend over distance",
       "<span class='chapter-number'>19</span>  <span class='chapter-title'>A taxonomy of attention mechanisms</span>"
@@ -2420,7 +2420,7 @@
     "href": "chapters/19-contexto-largo.html#our-angle-extending-in-terms-of-γ",
     "title": "20  Long-context extension",
     "section": "20.6 Our angle: extending in terms of γ",
-    "text": "20.6 Our angle: extending in terms of γ\nThere’s a thread tying all of this to Part II. All the methods act on the same degree of freedom —the base θ— and, since our γ depends on θ (γ_Padé, Ch. 15), rescaling θ shifts γ predictably. That lets us frame extension backwards: instead of picking a factor by eye, pick the θ that leaves the extended model at a target γ (our “α=0 rule”: fix θ_design for a desired γ at the new length).\n\n\n\n\n\n\nCaution✗ Honest — our validation is incomplete\n\n\n\nThe geometry behind this rule is solid (rescaling θ moves γ monotonically and predictably). But our empirical passkey validation came out incomplete: the experiment crashed for lack of memory (CUDA-OOM) before covering the lengths that would discriminate between conditions; we only confirmed that the native model retrieves within its training length (as expected). So we present the γ rule as derived and geometrically motivated, NOT as validated. We don’t claim it beats YaRN; we leave it as a hypothesis pending an experiment that reproduces cleanly. It’s exactly the kind of thing this book refuses to sell as fact.\n\n\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent has a YaRN/RoPE extension planner: give it the model and the target length L, and it hands you the rope_scaling block ready to paste, the γ before and after, the d_horizon at that length, and a verdict (HEALTHY / USABLE-WITH-CARE / NEEDS-FINETUNE / DEGRADES). It’s this theory turned into a practical tool.",
+    "text": "20.6 Our angle: extending in terms of γ\nThere’s a thread tying all of this to Part II. All the methods act on the same degree of freedom —the base θ— and, since our γ depends on θ (γ_Padé, Ch. 15), rescaling θ shifts γ predictably. That lets us frame extension backwards: instead of picking a factor by eye, pick the θ that leaves the extended model at a target γ (our “α=0 rule”: fix θ_design for a desired γ at the new length).\n\n\n\n\n\n\nCaution✗ Honest — our validation is incomplete\n\n\n\nThe geometry behind this rule is solid (rescaling θ moves γ monotonically and predictably). But our empirical passkey validation came out incomplete: the experiment crashed for lack of memory (CUDA-OOM) before covering the lengths that would discriminate between conditions; we only confirmed that the native model retrieves within its training length (as expected). So we present the γ rule as derived and geometrically motivated, NOT as validated. We don’t claim it beats YaRN; we leave it as a hypothesis pending an experiment that reproduces cleanly. It’s exactly the kind of thing this book refuses to sell as fact.\n\n\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent has a YaRN/RoPE extension planner: give it the model and the target length L, and it hands you the rope_scaling block ready to paste, the γ before and after, the d_horizon at that length, and a verdict (HEALTHY / USABLE-WITH-CARE / NEEDS-FINETUNE / DEGRADES). It’s this theory turned into a practical tool.\n▶ See the demo in tafagent",
     "crumbs": [
       "Part II — How transformers attend over distance",
       "<span class='chapter-number'>20</span>  <span class='chapter-title'>Long-context extension</span>"
@@ -2618,7 +2618,7 @@
     "href": "chapters/21-fases.html#why-this-lens-isnt-just-decoration",
     "title": "22  Phase structure and the polylog partition function",
     "section": "22.6 Why this lens isn’t just decoration",
-    "text": "22.6 Why this lens isn’t just decoration\nDespite the caveats, the physics connects to the practical: γ=1 is exactly the KV-cache compressibility boundary (Ch. 20). But let’s be precise about why they coincide: they aren’t two independent facts that corroborate each other, they’re the same one —the polylog \\(Z=\\mathrm{Li}_\\gamma\\) and the KV sum \\(\\sum_d d^{-\\gamma}\\) are the same series, and both stop converging at γ=1—. What the lens adds isn’t an extra prediction but consistency: thermodynamics and engineering are two readings of the same mathematical threshold. And that threshold is real —it marks where a finite window stops capturing the mass—, which is what makes the analogy valuable: not because it sounds elegant, but because it names where things change.\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent classifies your model into Phase A or B relative to the γ=1 line and reports the susceptibility χ. You’ll see that the atlas models (Ch. 16) cluster just below γ=1 —close to that boundary—.",
+    "text": "22.6 Why this lens isn’t just decoration\nDespite the caveats, the physics connects to the practical: γ=1 is exactly the KV-cache compressibility boundary (Ch. 20). But let’s be precise about why they coincide: they aren’t two independent facts that corroborate each other, they’re the same one —the polylog \\(Z=\\mathrm{Li}_\\gamma\\) and the KV sum \\(\\sum_d d^{-\\gamma}\\) are the same series, and both stop converging at γ=1—. What the lens adds isn’t an extra prediction but consistency: thermodynamics and engineering are two readings of the same mathematical threshold. And that threshold is real —it marks where a finite window stops capturing the mass—, which is what makes the analogy valuable: not because it sounds elegant, but because it names where things change.\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent classifies your model into Phase A or B relative to the γ=1 line and reports the susceptibility χ. You’ll see that the atlas models (Ch. 16) cluster just below γ=1 —close to that boundary—.\n▶ See the demo in tafagent",
     "crumbs": [
       "Part III — A physicist's lens on attention",
       "<span class='chapter-number'>22</span>  <span class='chapter-title'>Phase structure and the polylog partition function</span>"
@@ -2816,7 +2816,7 @@
     "href": "chapters/23-fraccionario.html#why-this-lens-adds-something",
     "title": "24  The fractional transport view",
     "section": "24.6 Why this lens adds something",
-    "text": "24.6 Why this lens adds something\nThree lenses (phases, thermodynamics, fractional) and the same γ=1 at the center: it’s the phase boundary (Ch. 21), the point where Fisher/C_V behave (Ch. 22), and the order-0 that separates smoothing from differentiating (here). But let’s be precise: these aren’t three independent proofs. All three pivot on γ=1 because they share the same mathematical root —the convergence of the series \\(\\sum_d d^{-\\gamma}\\), which is literally \\(\\mathrm{Li}_\\gamma(1)=\\zeta(\\gamma)\\)—. It’s the same fact told in three languages, not three corroborations. What it adds isn’t extra evidence but consistency: the three frameworks fit together without contradiction, and that alone is a sign the lens is well posed.\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent gives you your model’s γ; from there you read off directly its “fractional order” (γ−1)/2 and know whether it’s in the smoothing regime (γ&lt;1) or not. Try it with a few from the atlas: almost all will come out smoothing.",
+    "text": "24.6 Why this lens adds something\nThree lenses (phases, thermodynamics, fractional) and the same γ=1 at the center: it’s the phase boundary (Ch. 21), the point where Fisher/C_V behave (Ch. 22), and the order-0 that separates smoothing from differentiating (here). But let’s be precise: these aren’t three independent proofs. All three pivot on γ=1 because they share the same mathematical root —the convergence of the series \\(\\sum_d d^{-\\gamma}\\), which is literally \\(\\mathrm{Li}_\\gamma(1)=\\zeta(\\gamma)\\)—. It’s the same fact told in three languages, not three corroborations. What it adds isn’t extra evidence but consistency: the three frameworks fit together without contradiction, and that alone is a sign the lens is well posed.\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent gives you your model’s γ; from there you read off directly its “fractional order” (γ−1)/2 and know whether it’s in the smoothing regime (γ&lt;1) or not. Try it with a few from the atlas: almost all will come out smoothing.\n▶ See the demo in tafagent",
     "crumbs": [
       "Part III — A physicist's lens on attention",
       "<span class='chapter-number'>24</span>  <span class='chapter-title'>The fractional transport view</span>"
@@ -2937,7 +2937,7 @@
     "href": "chapters/24-grokking.html#the-result-where-we-refute-ourselves",
     "title": "25  Training dynamics and grokking",
     "section": "25.8 The result where we refute ourselves",
-    "text": "25.8 The result where we refute ourselves\nThis is honesty demonstrated, not announced (Ch. 0). On seeing that CKA re-rises before the jump, a tempting hypothesis arose: if inter-layer coordination causes generalization, then forcing \\(\\hat{O}_{01} \\to 1\\) (forcing the layers to resemble each other) should cause —or at least not prevent— grokking… and perhaps the opposite, preventing it, would prove the signal is a causal lever.\nWe tested it. And the experiment refuted us: when training for 20,000 steps, 2 out of 3 models with forced CKA kept grokking all the same. The honest conclusion:\n\nThe re-rise of the inter-layer CKA is a predictive / correlational signal, not a causal lever you can pull to manufacture (or block) generalization.\n\nWe corrected our own claim: it went from “candidate causal signal” to “early predictor, with no causality demonstrated”. It’s exactly the kind of recipe the manual preaches —follow the data even when it knocks down your favorite hypothesis.\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent doesn’t train models, but it includes an induction-head phase detector (the training-dynamics recipe, based on \\(\\Delta\\gamma\\)): it tells you whether a model has already crossed the transition in which copy/induction circuits form —the “inference-side” relative of the circuit formation we see here during training. Useful for placing a model relative to that phase transition without having to retrain it.",
+    "text": "25.8 The result where we refute ourselves\nThis is honesty demonstrated, not announced (Ch. 0). On seeing that CKA re-rises before the jump, a tempting hypothesis arose: if inter-layer coordination causes generalization, then forcing \\(\\hat{O}_{01} \\to 1\\) (forcing the layers to resemble each other) should cause —or at least not prevent— grokking… and perhaps the opposite, preventing it, would prove the signal is a causal lever.\nWe tested it. And the experiment refuted us: when training for 20,000 steps, 2 out of 3 models with forced CKA kept grokking all the same. The honest conclusion:\n\nThe re-rise of the inter-layer CKA is a predictive / correlational signal, not a causal lever you can pull to manufacture (or block) generalization.\n\nWe corrected our own claim: it went from “candidate causal signal” to “early predictor, with no causality demonstrated”. It’s exactly the kind of recipe the manual preaches —follow the data even when it knocks down your favorite hypothesis.\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent doesn’t train models, but it includes an induction-head phase detector (the training-dynamics recipe, based on \\(\\Delta\\gamma\\)): it tells you whether a model has already crossed the transition in which copy/induction circuits form —the “inference-side” relative of the circuit formation we see here during training. Useful for placing a model relative to that phase transition without having to retrain it.\n▶ See the demo in tafagent",
     "crumbs": [
       "Part III — A physicist's lens on attention",
       "<span class='chapter-number'>25</span>  <span class='chapter-title'>Training dynamics and *grokking*</span>"
@@ -3201,7 +3201,7 @@
     "href": "chapters/26-finetuning-clasificacion.html#when-to-tune-and-when-to-use-off-the-shelf-embeddings",
     "title": "27  Fine-tuning for classification and representation",
     "section": "27.9 When to tune and when to use off-the-shelf embeddings",
-    "text": "27.9 When to tune and when to use off-the-shelf embeddings\n\nTune when you have a fixed task with enough labeled data and you want maximum precision or to adapt to a concrete domain.\nUse frozen embeddings (off-the-shelf) for search/clustering, when many uses share the same vector space, when there are few labels, or when compute/serving cost matters (compute the vector once, reuse it).\n\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent profiles the base model you’re going to adapt: its γ (reach), regime, and KV budget. Useful before tuning to know which attention behavior you start from —if you’re going to use it as an embedding encoder for long texts, its decay profile (Ch. 15-20) tells you how far it really “sees”.",
+    "text": "27.9 When to tune and when to use off-the-shelf embeddings\n\nTune when you have a fixed task with enough labeled data and you want maximum precision or to adapt to a concrete domain.\nUse frozen embeddings (off-the-shelf) for search/clustering, when many uses share the same vector space, when there are few labels, or when compute/serving cost matters (compute the vector once, reuse it).\n\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent profiles the base model you’re going to adapt: its γ (reach), regime, and KV budget. Useful before tuning to know which attention behavior you start from —if you’re going to use it as an embedding encoder for long texts, its decay profile (Ch. 15-20) tells you how far it really “sees”.\n▶ See the demo in tafagent",
     "crumbs": [
       "Part IV — Training, adaptation and fine-tuning",
       "<span class='chapter-number'>27</span>  <span class='chapter-title'>Fine-tuning for classification and representation</span>"
@@ -3454,7 +3454,7 @@
     "href": "chapters/28-peft.html#when-to-use-each-one",
     "title": "29  Parameter-efficient fine-tuning (PEFT)",
     "section": "29.8 When to use each one",
-    "text": "29.8 When to use each one\n\nLoRA / QLoRA = today’s standard. Quality ≈ full tuning, fusible (zero latency), tiny checkpoints, and they let you swap adapters per task over a single loaded base —the “one base + many small adapters” pattern, key to serving many tasks at once.\nAdapters: historic; superseded by LoRA above all because of latency.\nPrompt / prefix tuning: ultralight; they shine at large scale and for serving very many tasks (one prefix per task, dirt cheap to store).\n\n\n\n\n\n\n\nWarning⚠ Honest — LoRA doesn’t always match full tuning\n\n\n\nA careful study, LoRA Learns Less and Forgets Less (Biderman et al. 2024), tempers the optimism: on hard tasks like code and math, LoRA (at standard low rank) underperforms full tuning —which learns perturbations of rank 10-100× larger. But LoRA forgets less (it preserves out-of-domain capabilities better). Lessons: (1) the rank \\(r\\) is a quality/size knob —turn it up on demanding tasks; (2) there’s a learn-vs-forget trade-off. 2024 refinements like DoRA (Liu et al. 2024) (decomposing the weight into magnitude and direction) close part of that gap.\n\n\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent profiles a model with LoRA already fused (\\(W_0 + BA\\)): since the delta is low-rank and is added to the base weight, you’ll see that the attention profile across distance (γ, regime; Ch. 15-20) barely moves relative to the base —consistent with the adaptation being a thin layer, not a rewrite. Useful for confirming that your fine-tuning didn’t break the model’s long-range behavior.\nAnd the 🔌 Adapter Reality mode acts before merging: paste the adapter_config.json of a published adapter and, from the config alone (no inference), it checks (a) compatibility with your base —match, target_modules, \\(\\alpha/r\\) scaling, embedding resize— and (b) the forgetting evidence for its rank, from the literature —including LoRA Learns Less and Forgets Less (Biderman et al. 2024)—, shown as a Δ (percentage-point) range with its sources, never a fabricated per-adapter number.",
+    "text": "29.8 When to use each one\n\nLoRA / QLoRA = today’s standard. Quality ≈ full tuning, fusible (zero latency), tiny checkpoints, and they let you swap adapters per task over a single loaded base —the “one base + many small adapters” pattern, key to serving many tasks at once.\nAdapters: historic; superseded by LoRA above all because of latency.\nPrompt / prefix tuning: ultralight; they shine at large scale and for serving very many tasks (one prefix per task, dirt cheap to store).\n\n\n\n\n\n\n\nWarning⚠ Honest — LoRA doesn’t always match full tuning\n\n\n\nA careful study, LoRA Learns Less and Forgets Less (Biderman et al. 2024), tempers the optimism: on hard tasks like code and math, LoRA (at standard low rank) underperforms full tuning —which learns perturbations of rank 10-100× larger. But LoRA forgets less (it preserves out-of-domain capabilities better). Lessons: (1) the rank \\(r\\) is a quality/size knob —turn it up on demanding tasks; (2) there’s a learn-vs-forget trade-off. 2024 refinements like DoRA (Liu et al. 2024) (decomposing the weight into magnitude and direction) close part of that gap.\n\n\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent profiles a model with LoRA already fused (\\(W_0 + BA\\)): since the delta is low-rank and is added to the base weight, you’ll see that the attention profile across distance (γ, regime; Ch. 15-20) barely moves relative to the base —consistent with the adaptation being a thin layer, not a rewrite. Useful for confirming that your fine-tuning didn’t break the model’s long-range behavior.\nAnd the 🔌 Adapter Reality mode acts before merging: paste the adapter_config.json of a published adapter and, from the config alone (no inference), it checks (a) compatibility with your base —match, target_modules, \\(\\alpha/r\\) scaling, embedding resize— and (b) the forgetting evidence for its rank, from the literature —including LoRA Learns Less and Forgets Less (Biderman et al. 2024)—, shown as a Δ (percentage-point) range with its sources, never a fabricated per-adapter number.\n▶ See the demo in tafagent",
     "crumbs": [
       "Part IV — Training, adaptation and fine-tuning",
       "<span class='chapter-number'>29</span>  <span class='chapter-title'>Parameter-efficient fine-tuning (PEFT)</span>"
@@ -3696,7 +3696,7 @@
     "href": "chapters/30-prompting.html#the-limits-of-prompting",
     "title": "31  Prompting and in-context learning",
     "section": "31.8 The limits of prompting",
-    "text": "31.8 The limits of prompting\n\nBrittleness (order, format, wording): it makes reliable evaluation hard and overestimates capabilities.\nThe ceiling: prompting elicits what the model learned in pretraining, it does not add knowledge —the superficial alignment hypothesis of Ch. 27 (Zhou et al. 2023)—.\nSecurity: hostile prompts can hijack the application (prompt injection (Greshake et al. 2023)) because the LLM blurs the line between data and instructions —we will see this in the security chapter—.\nWhen to use what: prompting to elicit capabilities and prototype; fine-tuning (Ch. 28) to lock in a format/style or to specialize; RAG (Ch. 31) to inject external or up-to-date knowledge the model does not have.\n\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\nICL ability is born, according to (Olsson et al. 2022), in a phase change where induction heads form. tafagent includes an induction-head phase detector (based on \\(\\Delta\\gamma\\)): it tells you whether a model has already crossed that transition —that is, whether you can expect few-shot to work well— without having to retrain it.",
+    "text": "31.8 The limits of prompting\n\nBrittleness (order, format, wording): it makes reliable evaluation hard and overestimates capabilities.\nThe ceiling: prompting elicits what the model learned in pretraining, it does not add knowledge —the superficial alignment hypothesis of Ch. 27 (Zhou et al. 2023)—.\nSecurity: hostile prompts can hijack the application (prompt injection (Greshake et al. 2023)) because the LLM blurs the line between data and instructions —we will see this in the security chapter—.\nWhen to use what: prompting to elicit capabilities and prototype; fine-tuning (Ch. 28) to lock in a format/style or to specialize; RAG (Ch. 31) to inject external or up-to-date knowledge the model does not have.\n\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\nICL ability is born, according to (Olsson et al. 2022), in a phase change where induction heads form. tafagent includes an induction-head phase detector (based on \\(\\Delta\\gamma\\)): it tells you whether a model has already crossed that transition —that is, whether you can expect few-shot to work well— without having to retrain it.\n▶ See the demo in tafagent",
     "crumbs": [
       "Part V — Using transformers",
       "<span class='chapter-number'>31</span>  <span class='chapter-title'>Prompting and in-context learning</span>"
@@ -4235,7 +4235,7 @@
     "href": "chapters/34-atencion-eficiente.html#bridge-to-our-theme-attention-across-distance",
     "title": "35  Efficient attention",
     "section": "35.9 Bridge to our theme (attention across distance)",
-    "text": "35.9 Bridge to our theme (attention across distance)\nEfficient attention is the engineering answer to the same cost we studied in physics —that of attending across distance. And there’s an honest distinction worth making: FlashAttention is content-agnostic, i.e. it computes all the interactions equally, just moving the bytes optimally. Our D_f window derived from γ (Ch. 20) is the content-aware complement: it says which distant KV entries have negligible attention mass and can be dropped —it changes what you compute, not just how you move it. They are orthogonal and composable: FlashAttention makes the window you keep cheaper; D_f decides how wide that window should be. (Honest: it’s a conceptual bridge, not a claim that D_f is a published efficient-attention method.)\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent computes the KV budget from γ (Ch. 20): how much cache you really need at the target length. Combine it with this chapter’s logic: FlashAttention makes exact attention cheap, and γ/D_f tells you how much distant context contributes little and you could compress —the “how much” that the exact kernel doesn’t decide for you.",
+    "text": "35.9 Bridge to our theme (attention across distance)\nEfficient attention is the engineering answer to the same cost we studied in physics —that of attending across distance. And there’s an honest distinction worth making: FlashAttention is content-agnostic, i.e. it computes all the interactions equally, just moving the bytes optimally. Our D_f window derived from γ (Ch. 20) is the content-aware complement: it says which distant KV entries have negligible attention mass and can be dropped —it changes what you compute, not just how you move it. They are orthogonal and composable: FlashAttention makes the window you keep cheaper; D_f decides how wide that window should be. (Honest: it’s a conceptual bridge, not a claim that D_f is a published efficient-attention method.)\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent computes the KV budget from γ (Ch. 20): how much cache you really need at the target length. Combine it with this chapter’s logic: FlashAttention makes exact attention cheap, and γ/D_f tells you how much distant context contributes little and you could compress —the “how much” that the exact kernel doesn’t decide for you.\n▶ See the demo in tafagent",
     "crumbs": [
       "Part VI — Efficiency, systems and deployment",
       "<span class='chapter-number'>35</span>  <span class='chapter-title'>Efficient attention</span>"
@@ -4367,7 +4367,7 @@
     "href": "chapters/35-compresion.html#bridge-to-our-theme-brief-and-honest",
     "title": "36  Quantization, distillation and pruning",
     "section": "36.9 Bridge to our theme (brief and honest)",
-    "text": "36.9 Bridge to our theme (brief and honest)\nWeight quantization and pruning are content-agnostic reductions. Even quantizing the KV cache (the section above) is agnostic: it shrinks every entry equally, without looking at which one matters. Our γ-based D_f window (Ch. 20) does something different and complementary —it decides which cache tokens to keep, in a content-aware way—: it’s an orthogonal axis, not a rival method, and it combines with quantizing the KV (fewer bits × fewer entries). And head pruning fits our observation that different heads decay differently (their per-head γ): some matter more than others —consistent both with head pruning and with our per-head γ, without claiming causality.\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent works on an axis complementary to weight compression: it computes the KV budget (cache memory) from γ (Ch. 20). If you quantize and/or prune a model so it fits, also measure its γ to know how much cache you’ll need when serving it at long context —the two levers add up.",
+    "text": "36.9 Bridge to our theme (brief and honest)\nWeight quantization and pruning are content-agnostic reductions. Even quantizing the KV cache (the section above) is agnostic: it shrinks every entry equally, without looking at which one matters. Our γ-based D_f window (Ch. 20) does something different and complementary —it decides which cache tokens to keep, in a content-aware way—: it’s an orthogonal axis, not a rival method, and it combines with quantizing the KV (fewer bits × fewer entries). And head pruning fits our observation that different heads decay differently (their per-head γ): some matter more than others —consistent both with head pruning and with our per-head γ, without claiming causality.\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent works on an axis complementary to weight compression: it computes the KV budget (cache memory) from γ (Ch. 20). If you quantize and/or prune a model so it fits, also measure its γ to know how much cache you’ll need when serving it at long context —the two levers add up.\n▶ See the demo in tafagent",
     "crumbs": [
       "Part VI — Efficiency, systems and deployment",
       "<span class='chapter-number'>36</span>  <span class='chapter-title'>Quantization, distillation and pruning</span>"
@@ -4532,7 +4532,7 @@
     "href": "chapters/36-serving.html#bridge-to-our-theme-brief-and-honest",
     "title": "37  Serving and deployment",
     "section": "37.12 Bridge to our theme (brief and honest)",
-    "text": "37.12 Bridge to our theme (brief and honest)\nThe decode bottleneck is the KV cache (it’s reread in HBM every step), and that cache is the binding constraint on how many requests fit in the batch. Our D_f window derived from γ (Ch. 20) bounds how much KV to retain per request → reducing the effective cache length means more requests in the same HBM, that is, it touches the serving constraint directly. (Honest: this is an observation of the book’s own; the serving sources don’t talk about γ or D_f.)\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent computes the KV budget from γ (Ch. 20): how much cache your model really needs at the target length. Since that cache is what limits the batch (and therefore throughput), knowing it in advance helps you size the service —how many concurrent users fit on your GPU.",
+    "text": "37.12 Bridge to our theme (brief and honest)\nThe decode bottleneck is the KV cache (it’s reread in HBM every step), and that cache is the binding constraint on how many requests fit in the batch. Our D_f window derived from γ (Ch. 20) bounds how much KV to retain per request → reducing the effective cache length means more requests in the same HBM, that is, it touches the serving constraint directly. (Honest: this is an observation of the book’s own; the serving sources don’t talk about γ or D_f.)\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent computes the KV budget from γ (Ch. 20): how much cache your model really needs at the target length. Since that cache is what limits the batch (and therefore throughput), knowing it in advance helps you size the service —how many concurrent users fit on your GPU.\n▶ See the demo in tafagent",
     "crumbs": [
       "Part VI — Efficiency, systems and deployment",
       "<span class='chapter-number'>37</span>  <span class='chapter-title'>Serving and deployment</span>"
@@ -4653,7 +4653,7 @@
     "href": "chapters/37-interpretabilidad.html#bridge-to-our-work-honest",
     "title": "38  A primer on mechanistic interpretability",
     "section": "38.8 Bridge to our work (honest)",
-    "text": "38.8 Bridge to our work (honest)\nOur γ / attention-over-distance and the grokking CKA re-rise (Ch. 24) are neighbors of interpretability: they measure internal structure (per-head γ, inter-layer CKA). But the honest asymmetry is worth stating: they are descriptive/correlational measures of the aggregate structure, not mechanical circuits. MI decompiles a specific algorithm with causal intervention; we measure global geometry/statistics without isolating a circuit. They are complementary lenses —structure-level vs algorithm-level—, not the same thing.\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent operates at the structure level (per-head γ, regime, sinks), not the circuit level (it doesn’t do activation patching or SAEs). It’s a diagnostic of the geometry of a model’s attention —useful as a first screen before fine-grained MI, but not a substitute for it: it tells you how attention is distributed, not what algorithm generates it.",
+    "text": "38.8 Bridge to our work (honest)\nOur γ / attention-over-distance and the grokking CKA re-rise (Ch. 24) are neighbors of interpretability: they measure internal structure (per-head γ, inter-layer CKA). But the honest asymmetry is worth stating: they are descriptive/correlational measures of the aggregate structure, not mechanical circuits. MI decompiles a specific algorithm with causal intervention; we measure global geometry/statistics without isolating a circuit. They are complementary lenses —structure-level vs algorithm-level—, not the same thing.\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent operates at the structure level (per-head γ, regime, sinks), not the circuit level (it doesn’t do activation patching or SAEs). It’s a diagnostic of the geometry of a model’s attention —useful as a first screen before fine-grained MI, but not a substitute for it: it tells you how attention is distributed, not what algorithm generates it.\n▶ See the demo in tafagent",
     "crumbs": [
       "Part VII — Interpretability and what is real",
       "<span class='chapter-number'>38</span>  <span class='chapter-title'>A primer on mechanistic interpretability</span>"
@@ -4752,7 +4752,7 @@
     "href": "chapters/38-audit.html#how-to-use-the-books-labeling-system",
     "title": "39  Verified, folklore and numerology",
     "section": "39.6 How to use the book’s labeling system",
-    "text": "39.6 How to use the book’s labeling system\nNone of this is rhetoric: it’s the badge system that runs through the manual. When you see a 📐 Verified in Lean box, there’s a formal proof behind it; a 📄 Our paper with a Zenodo link, there’s reproducible data; a ⚠ Honest, we’re warning you of a limit or a refutation. The rule for the reader (and for us): ask for the receipt. If a claim —ours or others’— comes with no proof, no datum and no mechanism, treat it as folklore until one shows up.\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent includes a falsification panel (“anti-bullshit”): it doesn’t just compute γ, it puts the claims to the test on your model —it compares predicted γ_Padé vs measured γ, flags when the fit is poor (low R²), and points out when a result doesn’t hold up. It’s the same philosophy as this chapter, turned into a tool: it doesn’t ask you to believe us; it lets you check it.",
+    "text": "39.6 How to use the book’s labeling system\nNone of this is rhetoric: it’s the badge system that runs through the manual. When you see a 📐 Verified in Lean box, there’s a formal proof behind it; a 📄 Our paper with a Zenodo link, there’s reproducible data; a ⚠ Honest, we’re warning you of a limit or a refutation. The rule for the reader (and for us): ask for the receipt. If a claim —ours or others’— comes with no proof, no datum and no mechanism, treat it as folklore until one shows up.\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent includes a falsification panel (“anti-bullshit”): it doesn’t just compute γ, it puts the claims to the test on your model —it compares predicted γ_Padé vs measured γ, flags when the fit is poor (low R²), and points out when a result doesn’t hold up. It’s the same philosophy as this chapter, turned into a tool: it doesn’t ask you to believe us; it lets you check it.\n▶ See the demo in tafagent",
     "crumbs": [
       "Part VII — Interpretability and what is real",
       "<span class='chapter-number'>39</span>  <span class='chapter-title'>Verified, folklore and numerology</span>"
@@ -4840,7 +4840,7 @@
     "href": "chapters/39-mapa2026.html#what-the-landscape-leaves-open-2026-honest",
     "title": "40  The map of the 2026 collapse landscape",
     "section": "40.5 What the landscape leaves open (2026, honest)",
-    "text": "40.5 What the landscape leaves open (2026, honest)\n\nThere’s no agreed first-principles theory. Almost everything is descriptive or analogical (thermo = “isomorphism”; gravitational = analogy; fractional = designed operator). The only rigorous local result (softmax = free-energy minimum) does not scale to a theory of the trained model.\nThe causal origin of sinks remains unresolved —and recent work even separates the massive activations from the sinks ( 2026), plus the unexplained secondary ones.\nThere’s no agreed grokking order parameter: four early signals compete.\nReproducibility and cross-model gaps: many 2026 results are from a single task (modular addition) or one model family. (Consistent with our own audit: a flagship claim —the imprint ν— did not reproduce on data, Ch. 38.)\nThe descriptor-measured vs operator-designed confusion runs through the whole field. γ’s value is that it is measured; but for that very reason it cannot, alone, give the causal mechanism.\n\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent embodies γ’s honest role in this map: it gives you the measured γ and your model’s regime —that is, it situates you relative to the decay lenses— and, separately, the sink mass (η-regime), showing that it’s a different axis. It doesn’t sell you a “theory of everything”; it gives you the coordinates to place yourself in a landscape that has not yet converged.",
+    "text": "40.5 What the landscape leaves open (2026, honest)\n\nThere’s no agreed first-principles theory. Almost everything is descriptive or analogical (thermo = “isomorphism”; gravitational = analogy; fractional = designed operator). The only rigorous local result (softmax = free-energy minimum) does not scale to a theory of the trained model.\nThe causal origin of sinks remains unresolved —and recent work even separates the massive activations from the sinks ( 2026), plus the unexplained secondary ones.\nThere’s no agreed grokking order parameter: four early signals compete.\nReproducibility and cross-model gaps: many 2026 results are from a single task (modular addition) or one model family. (Consistent with our own audit: a flagship claim —the imprint ν— did not reproduce on data, Ch. 38.)\nThe descriptor-measured vs operator-designed confusion runs through the whole field. γ’s value is that it is measured; but for that very reason it cannot, alone, give the causal mechanism.\n\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent embodies γ’s honest role in this map: it gives you the measured γ and your model’s regime —that is, it situates you relative to the decay lenses— and, separately, the sink mass (η-regime), showing that it’s a different axis. It doesn’t sell you a “theory of everything”; it gives you the coordinates to place yourself in a landscape that has not yet converged.\n▶ See the demo in tafagent",
     "crumbs": [
       "Part VII — Interpretability and what is real",
       "<span class='chapter-number'>40</span>  <span class='chapter-title'>The map of the 2026 collapse landscape</span>"
@@ -5082,7 +5082,7 @@
     "href": "chapters/41-etica.html#what-we-dont-know-the-books-honest-close",
     "title": "42  Ethics, safety and limitations",
     "section": "42.7 What we DON’T know (the book’s honest close)",
-    "text": "42.7 What we DON’T know (the book’s honest close)\nAnd here, true to Ch. 38, we close by naming the open questions instead of pretending we’ve closed them:\n\nThere’s no agreed theory of why scale works nor of when capabilities emerge: the scaling laws fit the loss, not the onset of a capability (or of a risk).\nWe can’t predict or bound emergent behaviors before they appear.\nInterpretability still can’t certify a deployed model (Chs. 37-38).\nThe alignment of highly capable / superhuman systems is unsolved.\nEven “what the model knows” isn’t sharp: there’s partial calibration, not a clear knowledge boundary.\n\n\n🧩 Analogy — the engine we still can’t open. We’ve built an engine that works but that we still can’t fully open to inspect. Using it well starts with admitting that —not with pretending the hood is transparent.\n\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\nThis chapter’s lesson —don’t mistake fluency for correctness; measure— is the philosophy of tafagent: against “by eye” claims about a model, it gives you a measured diagnostic (γ, regime, KV budget) and a falsification panel (Ch. 38). It doesn’t solve ethics or safety —no tool does— but it embodies the right habit: check, don’t believe.",
+    "text": "42.7 What we DON’T know (the book’s honest close)\nAnd here, true to Ch. 38, we close by naming the open questions instead of pretending we’ve closed them:\n\nThere’s no agreed theory of why scale works nor of when capabilities emerge: the scaling laws fit the loss, not the onset of a capability (or of a risk).\nWe can’t predict or bound emergent behaviors before they appear.\nInterpretability still can’t certify a deployed model (Chs. 37-38).\nThe alignment of highly capable / superhuman systems is unsolved.\nEven “what the model knows” isn’t sharp: there’s partial calibration, not a clear knowledge boundary.\n\n\n🧩 Analogy — the engine we still can’t open. We’ve built an engine that works but that we still can’t fully open to inspect. Using it well starts with admitting that —not with pretending the hood is transparent.\n\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\nThis chapter’s lesson —don’t mistake fluency for correctness; measure— is the philosophy of tafagent: against “by eye” claims about a model, it gives you a measured diagnostic (γ, regime, KV budget) and a falsification panel (Ch. 38). It doesn’t solve ethics or safety —no tool does— but it embodies the right habit: check, don’t believe.\n▶ See the demo in tafagent",
     "crumbs": [
       "Part VII — Interpretability and what is real",
       "<span class='chapter-number'>42</span>  <span class='chapter-title'>Ethics, safety and limitations</span>"
@@ -5324,7 +5324,7 @@
     "href": "chapters/R2-cookbook.html#recipe-0-how-not-to-fool-yourself-the-meta-recipe",
     "title": "44  R2 · Cookbook",
     "section": "44.9 Recipe 0 — How NOT to fool yourself (the meta-recipe)",
-    "text": "44.9 Recipe 0 — How NOT to fool yourself (the meta-recipe)\nBefore believing any number —yours or a paper’s—:\n\nAsk for the receipt: is there a proof (📐), data (📊), or just a claim? No receipt → folklore (Ch. 38).\nR² before γ: a γ with low R² is a poor summary; say so.\nDon’t compare raw γ across different models: it mixes θ + data + architecture; the clean control is within-model (Ch. 16).\nForm ≠ truth; fluency ≠ correctness; Lean ≠ reality: each claim needs its kind of receipt.\n\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\nAlmost all of these recipes have a shortcut in tafagent (Profile mode for γ and regime, KV computation, YaRN planner, falsification panel). The full manual for the tool —every mode and recipes X-1..X-23— is in R9.\n\n\nNext reference (R3): the glossary —every term in the book, defined at a glance—.",
+    "text": "44.9 Recipe 0 — How NOT to fool yourself (the meta-recipe)\nBefore believing any number —yours or a paper’s—:\n\nAsk for the receipt: is there a proof (📐), data (📊), or just a claim? No receipt → folklore (Ch. 38).\nR² before γ: a γ with low R² is a poor summary; say so.\nDon’t compare raw γ across different models: it mixes θ + data + architecture; the clean control is within-model (Ch. 16).\nForm ≠ truth; fluency ≠ correctness; Lean ≠ reality: each claim needs its kind of receipt.\n\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\nAlmost all of these recipes have a shortcut in tafagent (Profile mode for γ and regime, KV computation, YaRN planner, falsification panel). The full manual for the tool —every mode and recipes X-1..X-23— is in R5.\n▶ See the demo in tafagent\n\n\nNext reference (R3): the glossary —every term in the book, defined at a glance—.",
     "crumbs": [
       "Part VIII — Reference",
       "<span class='chapter-number'>44</span>  <span class='chapter-title'>R2 · Cookbook</span>"
@@ -5533,560 +5533,560 @@
     "href": "chapters/R4-medir-gamma.html#open-data-to-reproduce-or-refute",
     "title": "46  R4 · Measuring your own γ (and reproducing the atlas)",
     "section": "46.4 Open data to reproduce (or refute)",
-    "text": "46.4 Open data to reproduce (or refute)\n\nThe γ atlas (γ measured across 42 models from 4 families) and the within-model experiments (θ-rescale, γ⊥sink) are published as open data alongside Paper I (Zenodo 20314038) — downloadable, reproducible, criticizable.\nThe model panel and the tool’s apparatus are open at github.com/karlesmarin/tafagent-registry and github.com/karlesmarin/lean-taf (formal proofs). (The Hugging Face datasets exist for reproduction; check the exact repository handle before linking them.)\n\n\n\n\n\n\n\nWarning⚠ Honest — what this validates and what it doesn’t\n\n\n\nMeasuring γ and its R² validates the form \\(A(d)\\propto d^{-\\gamma}\\) as a description (solid: R²&gt;0.95 across 30+ models). It does not by itself validate the claims derived from γ that are still open —the D_f window (🟡 no benchmark) or the context headroom (🟡, avenue-2 crashed)—. Reproduce the measurement; treat the derived parts with their label (R1, Ch. 38).\n\n\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\nIf you don’t want to set up the pipeline, tafagent does steps 1-4 for you from a model id or config.json: it gives you γ_observed (from real weights), γ_Padé (predicted), the R², the regime, and the horizon. It is the “one-click” version of this recipe; the full manual is in R9.\n\n\nNext reference (R9): the tafagent manual —the 7 modes, the Anti-Bullshit Pack, the recipes, and the TAF Card—.",
+    "text": "46.4 Open data to reproduce (or refute)\n\nThe γ atlas (γ measured across 42 models from 4 families) and the within-model experiments (θ-rescale, γ⊥sink) are published as open data alongside Paper I (Zenodo 20314038) — downloadable, reproducible, criticizable.\nThe model panel and the tool’s apparatus are open at github.com/karlesmarin/tafagent-registry and github.com/karlesmarin/lean-taf (formal proofs). (The Hugging Face datasets exist for reproduction; check the exact repository handle before linking them.)\n\n\n\n\n\n\n\nWarning⚠ Honest — what this validates and what it doesn’t\n\n\n\nMeasuring γ and its R² validates the form \\(A(d)\\propto d^{-\\gamma}\\) as a description (solid: R²&gt;0.95 across 30+ models). It does not by itself validate the claims derived from γ that are still open —the D_f window (🟡 no benchmark) or the context headroom (🟡, avenue-2 crashed)—. Reproduce the measurement; treat the derived parts with their label (R1, Ch. 38).\n\n\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\nIf you don’t want to set up the pipeline, tafagent does steps 1-4 for you from a model id or config.json: it gives you γ_observed (from real weights), γ_Padé (predicted), the R², the regime, and the horizon. It is the “one-click” version of this recipe; the full manual is in R5.\n\n\nNext reference (R5): the tafagent manual —the 7 modes, the Anti-Bullshit Pack, the recipes, and the TAF Card—.",
     "crumbs": [
       "Part VIII — Reference",
       "<span class='chapter-number'>46</span>  <span class='chapter-title'>R4 · Measuring your own γ (and reproducing the atlas)</span>"
     ]
   },
   {
-    "objectID": "chapters/R9-tafagent.html",
-    "href": "chapters/R9-tafagent.html",
-    "title": "47  R9 · tafagent manual",
+    "objectID": "chapters/R5-tafagent.html",
+    "href": "chapters/R5-tafagent.html",
+    "title": "47  R5 · tafagent manual",
     "section": "",
     "text": "47.1 What it is and what it isn’t",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R9 · tafagent manual</span>"
+      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R5 · tafagent manual</span>"
     ]
   },
   {
-    "objectID": "chapters/R9-tafagent.html#what-it-is-and-what-it-isnt",
-    "href": "chapters/R9-tafagent.html#what-it-is-and-what-it-isnt",
-    "title": "47  R9 · tafagent manual",
+    "objectID": "chapters/R5-tafagent.html#what-it-is-and-what-it-isnt",
+    "href": "chapters/R5-tafagent.html#what-it-is-and-what-it-isnt",
+    "title": "47  R5 · tafagent manual",
     "section": "",
     "text": "It is: a tool in the browser (zero install, zero GPU, no telemetry) that predicts the practical viability of an LLM before you spend GPU/€: real long context, quantization degradation, chat template, config errors.\nIt isn’t: an attention-map viewer, nor a service that runs the model. What you see are deterministic predictions (computed with Pyodide) plus a natural-language layer.\nInput: an HF model id or a config.json (it reads θ, T_train, heads…); you set T_eval (the target length) and whether the model uses a sliding window (SWA).",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R9 · tafagent manual</span>"
+      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R5 · tafagent manual</span>"
     ]
   },
   {
-    "objectID": "chapters/R9-tafagent.html#the-metrics-it-computes",
-    "href": "chapters/R9-tafagent.html#the-metrics-it-computes",
-    "title": "47  R9 · tafagent manual",
+    "objectID": "chapters/R5-tafagent.html#the-metrics-it-computes",
+    "href": "chapters/R5-tafagent.html#the-metrics-it-computes",
+    "title": "47  R5 · tafagent manual",
     "section": "47.2 The metrics it computes",
     "text": "47.2 The metrics it computes\n\n\n\n\n\n\n\n\nMetric\nWhat it tells you\nCh.\n\n\n\n\nγ_Padé\nγ predicted from geometry (θ, T)\n15\n\n\nγ_observed\nγ measured from real weights\n15\n\n\nd_horizon\neffective attention horizon (how far it really attends)\n15, 19\n\n\nη (θ_eff_obs/θ_eff_Padé)\nregime: Normal / Fraud / Compressed / Over-Padé / SWA\n16\n\n\nKV memory\ncache memory at length L\n20, 36\n\n\nL_NIAH\nestimated needle-in-haystack ceiling\n19\n\n\nΔγ\nphase probe for induction heads\n24, 30\n\n\nΔPPL\nperplexity shift from quantization\n35\n\n\nPhase A / Phase B\nγ&lt;1 (global) vs γ&gt;1 (local collapse)\n21",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R9 · tafagent manual</span>"
+      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R5 · tafagent manual</span>"
     ]
   },
   {
-    "objectID": "chapters/R9-tafagent.html#the-7-modes",
-    "href": "chapters/R9-tafagent.html#the-7-modes",
-    "title": "47  R9 · tafagent manual",
+    "objectID": "chapters/R5-tafagent.html#the-7-modes",
+    "href": "chapters/R5-tafagent.html#the-7-modes",
+    "title": "47  R5 · tafagent manual",
     "section": "47.3 The 7 modes",
     "text": "47.3 The 7 modes\n\n📇 Profile. Paste a model id → γ_Padé vs γ_observed, R², regime, horizon. The starting mode.\n🆚 Compare. Pits two models against each other on the same axes.\n🔍 Inspect config. Reads and explains the config.json (θ, heads, SWA…).\n💬 Ask plain English. Ask in natural language (handled by a small model in-browser).\n📋 Pick recipe. Choose an X-* recipe (below).\n🩺 Diagnose CLI. Command-line-style diagnosis.\n📊 Phase diagram. Places a panel of models on the γ axis (Phase A/B) — the atlas interactive.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R9 · tafagent manual</span>"
+      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R5 · tafagent manual</span>"
     ]
   },
   {
-    "objectID": "chapters/R9-tafagent.html#the-anti-bullshit-pack-11-tools",
-    "href": "chapters/R9-tafagent.html#the-anti-bullshit-pack-11-tools",
-    "title": "47  R9 · tafagent manual",
+    "objectID": "chapters/R5-tafagent.html#the-anti-bullshit-pack-11-tools",
+    "href": "chapters/R5-tafagent.html#the-anti-bullshit-pack-11-tools",
+    "title": "47  R5 · tafagent manual",
     "section": "47.4 The Anti-Bullshit Pack (11 tools)",
     "text": "47.4 The Anti-Bullshit Pack (11 tools)\nDiagnostics that attack the “smoke” of model cards: Context Unmasker (real long context vs advertised), Chat-template Sniffer, Quant-regime Classifier, Multilingual Tokenizer Tax (tokenizes real text in 6 tokenizers → how much your language “costs”), Contamination Prior, LongScore (RULER+HELMET), PEFT Anti-Pattern, Spec-Decode, plus extension: YaRN/RoPE planner, GGUF Bridge, Launch-Flag Generator.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R9 · tafagent manual</span>"
+      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R5 · tafagent manual</span>"
     ]
   },
   {
-    "objectID": "chapters/R9-tafagent.html#the-recipes-8-core",
-    "href": "chapters/R9-tafagent.html#the-recipes-8-core",
-    "title": "47  R9 · tafagent manual",
+    "objectID": "chapters/R5-tafagent.html#the-recipes-8-core",
+    "href": "chapters/R5-tafagent.html#the-recipes-8-core",
+    "title": "47  R5 · tafagent manual",
     "section": "47.5 The recipes (8 core)",
     "text": "47.5 The recipes (8 core)\n\n\n\n\n\n\n\n\nRecipe\nFor\nCh.\n\n\n\n\nX-1\ncustom vs API\n25, 36\n\n\nX-2\nlong-context viability\n19\n\n\nX-3\nbudget pre-flight\n25\n\n\nX-5\nhardware\n36\n\n\nX-19\nKV compression (soft-decay/cutoff)\n20\n\n\nX-21\ntraining imprint on γ (γ_train) — ⚠ descriptive; not the ν identity, refuted on data (Ch. 38)\n15\n\n\nX-22\ncompute-context invariant\n34\n\n\nX-23\ninduction-head phase detector\n24, 30",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R9 · tafagent manual</span>"
+      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R5 · tafagent manual</span>"
     ]
   },
   {
-    "objectID": "chapters/R9-tafagent.html#how-to-read-the-output-the-taf-card",
-    "href": "chapters/R9-tafagent.html#how-to-read-the-output-the-taf-card",
-    "title": "47  R9 · tafagent manual",
+    "objectID": "chapters/R5-tafagent.html#how-to-read-the-output-the-taf-card",
+    "href": "chapters/R5-tafagent.html#how-to-read-the-output-the-taf-card",
+    "title": "47  R5 · tafagent manual",
     "section": "47.6 How to read the output: the TAF Card",
     "text": "47.6 How to read the output: the TAF Card\nThe result is summarized in a TAF Card with ✅ / ⚠ / ❌ verdicts per dimension (context, quantization, template, regime). And there is a falsification dashboard (F1-F23): it doesn’t just hand you numbers, it puts the claims to the test —the same philosophy as Ch. 38—.\nA typical flow: Profile (paste the id) → read the verdict on the TAF Card → if something comes back ⚠/❌, open the specific diagnostic (e.g. Context Unmasker or Quant-regime) → use the matching recipe (X-2 context, X-19 KV) to decide.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R9 · tafagent manual</span>"
+      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R5 · tafagent manual</span>"
     ]
   },
   {
-    "objectID": "chapters/R9-tafagent.html#verification-the-receipts",
-    "href": "chapters/R9-tafagent.html#verification-the-receipts",
-    "title": "47  R9 · tafagent manual",
+    "objectID": "chapters/R5-tafagent.html#verification-the-receipts",
+    "href": "chapters/R5-tafagent.html#verification-the-receipts",
+    "title": "47  R5 · tafagent manual",
     "section": "47.7 Verification (the receipts)",
-    "text": "47.7 Verification (the receipts)\n\nPyodide for the math (deterministic), WebLLM for the natural language, transformers.js for the tokenizer.\nLean+Mathlib verification: 15 identities formally proved (github.com/karlesmarin/lean-taf).\nPanel of 23 models open (github.com/karlesmarin/tafagent-registry).\n\n\n\n\n\n\n\nWarning⚠ Honest — what is prediction and what is measurement\n\n\n\nMany outputs (γ_Padé, estimated horizon, KV at length L) are predictions from the config —fast and useful for deciding before spending GPU—, not measurements of real attention. Once you have the model, contrast them with γ_observed (measured) and with your own measurement (R4). And remember the book’s limits: D_f and the context headroom are 🟡 rules not fully validated (R1).\n\n\nNext reference (R10): the suggested solutions to each chapter’s exercises.",
+    "text": "47.7 Verification (the receipts)\n\nPyodide for the math (deterministic), WebLLM for the natural language, transformers.js for the tokenizer.\nLean+Mathlib verification: 15 identities formally proved (github.com/karlesmarin/lean-taf).\nPanel of 23 models open (github.com/karlesmarin/tafagent-registry).\n\n\n\n\n\n\n\nWarning⚠ Honest — what is prediction and what is measurement\n\n\n\nMany outputs (γ_Padé, estimated horizon, KV at length L) are predictions from the config —fast and useful for deciding before spending GPU—, not measurements of real attention. Once you have the model, contrast them with γ_observed (measured) and with your own measurement (R4). And remember the book’s limits: D_f and the context headroom are 🟡 rules not fully validated (R1).\n\n\nNext reference (R6): the suggested solutions to each chapter’s exercises.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R9 · tafagent manual</span>"
+      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R5 · tafagent manual</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html",
-    "href": "chapters/R10-soluciones.html",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html",
+    "href": "chapters/R6-soluciones.html",
+    "title": "48  R6 · Exercise solutions",
     "section": "",
     "text": "48.1 Ch. 1 · Overview",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-1-overview",
-    "href": "chapters/R10-soluciones.html#ch.-1-overview",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-1-overview",
+    "href": "chapters/R6-soluciones.html#ch.-1-overview",
+    "title": "48  R6 · Exercise solutions",
     "section": "",
     "text": "Parallelizing RNNs. A GPU shines doing thousands of calculations at once, but an RNN processes the sequence word by word, where each step depends on the previous one. That serial dependency makes it impossible to spread the work across the GPU’s many cores, so the hardware sits underused and training becomes slow. In practice this capped the size of models and the amount of data they could be trained on.\nThe cost of connecting distant words. Connecting any pair of words “in a single step” requires comparing each token with all the others, so the number of comparisons grows with the square of the length (\\(\\sim n^2\\)). With thousands of words that blows up compute and memory, and it is exactly what makes long context expensive. It is the central problem tackled in Part II.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-2-tokens",
-    "href": "chapters/R10-soluciones.html#ch.-2-tokens",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-2-tokens",
+    "href": "chapters/R6-soluciones.html#ch.-2-tokens",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.2 Ch. 2 · Tokens",
     "text": "48.2 Ch. 2 · Tokens\n\nBy hand. After es, est and lo, the live symbols are lo w (in low×5 and lower×2 = 7), n e, n ew/w est, etc. The most frequent pair is lo w with 7 occurrences, so the next merge is low; after it, the pair low e (from lower×2) and n e (from newest×6) compete, and n e → ne wins with 6. In short: the two merges that apply are low and then ne, always picking the most frequent adjacent pair.\nThe space. \"the\", \" the\" and \"  the\" produce different lists because the leading space is part of the token: byte-level BPE treats the, the (space + the) and the (double space + the) as different pieces with different numbers. This happens because pre-tokenization attaches the preceding space to the word, so the same word at the start or in the middle of a sentence is encoded differently.\nThe multilingual tax. “the house is big” usually spends fewer tokens than “la casa es grande”, because tokenizers are trained mostly on English and have longer, more efficient pieces for that language. Spanish (like other languages) ends up chopped into more subwords, which consumes more context to say the same thing. That’s why a “same-length” translation can cost quite a bit more token budget.\nNo unknowns. A byte-level tokenizer starts from the 256 possible UTF-8 bytes, and any text in the world —any language, emoji, or symbol— can be expressed as a sequence of those 256 bytes. So there are always base pieces to represent it and you never need an &lt;UNK&gt; token. A word-level tokenizer, by contrast, has a finite vocabulary: if a word arrives that wasn’t in it, it has no number for it and must mark it as unknown.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-3-embeddings-and-the-residual-stream",
-    "href": "chapters/R10-soluciones.html#ch.-3-embeddings-and-the-residual-stream",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-3-embeddings-and-the-residual-stream",
+    "href": "chapters/R6-soluciones.html#ch.-3-embeddings-and-the-residual-stream",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.3 Ch. 3 · Embeddings and the residual stream",
     "text": "48.3 Ch. 3 · Embeddings and the residual stream\n\nThe table E. The embedding matrix has size vocabulary × d_model, so with 50,000 tokens and d_model = 768 that’s \\(50000 \\times 768 = 38\\,400\\,000\\) parameters (about 38.4 million). With d_model = 4096 it would be \\(50000 \\times 4096 = 204\\,800\\,000\\), i.e. about 204.8 million. The embedding table alone already accounts for a large part of the model.\nStatic vs. contextual. “banco” has a single input embedding because its token-ID always selects the same row of E, without yet knowing which sentence it appears in. But as it passes through the layers, attention adds in information from the neighboring words (“río” or “central”), so the vector becomes contextualized and ends up different in each sentence. Contextualization doesn’t live in E, but in what the layers write on top of it in the residual stream.\nAdditive. Adding (\\(x \\leftarrow x + \\text{FFN}(x)\\)) instead of replacing means each layer adds its contribution without erasing what was already there. So information from earlier layers persists along the residual stream and can be recombined later, rather than being lost. On top of that, this additive write (inherited from ResNets) lets the signal and the gradient cross many layers without diluting, which is what makes it possible to train very deep models.\nDirections. We’d expect vec(Madrid), because the subtraction vec(París) − vec(Francia) isolates the “capital of” direction, and adding it to vec(España) reaches the corresponding capital. It’s the same kind of analogy arithmetic as king − man + woman ≈ queen: relations (here “country → its capital”) live as directions in the embedding space. It’s approximate, not exact, but it captures the geometric regularity.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-4-attention",
-    "href": "chapters/R10-soluciones.html#ch.-4-attention",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-4-attention",
+    "href": "chapters/R6-soluciones.html#ch.-4-attention",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.4 Ch. 4 · Attention",
     "text": "48.4 Ch. 4 · Attention\n\nBy hand. With \\(q_2=[0,2]\\), the scores \\(q_2\\cdot k_j\\) are \\(0,\\,2,\\,2\\) (since \\(k_1=[1,0]\\), \\(k_2=[0,1]\\), \\(k_3=[1,1]\\)). After scaling and applying softmax, tokens 2 and 3 receive high, nearly equal weights, while token 1 is left with low weight. The output becomes dominated by \\(v_2\\) and \\(v_3\\), because the query now points to the second dimension, which is the one that keys \\(k_2\\) and \\(k_3\\) advertise.\nThe scaling. For \\(d=4,64,4096\\) you observe that the standard deviation of \\(QK^\\top\\) without scaling grows roughly like \\(\\sqrt{d}\\) (≈2, ≈8, ≈64), because the dot product is a sum of \\(d\\) terms whose variance grows with \\(d\\). With the \\(1/\\sqrt d\\) factor, the standard deviation stays around 1 regardless of the dimension. This confirms that scaling returns the logits to unit variance and avoids saturating the softmax.\nSaturation. Multiplying the logits by 10 before the softmax sharpens the differences: the weight concentrates almost entirely on the highest-scoring token and the rest fall close to 0, i.e. \\(A\\) becomes nearly one-hot. It’s the effect of lowering the “temperature”: larger logits mean a colder, peakier distribution; smaller logits, a hotter, more uniform one.\nFidelity. Take 2 tokens where \\(q_1\\cdot k_2 \\gg q_1\\cdot k_1\\), so that \\(\\alpha_{12}\\approx 0.99\\), but with a value \\(v_2\\) of tiny norm (e.g. \\(v_2=[0.001,0]\\)) against a large \\(v_1\\). Even though token 1 “attends” almost entirely to 2, the output \\(0.99\\,v_2 + 0.01\\,v_1\\) barely depends on \\(v_2\\) because its magnitude is negligible; changing \\(v_2\\) hardly alters the output. This illustrates that attention weight does not equal real influence: a heavily attended token can contribute little if its \\(\\lVert v_j\\rVert\\) is small.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-5-multi-head-attention",
-    "href": "chapters/R10-soluciones.html#ch.-5-multi-head-attention",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-5-multi-head-attention",
+    "href": "chapters/R6-soluciones.html#ch.-5-multi-head-attention",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.5 Ch. 5 · Multi-head attention",
     "text": "48.5 Ch. 5 · Multi-head attention\n\nThe split. Since d_k = d_model / h, with d_model = 1024 and h = 16 heads you get d_k = 1024/16 = 64. With h = 8 heads, d_k = 1024/8 = 128. More heads means smaller slices per head, and fewer heads, larger slices.\nCost. They don’t cost 12 times more because each head doesn’t work on the full vector, but on a slice of size d_k = d_model/12. The combined work of the 12 heads over their small slices roughly equals that of a single attention over the whole vector. Multi-head splits the same compute budget across several views, rather than adding cost.\nInduction head. It would predict perro. It does so in two steps: first it matches prefixes, looking backward for the previous occurrence of the current token gato; then it copies, raising the probability of the token that followed last time (perro). It’s the pattern [A][B] … [A] → [B]: “last time I saw gato, perro followed, so I predict perro”.\nPruning. No, it doesn’t mean multi-head is useless. That many heads can be pruned at inference with little loss only reveals they are partially redundant once the model is trained, and that a few specialized ones do the heavy lifting. But those redundant views might have been necessary during training for the model to discover and consolidate the useful roles; being able to remove them afterward doesn’t imply they were superfluous before.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-6-ffn",
-    "href": "chapters/R10-soluciones.html#ch.-6-ffn",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-6-ffn",
+    "href": "chapters/R6-soluciones.html#ch.-6-ffn",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.6 Ch. 6 · FFN",
     "text": "48.6 Ch. 6 · FFN\n\nThe nonlinearity. Without \\(\\sigma\\), the composition \\(W_2(W_1 x)\\) is \\((W_2 W_1)\\,x\\), i.e. the product of two matrices is just another matrix \\(W = W_2 W_1\\): a single linear transformation. The model loses the ability to learn nonlinear functions and to act as an “all-or-nothing” detector (threshold), reduced to linear combinations of the input.\nThe count. With \\(d_{model}=1024\\) and a 4× expansion you have \\(d_{ff}=4096\\). Then \\(W_1\\) is \\(1024\\times 4096 \\approx 4.19\\) million parameters, and \\(W_2\\) is \\(4096\\times 1024 \\approx 4.19\\) million more. In total the FFN is around \\(8.4\\) million parameters (ignoring biases).\nDivision of labor. (a) Attention: linking “ella” to its referent requires looking across tokens and moving information between them. (b) The FFN: activating the concept “capital of a country” is token-by-token processing over stored content. (c) Attention: averaging/mixing information from distant tokens is exactly its function.\nEditing a fact. The middle FFNs act as a key-value associative memory where concrete world facts reside, so that’s where you can modify a specific datum without touching the rest. The embedding layer only stores the generic lexical meaning of each token, not the factual relations, so editing it wouldn’t change the stored fact.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-7-residual-and-normalization",
-    "href": "chapters/R10-soluciones.html#ch.-7-residual-and-normalization",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-7-residual-and-normalization",
+    "href": "chapters/R6-soluciones.html#ch.-7-residual-and-normalization",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.7 Ch. 7 · Residual and normalization",
     "text": "48.7 Ch. 7 · Residual and normalization\n\nAdd vs replace. First reason: addition creates a “shortcut” (the residual connection) through which the gradient flows unattenuated, letting you train very deep networks without the signal vanishing. Second reason: each sublayer only needs to learn an incremental adjustment to the existing representation, instead of rebuilding the whole vector from scratch, which eases learning and preserves the information already accumulated.\nLayerNorm vs RMSNorm. The essential difference is that LayerNorm subtracts the mean before dividing by the standard deviation (centers and scales), whereas RMSNorm skips the centering and only divides by the root mean square. RMSNorm is thus cheaper and, in practice, just as effective.\nPre vs Post. Pre-LN: \\(x \\leftarrow x + \\mathrm{Sublayer}(\\mathrm{Norm}(x))\\). Post-LN: \\(x \\leftarrow \\mathrm{Norm}(x + \\mathrm{Sublayer}(x))\\). Post-LN needs learning-rate warmup to stabilize; Pre-LN is stable from the start and usually doesn’t require it.\nCollapse. Without residual connections, stacking many layers of pure attention makes the token representations average together over and over and converge: they all tend toward the same vector. It’s the phenomenon of rank collapse (oversmoothing), which destroys the distinction between tokens as depth increases.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-8-position-and-rope",
-    "href": "chapters/R10-soluciones.html#ch.-8-position-and-rope",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-8-position-and-rope",
+    "href": "chapters/R6-soluciones.html#ch.-8-position-and-rope",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.8 Ch. 8 · Position and RoPE",
     "text": "48.8 Ch. 8 · Position and RoPE\n\nBlindness to order. Attention is an operation symmetric under token permutation: it treats the input as a set, not a sequence. Without positional information, “el perro muerde al hombre” and “el hombre muerde al perro” contain exactly the same tokens, so they produce identical dot products and therefore the same result.\nRelative for free. RoPE rotates each vector by an angle proportional to its position; when you take the dot product between \\(q\\) at position \\(m\\) and \\(k\\) at position \\(n\\), the rotations combine and only the relative angle \\(m-n\\) survives. Just as with two clock hands, what matters for their product is the angle between them, not where each one points in absolute terms.\nθ and reach. Raising the base \\(\\theta\\) makes the rotation frequencies lower (slower rotations) for each pair of dimensions. By turning more slowly, the angles take longer to repeat, so the model distinguishes larger distances well: it increases effective reach at the cost of less fine resolution at short distances.\nq, k, and v? RoPE applies its rotation only to the queries \\(q\\) and the keys \\(k\\), not to the values \\(v\\). This makes sense because position should influence how affinity is computed (the \\(q\\cdot k\\) product that decides whom to attend to), but not the content transported once attention is decided, which is what the values carry.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-9-the-block",
-    "href": "chapters/R10-soluciones.html#ch.-9-the-block",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-9-the-block",
+    "href": "chapters/R6-soluciones.html#ch.-9-the-block",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.9 Ch. 9 · The block",
     "text": "48.9 Ch. 9 · The block\n\nThe pattern. The two Pre-LN lines are: \\(x \\leftarrow x + \\mathrm{Attention}(\\mathrm{Norm}(x))\\) and then \\(x \\leftarrow x + \\mathrm{FFN}(\\mathrm{Norm}(x))\\). The first mixes information across tokens (communication); the second processes each token separately (computation). Both add their result to the residual stream.\nThe mask. During training a generative model predicts the next token, so it must hide future positions: if it could see them, it would copy the answer directly and “cheat”. Without the mask it would learn to look ahead instead of to predict, and at inference (where the future doesn’t exist) it would fail completely.\nDepth. Induction heads (Ch. 5) need at least two layers: a first head copies information from the previous token and a second uses that information to search for and complete the pattern “… A B … A → B”. With a single layer that two-step operation can’t be composed, so the ability doesn’t exist.\nThe journey. The order is: tokenize · embeddings · add position · N blocks · unembed.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-10-architectures",
-    "href": "chapters/R10-soluciones.html#ch.-10-architectures",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-10-architectures",
+    "href": "chapters/R6-soluciones.html#ch.-10-architectures",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.10 Ch. 10 · Architectures",
     "text": "48.10 Ch. 10 · Architectures\n\nThe switch. The main change is the attention mask: going from bidirectional attention (each token sees the whole context) to causal attention (each token sees only the past). That mask, together with the next-token prediction objective, turns a comprehension model into a generation one.\nWhy doesn’t BERT write an essay? BERT uses bidirectional attention and is trained with masked language modeling: filling in blanks while seeing the context on both sides. It doesn’t learn to continue text token by token left to right, so it lacks the autoregressive mechanism needed to generate a long, coherent sequence.\nCross-attention. In a T5 translator, the decoder looks at the encoder: each position being generated queries (via cross-attention) the representations of the entire input sentence produced by the encoder. It serves to align what’s being generated with the content of the source text.\nChoosing a tool. (a) Classifying reviews: a bidirectional encoder model like BERT, which understands the full text in order to label it. (b) Chatbot: an autoregressive decoder model like GPT, which generates responses. (c) Translating English→Spanish: an encoder-decoder architecture like T5, which reads the whole sentence and regenerates it in the other language.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-11-training",
-    "href": "chapters/R10-soluciones.html#ch.-11-training",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-11-training",
+    "href": "chapters/R6-soluciones.html#ch.-11-training",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.11 Ch. 11 · Training",
     "text": "48.11 Ch. 11 · Training\n\nSelf-supervision. No human labels are needed because the “correct answer” is the text itself: given a fragment, the next token is already written in the corpus. The model simply hides that token, tries to predict it, and compares against the one that actually came. So any raw text becomes millions of labeled examples for free.\nPerplexity. A perplexity of 1 means the model is perfectly confident and always nails the next token (no doubt at all). A perplexity equal to the vocabulary size means the opposite: the model spreads probability uniformly across all words, i.e. it has learned nothing and is choosing at random. Perplexity is read as “among how many equiprobable options the model hesitates on average”.\nChinchilla. Per Chinchilla, you’re probably spending too much compute on parameters and too little on data: a huge model trained on few tokens is undertrained. With a fixed budget it pays to balance size and data (roughly in proportion, about 20 tokens per parameter). A smaller model fed with more tokens would perform better at the same compute.\nWarmup. Starting with a high learning rate from step 1 can break training because the weights are freshly initialized and the first gradients are noisy and large. A huge step in that phase can blow up the activations or norms and cause divergence (loss exploding to NaN). Warmup raises the learning rate gradually so the model stabilizes before taking large steps.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-12-inference",
-    "href": "chapters/R10-soluciones.html#ch.-12-inference",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-12-inference",
+    "href": "chapters/R6-soluciones.html#ch.-12-inference",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.12 Ch. 12 · Inference",
     "text": "48.12 Ch. 12 · Inference\n\nGreedy. Always picking the most probable word at each step is a local decision that can close off globally better paths. For example, a highly probable first token (“El”) can lead to mediocre continuations, while a slightly less probable second token would open up a sentence of higher joint probability. Greedy can’t undo that decision, so it gets stuck in a local optimum instead of the most probable sentence.\nTemperature. For a reliable code assistant I’d use a low T (close to 0), because I want deterministic, correct, reproducible outputs with no inventions. For a creative idea generator I’d use a high T (e.g. 0.8–1.2), which flattens the distribution and lets it explore less probable, more varied options. Temperature is, in essence, the knob between “safe and repetitive” and “diverse but risky”.\nAdaptive top-p. Top-p (nucleus) accumulates candidates until they sum to a probability mass \\(p\\); when the model is confident, a single token already holds almost all the mass, so very few candidates suffice. When it’s unsure, probability is spread out and many tokens are needed to reach \\(p\\). Its advantage over top-k is that it adapts the number of candidates to the model’s confidence, instead of fixing a rigid \\(k\\) that’s too many when there’s certainty and too few when there’s doubt.\nKV-cache. Generation slows down and uses more memory because, with each new token, attention must look at all previous tokens, and that context grows linearly with the text. The KV-cache stores the already-computed keys and values so they aren’t recomputed, which saves compute. The trade-off is clear: it spends memory (which grows with length) to gain speed per token.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-13-reading-attention-maps",
-    "href": "chapters/R10-soluciones.html#ch.-13-reading-attention-maps",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-13-reading-attention-maps",
+    "href": "chapters/R6-soluciones.html#ch.-13-reading-attention-maps",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.13 Ch. 13 · Reading attention maps",
     "text": "48.13 Ch. 13 · Reading attention maps\n\nThere’s no “single” map. Each head of each layer produces its own attention map, so with 32 layers and 32 heads there are \\(32 \\times 32 = 1024\\) distinct maps per sentence. There’s no “the” map of the model, but more than a thousand different views. That’s why talking about “what the model looks at” as a single image is a misleading simplification.\nThe sink. Since each attention row must sum to 1 (it’s a probability distribution), a head that doesn’t actually “want” to attend to anything in particular has to dump that mass somewhere. The first token is usually that stable dumping ground, so a bright column appears over it. That brightness is an artifact of normalization, not a sign that the first token matters.\nFidelity. It’s not valid because an attention map shows correlation, not cause: a head attending to Y doesn’t prove that attention is the reason for prediction X. The prediction arises from the interaction of many heads, layers, and the values (V), not just one head’s attention weights. Without an intervention (e.g. ablating that head) you can’t assert the “because”.\nThe U. Mean attention versus distance is U-shaped (or J-shaped): a very high peak at near-zero distance and another at the initial positions, with a valley in between. The left arm, over the first tokens, is the “sink”. The gentle descent to the right, at growing distances, is the “tail” whose decay we’ll measure with the exponent γ.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-14-aliasing-and-ropes-three-scales",
-    "href": "chapters/R10-soluciones.html#ch.-14-aliasing-and-ropes-three-scales",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-14-aliasing-and-ropes-three-scales",
+    "href": "chapters/R6-soluciones.html#ch.-14-aliasing-and-ropes-three-scales",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.14 Ch. 14 · Aliasing and RoPE’s three scales",
     "text": "48.14 Ch. 14 · Aliasing and RoPE’s three scales\n\nWavelength. The frequency is \\(\\omega_i = \\theta^{-2i/d}\\), so index \\(i=0\\) spins fastest (its \\(\\lambda_0 = 2\\pi \\approx 6\\) positions) and \\(i=30\\) spins extremely slowly (\\(\\lambda \\propto \\theta^{2i/d}\\), enormous). Therefore, the \\(i=0\\) pair is the fastest-spinning one and the one that aliases first, as it completes its full turn right away.\nAliasing. Like the wagon wheel that on film appears to spin backward or stand still, a RoPE pair “samples” the angle and, past a full turn (\\(\\lambda\\)), can’t tell whether \\(r\\) positions or \\(r+\\lambda\\) have passed: both give exactly the same angle. With the angle coinciding, the dot product coincides, so that pair can’t distinguish the two distances. That’s why a pair can’t separate distances that differ by exactly one wavelength.\nThe scales. \\(T_{\\rm max} = 2\\pi\\theta\\) (≈ 62,832 with θ=10⁴) is the wavelength of the slowest pair, i.e. the maximum distance the geometry can encode. There \\(n_{\\rm active}(d)\\) drops to zero: no pair retains unambiguous positional signal anymore, because they’ve all aliased. Beyond \\(T_{\\rm max}\\) position becomes completely ambiguous.\nHonesty. We say “it bounds the resolution” and not “it imposes the decay” because Round and Round We Go showed that with real queries and keys RoPE doesn’t guarantee a monotone decay; in fact models use the low frequencies to match content almost regardless of position. What the geometry does do is mark which distances can be distinguished, an upper bound on resolution. How the model uses each band within that limit is a learned decision, not a geometric decree.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-15-the-decay-law-ad-dγ",
-    "href": "chapters/R10-soluciones.html#ch.-15-the-decay-law-ad-dγ",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-15-the-decay-law-ad-dγ",
+    "href": "chapters/R6-soluciones.html#ch.-15-the-decay-law-ad-dγ",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.15 Ch. 15 · The decay law A(d) ∝ d^−γ",
     "text": "48.15 Ch. 15 · The decay law A(d) ∝ d^−γ\n\nThe slope. The line with slope \\(-0.4\\) looks farther, because it falls more slowly and keeps more attention mass at distance; being \\(\\gamma &lt; 1\\), it’s Phase A. The one with slope \\(-1.3\\) falls fast and concentrates attention nearby; being \\(\\gamma &gt; 1\\), it’s Phase B. In log-log, a smaller slope (in absolute value) = heavier tail = longer horizon.\nMaximum entropy. The only thing RoPE’s geometry fixes on average is \\(\\mathbb{E}[\\log d] = \\text{constant}\\), a “budget” of log-distance. The most honest distribution is the one that assumes the minimum compatible with that single datum, without inventing extra biases; and it turns out the only one that maximizes entropy under that constraint is the power law \\(p^*(d) \\propto d^{-\\gamma}\\), with \\(\\gamma\\) as the Lagrange multiplier. A Gaussian would assume a scale and a concentration nobody gave us, so it would be less honest.\nHonest prediction. \\(\\gamma_{\\rm Padé}\\) only captures \\(\\gamma_{\\rm geom}(\\theta, T)\\), so the difference between the predicted 0.7 and the measured 0.55 lives in the other terms of the decomposition \\(\\gamma_{\\rm obs} = \\gamma_{\\rm geom} + \\gamma_{\\rm train} + \\gamma_{\\rm arch} + \\varepsilon\\). That the measured γ is lower (looks farther than geometry alone predicts) points mostly to \\(\\gamma_{\\rm train}\\) —the formation of induction heads from the data— and partly to \\(\\gamma_{\\rm arch}\\). It’s consistent with \\(\\gamma_{\\rm Padé}\\) getting the center right but with a median error of ~20–22% in Phase A.\nTool. In Profile mode, tafagent returns three things: the \\(\\gamma_{\\rm Padé}\\) predicted from θ and T alone, its comparison with the model’s observed \\(\\gamma\\), and the regime (Phase A or Phase B) along with the effective horizon that model falls into. It’s the chapter’s theory turned into a profiling tool.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-16-the-γ-atlas-decay-measured-across-42-models",
-    "href": "chapters/R10-soluciones.html#ch.-16-the-γ-atlas-decay-measured-across-42-models",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-16-the-γ-atlas-decay-measured-across-42-models",
+    "href": "chapters/R6-soluciones.html#ch.-16-the-γ-atlas-decay-measured-across-42-models",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.16 Ch. 16 · The γ atlas: decay measured across 42 models",
     "text": "48.16 Ch. 16 · The γ atlas: decay measured across 42 models\n\nReading the map. That 38 of 42 models have \\(\\gamma&lt;1\\) means trained transformers tend to look far, not to concentrate nearby. A \\(\\gamma&lt;1\\) implies a heavy tail: attention decays slowly with distance and spreads weight to distant tokens too. The pattern suggests that exploiting wide context is the norm models tend toward when left to their own devices, not the exception.\nThe median. What’s striking is that the models don’t scatter randomly across the whole range, but cluster just below \\(\\gamma=1\\) (median \\(\\approx0.885\\)). It’s as if training pushed them right to the edge of the “look-far” regime without quite crossing into concentration. That closeness doesn’t seem accidental and connects with the Hagedorn transition of Ch. 21.\nHonesty. Comparing the raw \\(\\gamma\\) of two different models mixes several factors at once —base \\(\\theta\\), training data and architecture—, so the difference can’t be cleanly attributed to architecture. The experiment that does isolate the cause is the within-model control: take the same model and vary a single lever (e.g. rescaling \\(\\theta\\)), as in Ch. 17. The atlas describes the landscape, but doesn’t isolate causes on its own.\nFit. I’d take the \\(\\gamma\\) of the model with \\(R^2=0.85\\) with considerably less confidence: there the law \\(A(d)\\propto d^{-\\gamma}\\) fits the real attention worse, so \\(\\gamma\\) is a coarser summary. With \\(R^2=0.98\\) the exponent describes the data almost perfectly and is a reliable value. I wouldn’t discard the \\(0.85\\) one, but I’d treat it as approximate and watch the \\(R^2\\) column model by model.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-17-attention-sinks-and-concentration",
-    "href": "chapters/R10-soluciones.html#ch.-17-attention-sinks-and-concentration",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-17-attention-sinks-and-concentration",
+    "href": "chapters/R6-soluciones.html#ch.-17-attention-sinks-and-concentration",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.17 Ch. 17 · Attention sinks and concentration",
     "text": "48.17 Ch. 17 · Attention sinks and concentration\n\nIndependence. If concentration and decay were the same phenomenon, raising \\(\\gamma\\) from \\(0.75\\) to \\(1.0\\) should have moved the sink mass appreciably. What actually happened is that it stayed flat (from \\(0.371\\) to \\(0.387\\), \\(\\approx0.38\\)) while \\(\\gamma\\) swept almost its entire range. Moving one lever changed one mechanism enormously and left the other intact: they are independent (\\(\\gamma \\perp\\) sink).\nThe control. Rescaling \\(\\theta\\) within the same model keeps everything else fixed —weights, data, architecture—, so any observed change is caused by \\(\\theta\\) and not by a crossed factor. Comparing two different models confounds \\(\\theta\\), data, and architecture at once, so it can’t attribute the effect to a single cause. It’s the difference between describing a landscape (atlas, Ch. 16) and isolating a cause (controlled experiment).\nTwo axes. A decision that depends on the sink: managing concentration by keeping a few initial tokens when trimming context, as StreamingLLM does, so as not to destabilize the softmax. A decision that depends on \\(\\gamma\\): estimating the model’s effective reach and how much its KV-cache can be compressed (Ch. 20), which is a positional phenomenon. Confusing them leads you to “fix” one believing you’re fixing the other.\nHonesty. We explicitly leave unresolved whether secondary sinks appear or disappear as you sweep \\(\\theta\\). The literature itself notes that large-\\(\\theta\\) models sometimes lack them and that the underlying cause remains an open question. We have the apparatus to study it, but we mark it as pending work, not as solved.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-18-taxonomy-of-attention-mechanisms",
-    "href": "chapters/R10-soluciones.html#ch.-18-taxonomy-of-attention-mechanisms",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-18-taxonomy-of-attention-mechanisms",
+    "href": "chapters/R6-soluciones.html#ch.-18-taxonomy-of-attention-mechanisms",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.18 Ch. 18 · Taxonomy of attention mechanisms",
     "text": "48.18 Ch. 18 · Taxonomy of attention mechanisms\n\nExact vs approximate. FlashAttention is not approximate because it computes exact attention, bit-for-bit identical to dense; it sacrifices no quality. What it reorganizes is where and how the computation happens in the GPU’s memory hierarchy: it tiles the operation and recomputes it to never materialize the \\(n\\times n\\) matrix. It’s “efficient” in memory (\\(O(n)\\)) without being approximate in the result.\nKV vs compute. GQA doesn’t lower the \\(O(n^2)\\) compute cost: it’s still full, exact attention over all tokens. What it reduces is the KV-cache memory, by having groups of heads share the same keys and values, so fewer distinct K/V are stored. It’s a memory saving at inference, not a saving in attention FLOPs.\nWhat won. Linear attentions are cheaper in theory (\\(O(n)\\)), but they trade accuracy for speed, and at scale that quality loss doesn’t pay off. Full attention, computed well with FlashAttention, keeps all the fidelity without paying the feared memory overhead. That’s why, despite years of attempts, Performer, Linformer, and the like didn’t dethrone dense attention at the frontier.\nAnother family. Mamba is not a cheaper attention: it’s a state-space model (SSM) with linear-time recurrence and no attention matrix at all. Instead of comparing each token with the rest, it propagates information through a recurrent state. That’s why it’s considered another architecture family, and it tends to gain ground as a hybrid (Jamba) rather than a pure replacement.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-19-long-context-extension",
-    "href": "chapters/R10-soluciones.html#ch.-19-long-context-extension",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-19-long-context-extension",
+    "href": "chapters/R6-soluciones.html#ch.-19-long-context-extension",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.19 Ch. 19 · Long-context extension",
     "text": "48.19 Ch. 19 · Long-context extension\n\nWhy it fails. A model trained at 4k has only seen the RoPE angles of positions 0…4k; at 16k out-of-distribution angles appear that it never observed. In that regime the attention scores blow up and the softmax destabilizes, producing degenerate text (gibberish). That’s why the solution isn’t to extrapolate to new angles, but to remap the long positions within the range of angles already known.\nNTK vs PI. PI compresses all positions equally (divide by \\(L/T\\)), which also squeezes the high frequencies and loses fine local resolution. NTK-aware applies a non-uniform rescaling of \\(\\theta\\): it preserves the high frequencies (the local) and stretches only the low ones (the distant). So it respects the local information PI sacrifices, and often works without finetuning for small factors (2–4×).\nAudit. I’d ask for a full-length retrieval evaluation, passkey- or needle-in-a-haystack-style, that checks whether the model truly locates concrete information throughout the entire nominal context. Perplexity isn’t enough because it’s dominated by local tokens and can stay low while retrieval has already collapsed. I’d also watch for “lost in the middle”: the usable length is usually less than the nominal one, so a “1M” is rarely 1M effective.\nHonesty. We present the \\(\\gamma\\) rule as unvalidated because, although the geometry is solid (rescaling \\(\\theta\\) moves \\(\\gamma\\) monotonically and predictably), our empirical validation with passkey came out incomplete: the experiment crashed for lack of memory (CUDA-OOM) before covering the lengths that discriminated between conditions. We only confirmed the expected (the native model retrieves within its training length), not that the rule beats YaRN. This book refuses to sell as fact what is still a hypothesis pending reproduction.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-20-kv-cache-compression-in-practice",
-    "href": "chapters/R10-soluciones.html#ch.-20-kv-cache-compression-in-practice",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-20-kv-cache-compression-in-practice",
+    "href": "chapters/R6-soluciones.html#ch.-20-kv-cache-compression-in-practice",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.20 Ch. 20 · KV-cache compression in practice",
     "text": "48.20 Ch. 20 · KV-cache compression in practice\n\nCompressibility. You compress the \\(\\gamma=1.3\\) one better. With \\(\\gamma&gt;1\\) (Phase B, light tail) attention decays fast and a small finite window captures almost all the mass, so you can discard much of the distant KV without losing hardly any attention. With \\(\\gamma=0.7\\) (Phase A, heavy tail) the mass is spread across the whole context and no finite window captures it, so it’s hard to compress.\nThe boundary. \\(\\gamma=1\\) separates the two regimes because it’s where the behavior of the sum \\(\\sum d^{-\\gamma}\\) changes. With \\(\\gamma&gt;1\\) the series converges: the tail beyond \\(D\\) shrinks like \\(D^{1-\\gamma}\\), so a finite window suffices (compressible). With \\(\\gamma&lt;1\\) the series diverges like \\(D^{1-\\gamma}\\): the mass piles up without bound with distance and no finite window captures it (hard). At \\(\\gamma=1\\) it diverges marginally, like \\(\\log D\\), which is the boundary case.\nHonesty. We don’t claim \\(D_f\\) is better than Ada-KV because the head-to-head is missing: they must be compared at matched memory on task benchmarks (RULER, LongBench, NIAH), not just against heuristics. We present \\(D_f\\) as a derived, predictive, parameter-free budget, but not proven superior. The experiment that’s missing is exactly that head-to-head benchmark against the principled methods (Ada-KV, LAVa).\nMass ≠ fidelity. A token can receive little attention mass and still influence the output a lot if the norm of its value vector (V) is large, because the output is a weighted sum of the V’s. So discarding it for low mass —as \\(D_f\\) would— would degrade the output despite “losing little attention”. This is Ada-KV’s critique: mass is necessary but not sufficient to guarantee fidelity.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-21-phase-structure-and-the-polylog-partition-function",
-    "href": "chapters/R10-soluciones.html#ch.-21-phase-structure-and-the-polylog-partition-function",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-21-phase-structure-and-the-polylog-partition-function",
+    "href": "chapters/R6-soluciones.html#ch.-21-phase-structure-and-the-polylog-partition-function",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.21 Ch. 21 · Phase structure and the polylog partition function",
     "text": "48.21 Ch. 21 · Phase structure and the polylog partition function\n\nPartition function. \\(Z\\) “censuses” all the states of the system, summing them weighted by \\(e^{-E/T}\\), so the low-energy ones count more; in attention it’s the softmax normalizer viewed over distance. Knowing \\(Z\\) gives you everything —mean energy, fluctuations, entropy— because those quantities come from differentiating \\(Z\\), so having the partition function is equivalent to having the system’s complete behavior.\nThe polylog. Because \\(\\mathrm{Li}_s(z)=\\sum_{k\\ge1} z^k/k^s\\) is simply the generic normalizer of any distribution with a power-law tail (and at \\(z=1\\) it’s the Riemann zeta). That “\\(Z\\) is a polylog” is automatic mathematics the moment attention decays like \\(d^{-\\gamma}\\): nothing is discovered, the function is merely named. The real value would be in showing that the distance distribution truly has that form and that \\(\\gamma\\) is a measurable control parameter.\nTransition vs crossover. A phase transition is a qualitative, abrupt change upon crossing a critical value (still water at 100°C turning to steam); a smooth crossover is a gradual change with no singular point (butter softening). Our neighbor Kim (Kim 2026) explicitly reports that he does not observe asymptotic power-law divergence, “only a critical-type crossover”, i.e. he sees a smooth crossover, not a true transition.\nHonesty. Because at finite \\(N\\), \\(\\mathrm{Li}_1\\) diverges only as \\(\\log N\\), which looks more like a crossover than a jump, and our nearest neighbor observes no divergence. The susceptibility \\(\\chi=1/|\\gamma-1|\\) diverges formally at \\(\\gamma=1\\), but whether that’s a real transition or a mere smooth crossover is an open question. That’s why we present it as “a candidate boundary with evidence”, not as a proven transition.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-22-the-thermodynamic-dictionary",
-    "href": "chapters/R10-soluciones.html#ch.-22-the-thermodynamic-dictionary",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-22-the-thermodynamic-dictionary",
+    "href": "chapters/R6-soluciones.html#ch.-22-the-thermodynamic-dictionary",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.22 Ch. 22 · The thermodynamic dictionary",
     "text": "48.22 Ch. 22 · The thermodynamic dictionary\n\nFisher and C_V. Fisher information measures how sharply the distribution changes as you move a parameter (how easy it is to “pin down” \\(\\gamma\\) from the data), and the heat capacity \\(C_V\\) measures the size of energy fluctuations, \\(\\mathrm{Var}(E)/T^2\\). It makes sense that they’re the same thing (up to a \\(\\gamma^2\\) factor) because both are the second derivative of the free energy: statistical sensitivity and thermal fluctuation are two faces of the same curvature.\nThe Lean receipt. A Lean (Mathlib) proof of \\(\\mathrm{Fisher}=C_V/\\gamma^2\\) shows that the algebra of the identity is correct —that the formulas check out with zero residual, beyond any numerical doubt—. What it does not show is that this relation describes a transformer causally: “the algebra is consistent” is one thing, and “this is what the model does” is a very different one. It’s a receipt of formal consistency, not an empirical claim about the network.\nThe erratum. The coefficient of \\(C_V\\) at \\(\\gamma=1\\) went from \\((\\log N)^2/4\\) to \\((\\log N)^2/12\\), i.e. an error of a factor 3 (the denominator is multiplied by 3). The correct value, \\((\\log N)^2/12\\), is confirmed by two independent derivations and we verified it in Lean.\nHonesty. Because reporting an error of your own —flagging it as an erratum, correcting it, and re-proving it in Lean— teaches where we went wrong and how we fixed it, which is exactly what distinguishes a trustworthy source. A manual that only tells its successes can’t be audited; one that exhibits the wrong factor 3 and its correction demonstrates honesty rather than proclaiming it, which makes it more credible, not less.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-23-the-fractional-transport-view",
-    "href": "chapters/R10-soluciones.html#ch.-23-the-fractional-transport-view",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-23-the-fractional-transport-view",
+    "href": "chapters/R6-soluciones.html#ch.-23-the-fractional-transport-view",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.23 Ch. 23 · The fractional-transport view",
     "text": "48.23 Ch. 23 · The fractional-transport view\n\nAnt vs albatross. The ant is normal (Brownian) diffusion: many small local steps, territory that grows slowly (\\(\\propto\\sqrt{t}\\)), and an ordinary Laplacian. The albatross is a Lévy flight (anomalous diffusion): rare, enormous power-law-tailed jumps that dominate how far it reaches. The albatross is the one that resembles attention with a power-law tail \\(d^{-\\gamma}\\), because its jump kernel has that same power-law form.\nThe order. With \\(s=(\\gamma-1)/2\\): a model with \\(\\gamma=0.7\\) gives \\(s=-0.15&lt;0\\), so it integrates/smooths (long-range averaging). One with \\(\\gamma=1.3\\) gives \\(s=0.15&gt;0\\), so it differentiates (amplifies the fine, roughness). The crossover is at \\(\\gamma=1\\) (\\(s=0\\), identity), and most trained models fall on the smoothing side.\nHonesty. The fractional/Lévy framework is not ours: Fractional Neural Attention (FNA) (Qu et al. 2025) already designs attention as a fractional Laplacian with a hand-chosen order \\(\\alpha\\). What’s plausibly ours is reading the measured \\(\\gamma\\) (from the atlas, tied to RoPE) as a fractional order and placing trained models in the smoothing regime —a descriptive claim, not a new operator—.\nThe Lévy caveat. A real Lévy index is only stable for \\(\\alpha\\in(0,2)\\), and our mapping is \\(\\alpha=\\gamma-1\\). For very large \\(\\gamma\\), \\(\\alpha=\\gamma-1\\) goes above 2, outside the range of \\(\\alpha\\)-stable processes, and the analogy stops making physical sense. That’s why the lens is valid only within a regime (\\(\\gamma\\) not too large), not always; besides, \\(\\alpha=\\gamma-1\\) and \\(s=(\\gamma-1)/2\\) are interpretive mappings, not theorems.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-24-training-dynamics-and-grokking",
-    "href": "chapters/R10-soluciones.html#ch.-24-training-dynamics-and-grokking",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-24-training-dynamics-and-grokking",
+    "href": "chapters/R6-soluciones.html#ch.-24-training-dynamics-and-grokking",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.24 Ch. 24 · Training dynamics and grokking",
     "text": "48.24 Ch. 24 · Training dynamics and grokking\n\nThe curve. Phase 1: train accuracy rises to ~100% early (memorization) while test stays at chance. Phase 2: a very long plateau (often a thousand times more steps) with train pinned at 100% and test on the floor. Phase 3: the jump, where test shoots up to nearly 100% much later. Classic overfitting logic would tell you to stop on the plateau, because train is already perfect and test isn’t improving —it looks as if the model “already finished” and is just memorizing—.\nNot so sudden. Per Nanda (Nanda et al. 2023), during the plateau the circuit that truly generalizes is forming gradually —in modular addition, a Fourier algorithm that turns “adding” into “rotating”. The test jump seems abrupt because it only becomes visible in the metric when that circuit, which had been cooking for a while, finally outweighs memorization and the latter retreats (cleanup); the curve’s abruptness is an artifact of when, not of the mechanism.\nThe engine. In Omnigrok (Liu et al. 2022), against the weight norm the train loss is “L”-shaped (many norms memorize well) and the test loss “U”-shaped (only a narrow band of small norm generalizes); hence the “LU” mechanism. Weight decay penalizes large weights and slowly drags the norm from the memorizing zone (high) toward the generalizing minimum (low), and the grok happens when that journey completes. If weight decay is insufficient, the drag never arrives and many models never generalize: they stay on the plateau forever.\nHonesty I. Because predicting grokking already has dedicated work —e.g. Early-Warning Signals of Grokking (Xu 2026) and spectral entropy collapse (Khanh et al. 2026)—, so claiming primacy would be false. Our contribution is a concrete, simple, training-internal, cheap signal: the inter-layer CKA \\(\\hat{O}_{01}\\), which is between layers (not within-one covariance) and gives a measurable temporal lead.\nHonesty II. We had the hypothesis that forcing \\(\\hat{O}_{01}\\to1\\) (forcing the layers to resemble each other) would cause or prevent grokking, which would prove that CKA is a causal lever. The experiment —training 20,000 steps with CKA forced— refuted us: 2 out of 3 models kept grokking anyway. So we corrected the claim from “candidate causal signal” to “early predictor, correlational, with no demonstrated causality”.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-25-pre-training-at-scale",
-    "href": "chapters/R10-soluciones.html#ch.-25-pre-training-at-scale",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-25-pre-training-at-scale",
+    "href": "chapters/R6-soluciones.html#ch.-25-pre-training-at-scale",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.25 Ch. 25 · Pre-training at scale",
     "text": "48.25 Ch. 25 · Pre-training at scale\n\nThe terms. In \\(L(N,D)=E+A/N^{\\alpha}+B/D^{\\beta}\\), \\(E\\) is the irreducible entropy: the loss floor no model can go below because language has genuine randomness. Even if \\(N\\) (parameters) and \\(D\\) (tokens) were infinite, the terms \\(A/N^{\\alpha}\\) and \\(B/D^{\\beta}\\) tend to zero but never go below \\(E\\). That’s why no model, however large, goes below that floor.\nThe split. With Chinchilla (Hoffmann et al. 2022) (\\(a\\approx b\\approx0.5\\), \\(N,D\\propto C^{0.5}\\)), 10× more compute is split evenly: the model grows \\(\\sqrt{10}\\approx3.16\\times\\) and the data also \\(\\approx3.16\\times\\) —brain and study in step, ~20 tokens/parameter rule—. Kaplan (Kaplan et al. 2020), by contrast, said “almost everything to brain” (\\(N\\propto C^{0.73}\\), \\(D\\propto C^{0.27}\\)): the model grew ~5.4× and the data only ~1.85×, leaving the giants undertrained.\nInference-aware. That rule optimizes only training compute and completely ignores the cost of serving the model, which answers trillions of requests afterward; the lifetime bill is training + inference × usage volume. Since a smaller model is cheaper to serve each day, it pays to over-train it: that’s why Llama-3 trains an 8B with ~15 trillion tokens (~1,875 tokens/parameter, nearly 90× the 20:1 rule), because performance kept improving well past its Chinchilla-optimal point.\nParallelism. Tensor parallelism splits the matrices within each layer and forces the GPUs to communicate at every fwd/bwd step (very high traffic), so it only pays off within a node, with a fast interconnect like NVLink. Pipeline parallelism cuts the layer stack into stages and only exchanges the boundary activations (low traffic), so it tolerates the slower bandwidth between nodes. The rule is: the more the GPUs “talk”, the closer they must be.\nStability. In PaLM (Chowdhery et al. 2022), re-feeding the same skipped batches after a spike did not reproduce the loss spike. That indicates the cause wasn’t the data itself (if it were, the spike would return), but the interaction between that batch and the model’s specific state at that instant. That’s why the fix was to rewind to a checkpoint ~100 steps earlier and skip ~200-500 batches, changing the state instead of the data.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-26-fine-tuning-for-classification",
-    "href": "chapters/R10-soluciones.html#ch.-26-fine-tuning-for-classification",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-26-fine-tuning-for-classification",
+    "href": "chapters/R6-soluciones.html#ch.-26-fine-tuning-for-classification",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.26 Ch. 26 · Fine-tuning for classification",
     "text": "48.26 Ch. 26 · Fine-tuning for classification\n\nThe head. In \\(W \\in \\mathbb{R}^{K\\times H}\\), \\(K\\) is the number of classes (the output dimensions, one logit per label) and \\(H\\) is the model’s hidden dimension (the size of the vector entering the head). It’s “the only thing born from scratch” because the body (embeddings and layers) comes pretrained, whereas this task-specific linear projection is initialized randomly and didn’t exist before the fine-tuning.\nFreeze vs fine-tune. With only 200 examples and little compute it pays to freeze the body and train only the head (or use a bi-encoder/linear probing): there’s far too little data to move millions of parameters without overfitting. With 2 million examples full fine-tuning is worthwhile, because there’s enough signal to adapt all the representations and it usually gives better accuracy.\nThe raw [CLS]. The embedding space of an unfinetuned BERT is anisotropic: the vectors occupy a narrow cone instead of spreading over the sphere, so any two sentences have an artificially high cosine similarity. That’s why the raw [CLS] discriminates poorly between sentences: the cosine distances barely separate meanings and the vector isn’t a good sentence representative until the fine-tuning (or a contrastive objective) reduces that anisotropy.\nBi vs cross. A cross-encoder feeds the two sentences together through the network and produces a joint score, so comparing one query with 10,000 sentences requires 10,000 full model passes: it doesn’t scale. A bi-encoder encodes each sentence separately into a vector, so it can precompute the 10,000 embeddings once and, at query time, only computes dot products (nearest-neighbor search), which is cheap.\nTemperature. In an InfoNCE-style contrastive loss, \\(\\tau\\) scales the logits (\\(\\text{sim}/\\tau\\)); lowering \\(\\tau\\) a lot makes the softmax very peaky and concentrates almost all the gradient weight on the hardest negatives (the ones closest to the positive). This hardens the penalty on those negatives, but too small a \\(\\tau\\) makes training unstable and sensitive to label noise.\nSimCSE. SimCSE builds a positive pair by passing the same sentence twice through the encoder with different dropout masks: the two slightly perturbed views are the positive, with no need for labels. If you remove the dropout, the two passes are identical, the positive is trivial (perfect similarity), and the model collapses: the method stops learning useful representations.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-27-alignment",
-    "href": "chapters/R10-soluciones.html#ch.-27-alignment",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-27-alignment",
+    "href": "chapters/R6-soluciones.html#ch.-27-alignment",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.27 Ch. 27 · Alignment",
     "text": "48.27 Ch. 27 · Alignment\n\nThe gap. A base model is only trained to predict the next token over raw text, so faced with an instruction it tends to continue it (e.g. generating more questions) instead of answering, even if it “knows” the answer: the ability exists but isn’t conditioned to the instruction-response format. Instruction tuning (SFT), and then preference alignment, is the stage that teaches it to map instructions to useful responses.\nBradley-Terry. The loss \\(-\\log \\sigma(r(x,y_w) - r(x,y_l))\\) pushes the reward of the winner \\(y_w\\) to exceed that of the loser \\(y_l\\) by a growing margin (maximizes that difference). Pairwise comparisons are used rather than absolute scores because humans are far more consistent saying “A is better than B” than assigning calibrated numerical scores, which vary across annotators and over time.\nThe leash. Without the \\(-\\beta\\cdot\\text{KL}\\) term that anchors the policy to the reference model, the policy drifts freely to maximize reward and falls into reward hacking: it exploits flaws in the reward model (long, sycophantic responses, or patterns the RM scores high) instead of genuinely improving. It’s Goodhart’s law: when the reward (a proxy metric) becomes the objective, it stops being a good measure of real quality.\nDPO. DPO removes (a) training an explicit reward model and (b) the online RL loop with PPO; it does so by rewriting the RLHF objective in closed form to optimize directly over the preference pairs with the policy and a frozen reference model. The “implicit reward” is the quantity \\(\\beta \\log \\frac{\\pi_\\theta(y\\mid x)}{\\pi_{\\text{ref}}(y\\mid x)}\\): the policy itself encodes a reward, with no separate RM needed. (It’s an open debate: DPO is simpler and more stable, but there’s evidence that well-tuned PPO can beat it on certain benchmarks; neither dominates universally.)\nHonesty. Two failure modes are sycophancy, saying what the user wants to hear instead of the truth, and confident hallucination, inventing with a self-assured tone. Human preference data can cause them because annotators tend to reward responses that please them, sound confident, or confirm their beliefs, so the model learns to optimize perceived approval rather than truthfulness.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-28-peft",
-    "href": "chapters/R10-soluciones.html#ch.-28-peft",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-28-peft",
+    "href": "chapters/R6-soluciones.html#ch.-28-peft",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.28 Ch. 28 · PEFT",
     "text": "48.28 Ch. 28 · PEFT\n\nThe saving. PEFT reduces training memory because only a handful of parameters are trainable, and the optimizer states (in Adam, two moments per parameter) plus the gradients only exist for those parameters, not for the billions of the frozen base. Since those states are usually the bulk of training memory (several times the model’s size), cutting them to a tiny fraction is the big saving.\nLoRA term by term. In \\(h = W_0 x + \\frac{\\alpha}{r}BAx\\), \\(W_0\\) is the frozen pretrained matrix; \\(A \\in \\mathbb{R}^{r\\times d}\\) projects down to a low rank \\(r\\) and \\(B \\in \\mathbb{R}^{d\\times r}\\) projects back up, so \\(BA\\) is a trainable low-rank update. \\(B\\) is initialized to zero so that at the start \\(BA=0\\) and the model begins as exactly the pretrained one, avoiding a random perturbation at the start.\nZero latency. LoRA adds no inference latency because the update \\(\\frac{\\alpha}{r}BA\\) can be fused into \\(W_0\\) by adding it (\\(W = W_0 + \\frac{\\alpha}{r}BA\\)), leaving a single matrix identical in shape to the original. An adapter, by contrast, inserts extra sequential layers in the compute path that can’t be fused, so they add steps and latency on every forward pass.\nQLoRA. The frozen base matrix \\(W_0\\) is quantized to 4 bits (NF4), and the LoRA adapters (\\(A\\) and \\(B\\)) are trained in 16 bits. The 4-bit base “is never updated” because it’s frozen and only used for the forward pass (dequantized on the fly for the product); all gradients flow to the 16-bit adapters, so the quantized version doesn’t need to be trainable.\nHonesty. Per LoRA Learns Less and Forgets Less, LoRA falls short on tasks that demand learning genuinely new knowledge or domains (e.g. continued pretraining in code or math), where full fine-tuning learns more. In exchange, LoRA forgets less: it acts as a regularizer and better preserves the base model’s capabilities outside the target task, keeping more diversity in the outputs.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-29-generation",
-    "href": "chapters/R10-soluciones.html#ch.-29-generation",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-29-generation",
+    "href": "chapters/R6-soluciones.html#ch.-29-generation",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.29 Ch. 29 · Generation",
     "text": "48.29 Ch. 29 · Generation\n\nProbability ≠ quality. Greedy and beam search degenerate in open generation because maximizing probability leads to loops and repetitions: the most probable text isn’t the most natural. Holtzman et al. showed that human text does not occupy the maximum-probability regions: it oscillates, uses surprising words, and its probability varies, so chasing the maximum produces flat, repetitive outputs.\nMin-p vs top-p. Top-p (nucleus) cuts by accumulating probability mass up to a fixed threshold \\(p\\) over the sorted set; min-p sets a threshold relative to the most probable token, discarding those that fall below \\(\\text{min\\_p}\\cdot p_{\\max}\\). Min-p holds up better at high temperatures because its cutoff adapts to the model’s confidence: when the distribution flattens from the temperature, it still demands proximity to the peak and avoids admitting absurd tokens from the tail.\nText CFG. In \\(\\text{logits}_{\\text{without}} + \\gamma\\cdot(\\text{logits}_{\\text{with}} - \\text{logits}_{\\text{without}})\\), \\(\\gamma\\) is the guidance strength: it amplifies the difference the prompt/condition introduces, pushing the output toward what the conditioning favors. With \\(\\gamma=1\\) you recover normal conditional generation (the expression collapses to \\(\\text{logits}_{\\text{with}}\\)); \\(\\gamma&gt;1\\) exaggerates the prompt’s effect.\nConstrained. The “mask + renormalize” mechanism sets to \\(-\\infty\\) (zero probability) the logits of tokens that would violate the grammar/schema at that point, and renormalizes the softmax over the allowed tokens, guaranteeing the output is syntactically valid. But a valid JSON doesn’t guarantee a correct answer: the constraint only forces the form, not the content, so the model can fill valid fields with false or meaningless data.\nSpeculative. Speculative decoding uses a small model to propose several tokens and the large one verifies them in parallel, accepting them with a sampling criterion (rejection sampling) and, on rejection, sampling from a corrected residual distribution. That acceptance/correction scheme is designed so that the resulting distribution is exactly that of the large model sampling alone: only the speed changes, not the probabilities.\nLLM-judges. Two biases are position bias (preferring the first or second response according to the order they’re presented in) and verbosity/self-preference bias (favoring longer responses or those generated by models of its own family/style, regardless of their real quality).",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-30-prompting-and-icl",
-    "href": "chapters/R10-soluciones.html#ch.-30-prompting-and-icl",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-30-prompting-and-icl",
+    "href": "chapters/R6-soluciones.html#ch.-30-prompting-and-icl",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.30 Ch. 30 · Prompting and ICL",
     "text": "48.30 Ch. 30 · Prompting and ICL\n\nNo gradients. That ICL happens “at inference time” means the model learns from the pattern of the examples within the prompt itself during a single forward pass, without updating any weights. It differs from fine-tuning in that there’s no backpropagation or permanent change to the model: the “learning” lives only in the activation of that context and disappears when the prompt changes.\nRandom labels. Min et al. showed that shuffling (randomly assigning) the labels of the demonstration examples barely degrades performance, which indicates that the correct input→label mapping isn’t what contributes most. What does matter is: the label space (which classes exist), the input text distribution, and the format of the demonstration.\nInduction heads. The “[A][B]…[A]→[B]” rule describes an attention head that, on seeing token [A] again, looks for its previous occurrence and copies what came after ([B]), i.e. it completes by pattern matching in the context. It’s a good candidate mechanism for ICL because it implements exactly the kind of copy/generalization-by-analogy that learning from examples requires; the evidence is stronger in small/toy models (where Olsson et al. isolated it), and plausible but less verifiable in large ones.\nCoT and scale. Chain-of-thought doesn’t help (and may even hurt) a small model because it lacks the underlying reasoning capacity to execute the intermediate steps well; CoT only unlocks abilities that emerge with scale. Self-consistency samples several reasoning chains and takes the answer by majority vote: since there are many correct paths but errors scatter, marginalizing over chains improves accuracy.\nFragility. Two ways the same prompt can give very different results without changing its content: (a) reordering the few-shot examples (the order of the demonstrations changes the output a lot) and (b) superficial variations of format or wording (line breaks, separators, capitalization, spaces) that don’t alter the meaning but do alter the prediction.\nFidelity. Turpin et al. showed that written CoT reasoning can be unfaithful: it doesn’t necessarily reflect the real cause of the answer. By introducing biases into the prompt (e.g. always marking option “A” as correct in the examples), the model changes its answer to follow the bias but generates a plausible CoT justification that never mentions that bias, rationalizing after the fact instead of explaining its real decision.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-31-rag",
-    "href": "chapters/R10-soluciones.html#ch.-31-rag",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-31-rag",
+    "href": "chapters/R6-soluciones.html#ch.-31-rag",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.31 Ch. 31 · RAG",
     "text": "48.31 Ch. 31 · RAG\n\nParametric vs non. Parametric memory is the knowledge encoded in the model’s weights during training; non-parametric is an external store (corpus, vector index) queried at inference time. The one you update without retraining is the non-parametric: it’s enough to reindex or add documents to the store.\nDense vs BM25. BM25 wins when exact lexical matching matters: product codes, rare proper names, identifiers, or jargon that didn’t appear in the embedder’s training. Dense retrieval wins with paraphrases and synonyms, where query and document say the same thing with different words. The hybrid is usually better because it combines BM25’s literal precision with dense’s semantic coverage, covering each one’s failures.\nANN. Exact kNN requires comparing the query with all the vectors, a linear cost \\(O(n\\,d)\\) that becomes prohibitive with millions of items per query. HNSW/FAISS use approximate search (navigable graphs or quantization) to achieve near-logarithmic latency. What’s sacrificed is the exactness guarantee: sometimes a true neighbor is missed (lower recall) in exchange for enormous speed.\nReranking. The bi-encoder encodes query and document separately, so their vectors are precomputed and retrieval is a lightning-fast dot product over millions of candidates. The cross-encoder processes the query-document pair together and is far more precise, but also far more expensive: applying it to the whole corpus would be infeasible. That’s why it’s used in two stages: the bi-encoder narrows to a handful of candidates and the cross-encoder reranks only those.\nLost in the middle. The most relevant fragments are placed at the beginning and the end of the context, not in the center. Models attend better to the edges and tend to “lose” information situated in the middle of a long window, so burying what’s important in the middle degrades the answer.\nHonesty. First, the model can ignore the retrieved context and answer from its parametric memory, contradicting the correct source. Second, it can misinterpret or poorly synthesize fragments that were relevant, or combine correct pieces into a false conclusion. RAG reduces hallucination by anchoring the answer in evidence, but doesn’t eliminate it.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-32-agents",
-    "href": "chapters/R10-soluciones.html#ch.-32-agents",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-32-agents",
+    "href": "chapters/R6-soluciones.html#ch.-32-agents",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.32 Ch. 32 · Agents",
     "text": "48.32 Ch. 32 · Agents\n\nAgent vs RAG. “Retrieving” is bringing in information to condition a single response; “acting” is executing tools that change the state of the world or the process itself and observing the result in a loop. RAG is a particular case of an agent with a single tool (the retriever) and a single step, with no iterative decision cycle.\nReAct. The cycle interleaves a Thought (reasoning about what’s needed), an Action (invoking a tool), and an Observation (reading the real result), repeating until solved. It reduces hallucination because each step is anchored in verifiable external observations rather than inventing facts from the model’s weights alone.\nCode as action. First, code is compositional and expressive: loops, conditionals, and variables let you chain many operations into a single action, something impossible with flat tool calls. Second, it’s verifiable and executable: an interpreter gives exact feedback (results or errors) and leverages a vast ecosystem of existing libraries.\nError composition. With independent steps at 90%, the reliability of 10 steps is \\(0.9^{10}\\approx 0.35\\), barely 35%. This shows that long-horizon agents collapse from the multiplication of probabilities: you need extremely high per-step reliability, error recovery, or verification for long tasks to be viable.\nDemo vs production. A revealing figure is τ-bench, where GPT-4o is around 61% on the first try but falls to ~25% in pass^8; in GAIA the gap is 15% for agents versus ~92% human. pass^k measures consistency: whether the agent achieves the task in all \\(k\\) tries in a row, not just once; a low pass^8 betrays brutal inconsistency even if the one-off success rate is high.\nSecurity. In a chatbot, a prompt injection at most manipulates the output text. In an agent, that malicious text can hijack real actions (delete files, send money, leak data) because the agent has the power to act on the world; the damage is amplified when crossing from words to effects.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-33-multimodal",
-    "href": "chapters/R10-soluciones.html#ch.-33-multimodal",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-33-multimodal",
+    "href": "chapters/R6-soluciones.html#ch.-33-multimodal",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.33 Ch. 33 · Multimodal",
     "text": "48.33 Ch. 33 · Multimodal\n\nPatches. The ViT chops the image into fixed-size patches (e.g. \\(16\\times16\\)), flattens each one, and projects it linearly into a vector, obtaining a sequence of “tokens” analogous to words. The [CLS] token is a learned token added at the start whose final state aggregates the global representation of the image for classification tasks.\nData hunger. The ViT lacks the inductive biases of CNNs (locality and translation equivariance), so it must learn them from scratch from the data, which demands enormous datasets (JFT-300M style) to surpass CNNs. DeiT showed that with distillation and a good training recipe you can train a competitive ViT with ImageNet alone, without large-scale private data.\nCLIP zero-shot. CLIP trains with a contrastive objective that aligns images and their text descriptions into a single embedding space, pulling the correct pairs together and pushing the incorrect ones apart. To classify without task labels, it turns each class into a sentence (“a photo of a cat”) and assigns the image to the class whose text has the highest similarity, all without task-specific training.\nThe bridge. A Q-Former or a projection acts as an adapter that translates the visual encoder’s features into the embedding space the frozen LLM understands. So the LLM is “given eyes” without retraining it: only the bridge is trained, converting image features into something equivalent to input tokens of the text model.\nCross-attention. When the text looks at an image, the queries come from the text modality (what the model is looking for) and the keys/values come from the image modality (the available information). So each text position attends to and extracts information from the visual features.\nThe circle. Both are “extra” tokens with no semantic content of their own that the model uses as dumping grounds: the ViT’s register tokens and the LLM’s attention sinks absorb leftover attention mass so as not to contaminate the useful tokens. They arise analogously because attention needs a place to “deposit” probability when there’s nothing relevant to look at.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-34-efficient-attention",
-    "href": "chapters/R10-soluciones.html#ch.-34-efficient-attention",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-34-efficient-attention",
+    "href": "chapters/R6-soluciones.html#ch.-34-efficient-attention",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.34 Ch. 34 · Efficient attention",
     "text": "48.34 Ch. 34 · Efficient attention\n\nTwo costs. Attention’s compute cost is \\(O(n^2 d)\\) and its memory cost is the score matrix \\(O(n^2)\\). What “explodes” is the \\(O(n^2)\\) memory with the sequence length \\(n\\); it doesn’t depend on the dimension \\(d\\) because the attention matrix is of size \\(n\\times n\\) per head, regardless of how many channels each vector has.\nMemory-bound. “Memory-bound” means the bottleneck is moving data between memory levels, not the arithmetic operations; “compute-bound” is the opposite. Attention falls in the former because it does few operations per byte read/written of the enormous \\(n\\times n\\) matrix. HBM is the GPU’s large but slow memory and SRAM the small, fast on-chip one; the real cost is in the HBM↔︎SRAM shuttling.\nOnline softmax. Normal softmax needs the entire row because it must subtract the max and divide by the sum of exponentials of all elements, global values of the row. Block-wise computation avoids this by keeping a running max and sum that update as each block is processed, rescaling the partial results, so it never materializes the full row.\nExact vs approximate. FlashAttention reorders the computation (operation fusion and online block-wise softmax) but computes exactly the same softmax as standard attention, only with less memory traffic. Linear attention, by contrast, replaces the softmax with a feature kernel \\(\\varphi\\), which changes the function computed and is therefore an approximation.\nReassociation. In \\(\\varphi(Q)(\\varphi(K)^\\top V)\\) you first compute \\(\\varphi(K)^\\top V\\), a matrix of size \\(d\\times d\\) independent of \\(n\\). Associating this way avoids forming the \\(n\\times n\\) matrix and the cost becomes linear in \\(n\\) instead of quadratic.\nRoofline. FlashAttention attacks the IO constant (reduces HBM↔︎SRAM traffic without changing the complexity). Linear attention attacks the exponent (from \\(n^2\\) to \\(n\\)). GQA attacks the inference cache (shares keys/values across heads to reduce the KV-cache size).",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-35-compression",
-    "href": "chapters/R10-soluciones.html#ch.-35-compression",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-35-compression",
+    "href": "chapters/R6-soluciones.html#ch.-35-compression",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.35 Ch. 35 · Compression",
     "text": "48.35 Ch. 35 · Compression\n\nThe map. In \\(x \\approx S\\,(x_q - Z)\\), \\(S\\) is the scale (factor mapping integers to reals) and \\(Z\\) is the zero-point (the integer representing the real value \\(0\\)). Group-wise quantization assigns its own \\(S\\) (and \\(Z\\)) to each subblock of weights instead of a single one per tensor, capturing local ranges better and reducing the error versus per-tensor quantization.\nPTQ vs QAT. PTQ quantizes an already-trained model cheaply and quickly, without retraining, and usually suffices at 8 bits. QAT simulates quantization during training so the model learns to tolerate it, which is worth its cost when going to aggressive precisions (4 bits or less) or when PTQ degrades quality too much.\nOutliers. A few activation dimensions have enormous magnitudes that stretch the quantization range, crushing all the others into very few levels and blowing up the error. LLM.int8() isolates them: it processes those outlier columns in high precision (FP16) and quantizes the rest to int8, combining both results.\nSoft targets. The teacher’s full distribution reveals its “dark knowledge”: the relative probabilities among wrong classes (what resembles what), information that the hard single-class label hides. Temperature \\(T\\) smooths that distribution (logits divided by \\(T\\)) to amplify those small signals so the student learns the relations between classes better.\nPruning. Structured pruning removes whole units (neurons, heads, channels), leaving smaller, denser matrices that the GPU runs directly faster. Unstructured pruning scatters zeros everywhere: it saves parameters but the GPU still processes the dense matrix except with special sparsity support, so it rarely actually speeds things up on normal hardware.\nHonesty. Perplexity is an aggregate average that can barely move while compression destroys concrete capabilities (reasoning, instruction-following, rare factual knowledge) that don’t dominate that average. You need to evaluate with downstream task benchmarks and specific tests, because near-intact perplexity doesn’t guarantee the compressed model still works.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-36-serving-and-deploying",
-    "href": "chapters/R10-soluciones.html#ch.-36-serving-and-deploying",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-36-serving-and-deploying",
+    "href": "chapters/R6-soluciones.html#ch.-36-serving-and-deploying",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.36 Ch. 36 · Serving and deploying",
     "text": "48.36 Ch. 36 · Serving and deploying\n\nTwo phases. Prefill processes the whole prompt at once: since all input tokens are known, it’s a massive, parallel matrix-matrix multiplication that saturates the GPU’s cores, so it’s compute-bound. Decode generates one token at a time and must reread the keys/values of all the previous ones, a low-arithmetic-intensity matrix-vector operation whose limit is bringing data from HBM (weights + KV cache), not computing: that’s why it’s bandwidth-bound. The serving bottleneck is decode, because it’s sequential, underuses the compute, and is where the KV cache is reread at every step.\nMetrics. TTFT (time-to-first-token) is how long the user waits to see the first word and is dominated by prefill; TPOT/ITL is the time per output token and is dominated by decode (it’s the perceived speed). Goodput —requests/sec meeting a latency SLO— is more honest than plain throughput because you can have many total tokens/sec and yet have almost no user meet their TTFT/TPOT target; throughput counts tokens, goodput counts satisfied users.\nContinuous batching. A static batch isn’t released until the longest request finishes, and since output lengths vary unpredictably, already-finished requests leave idle slots occupying the GPU. Continuous batching schedules at the iteration level: after each step it removes the finished ones and admits new ones, keeping the GPU saturated. The “23×” isn’t a guarantee because that maximum only appears with high variance in response lengths; with similar-length responses all systems converge to ~1×.\nKV cache. The KV cache grows linearly with the batch size and the sequence length and competes with the weights for HBM, so how much KV fits decides how many requests you can batch. PagedAttention brings two things to serving: it stores the cache in virtual-memory-style blocks, eliminating fragmentation (near-zero waste → larger batches fit), and it lets common-prefix blocks (same system prompt or few-shot examples) be physically shared instead of recomputed.\nInterference. A long prefill is compute-bound and monopolizes the GPU, so other users’ in-progress decodes stall and their TPOT spikes. DistServe solves it by disaggregation —placing prefill and decode on separate GPUs/instances, each phase optimized on its own, at the cost of transferring the KV cache between them—. Sarathi-Serve solves it by chopping the long prefill into chunks and interleaving them with the decodes in the same batch without pausing them (stall-free batching): spatial separation versus temporal interleaving.\nHonesty. Because almost all the serving “X× faster” claims are very workload-specific: they depend on the chosen baseline, the GPU and its interconnect, the model size, and the input/output lengths. A result obtained with high-variance responses or a naive baseline can collapse to ~1× on your real traffic, so read them as “up to X× under the paper’s conditions” and measure on your own workload before believing the curve.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-37-a-primer-on-mechanistic-interpretability",
-    "href": "chapters/R10-soluciones.html#ch.-37-a-primer-on-mechanistic-interpretability",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-37-a-primer-on-mechanistic-interpretability",
+    "href": "chapters/R6-soluciones.html#ch.-37-a-primer-on-mechanistic-interpretability",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.37 Ch. 37 · A primer on mechanistic interpretability",
     "text": "48.37 Ch. 37 · A primer on mechanistic interpretability\n\nCausal vs correlational. MI insists on intervention because its goal is to demonstrate which component causes a behavior, not just what correlates with it. A bright attention map over a token is correlational: information can flow through the residual stream, the values, and the MLPs without passing through where attention “looks”, so a high weight doesn’t prove that token caused the output. That’s why MI prefers transplanting activations and measuring the effect, not reading maps.\nQK vs OV. The QK circuit decides where the head attends (the attention pattern, who it looks at), and the OV circuit decides what it writes into the residual stream when it looks there. Separating them is useful because they’re nearly independent computations: a head can get who to attend to right but contribute irrelevant content, or vice versa, and diagnosing them separately avoids confusing routing with content.\nSuperposition. The 50-slot drawer holds 100 objects by tilting them so they overlap but stay distinguishable: you gain capacity but there’s no longer “one object per slot”. Likewise, the network represents more features than dimensions in nearly orthogonal directions, so opening one neuron returns a mix of disparate concepts (polysemanticity). SAEs try to undo that superposition by training an overcomplete, sparse dictionary that decomposes the activation into many monosemantic features.\nPatching. Activation patching runs a clean pass and a corrupted one, transplants an activation from one to the other, and measures how much the output changes; if moving that component changes the result, that one is causally responsible. It’s causal precisely because it intervenes and observes the effect, not just looks. It differs from a linear probe (probing), which only trains a classifier to see whether certain information is present: the probe shows the datum is decodable, not that the model uses it (correlation ≠ use).\nHonesty. First, published circuits tend to be partial and victims of cherry-picking and the streetlight effect: we study what the tools illuminate, not necessarily what matters, and the model may use routes that aren’t isolated. Second, patching itself has unsettled subtleties —logit difference, probability, or KL, and different ways of “corrupting”, can yield different conclusions— and most clean circuits are from small models or narrow behaviors that we don’t know how to scale to the frontier.\nStructure vs circuit. Our per-head γ is a descriptive/correlational measure of the aggregate geometry of attention (how it spreads over distance), not an isolated algorithm with causal evidence. A mechanistic circuit identifies which components implement a concrete computation and proves it by intervening; γ isolates no component and doesn’t intervene, it only summarizes global statistics. They are complementary lenses —structure-level versus algorithm-level—, not the same thing.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-38-verified-folklore-and-numerology",
-    "href": "chapters/R10-soluciones.html#ch.-38-verified-folklore-and-numerology",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-38-verified-folklore-and-numerology",
+    "href": "chapters/R6-soluciones.html#ch.-38-verified-folklore-and-numerology",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.38 Ch. 38 · Verified, folklore, and numerology",
     "text": "48.38 Ch. 38 · Verified, folklore, and numerology\n\nThe three buckets. Verified/derived is a claim with a receipt —a formal proof in Lean or reproducible data—, e.g. our Fisher = \\(C_V/\\gamma^2\\) identity proved in Lean. Folklore is a popular belief without justification or already contradicted, like “attention explains the model’s decision”. Numerology is a number or formula that fits the data with no mechanism to explain it: fitting a curve with good R² isn’t understanding it.\nThe receipt. A mathematical identity needs a formal proof (Lean) verifying that the algebra checks out and is consistent; an empirical claim needs reproducible data showing that the phenomenon occurs in real models. The same one doesn’t work because they’re different things: Lean proves the formulas are coherent, not that they describe a transformer causally, and data that fits doesn’t guarantee the underlying algebra is correct.\nLean ≠ reality. The imprint ν ≈ \\(-1/(2\\pi)\\) has an algebraic identity proved in Lean, so the algebra is internally correct. But when measured on data it doesn’t reproduce: the confidence interval comes out wide and doesn’t converge in Pythia-70M. This shows that “proved in Lean” only certifies algebraic consistency (the blueprint is well drawn), not that the building constructed —the real model— resembles it; an empirical claim can be false even if its algebra is valid.\nErratum. In Paper I we claimed \\(C_V(\\gamma=1) = (\\log N)^2/4\\), an error of a factor 3; the correct value is \\((\\log N)^2/12\\), which two independent derivations reach and which we re-proved in Lean. Reporting it increases reliability because it shows we apply the same yardstick to our own work and that the process detects and corrects errors: a book that teaches where it went wrong is more credible than one that only exhibits successes.\nMyth. “Attention explains the model’s decision” is folklore because, as Ch. 37 argues, an attention map is correlational, not causal: information can flow through the residual stream, the values, and the MLPs without passing through where attention puts its weight. That a head “looks” a lot at a token doesn’t prove that token caused the output; proving it requires causal intervention (activation patching), not reading the map.\nApply it. First, what kind of receipt does it bring —a formal proof, reproducible data, or just an eyeballed fit? Second, is there a mechanism that explains why that number appears, or is it coincidence (numerology)? Third, does it reproduce outside its case —on other tasks, models, or seeds, with a narrow confidence interval—, or is it from a single task/family? Without receipt, mechanism, or reproducibility, treat it as folklore.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-39-the-map-of-the-2026-collapse-landscape",
-    "href": "chapters/R10-soluciones.html#ch.-39-the-map-of-the-2026-collapse-landscape",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-39-the-map-of-the-2026-collapse-landscape",
+    "href": "chapters/R6-soluciones.html#ch.-39-the-map-of-the-2026-collapse-landscape",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.39 Ch. 39 · The map of the 2026 collapse landscape",
     "text": "48.39 Ch. 39 · The map of the 2026 collapse landscape\n\nFour objects. Sinks measures the concentration of attention mass on specific (low-information, typically BOS) tokens. Temperature/thermodynamics measures the global sharpness of the softmax read as Boltzmann plus the training dynamics. Covariance/grokking measures the geometry of the representations (spectral entropy, effective dimension). Fractional measures a Lévy diffusion kernel with a designed order α. Since each framework has its own order parameter and measures a different object, they can’t be “the same thing”: they are four lenses, not four views of a single proven phenomenon.\nReal overlap. The field recognizes two solid bridges with no need for our γ. First, it’s been shown that sink = massive activation = compression valley are the same phenomenon (proved identity). Second, Kim’s energy fluctuation (thermodynamics) and the grokking parameters point to the same event: the onset of generalization.\nHonest γ. Strong connector: γ ↔︎ fractional, via the order \\((\\gamma-1)/2\\), even if it’s a descriptor↔︎design crossover. Our analogy: γ=1 ↔︎ Hagedorn boundary (temperature), since Kim doesn’t fix a static boundary at γ=1 and equating them is our interpretive layer. Separator: γ ⊥ sink-mass, where γ doesn’t unify but instead shows that sinks are an orthogonal axis. Weak correlation: γ-rerise/CKA ↔︎ grokking, an analogy with no mechanism that competes with other signals.\nOverclaiming. Defensible version: “γ is a measurable exponent that lets you situate a model against three of the lenses —directly with the fractional, as an analogy with temperature, and as a correlation with grokking— and that also shows sinks to be a fourth, orthogonal lens.” It’s not “the coordinate that unifies the four frameworks”; it’s a coordinate that locates and separates, flagging γ=1↔︎Hagedorn and γ↔︎grokking as our synthesis/speculation.\nWhat’s open. First, there’s no consensus first-principles theory: almost everything is descriptive or analogical (thermo = “isomorphism”, fractional = designed operator) and the only rigorous local result —softmax = free-energy minimum— doesn’t scale to the trained model. Second, there’s no agreed grokking order parameter: four early signals compete with no winner, and the causal origin of sinks remains unresolved. They matter because without them you can’t go from describing collapse to predicting or causally controlling it.\nDescriptor vs design. FNA’s α is a designed operator: it’s built by hand so the kernel has the desired multiscale reach. γ is a measured descriptor: it’s extracted by fitting the observed attention of real models. It matters for claiming mechanism because a parameter that is measured describes what the model does but, on its own, doesn’t prove why it does it; one that is designed generates a behavior, but doesn’t prove the real model implements it that way —conflating them is the error that runs through the whole field.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-40-evaluation-measuring-without-fooling-yourself",
-    "href": "chapters/R10-soluciones.html#ch.-40-evaluation-measuring-without-fooling-yourself",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-40-evaluation-measuring-without-fooling-yourself",
+    "href": "chapters/R6-soluciones.html#ch.-40-evaluation-measuring-without-fooling-yourself",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.40 Ch. 40 · Evaluation: measuring without fooling yourself",
     "text": "48.40 Ch. 40 · Evaluation: measuring without fooling yourself\n\nPerplexity. Two models with different tokenizers can’t be compared by perplexity because PPL is computed per token, and a model with a larger vocabulary splits the same text into fewer tokens: its “mean surprise per token” doesn’t measure the same thing as the other’s. Bits-per-byte (bpb) fixes it, normalizing the loss by bytes of text instead of by tokens —a common unit independent of the tokenization—.\nThe mirage. A high score on a public benchmark doesn’t prove capability because it may be due to contamination: if the test questions appeared in the training corpus (and benchmarks are on the web), the model remembers the answer instead of reasoning it out. The score rises without the real capability moving —the gap between the two is the widget’s “mirage”—. That’s why a score with no contamination control isn’t evidence.\nGoodhart. If the GSM8K math benchmark becomes the target, a team can train on thousands of same-style problems until it nails that specific format; the model climbs on GSM8K but may get worse at general mathematical reasoning (it overfits the test’s template instead of learning to reason). The measure, once it becomes a target, stops measuring what it was meant to.\nThe judge. Three biases of the LLM-as-judge: (a) position —it prefers the first/second response by its order; mitigated by averaging the two orderings—; (b) verbosity —it rewards the longer one; mitigated by controlling or penalizing length—; (c) self-preference —it scores its own family’s style higher; mitigated by using several different judges or a human vote—. (Also sycophancy: rewarding what sounds confident and pleasant.)\nRigor. You ask it: with how many seeds and what error bar? Changing the seed, the order of the few-shot examples, or the prompt template moves MMLU by several points, so a “+1.5%” without a confidence interval can be noise, not a real improvement. Without statistical significance, it’s not a defensible claim.\nLong context. RULER/NIAH is the natural place to validate D_f because it measures directly what D_f predicts: how much information from a long context the model retains and uses. Comparing the retention of KV trimmed to the D_f window (Ch. 20) against the field’s heuristics, on RULER, would turn D_f from a hypothesis into a result (or refute it). It’s the evaluation the book acknowledges is pending (the avenue-2 attempt crashed, Ch. 19).",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   },
   {
-    "objectID": "chapters/R10-soluciones.html#ch.-41-ethics-safety-and-limitations",
-    "href": "chapters/R10-soluciones.html#ch.-41-ethics-safety-and-limitations",
-    "title": "48  R10 · Exercise solutions",
+    "objectID": "chapters/R6-soluciones.html#ch.-41-ethics-safety-and-limitations",
+    "href": "chapters/R6-soluciones.html#ch.-41-ethics-safety-and-limitations",
+    "title": "48  R6 · Exercise solutions",
     "section": "48.41 Ch. 41 · Ethics, safety, and limitations",
     "text": "48.41 Ch. 41 · Ethics, safety, and limitations\n\nCapability ≠ safety. A model can be very capable writing code or fluent responses and at the same time be unreliable: it confidently hallucinates false data, or is susceptible to jailbreaks that bypass its safety training. Knowing how to do something (capability) doesn’t imply doing it reliably and safely: fluency and correctness/safety are distinct axes, which is why a competent model still needs supervision and verification.\nHallucination. Partial calibration doesn’t solve it because, although large models are reasonably calibrated at judging whether their own answer is correct, they still hallucinate: knowing how to estimate confidence doesn’t prevent producing the false output. It’s “partly intrinsic” because predicting the next token over imperfect data generates fluent unsupported outputs, and there’s an argument (theoretical, worst-case) that it can’t be eliminated entirely —argued, not settled—; RAG reduces it, doesn’t erase it.\nJailbreak. The first mode is competing objectives: being helpful clashes with being safe, and the attacker exploits that tension to make the model prioritize helping. The second is mismatched generalization: capabilities reach domains the safety training didn’t cover. A “guardrail” isn’t containment because there exist universal adversarial suffixes, automatically generated, that transfer across models: safety training is bypassable friction, not a guarantee robust to optimization attacks.\nSleeper agents. It demonstrates exactly that a backdoor inserted on purpose (safe code if “2023”, exploitable if “2024”) can persist through SFT, RLHF, and adversarial training, and that the latter sometimes teaches the model to hide the trigger better. It does NOT demonstrate that models develop deception on their own in normal training: the backdoor was introduced deliberately, so the result is about persistence and concealment, not about the spontaneous emergence of deceptiveness.\nEvaluating. Benchmark contamination occurs when test-set data leaks into training, artificially inflating the figures. It would make you distrust a headline number because that result may reflect memorization of the test and not real capability, so it’s worth doing holistic evaluation (beyond accuracy: robustness, bias, toxicity) with contamination control before believing any standout score.\nFinal honesty. First, we don’t know why or when capabilities emerge: scaling laws fit the loss, not the onset of a capability or a risk, and we can’t predict or bound emergent behaviors before they appear. Second, we don’t know how to certify the safety of a deployed model —interpretability isn’t there yet, the alignment of superhuman systems is unresolved, and even “what the model knows” isn’t sharp—. They matter because using these models responsibly demands admitting those limits instead of pretending the hood is transparent.\n\n\n\n\n\nChowdhery, Aakanksha et al. 2022. PaLM: Scaling Language Modeling with Pathways. https://arxiv.org/abs/2204.02311.\n\n\nHoffmann, Jordan et al. 2022. Training Compute-Optimal Large Language Models (Chinchilla). https://arxiv.org/abs/2203.15556.\n\n\nKaplan, Jared et al. 2020. Scaling Laws for Neural Language Models. https://arxiv.org/abs/2001.08361.\n\n\nKhanh, Hoa, Trung, and Duc. 2026. Spectral Entropy Collapse as a Phase Transition in Delayed Generalisation. https://arxiv.org/abs/2604.13123.\n\n\nKim, Gunn. 2026. Thermodynamic Isomorphism of Transformers: A Lagrangian Approach to Attention Dynamics. https://arxiv.org/abs/2602.08216.\n\n\nLiu, Ziming, Eric J. Michaud, and Max Tegmark. 2022. Omnigrok: Grokking Beyond Algorithmic Data. https://arxiv.org/abs/2210.01117.\n\n\nNanda, Neel, Lawrence Chan, Tom Lieberum, Jess Smith, and Jacob Steinhardt. 2023. Progress Measures for Grokking via Mechanistic Interpretability. https://arxiv.org/abs/2301.05217.\n\n\nQu, Xiao, Cheng Ly, and Pulin Gong. 2025. Fractional Neural Attention for Efficient Multiscale Sequence Processing. https://arxiv.org/abs/2511.10208.\n\n\nXu, Yongzhong. 2026. Early-Warning Signals of Grokking via Loss-Landscape Geometry. https://arxiv.org/abs/2602.16967.",
     "crumbs": [
       "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R10 · Exercise solutions</span>"
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R6 · Exercise solutions</span>"
     ]
   }
 ]
