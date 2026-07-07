@@ -1160,7 +1160,7 @@ window.Quarto = {
   </div>
   <div class="fg-step" style="--i:4">
     <span class="fg-chip">🎯</span>
-    <div class="fg-card"><b>L_crit: compromiso</b><span>el contenido colapsa hacia la respuesta</span></div>
+    <div class="fg-card"><b>compromiso</b><span>cerca del final, el contenido colapsa hacia la respuesta</span></div>
   </div>
   <div class="fg-step" style="--i:5">
     <span class="fg-chip">📤</span>
@@ -1238,7 +1238,7 @@ window.Quarto = {
     '⚡ Ignición: “París” aparece en la pizarra… ¡y faltan 4 tokens para decirlo!',
     'La pizarra SOSTIENE “París” mientras el texto sigue. Eso es sostener un plan.',
     '“París” sigue cargado. En logit lens, nada de esto existe (pruébalo).',
-    'Cruzando L_crit: el contenido colapsa hacia la salida — el compromiso.',
+    'Cruzando la frontera de compromiso: el contenido colapsa hacia la salida.',
     'El modelo por fin lo dice: “París”. La pizarra lo sabía desde la posición 5.'];
   grid.style.gridTemplateColumns='3.2rem repeat('+TOK.length+',1fr)';
   function build(){
@@ -1247,7 +1247,7 @@ window.Quarto = {
     TOK.forEach(function(t){var d=document.createElement('div');d.className='ws-cell ws-tok';d.textContent=t;grid.appendChild(d)});
     for(var L=0;L<NL;L++){
       if(L===BAND_HI+1){var lc=document.createElement('div');lc.className='ws-lcrit';
-        lc.textContent='L_crit — fin de la pizarra, empieza la alineación con la salida';grid.appendChild(lc)}
+        lc.textContent='frontera de compromiso — la pizarra cede a la alineación con la salida';grid.appendChild(lc)}
       var lab=document.createElement('div');lab.className='ws-cell ws-lab';
       lab.textContent='L'+L+(L>=BAND_LO&&L<=BAND_HI?' ▉':'');grid.appendChild(lab);
       for(var p=0;p<TOK.length;p++){
@@ -1427,18 +1427,12 @@ window.Quarto = {
 })();
 </script>
 </div>
-<p>Aquí Anthropic se detiene — miden <em>dónde</em>, no explican <em>por qué</em>. Y esta es la pregunta que este libro sí puede intentar responder, porque llevamos tres partes construyendo la herramienta. Piénsalo con lo que ya sabes del <a href="14-aliasing.html" class="quarto-xref"><span>Capítulo 15</span></a>: <strong>¿qué cambia dentro del modelo a una profundidad concreta?</strong></p>
-<p>Pista: las capas bajas trabajan con <strong>posición</strong> — su atención sigue la ley de potencias del <a href="15-ley-gamma.html" class="quarto-xref"><span>Capítulo 16</span></a>, ordenando “qué está cerca de qué”. Pero la geometría de RoPE tiene alcance limitado (las tres escalas del <a href="14-aliasing.html" class="quarto-xref"><span>Capítulo 15</span></a>): llega una profundidad en la que el andamiaje posicional ya dio de sí, y las capas pasan a trabajar con <strong>significado</strong>. Esa frontera se puede predecir desde los hiperparámetros del modelo — sin mirar dentro:</p>
-<p><span class="math display">\[L_{crit} = \underbrace{N_L}_{\text{capas totales}} \cdot
-\underbrace{\log_\theta\!\left(\frac{T_{train}}{2\pi}\right)}_{\text{fracción posicional}} \cdot
-\underbrace{\left(\frac{d_{head}}{64}\right)^{1/\sqrt{12}}}_{\text{corrección por cabeza}}\]</span></p>
-<p>Término a término, como manda la casa:</p>
+<p>Aquí Anthropic se detiene — miden <em>dónde</em>, no explican <em>por qué</em>. Nosotros lo hemos medido también, en la escalera Pythia y con protocolo pre-registrado (predicciones congeladas antes de medir). Lo observado, con datos:</p>
 <ul>
-<li><span class="math inline">\(N_L\)</span> — el <strong>total de capas</strong>: la fórmula reparte la red en una parte posicional y otra semántica, así que todo se expresa como <em>fracción de</em> <span class="math inline">\(N_L\)</span>.</li>
-<li><span class="math inline">\(\log_\theta(T_{train}/2\pi)\)</span> — la <strong>fracción del trabajo que es posicional</strong>. Es una vieja conocida: en el <a href="14-aliasing.html" class="quarto-xref"><span>Capítulo 15</span></a> viste que la fracción de bandas de RoPE ya aliasadas a distancia <span class="math inline">\(d\)</span> es <span class="math inline">\(\log_\theta(d/2\pi)\)</span>. Evaluada en <span class="math inline">\(d = T_{train}\)</span> (la distancia máxima que el modelo vio al entrenar) dice qué parte de la maquinaria posicional se usa de verdad — y esa misma fracción de capas resulta dedicarse a ella. Para los valores típicos (<span class="math inline">\(\theta = 10^4\)</span>, <span class="math inline">\(T = 2048\)</span>): <span class="math inline">\(0.628\)</span> — casi dos tercios de la red ordenando posiciones antes de pasar al significado.</li>
-<li><span class="math inline">\((d_{head}/64)^{1/\sqrt{12}}\)</span> — la <strong>corrección por dimensión de cabeza</strong>: cabezas más anchas llevan más bandas de frecuencia, y el andamiaje posicional tarda más capas en agotarse. El exponente <span class="math inline">\(1/\sqrt{12} \approx 0.29\)</span> no es un ajuste caprichoso: <span class="math inline">\(\sqrt{12}\)</span> es la desviación típica de una distribución uniforme — y las log-frecuencias de RoPE están espaciadas <em>uniformemente</em> (<a href="14-aliasing.html" class="quarto-xref"><span>Capítulo 15</span></a>). Con <span class="math inline">\(d_{head}=64\)</span> (el estándar) el factor vale 1 y desaparece.</li>
+<li>El <strong>codo de legibilidad</strong> — la capa donde el logit lens empieza a leer, es decir, donde el contenido se alinea con la salida — cae a una <strong>fracción de profundidad prácticamente constante, ≈ 0.69</strong>, en los tres modelos medidos (0.67 / 0.71 / 0.69), aunque difieren 16× en tamaño y 4× en dimensión de cabeza.</li>
+<li>En pythia-410m aparece además una <strong>banda de ventaja</strong> clara (capas 8–13, fracción 0.33–0.54) donde el J-lens lee contenido futuro 3–6× mejor que el logit lens. En pythia-1b esa banda <strong>no aparece</strong> — también eso es un dato.</li>
 </ul>
-<p>Honestidad primero: esta fórmula viene de nuestro trabajo <span class="citation" data-cites="marin2026attend">(<a href="#ref-marin2026attend" role="doc-biblioref">Marín 2026</a>)</span> y hasta hoy está <strong>validada causalmente en solo dos modelos</strong> (±0.5 capas en ambos) — por eso la estamos poniendo a prueba en seis, con las predicciones congeladas <em>antes</em> de medir. La hipótesis natural — la llamamos <strong>H1</strong> — es que la frontera de la banda de la pizarra <strong>es</strong> esa <span class="math inline">\(L_{crit}\)</span>: la pizarra necesita el andamiaje posicional para rutear conceptos entre posiciones, y donde el andamiaje termina, el contenido colapsa en la respuesta.</p>
+<p><strong>Por qué la banda está donde está sigue siendo una pregunta abierta.</strong> Teníamos una candidata: la capa crítica <span class="math inline">\(L_{crit}\)</span> de nuestro propio trabajo <span class="citation" data-cites="marin2026attend">(<a href="#ref-marin2026attend" role="doc-biblioref">Marín 2026</a>)</span> — la profundidad donde el andamiaje posicional de RoPE se agota (las tres escalas del <a href="14-aliasing.html" class="quarto-xref"><span>Capítulo 15</span></a>), calculable desde los hiperparámetros <span class="math inline">\(\theta\)</span>, <span class="math inline">\(T\)</span> y <span class="math inline">\(d_{head}\)</span>. La pusimos a prueba con predicciones congeladas antes de medir, y <strong>falló en el modelo que discriminaba</strong>. Los números:</p>
 <div class="callout callout-style-default callout-important callout-titled" title="Resultado de la medición (2026-07-07): H1 refutada">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -1483,7 +1477,7 @@ window.Quarto = {
 <li><strong>Leerla</strong> (hoy): monitorizar qué conceptos están cargados — depuración y auditoría. En el paper, la pizarra contenía <em>leverage</em>, <em>panic</em> o <em>fake</em> que jamás asomaron a la salida.</li>
 <li><strong>Escribirla</strong> (experimental): sostener un concepto clampando su vector — que un modelo pequeño <strong>no suelte</strong> la aguja en un contexto largo.</li>
 <li><strong>Protegerla</strong> (hipótesis abierta): compresión asimétrica — cuantizar y podar agresivamente el 90 % automático (<a href="35-compresion.html" class="quarto-xref"><span>Capítulo 36</span></a>) y proteger la esquina que razona.</li>
-<li><strong>Dimensionarla</strong> (si H1 se confirma): elegir <span class="math inline">\(\theta\)</span>, <span class="math inline">\(T\)</span>, <span class="math inline">\(d_{head}\)</span> para colocar la banda donde convenga — la pizarra como <strong>parámetro de diseño</strong>.</li>
+<li><strong>Dimensionarla</strong> (hoy fuera de alcance): colocar la banda a voluntad exigiría saber qué la coloca — y nuestra candidata (<span class="math inline">\(L_{crit}\)</span>) quedó refutada al medirla. Sin una teoría verificada de la posición de la banda, esto es una aspiración, no una palanca.</li>
 </ul>
 <p>Y la palanca más barata de todas ya la conocías sin saberlo: si la pizarra de un modelo pequeño es pequeña, <strong>no le pidas que piense en silencio</strong> — dale papel (1). El chain-of-thought no es un truco de prompt: es una prótesis de memoria de trabajo.</p>
 <div class="analogia">
@@ -1496,7 +1490,7 @@ window.Quarto = {
 <li>La “pizarra compartida” del <a href="03-embeddings.html" class="quarto-xref"><span>Capítulo 4</span></a> tiene una <strong>esquina en limpio</strong>: un subespacio (~10 %) legible en idioma token — el <strong>espacio de trabajo</strong> del modelo.</li>
 <li>Se lee con la <strong>lente Jacobiana</strong> (logit lens + gafas graduadas por capa); lee <em>conceptos sobre la mesa</em>, no el siguiente token.</li>
 <li>Evidencia causal en tres pasos: <strong>editable</strong> (swap de conceptos), <strong>media el razonamiento</strong> (el intermediario invisible), <strong>doble disociación</strong> (borrar la pizarra hunde lo flexible y respeta lo automático).</li>
-<li>Vive en una <strong>banda de profundidad</strong>; por qué ahí es pregunta abierta — nuestra <strong>H1</strong> propone la frontera posicional→semántica <span class="math inline">\(L_{crit}\)</span>, con medición pre-registrada en curso.</li>
+<li>Vive en una <strong>banda de profundidad</strong>; por qué ahí sigue abierto. En nuestra medición (escalera Pythia), el codo de legibilidad cae a fracción ≈ 0.69 constante y la candidata <span class="math inline">\(L_{crit}\)</span> quedó refutada.</li>
 <li><strong>Externalizar</strong> (CoT) es dar papel a una pizarra pequeña — la palanca práctica inmediata para modelos modestos.</li>
 <li>Regla de oro (<a href="38-audit.html" class="quarto-xref"><span>Capítulo 39</span></a>): la lente <strong>genera</strong> hipótesis; solo la intervención causal las <strong>confirma</strong>.</li>
 </ul>
@@ -1509,7 +1503,7 @@ window.Quarto = {
 <li><strong>El intermediario invisible.</strong> En “las patas del animal que teje telarañas es”, ¿qué hay en la pizarra que no está ni en la pregunta ni en la respuesta? ¿Cómo se demuestra que es causal y no decorativo?</li>
 <li><strong>Doble disociación.</strong> ¿Qué dos familias de tareas separa el borrado de la pizarra? ¿Por qué esa separación es mejor evidencia que cualquier correlación?</li>
 <li><strong>Externalización.</strong> ¿Por qué el chain-of-thought sobrevive al borrado de la pizarra, y qué receta práctica se deduce para modelos pequeños?</li>
-<li><strong>H1 con números.</strong> Para <span class="math inline">\(N_L=16\)</span>, <span class="math inline">\(\theta=10^4\)</span>, <span class="math inline">\(T=2048\)</span>, <span class="math inline">\(d_{head}=256\)</span>: ¿en qué capa predice <span class="math inline">\(L_{crit}\)</span> la frontera? ¿Y qué esperarías ver en el codo del logit lens si H1 es correcta? (Solución en el <a href="R4-medir-gamma.html" class="quarto-xref"><span>Capítulo 47</span></a> del formulario… o calcúlalo: <span class="math inline">\(\log_\theta(T/2\pi)=0.628\)</span>.)</li>
+<li><strong>El test que falló.</strong> La fórmula <span class="math inline">\(L_{crit} = N_L\log_\theta(T/2\pi)(d_{head}/64)^{1/\sqrt{12}}\)</span> predecía la frontera de pythia-1b (<span class="math inline">\(N_L=16\)</span>, <span class="math inline">\(\theta=10^4\)</span>, <span class="math inline">\(T=2048\)</span>, <span class="math inline">\(d_{head}=256\)</span>) en la capa 15; el codo medido salió en la capa 11 (fracción 0.69, como en los otros dos modelos). ¿Qué factor de la fórmula señalan los datos como responsable del fallo? ¿Y por qué la escalera Pythia no puede distinguir “fracción constante universal” de <span class="math inline">\(\log_\theta(T/2\pi)\)</span> a secas?</li>
 <li><strong>Escepticismo.</strong> Da dos razones por las que un readout del J-lens podría ser un falso positivo, y diseña el experimento que lo descartaría.</li>
 </ol>
 </section>

@@ -1160,7 +1160,7 @@ window.Quarto = {
   </div>
   <div class="fg-step" style="--i:4">
     <span class="fg-chip">🎯</span>
-    <div class="fg-card"><b>L_crit: commitment</b><span>content collapses toward the answer</span></div>
+    <div class="fg-card"><b>commitment</b><span>near the end, content collapses toward the answer</span></div>
   </div>
   <div class="fg-step" style="--i:5">
     <span class="fg-chip">📤</span>
@@ -1238,7 +1238,7 @@ window.Quarto = {
     '⚡ Ignition: "Paris" appears on the whiteboard… 4 tokens before it is said!',
     'The whiteboard HOLDS "Paris" while the text goes on. That is holding a plan.',
     '"Paris" is still loaded. Under the logit lens, none of this exists (try it).',
-    'Crossing L_crit: content collapses toward the output — the commitment.',
+    'Crossing the commitment boundary: content collapses toward the output.',
     'The model finally says it: "Paris". The whiteboard knew since position 5.'];
   grid.style.gridTemplateColumns='3.2rem repeat('+TOK.length+',1fr)';
   function build(){
@@ -1247,7 +1247,7 @@ window.Quarto = {
     TOK.forEach(function(t){var d=document.createElement('div');d.className='ws-cell ws-tok';d.textContent=t;grid.appendChild(d)});
     for(var L=0;L<NL;L++){
       if(L===BAND_HI+1){var lc=document.createElement('div');lc.className='ws-lcrit';
-        lc.textContent='L_crit — end of the whiteboard, output alignment begins';grid.appendChild(lc)}
+        lc.textContent='commitment boundary — the whiteboard yields to output alignment';grid.appendChild(lc)}
       var lab=document.createElement('div');lab.className='ws-cell ws-lab';
       lab.textContent='L'+L+(L>=BAND_LO&&L<=BAND_HI?' ▉':'');grid.appendChild(lab);
       for(var p=0;p<TOK.length;p++){
@@ -1425,18 +1425,12 @@ window.Quarto = {
 })();
 </script>
 </div>
-<p>Here Anthropic stops — they measure <em>where</em>, they don’t explain <em>why</em>. And this is the question this book can actually try to answer, because we have spent three parts building the tool. Think about it with what you already know from <a href="14-aliasing.html" class="quarto-xref"><span>Chapter 15</span></a>: <strong>what changes inside the model at a specific depth?</strong></p>
-<p>Hint: low layers work with <strong>position</strong> — their attention follows the power law of <a href="15-ley-gamma.html" class="quarto-xref"><span>Chapter 16</span></a>, sorting “what is near what”. But RoPE’s geometry has limited reach (the three scales of <a href="14-aliasing.html" class="quarto-xref"><span>Chapter 15</span></a>): there comes a depth at which the positional scaffolding has given all it has, and layers switch to working with <strong>meaning</strong>. That boundary can be predicted from the model’s hyperparameters — without looking inside:</p>
-<p><span class="math display">\[L_{crit} = \underbrace{N_L}_{\text{total layers}} \cdot
-\underbrace{\log_\theta\!\left(\frac{T_{train}}{2\pi}\right)}_{\text{positional fraction}} \cdot
-\underbrace{\left(\frac{d_{head}}{64}\right)^{1/\sqrt{12}}}_{\text{per-head correction}}\]</span></p>
-<p>Term by term, as this book requires:</p>
+<p>Here Anthropic stops — they measure <em>where</em>, they don’t explain <em>why</em>. We measured it too, on the Pythia ladder with a pre-registered protocol (predictions frozen before measuring). What the data show:</p>
 <ul>
-<li><span class="math inline">\(N_L\)</span> — the <strong>total number of layers</strong>: the formula splits the network into a positional part and a semantic part, so everything is expressed as a <em>fraction of</em> <span class="math inline">\(N_L\)</span>.</li>
-<li><span class="math inline">\(\log_\theta(T_{train}/2\pi)\)</span> — the <strong>fraction of the work that is positional</strong>. An old friend: in <a href="14-aliasing.html" class="quarto-xref"><span>Chapter 15</span></a> you saw that the fraction of RoPE bands already aliased at distance <span class="math inline">\(d\)</span> is <span class="math inline">\(\log_\theta(d/2\pi)\)</span>. Evaluated at <span class="math inline">\(d = T_{train}\)</span> (the largest distance the model saw in training) it says how much of the positional machinery is actually used — and that same fraction of layers turns out to be devoted to it. For the typical values (<span class="math inline">\(\theta = 10^4\)</span>, <span class="math inline">\(T = 2048\)</span>): <span class="math inline">\(0.628\)</span> — nearly two thirds of the network sorting positions before moving on to meaning.</li>
-<li><span class="math inline">\((d_{head}/64)^{1/\sqrt{12}}\)</span> — the <strong>head-width correction</strong>: wider heads carry more frequency bands, and the positional scaffolding takes more layers to exhaust. The exponent <span class="math inline">\(1/\sqrt{12} \approx 0.29\)</span> is not a whim: <span class="math inline">\(\sqrt{12}\)</span> is the standard deviation of a uniform distribution — and RoPE’s log-frequencies are spaced <em>uniformly</em> (<a href="14-aliasing.html" class="quarto-xref"><span>Chapter 15</span></a>). With <span class="math inline">\(d_{head}=64\)</span> (the standard) the factor equals 1 and disappears.</li>
+<li>The <strong>readability knee</strong> — the layer where the logit lens starts to read, i.e.&nbsp;where content aligns with the output — sits at a <strong>practically constant depth fraction, ≈ 0.69</strong>, in all three measured models (0.67 / 0.71 / 0.69), even though they differ 16× in size and 4× in head dimension.</li>
+<li>pythia-410m additionally shows a clear <strong>advantage band</strong> (layers 8–13, fraction 0.33–0.54) where the J-lens reads future content 3–6× better than the logit lens. In pythia-1b that band <strong>does not appear</strong> — which is also a data point.</li>
 </ul>
-<p>Honesty first: this formula comes from our own work <span class="citation" data-cites="marin2026attend">(<a href="#ref-marin2026attend" role="doc-biblioref">Marín 2026</a>)</span> and so far it is <strong>causally validated in only two models</strong> (±0.5 layers in both) — which is why we are putting it to the test in six, with predictions frozen <em>before</em> measuring. The natural hypothesis — we call it <strong>H1</strong> — is that the boundary of the whiteboard’s band <strong>is</strong> that <span class="math inline">\(L_{crit}\)</span>: the whiteboard needs the positional scaffolding to route concepts across positions, and where the scaffolding ends, content collapses into the answer.</p>
+<p><strong>Why the band sits where it sits remains an open question.</strong> We had a candidate: the critical layer <span class="math inline">\(L_{crit}\)</span> from our own work <span class="citation" data-cites="marin2026attend">(<a href="#ref-marin2026attend" role="doc-biblioref">Marín 2026</a>)</span> — the depth where RoPE’s positional scaffolding runs out (the three scales of <a href="14-aliasing.html" class="quarto-xref"><span>Chapter 15</span></a>), computable from the hyperparameters <span class="math inline">\(\theta\)</span>, <span class="math inline">\(T\)</span> and <span class="math inline">\(d_{head}\)</span>. We put it to the test with predictions frozen before measuring, and <strong>it failed on the model that discriminated</strong>. The numbers:</p>
 <div class="callout callout-style-default callout-important callout-titled" title="Result of the measurement (2026-07-07): H1 refuted">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -1481,7 +1475,7 @@ window.Quarto = {
 <li><strong>Read it</strong> (today): monitor which concepts are loaded — debugging and auditing. In the paper, the whiteboard contained <em>leverage</em>, <em>panic</em> or <em>fake</em> that never surfaced in the output.</li>
 <li><strong>Write it</strong> (experimental): hold a concept by clamping its vector — so a small model <strong>doesn’t drop</strong> the needle in a long context.</li>
 <li><strong>Protect it</strong> (open hypothesis): asymmetric compression — quantize and prune the 90 % automatic part aggressively (<a href="35-compresion.html" class="quarto-xref"><span>Chapter 36</span></a>) and protect the corner that reasons.</li>
-<li><strong>Size it</strong> (if H1 is confirmed): choose <span class="math inline">\(\theta\)</span>, <span class="math inline">\(T\)</span>, <span class="math inline">\(d_{head}\)</span> to place the band where it suits you — the whiteboard as a <strong>design parameter</strong>.</li>
+<li><strong>Size it</strong> (out of reach today): placing the band at will would require knowing what places it — and our candidate (<span class="math inline">\(L_{crit}\)</span>) was refuted when measured. Without a verified theory of the band’s position, this is an aspiration, not a lever.</li>
 </ul>
 <p>And the cheapest lever of all you already knew without knowing it: if a small model’s whiteboard is small, <strong>don’t ask it to think silently</strong> — give it paper (1). Chain-of-thought is not a prompt trick: it is a working-memory prosthesis.</p>
 <div class="analogia">
@@ -1494,7 +1488,7 @@ window.Quarto = {
 <li>The “shared whiteboard” of <a href="03-embeddings.html" class="quarto-xref"><span>Chapter 4</span></a> has a <strong>corner in clean letters</strong>: a subspace (~10 %) readable in token language — the model’s <strong>workspace</strong>.</li>
 <li>It is read with the <strong>Jacobian lens</strong> (logit lens + per-layer prescription glasses); it reads <em>concepts on the table</em>, not the next token.</li>
 <li>Causal evidence in three steps: <strong>editable</strong> (concept swaps), <strong>mediates reasoning</strong> (the invisible intermediate), <strong>double dissociation</strong> (erasing the whiteboard crushes the flexible and spares the automatic).</li>
-<li>It lives in a <strong>depth band</strong>; why there is an open question — our <strong>H1</strong> proposes the positional→semantic boundary <span class="math inline">\(L_{crit}\)</span>, with a pre-registered measurement in progress.</li>
+<li>It lives in a <strong>depth band</strong>; why there remains open. In our measurement (the Pythia ladder), the readability knee sits at a constant fraction ≈ 0.69 and the candidate <span class="math inline">\(L_{crit}\)</span> was refuted.</li>
 <li><strong>Externalizing</strong> (CoT) is giving paper to a small whiteboard — the immediate practical lever for modest models.</li>
 <li>Golden rule (<a href="38-audit.html" class="quarto-xref"><span>Chapter 39</span></a>): the lens <strong>generates</strong> hypotheses; only causal intervention <strong>confirms</strong> them.</li>
 </ul>
@@ -1507,7 +1501,7 @@ window.Quarto = {
 <li><strong>The invisible intermediate.</strong> In “the number of legs of the animal that weaves webs is”, what is on the whiteboard that is neither in the question nor in the answer? How is it shown to be causal rather than decorative?</li>
 <li><strong>Double dissociation.</strong> Which two families of tasks does erasing the whiteboard separate? Why is that separation better evidence than any correlation?</li>
 <li><strong>Externalization.</strong> Why does chain-of-thought survive the erasure of the whiteboard, and what practical recipe follows for small models?</li>
-<li><strong>H1 with numbers.</strong> For <span class="math inline">\(N_L=16\)</span>, <span class="math inline">\(\theta=10^4\)</span>, <span class="math inline">\(T=2048\)</span>, <span class="math inline">\(d_{head}=256\)</span>: at which layer does <span class="math inline">\(L_{crit}\)</span> predict the boundary? And what would you expect to see in the logit lens knee if H1 is right? (Solution in <a href="R4-medir-gamma.html" class="quarto-xref"><span>Chapter 47</span></a>… or compute it: <span class="math inline">\(\log_\theta(T/2\pi)=0.628\)</span>.)</li>
+<li><strong>The test that failed.</strong> The formula <span class="math inline">\(L_{crit} = N_L\log_\theta(T/2\pi)(d_{head}/64)^{1/\sqrt{12}}\)</span> predicted pythia-1b’s boundary (<span class="math inline">\(N_L=16\)</span>, <span class="math inline">\(\theta=10^4\)</span>, <span class="math inline">\(T=2048\)</span>, <span class="math inline">\(d_{head}=256\)</span>) at layer 15; the measured knee came out at layer 11 (fraction 0.69, as in the other two models). Which factor of the formula do the data point to as responsible for the failure? And why can’t the Pythia ladder distinguish a “universal constant fraction” from plain <span class="math inline">\(\log_\theta(T/2\pi)\)</span>?</li>
 <li><strong>Skepticism.</strong> Give two reasons why a J-lens readout could be a false positive, and design the experiment that would rule it out.</li>
 </ol>
 </section>
