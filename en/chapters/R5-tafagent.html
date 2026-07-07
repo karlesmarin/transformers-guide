@@ -995,11 +995,12 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#what-it-is-and-what-it-isnt" id="toc-what-it-is-and-what-it-isnt" class="nav-link active" data-scroll-target="#what-it-is-and-what-it-isnt"><span class="header-section-number">48.1</span> What it is and what it isn’t</a></li>
   <li><a href="#the-metrics-it-computes" id="toc-the-metrics-it-computes" class="nav-link" data-scroll-target="#the-metrics-it-computes"><span class="header-section-number">48.2</span> The metrics it computes</a></li>
-  <li><a href="#the-7-modes" id="toc-the-7-modes" class="nav-link" data-scroll-target="#the-7-modes"><span class="header-section-number">48.3</span> The 7 modes</a></li>
-  <li><a href="#the-anti-bullshit-pack-11-tools" id="toc-the-anti-bullshit-pack-11-tools" class="nav-link" data-scroll-target="#the-anti-bullshit-pack-11-tools"><span class="header-section-number">48.4</span> The <em>Anti-Bullshit Pack</em> (11 tools)</a></li>
-  <li><a href="#the-recipes-8-core" id="toc-the-recipes-8-core" class="nav-link" data-scroll-target="#the-recipes-8-core"><span class="header-section-number">48.5</span> The recipes (8 core)</a></li>
-  <li><a href="#how-to-read-the-output-the-taf-card" id="toc-how-to-read-the-output-the-taf-card" class="nav-link" data-scroll-target="#how-to-read-the-output-the-taf-card"><span class="header-section-number">48.6</span> How to read the output: the <em>TAF Card</em></a></li>
-  <li><a href="#verification-the-receipts" id="toc-verification-the-receipts" class="nav-link" data-scroll-target="#verification-the-receipts"><span class="header-section-number">48.7</span> Verification (the receipts)</a></li>
+  <li><a href="#how-it-is-organized-five-questions-not-a-list-of-modes" id="toc-how-it-is-organized-five-questions-not-a-list-of-modes" class="nav-link" data-scroll-target="#how-it-is-organized-five-questions-not-a-list-of-modes"><span class="header-section-number">48.3</span> How it is organized: five questions, not a list of modes</a></li>
+  <li><a href="#guided-demos-and-your-language" id="toc-guided-demos-and-your-language" class="nav-link" data-scroll-target="#guided-demos-and-your-language"><span class="header-section-number">48.4</span> Guided demos and your language</a></li>
+  <li><a href="#the-anti-bullshit-pack" id="toc-the-anti-bullshit-pack" class="nav-link" data-scroll-target="#the-anti-bullshit-pack"><span class="header-section-number">48.5</span> The <em>Anti-Bullshit Pack</em></a></li>
+  <li><a href="#the-recipes-8-core" id="toc-the-recipes-8-core" class="nav-link" data-scroll-target="#the-recipes-8-core"><span class="header-section-number">48.6</span> The recipes (8 core)</a></li>
+  <li><a href="#how-to-read-the-output-the-taf-card" id="toc-how-to-read-the-output-the-taf-card" class="nav-link" data-scroll-target="#how-to-read-the-output-the-taf-card"><span class="header-section-number">48.7</span> How to read the output: the <em>TAF Card</em></a></li>
+  <li><a href="#verification-the-receipts" id="toc-verification-the-receipts" class="nav-link" data-scroll-target="#verification-the-receipts"><span class="header-section-number">48.8</span> Verification (the receipts)</a></li>
   </ul>
 </nav>
     </div>
@@ -1107,24 +1108,31 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="the-7-modes" class="level2" data-number="48.3">
-<h2 data-number="48.3" class="anchored" data-anchor-id="the-7-modes"><span class="header-section-number">48.3</span> The 7 modes</h2>
+<section id="how-it-is-organized-five-questions-not-a-list-of-modes" class="level2" data-number="48.3">
+<h2 data-number="48.3" class="anchored" data-anchor-id="how-it-is-organized-five-questions-not-a-list-of-modes"><span class="header-section-number">48.3</span> How it is organized: five questions, not a list of modes</h2>
+<p>The landing page groups the tools by <strong>what you want to do</strong> (modes grow with every release; the always-current list lives in the app’s own 📘 manual):</p>
 <ol type="1">
-<li><strong>📇 Profile.</strong> Paste a <em>model id</em> → γ_Padé vs γ_observed, R², regime, horizon. <strong>The starting mode.</strong></li>
-<li><strong>🆚 Compare.</strong> Pits two models against each other on the same axes.</li>
-<li><strong>🔍 Inspect config.</strong> Reads and explains the <code>config.json</code> (θ, heads, SWA…).</li>
-<li><strong>💬 Ask plain English.</strong> Ask in natural language (handled by a small model <em>in-browser</em>).</li>
-<li><strong>📋 Pick recipe.</strong> Choose an X-* recipe (below).</li>
-<li><strong>🩺 Diagnose CLI.</strong> Command-line-style diagnosis.</li>
-<li><strong>📊 Phase diagram.</strong> Places a panel of models on the γ axis (Phase A/B) — the <strong>atlas</strong> interactive.</li>
+<li><strong>🔬 “Will this model work for me?”</strong> — <em>Profile</em> (paste an id → the full TAF Card, <strong>the starting mode</strong>), <em>Fit Check</em>, <em>Unmask</em>, <em>Memory Reality</em>, <em>NIAH→Reason</em>, <em>LongScore</em>, <em>Quant</em>, <em>YaRN Planner</em>, <em>GGUF Bridge</em>, <em>Launch Flags</em>, <em>Inspect config</em>…</li>
+<li><strong>✓ “Should I believe this number?”</strong> — <em>Contamination</em>, <em>Drift</em>, <em>Arena CI</em>, <em>Saturation</em>.</li>
+<li><strong>⚙️ “Set up an eval correctly”</strong> — <em>Chat-template Sniffer</em>, <em>Diagnose CLI</em>, <em>JSON CoT</em>, <em>PEFT Lint</em>, <em>Cache Diff</em>, <em>Spec-Decode</em>, <em>Token Tax</em>.</li>
+<li><strong>🆚 “Compare models”</strong> — <em>Compare</em> (2-3 models, same recipe) and the interactive <strong>phase diagram</strong> (the atlas, live).</li>
+<li><strong>📋 “Manual / free-form”</strong> — <em>Pick recipe</em> (a specific X-<em>) and </em>Ask* (natural-language question, handled by a small in-browser LLM).</li>
 </ol>
+<p>Recent highlight — <strong>💾 Fit Check (“will it fit?”)</strong>: model + precision + GPU + context → the full VRAM budget (weights + <strong>KV cache</strong> + scratch), <em>why</em> it doesn’t fit when it doesn’t (weights or KV?), the max context that does fit, and the cheapest rescue. It answers the most repeated forum question <em>before</em> downloading anything — and teaches the Ch. 21 lesson along the way: at long context, the KV cache can weigh as much as the model.</p>
 </section>
-<section id="the-anti-bullshit-pack-11-tools" class="level2" data-number="48.4">
-<h2 data-number="48.4" class="anchored" data-anchor-id="the-anti-bullshit-pack-11-tools"><span class="header-section-number">48.4</span> The <em>Anti-Bullshit Pack</em> (11 tools)</h2>
+<section id="guided-demos-and-your-language" class="level2" data-number="48.4">
+<h2 data-number="48.4" class="anchored" data-anchor-id="guided-demos-and-your-language"><span class="header-section-number">48.4</span> Guided demos and your language</h2>
+<ul>
+<li>Every mode has a <strong>🎬 Demo</strong> button: a guided simulation that types, clicks and narrates step by step, ending with a “what you just learned” card. Linkable: <code>?demo=fitcheck</code>, <code>?demo=profile</code>, <code>?demo=yarn</code>… — handy for sharing or teaching.</li>
+<li><strong>Four languages end-to-end</strong> (EN/ES/FR/ZH): since v0.12 not just the menus — the demos, the recipe verdicts and their explanations follow the browser language too.</li>
+</ul>
+</section>
+<section id="the-anti-bullshit-pack" class="level2" data-number="48.5">
+<h2 data-number="48.5" class="anchored" data-anchor-id="the-anti-bullshit-pack"><span class="header-section-number">48.5</span> The <em>Anti-Bullshit Pack</em></h2>
 <p>Diagnostics that attack the “smoke” of model cards: <strong>Context Unmasker</strong> (real long context vs advertised), <strong>Chat-template Sniffer</strong>, <strong>Quant-regime Classifier</strong>, <strong>Multilingual Tokenizer Tax</strong> (tokenizes real text in 6 tokenizers → how much your language “costs”), <strong>Contamination Prior</strong>, <strong>LongScore</strong> (RULER+HELMET), <strong>PEFT Anti-Pattern</strong>, <strong>Spec-Decode</strong>, plus extension: <strong>YaRN/RoPE planner</strong>, <strong>GGUF Bridge</strong>, <strong>Launch-Flag Generator</strong>.</p>
 </section>
-<section id="the-recipes-8-core" class="level2" data-number="48.5">
-<h2 data-number="48.5" class="anchored" data-anchor-id="the-recipes-8-core"><span class="header-section-number">48.5</span> The recipes (8 core)</h2>
+<section id="the-recipes-8-core" class="level2" data-number="48.6">
+<h2 data-number="48.6" class="anchored" data-anchor-id="the-recipes-8-core"><span class="header-section-number">48.6</span> The recipes (8 core)</h2>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 33%">
@@ -1182,13 +1190,13 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="how-to-read-the-output-the-taf-card" class="level2" data-number="48.6">
-<h2 data-number="48.6" class="anchored" data-anchor-id="how-to-read-the-output-the-taf-card"><span class="header-section-number">48.6</span> How to read the output: the <em>TAF Card</em></h2>
+<section id="how-to-read-the-output-the-taf-card" class="level2" data-number="48.7">
+<h2 data-number="48.7" class="anchored" data-anchor-id="how-to-read-the-output-the-taf-card"><span class="header-section-number">48.7</span> How to read the output: the <em>TAF Card</em></h2>
 <p>The result is summarized in a <strong>TAF Card</strong> with <strong>✅ / ⚠ / ❌</strong> verdicts per dimension (context, quantization, template, regime). And there is a <strong>falsification dashboard (F1-F23)</strong>: it doesn’t just hand you numbers, it <strong>puts the claims to the test</strong> —the same philosophy as Ch. 38—.</p>
 <p><strong>A typical flow:</strong> <em>Profile</em> (paste the id) → read the <strong>verdict</strong> on the TAF Card → if something comes back ⚠/❌, open the specific <strong>diagnostic</strong> (e.g.&nbsp;<em>Context Unmasker</em> or <em>Quant-regime</em>) → use the matching <strong>recipe</strong> (X-2 context, X-19 KV) to decide.</p>
 </section>
-<section id="verification-the-receipts" class="level2" data-number="48.7">
-<h2 data-number="48.7" class="anchored" data-anchor-id="verification-the-receipts"><span class="header-section-number">48.7</span> Verification (the receipts)</h2>
+<section id="verification-the-receipts" class="level2" data-number="48.8">
+<h2 data-number="48.8" class="anchored" data-anchor-id="verification-the-receipts"><span class="header-section-number">48.8</span> Verification (the receipts)</h2>
 <ul>
 <li><strong>Pyodide</strong> for the math (deterministic), <strong>WebLLM</strong> for the natural language, <strong>transformers.js</strong> for the tokenizer.</li>
 <li><strong>Lean+Mathlib verification:</strong> 15 identities formally proved (<code>github.com/karlesmarin/lean-taf</code>).</li>
