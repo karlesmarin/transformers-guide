@@ -1439,25 +1439,25 @@ window.Quarto = {
 <li><span class="math inline">\((d_{head}/64)^{1/\sqrt{12}}\)</span> — la <strong>corrección por dimensión de cabeza</strong>: cabezas más anchas llevan más bandas de frecuencia, y el andamiaje posicional tarda más capas en agotarse. El exponente <span class="math inline">\(1/\sqrt{12} \approx 0.29\)</span> no es un ajuste caprichoso: <span class="math inline">\(\sqrt{12}\)</span> es la desviación típica de una distribución uniforme — y las log-frecuencias de RoPE están espaciadas <em>uniformemente</em> (<a href="14-aliasing.html" class="quarto-xref"><span>Capítulo 15</span></a>). Con <span class="math inline">\(d_{head}=64\)</span> (el estándar) el factor vale 1 y desaparece.</li>
 </ul>
 <p>Honestidad primero: esta fórmula viene de nuestro trabajo <span class="citation" data-cites="marin2026attend">(<a href="#ref-marin2026attend" role="doc-biblioref">Marín 2026</a>)</span> y hasta hoy está <strong>validada causalmente en solo dos modelos</strong> (±0.5 capas en ambos) — por eso la estamos poniendo a prueba en seis, con las predicciones congeladas <em>antes</em> de medir. La hipótesis natural — la llamamos <strong>H1</strong> — es que la frontera de la banda de la pizarra <strong>es</strong> esa <span class="math inline">\(L_{crit}\)</span>: la pizarra necesita el andamiaje posicional para rutear conceptos entre posiciones, y donde el andamiaje termina, el contenido colapsa en la respuesta.</p>
-<div class="callout callout-style-default callout-important callout-titled" title="⚖️ Veredicto de la medición (2026-07-07) — H1 REFUTADA, y por qué eso es buena ciencia">
+<div class="callout callout-style-default callout-important callout-titled" title="Resultado de la medición (2026-07-07): H1 refutada">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>⚖️ Veredicto de la medición (2026-07-07) — H1 REFUTADA, y por qué eso es buena ciencia
+<span class="screen-reader-only">Importante</span>Resultado de la medición (2026-07-07): H1 refutada
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Prometimos publicar el resultado “confirme o refute”. <strong>Refutó.</strong> Testeamos H1 en la escalera Pythia con protocolo pre-registrado, y el diseño discriminante hizo su trabajo:</p>
+<p>Testeamos H1 en la escalera Pythia con protocolo pre-registrado. Resultado:</p>
 <ul>
-<li>En 70m y 410m (ambos con <span class="math inline">\(L_{crit}/N = 0.63\)</span>), el codo del logit lens cayó en la predicción con error ≤2 capas. Prometedor… pero ambiguo: ahí <span class="math inline">\(L_{crit}\)</span> coincide con la fracción “universal”.</li>
-<li>El juez era <strong>pythia-1b</strong> (<span class="math inline">\(d_{head}=256\)</span> → <span class="math inline">\(L_{crit}/N = 0.94\)</span>, lejos de todo): su codo salió en <strong>L11/16 = 0.69</strong> — en el rango del <em>null</em> (fracción fija), no en el de H1. Y su banda de ventaja J-lens ni siquiera existe (el J-lens nunca dobla al logit lens).</li>
-<li>Los tres modelos juntos: codo en fracción <strong>0.67 / 0.71 / 0.69</strong> — <strong>constante ≈ 0.69</strong>, justo lo que predecía la hipótesis nula.</li>
+<li>En 70m y 410m (ambos con <span class="math inline">\(L_{crit}/N = 0.63\)</span>), el codo del logit lens cayó en la predicción con error ≤2 capas — pero ahí <span class="math inline">\(L_{crit}\)</span> coincide con la fracción típica, así que no discrimina.</li>
+<li>El modelo discriminante era <strong>pythia-1b</strong> (<span class="math inline">\(d_{head}=256\)</span> → <span class="math inline">\(L_{crit}/N = 0.94\)</span>): su codo salió en <strong>L11/16 = 0.69</strong>, en el rango de la hipótesis nula (fracción fija), no en el de H1. Su banda de ventaja J-lens además no existe (el J-lens nunca dobla al logit lens en ninguna capa).</li>
+<li>Los tres modelos juntos: codo en fracción <strong>0.67 / 0.71 / 0.69</strong> — constante ≈ 0.69.</li>
 </ul>
-<p>Moraleja doble. (1) El factor <span class="math inline">\((d_{head}/64)^{1/\sqrt{12}}\)</span> de la fórmula — el que estaba validado con solo n=2 — es el responsable directo del fallo: <strong>eso es exactamente lo que un test de generalización debe descubrir</strong>. (2) Queda una pista abierta y honesta: la fracción <em>sin</em> ese factor, <span class="math inline">\(\log_\theta(T/2\pi) = 0.628\)</span>, predice los tres codos con ≤2 capas de error — pero en Pythia (θ y T idénticos en toda la escalera) es indistinguible de “constante universal”. El test que las separa (un modelo con θ distinto, p.&nbsp;ej. Llama-3-8B → predicción 0.55 vs ~0.69) está pre-registrado como H1b y <strong>no afirmamos nada hasta que corra</strong>. Datos, figura y pre-registro completo: <a href="https://github.com/karlesmarin/predicting-how-transformers-attend">repo de investigación</a>. Así se ve el <a href="38-audit.html" class="quarto-xref"><span>Capítulo 39</span></a> por dentro, aplicado a uno mismo.</p>
+<p>El fallo se localiza en el factor <span class="math inline">\((d_{head}/64)^{1/\sqrt{12}}\)</span>, que estaba validado con n=2. Queda una pista abierta: la fracción <em>sin</em> ese factor, <span class="math inline">\(\log_\theta(T/2\pi) = 0.628\)</span>, predice los tres codos con ≤2 capas de error — pero en Pythia (θ y T idénticos en toda la escalera) es indistinguible de una constante universal. El test que las separa (un modelo con θ distinto, p.&nbsp;ej. Llama-3-8B → predicción 0.55 vs ~0.69) está registrado como H1b y pendiente de ejecutar. Datos, figura y pre-registro: <a href="https://github.com/karlesmarin/predicting-how-transformers-attend">repo de investigación</a>.</p>
 </div>
 </div>
 </div>
