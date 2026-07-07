@@ -947,6 +947,12 @@ div.csl-indent {
  <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Ethics, safety and limitations</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/42-workspace.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">The global workspace: reading the model’s whiteboard</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -961,37 +967,37 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R1-formulario.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R1 · Master formulary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R1 · Master formulary</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R2-cookbook.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R3-glosario.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R3 · Glossary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R3 · Glossary</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R4-medir-gamma.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R4 · Measuring your own γ (and reproducing the atlas)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R4 · Measuring your own γ (and reproducing the atlas)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R5-tafagent.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R5 · tafagent manual</span></span></a>
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">R5 · tafagent manual</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R6-soluciones.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">R6 · Exercise solutions</span></span></a>
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">R6 · Exercise solutions</span></span></a>
   </div>
 </li>
       </ul>
@@ -1134,7 +1140,7 @@ div.csl-indent {
 <section id="the-methods-seeing-and-above-all-intervening" class="level2" data-number="38.6">
 <h2 data-number="38.6" class="anchored" data-anchor-id="the-methods-seeing-and-above-all-intervening"><span class="header-section-number">38.6</span> The methods: seeing and, above all, intervening</h2>
 <ul>
-<li><strong>Logit lens</strong> <span class="citation" data-cites="nostalgebraist2020logitlens">(<a href="#ref-nostalgebraist2020logitlens" role="doc-biblioref"><span class="nocase">nostalgebraist</span> 2020</a>)</span>: projects the residual-stream activation at an intermediate layer through the <strong>output matrix</strong> (<em>unembedding</em>) to read the model’s “current bet” at that floor. It reveals that the prediction <strong>forms gradually</strong> with depth. The <strong>tuned lens</strong> <span class="citation" data-cites="belrose2023tunedlens">(<a href="#ref-belrose2023tunedlens" role="doc-biblioref"><span class="nocase">Belrose et al.</span> 2023</a>)</span> refines it with a per-layer linear probe (more reliable than the raw version).</li>
+<li><strong>Logit lens</strong> <span class="citation" data-cites="nostalgebraist2020logitlens">(<a href="#ref-nostalgebraist2020logitlens" role="doc-biblioref"><span class="nocase">nostalgebraist</span> 2020</a>)</span>: projects the residual-stream activation at an intermediate layer through the <strong>output matrix</strong> (<em>unembedding</em>) to read the model’s “current bet” at that floor. It reveals that the prediction <strong>forms gradually</strong> with depth. The <strong>tuned lens</strong> <span class="citation" data-cites="belrose2023tunedlens">(<a href="#ref-belrose2023tunedlens" role="doc-biblioref"><span class="nocase">Belrose et al.</span> 2023</a>)</span> refines it with a per-layer linear probe (more reliable than the raw version). And the <strong>Jacobian lens</strong> (J-lens) <span class="citation" data-cites="lindsey2026workspace">(<a href="#ref-lindsey2026workspace" role="doc-biblioref">Gurnee et al. 2026</a>)</span> corrects it with the <strong>average Jacobian</strong> between layer ℓ and the final layer — it reads interpretable content at intermediate layers where the logit lens only sees noise; with it the model’s <strong>global workspace</strong> was discovered (<a href="42-workspace.html" class="quarto-xref"><span>Chapter 43</span></a>).</li>
 <li><strong><em>Activation patching</em> / causal tracing:</strong> the central <strong>causal</strong> method. You run a <strong>clean</strong> pass and a <strong>corrupted</strong> one, <strong>transplant</strong> an activation from one to the other and measure how much the output changes → you locate which component is <strong>causally</strong> responsible. With this technique, ROME <span class="citation" data-cites="meng2022rome">(<a href="#ref-meng2022rome" role="doc-biblioref">Meng, Bau, et al. 2022</a>)</span> localized <strong>factual knowledge</strong> in the MLPs of intermediate layers (and then <strong>edited</strong> it; MEMIT <span class="citation" data-cites="meng2022memit">(<a href="#ref-meng2022memit" role="doc-biblioref">Meng, Sen Sharma, et al. 2022</a>)</span> scaled it to thousands of facts). The canonical full-circuit example is <strong>indirect object identification (IOI)</strong> in GPT-2 <span class="citation" data-cites="wang2022ioi">(<a href="#ref-wang2022ioi" role="doc-biblioref">Wang et al. 2023</a>)</span>: 26 heads in 7 classes, evaluated by faithfulness/completeness/minimality.</li>
 <li><strong>Probing:</strong> training a <strong>linear classifier</strong> on the activations to see whether certain information <strong>is present</strong>. Its important limit: <strong>correlation ≠ use</strong> —a probe shows that the information is <em>decodable</em>, not that the model <em>uses</em> it. That’s why MI prefers the <strong>causal</strong> methods.</li>
 </ul>
@@ -1227,6 +1233,9 @@ Cunningham, Hoagy, Aidan Ewart, Logan Riggs, Robert Huben, and Lee Sharkey. 2023
 </div>
 <div id="ref-elhage2022superposition" class="csl-entry" role="listitem">
 <span class="nocase">Elhage, Nelson et al.</span> 2022. <span>“Toy Models of Superposition.”</span> <em>Transformer Circuits Thread (Anthropic)</em>. <a href="https://arxiv.org/abs/2209.10652">https://arxiv.org/abs/2209.10652</a>.
+</div>
+<div id="ref-lindsey2026workspace" class="csl-entry" role="listitem">
+Gurnee, Wes, Nicholas Sofroniew, Adam Pearce, et al. 2026. <em>Verbalizable Representations Form a Global Workspace in Language Models</em>. Transformer Circuits. <a href="https://transformer-circuits.pub/2026/workspace/index.html">https://transformer-circuits.pub/2026/workspace/index.html</a>.
 </div>
 <div id="ref-lindsey2025biology" class="csl-entry" role="listitem">
 <span class="nocase">Lindsey, Jack, Wes Gurnee, Emmanuel Ameisen, Brian Chen, Adam Pearce, et al.</span> 2025. <em>On the Biology of a Large Language Model</em>. Transformer Circuits. <a href="https://transformer-circuits.pub/2025/attribution-graphs/biology.html">https://transformer-circuits.pub/2025/attribution-graphs/biology.html</a>.

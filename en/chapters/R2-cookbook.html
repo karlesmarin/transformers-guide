@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>44&nbsp; R2 · Cookbook – How Transformers Attend</title>
+<title>45&nbsp; R2 · Cookbook – How Transformers Attend</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -595,7 +595,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/R1-formulario.html">Part VIII — Reference</a></li><li class="breadcrumb-item"><a href="../chapters/R2-cookbook.html"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/R1-formulario.html">Part VIII — Reference</a></li><li class="breadcrumb-item"><a href="../chapters/R2-cookbook.html"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -957,6 +957,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Ethics, safety and limitations</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/42-workspace.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">The global workspace: reading the model’s whiteboard</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -971,37 +977,37 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R1-formulario.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R1 · Master formulary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R1 · Master formulary</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R2-cookbook.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R3-glosario.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R3 · Glossary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R3 · Glossary</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R4-medir-gamma.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R4 · Measuring your own γ (and reproducing the atlas)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R4 · Measuring your own γ (and reproducing the atlas)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R5-tafagent.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R5 · tafagent manual</span></span></a>
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">R5 · tafagent manual</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R6-soluciones.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">R6 · Exercise solutions</span></span></a>
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">R6 · Exercise solutions</span></span></a>
   </div>
 </li>
       </ul>
@@ -1016,24 +1022,24 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#recipe-1-measure-a-models-γ" id="toc-recipe-1-measure-a-models-γ" class="nav-link active" data-scroll-target="#recipe-1-measure-a-models-γ"><span class="header-section-number">44.1</span> Recipe 1 — Measure a model’s γ</a></li>
-  <li><a href="#recipe-2-predict-γ-from-geometry-no-training" id="toc-recipe-2-predict-γ-from-geometry-no-training" class="nav-link" data-scroll-target="#recipe-2-predict-γ-from-geometry-no-training"><span class="header-section-number">44.2</span> Recipe 2 — Predict γ from geometry (no training)</a></li>
-  <li><a href="#recipe-3-separate-concentration-sink-from-decay-γ" id="toc-recipe-3-separate-concentration-sink-from-decay-γ" class="nav-link" data-scroll-target="#recipe-3-separate-concentration-sink-from-decay-γ"><span class="header-section-number">44.3</span> Recipe 3 — Separate concentration (sink) from decay (γ)</a></li>
-  <li><a href="#recipe-4-size-the-kv-cache-budget" id="toc-recipe-4-size-the-kv-cache-budget" class="nav-link" data-scroll-target="#recipe-4-size-the-kv-cache-budget"><span class="header-section-number">44.4</span> Recipe 4 — Size the KV-cache budget</a></li>
-  <li><a href="#recipe-5-extend-a-models-context" id="toc-recipe-5-extend-a-models-context" class="nav-link" data-scroll-target="#recipe-5-extend-a-models-context"><span class="header-section-number">44.5</span> Recipe 5 — Extend a model’s context</a></li>
-  <li><a href="#recipe-6-choose-a-decoding-strategy" id="toc-recipe-6-choose-a-decoding-strategy" class="nav-link" data-scroll-target="#recipe-6-choose-a-decoding-strategy"><span class="header-section-number">44.6</span> Recipe 6 — Choose a decoding strategy</a></li>
-  <li><a href="#recipe-7-decide-how-to-compress-a-model" id="toc-recipe-7-decide-how-to-compress-a-model" class="nav-link" data-scroll-target="#recipe-7-decide-how-to-compress-a-model"><span class="header-section-number">44.7</span> Recipe 7 — Decide how to compress a model</a></li>
-  <li><a href="#recipe-8-estimate-the-cost-of-serving" id="toc-recipe-8-estimate-the-cost-of-serving" class="nav-link" data-scroll-target="#recipe-8-estimate-the-cost-of-serving"><span class="header-section-number">44.8</span> Recipe 8 — Estimate the cost of serving</a></li>
-  <li><a href="#recipe-0-how-not-to-fool-yourself-the-meta-recipe" id="toc-recipe-0-how-not-to-fool-yourself-the-meta-recipe" class="nav-link" data-scroll-target="#recipe-0-how-not-to-fool-yourself-the-meta-recipe"><span class="header-section-number">44.9</span> Recipe 0 — How NOT to fool yourself (the meta-recipe)</a></li>
+  <li><a href="#recipe-1-measure-a-models-γ" id="toc-recipe-1-measure-a-models-γ" class="nav-link active" data-scroll-target="#recipe-1-measure-a-models-γ"><span class="header-section-number">45.1</span> Recipe 1 — Measure a model’s γ</a></li>
+  <li><a href="#recipe-2-predict-γ-from-geometry-no-training" id="toc-recipe-2-predict-γ-from-geometry-no-training" class="nav-link" data-scroll-target="#recipe-2-predict-γ-from-geometry-no-training"><span class="header-section-number">45.2</span> Recipe 2 — Predict γ from geometry (no training)</a></li>
+  <li><a href="#recipe-3-separate-concentration-sink-from-decay-γ" id="toc-recipe-3-separate-concentration-sink-from-decay-γ" class="nav-link" data-scroll-target="#recipe-3-separate-concentration-sink-from-decay-γ"><span class="header-section-number">45.3</span> Recipe 3 — Separate concentration (sink) from decay (γ)</a></li>
+  <li><a href="#recipe-4-size-the-kv-cache-budget" id="toc-recipe-4-size-the-kv-cache-budget" class="nav-link" data-scroll-target="#recipe-4-size-the-kv-cache-budget"><span class="header-section-number">45.4</span> Recipe 4 — Size the KV-cache budget</a></li>
+  <li><a href="#recipe-5-extend-a-models-context" id="toc-recipe-5-extend-a-models-context" class="nav-link" data-scroll-target="#recipe-5-extend-a-models-context"><span class="header-section-number">45.5</span> Recipe 5 — Extend a model’s context</a></li>
+  <li><a href="#recipe-6-choose-a-decoding-strategy" id="toc-recipe-6-choose-a-decoding-strategy" class="nav-link" data-scroll-target="#recipe-6-choose-a-decoding-strategy"><span class="header-section-number">45.6</span> Recipe 6 — Choose a decoding strategy</a></li>
+  <li><a href="#recipe-7-decide-how-to-compress-a-model" id="toc-recipe-7-decide-how-to-compress-a-model" class="nav-link" data-scroll-target="#recipe-7-decide-how-to-compress-a-model"><span class="header-section-number">45.7</span> Recipe 7 — Decide how to compress a model</a></li>
+  <li><a href="#recipe-8-estimate-the-cost-of-serving" id="toc-recipe-8-estimate-the-cost-of-serving" class="nav-link" data-scroll-target="#recipe-8-estimate-the-cost-of-serving"><span class="header-section-number">45.8</span> Recipe 8 — Estimate the cost of serving</a></li>
+  <li><a href="#recipe-0-how-not-to-fool-yourself-the-meta-recipe" id="toc-recipe-0-how-not-to-fool-yourself-the-meta-recipe" class="nav-link" data-scroll-target="#recipe-0-how-not-to-fool-yourself-the-meta-recipe"><span class="header-section-number">45.9</span> Recipe 0 — How NOT to fool yourself (the meta-recipe)</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/R1-formulario.html">Part VIII — Reference</a></li><li class="breadcrumb-item"><a href="../chapters/R2-cookbook.html"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/R1-formulario.html">Part VIII — Reference</a></li><li class="breadcrumb-item"><a href="../chapters/R2-cookbook.html"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-r2" class="quarto-section-identifier"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></h1>
+<h1 class="title"><span id="sec-r2" class="quarto-section-identifier"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></h1>
 </div>
 
 
@@ -1060,8 +1066,8 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<section id="recipe-1-measure-a-models-γ" class="level2" data-number="44.1">
-<h2 data-number="44.1" class="anchored" data-anchor-id="recipe-1-measure-a-models-γ"><span class="header-section-number">44.1</span> Recipe 1 — Measure a model’s γ</h2>
+<section id="recipe-1-measure-a-models-γ" class="level2" data-number="45.1">
+<h2 data-number="45.1" class="anchored" data-anchor-id="recipe-1-measure-a-models-γ"><span class="header-section-number">45.1</span> Recipe 1 — Measure a model’s γ</h2>
 <p><strong>Goal:</strong> obtain the decay exponent <span class="math inline">\(\gamma\)</span> that summarizes how attention falls off with distance.</p>
 <ol type="1">
 <li>Run a batch of texts through the model and <strong>record the attention weights</strong> of each head/layer.</li>
@@ -1073,8 +1079,8 @@ window.Quarto = {
 <p><strong>Where:</strong> Ch. 13 (reading maps) and Ch. 15 (the law). <strong>Shortcut:</strong> <em>Profile</em> mode in <a href="https://karlesmarin.github.io/tafagent/">tafagent</a>.</p>
 </blockquote>
 </section>
-<section id="recipe-2-predict-γ-from-geometry-no-training" class="level2" data-number="44.2">
-<h2 data-number="44.2" class="anchored" data-anchor-id="recipe-2-predict-γ-from-geometry-no-training"><span class="header-section-number">44.2</span> Recipe 2 — Predict γ from geometry (no training)</h2>
+<section id="recipe-2-predict-γ-from-geometry-no-training" class="level2" data-number="45.2">
+<h2 data-number="45.2" class="anchored" data-anchor-id="recipe-2-predict-γ-from-geometry-no-training"><span class="header-section-number">45.2</span> Recipe 2 — Predict γ from geometry (no training)</h2>
 <p><strong>Goal:</strong> estimate γ <strong>before</strong> measuring, using only RoPE’s base θ and the length <span class="math inline">\(T\)</span>.</p>
 <ol type="1">
 <li>Take <strong>θ</strong> (a model hyperparameter, e.g.&nbsp;10000) and the <strong>length</strong> <span class="math inline">\(T\)</span> you are evaluating.</li>
@@ -1085,8 +1091,8 @@ window.Quarto = {
 <p><strong>Where:</strong> Ch. 15. <strong>Formal receipt:</strong> the γ_Padé=Cayley identity is <strong>proved in Lean</strong> (📐, R1).</p>
 </blockquote>
 </section>
-<section id="recipe-3-separate-concentration-sink-from-decay-γ" class="level2" data-number="44.3">
-<h2 data-number="44.3" class="anchored" data-anchor-id="recipe-3-separate-concentration-sink-from-decay-γ"><span class="header-section-number">44.3</span> Recipe 3 — Separate concentration (sink) from decay (γ)</h2>
+<section id="recipe-3-separate-concentration-sink-from-decay-γ" class="level2" data-number="45.3">
+<h2 data-number="45.3" class="anchored" data-anchor-id="recipe-3-separate-concentration-sink-from-decay-γ"><span class="header-section-number">45.3</span> Recipe 3 — Separate concentration (sink) from decay (γ)</h2>
 <p><strong>Goal:</strong> don’t conflate two things the literature mixes up.</p>
 <ol type="1">
 <li>Measure <strong>two</strong> distinct signals: the <strong>sink mass</strong> (how much attention lands on the first tokens) <strong>and</strong> the <strong>γ</strong> (Recipe 1).</li>
@@ -1097,8 +1103,8 @@ window.Quarto = {
 <p><strong>Where:</strong> Ch. 17. <strong>Shortcut:</strong> tafagent reports <code>peak_max_share</code> (sink) <strong>and</strong> γ separately.</p>
 </blockquote>
 </section>
-<section id="recipe-4-size-the-kv-cache-budget" class="level2" data-number="44.4">
-<h2 data-number="44.4" class="anchored" data-anchor-id="recipe-4-size-the-kv-cache-budget"><span class="header-section-number">44.4</span> Recipe 4 — Size the KV-cache budget</h2>
+<section id="recipe-4-size-the-kv-cache-budget" class="level2" data-number="45.4">
+<h2 data-number="45.4" class="anchored" data-anchor-id="recipe-4-size-the-kv-cache-budget"><span class="header-section-number">45.4</span> Recipe 4 — Size the KV-cache budget</h2>
 <p><strong>Goal:</strong> estimate how much KV cache you <strong>really</strong> need at the target length.</p>
 <ol type="1">
 <li>Measure γ (Recipe 1). If <strong>γ &gt; 1</strong> (Phase B, concentrates nearby), the cache is <strong>compressible</strong>.</li>
@@ -1110,8 +1116,8 @@ window.Quarto = {
 <p><strong>Where:</strong> Ch. 20 (D_f) and Ch. 36 (serving). <strong>Shortcut:</strong> tafagent computes the KV memory.</p>
 </blockquote>
 </section>
-<section id="recipe-5-extend-a-models-context" class="level2" data-number="44.5">
-<h2 data-number="44.5" class="anchored" data-anchor-id="recipe-5-extend-a-models-context"><span class="header-section-number">44.5</span> Recipe 5 — Extend a model’s context</h2>
+<section id="recipe-5-extend-a-models-context" class="level2" data-number="45.5">
+<h2 data-number="45.5" class="anchored" data-anchor-id="recipe-5-extend-a-models-context"><span class="header-section-number">45.5</span> Recipe 5 — Extend a model’s context</h2>
 <p><strong>Goal:</strong> make a model work beyond its training length.</p>
 <ol type="1">
 <li>Remember: RoPE’s wavelengths depend on θ; <strong>rescaling θ</strong> stretches them.</li>
@@ -1122,8 +1128,8 @@ window.Quarto = {
 <p><strong>Where:</strong> Ch. 14 (scales), Ch. 19 (long context).</p>
 </blockquote>
 </section>
-<section id="recipe-6-choose-a-decoding-strategy" class="level2" data-number="44.6">
-<h2 data-number="44.6" class="anchored" data-anchor-id="recipe-6-choose-a-decoding-strategy"><span class="header-section-number">44.6</span> Recipe 6 — Choose a decoding strategy</h2>
+<section id="recipe-6-choose-a-decoding-strategy" class="level2" data-number="45.6">
+<h2 data-number="45.6" class="anchored" data-anchor-id="recipe-6-choose-a-decoding-strategy"><span class="header-section-number">45.6</span> Recipe 6 — Choose a decoding strategy</h2>
 <p><strong>Goal:</strong> get greedy/sampling right for the task.</p>
 <ol type="1">
 <li><strong>Closed</strong> task (code, factual, translation)? → <strong>greedy/beam</strong> (precision).</li>
@@ -1135,8 +1141,8 @@ window.Quarto = {
 <p><strong>Where:</strong> Ch. 12 (basics) and Ch. 29 (in depth).</p>
 </blockquote>
 </section>
-<section id="recipe-7-decide-how-to-compress-a-model" class="level2" data-number="44.7">
-<h2 data-number="44.7" class="anchored" data-anchor-id="recipe-7-decide-how-to-compress-a-model"><span class="header-section-number">44.7</span> Recipe 7 — Decide how to compress a model</h2>
+<section id="recipe-7-decide-how-to-compress-a-model" class="level2" data-number="45.7">
+<h2 data-number="45.7" class="anchored" data-anchor-id="recipe-7-decide-how-to-compress-a-model"><span class="header-section-number">45.7</span> Recipe 7 — Decide how to compress a model</h2>
 <p><strong>Goal:</strong> shrink it without losing (much) quality.</p>
 <ol type="1">
 <li><strong>First choice: quantization.</strong> 8 bits ≈ lossless; 4 bits nearly so (GPTQ/AWQ). Below ~3-4 bits, <strong>cliff</strong> (math/code suffer).</li>
@@ -1148,8 +1154,8 @@ window.Quarto = {
 <p><strong>Where:</strong> Ch. 35.</p>
 </blockquote>
 </section>
-<section id="recipe-8-estimate-the-cost-of-serving" class="level2" data-number="44.8">
-<h2 data-number="44.8" class="anchored" data-anchor-id="recipe-8-estimate-the-cost-of-serving"><span class="header-section-number">44.8</span> Recipe 8 — Estimate the cost of serving</h2>
+<section id="recipe-8-estimate-the-cost-of-serving" class="level2" data-number="45.8">
+<h2 data-number="45.8" class="anchored" data-anchor-id="recipe-8-estimate-the-cost-of-serving"><span class="header-section-number">45.8</span> Recipe 8 — Estimate the cost of serving</h2>
 <p><strong>Goal:</strong> anticipate throughput/latency/memory before deploying.</p>
 <ol type="1">
 <li>Identify the bottleneck: <strong>decode</strong> (bandwidth-bound), not prefill.</li>
@@ -1161,8 +1167,8 @@ window.Quarto = {
 <p><strong>Where:</strong> Ch. 34 and Ch. 36.</p>
 </blockquote>
 </section>
-<section id="recipe-0-how-not-to-fool-yourself-the-meta-recipe" class="level2" data-number="44.9">
-<h2 data-number="44.9" class="anchored" data-anchor-id="recipe-0-how-not-to-fool-yourself-the-meta-recipe"><span class="header-section-number">44.9</span> Recipe 0 — How NOT to fool yourself (the meta-recipe)</h2>
+<section id="recipe-0-how-not-to-fool-yourself-the-meta-recipe" class="level2" data-number="45.9">
+<h2 data-number="45.9" class="anchored" data-anchor-id="recipe-0-how-not-to-fool-yourself-the-meta-recipe"><span class="header-section-number">45.9</span> Recipe 0 — How NOT to fool yourself (the meta-recipe)</h2>
 <p>Before believing any number —yours or a paper’s—:</p>
 <ol type="1">
 <li><strong>Ask for the receipt:</strong> is there a proof (📐), data (📊), or just a claim? No receipt → folklore (Ch. 38).</li>
@@ -2594,12 +2600,12 @@ window.Quarto = {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../chapters/R1-formulario.html" class="pagination-link" aria-label="R1 · Master formulary">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R1 · Master formulary</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R1 · Master formulary</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../chapters/R3-glosario.html" class="pagination-link" aria-label="R3 · Glossary">
-        <span class="nav-page-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R3 · Glossary</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R3 · Glossary</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

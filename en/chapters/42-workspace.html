@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>41&nbsp; Evaluation: measuring without fooling yourself – How Transformers Attend</title>
+<title>43&nbsp; The global workspace: reading the model’s whiteboard – How Transformers Attend</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -22,6 +22,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 /* CSS for citations */
 div.csl-bib-body { }
@@ -51,8 +86,8 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../chapters/41-etica.html" rel="next">
-<link href="../chapters/39-mapa2026.html" rel="prev">
+<link href="../chapters/R1-formulario.html" rel="next">
+<link href="../chapters/41-etica.html" rel="prev">
 <link href="../icon.png" rel="icon" type="image/png">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -614,7 +649,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/37-interpretabilidad.html">Part VII — Interpretability and what is real</a></li><li class="breadcrumb-item"><a href="../chapters/40-evaluacion.html"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Evaluation: measuring without fooling yourself</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/37-interpretabilidad.html">Part VII — Interpretability and what is real</a></li><li class="breadcrumb-item"><a href="../chapters/42-workspace.html"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">The global workspace: reading the model’s whiteboard</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -966,7 +1001,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/40-evaluacion.html" class="sidebar-item-text sidebar-link active">
+  <a href="../chapters/40-evaluacion.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Evaluation: measuring without fooling yourself</span></span></a>
   </div>
 </li>
@@ -978,7 +1013,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/42-workspace.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/42-workspace.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">The global workspace: reading the model’s whiteboard</span></span></a>
   </div>
 </li>
@@ -1041,17 +1076,16 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#the-idea-in-one-sentence" id="toc-the-idea-in-one-sentence" class="nav-link active" data-scroll-target="#the-idea-in-one-sentence"><span class="header-section-number">41.1</span> The idea in one sentence</a></li>
-  <li><a href="#key-concepts-and-their-role-in-the-transformer" id="toc-key-concepts-and-their-role-in-the-transformer" class="nav-link" data-scroll-target="#key-concepts-and-their-role-in-the-transformer"><span class="header-section-number">41.2</span> Key concepts and their role in the transformer</a></li>
-  <li><a href="#why-a-whole-chapter" id="toc-why-a-whole-chapter" class="nav-link" data-scroll-target="#why-a-whole-chapter"><span class="header-section-number">41.3</span> Why a whole chapter</a></li>
-  <li><a href="#perplexity-the-internal-metric-and-its-limits" id="toc-perplexity-the-internal-metric-and-its-limits" class="nav-link" data-scroll-target="#perplexity-the-internal-metric-and-its-limits"><span class="header-section-number">41.4</span> Perplexity: the internal metric (and its limits)</a></li>
-  <li><a href="#capability-benchmarks-putting-a-number-on-what-it-can-do" id="toc-capability-benchmarks-putting-a-number-on-what-it-can-do" class="nav-link" data-scroll-target="#capability-benchmarks-putting-a-number-on-what-it-can-do"><span class="header-section-number">41.5</span> Capability benchmarks: putting a number on what it can do</a></li>
-  <li><a href="#the-benchmark-mirage-contamination" id="toc-the-benchmark-mirage-contamination" class="nav-link" data-scroll-target="#the-benchmark-mirage-contamination"><span class="header-section-number">41.6</span> The benchmark mirage: contamination</a></li>
-  <li><a href="#the-judge-is-an-llm-and-it-can-be-fooled" id="toc-the-judge-is-an-llm-and-it-can-be-fooled" class="nav-link" data-scroll-target="#the-judge-is-an-llm-and-it-can-be-fooled"><span class="header-section-number">41.7</span> The judge is an LLM (and it can be fooled)</a></li>
-  <li><a href="#statistical-rigor-is-that-2-real" id="toc-statistical-rigor-is-that-2-real" class="nav-link" data-scroll-target="#statistical-rigor-is-that-2-real"><span class="header-section-number">41.8</span> Statistical rigor: is that “+2%” real?</a></li>
-  <li><a href="#bridge-to-our-theme-brief-and-honest" id="toc-bridge-to-our-theme-brief-and-honest" class="nav-link" data-scroll-target="#bridge-to-our-theme-brief-and-honest"><span class="header-section-number">41.9</span> Bridge to our theme (brief and honest)</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">41.10</span> Summary</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">41.11</span> Exercises</a></li>
+  <li><a href="#the-idea-in-one-sentence" id="toc-the-idea-in-one-sentence" class="nav-link active" data-scroll-target="#the-idea-in-one-sentence"><span class="header-section-number">43.1</span> The idea in one sentence</a></li>
+  <li><a href="#key-concepts-and-their-role-in-the-transformer" id="toc-key-concepts-and-their-role-in-the-transformer" class="nav-link" data-scroll-target="#key-concepts-and-their-role-in-the-transformer"><span class="header-section-number">43.2</span> Key concepts and their role in the transformer</a></li>
+  <li><a href="#the-whiteboard-had-a-corner-in-clean-letters" id="toc-the-whiteboard-had-a-corner-in-clean-letters" class="nav-link" data-scroll-target="#the-whiteboard-had-a-corner-in-clean-letters"><span class="header-section-number">43.3</span> The whiteboard had a corner in clean letters</a></li>
+  <li><a href="#watch-it-work" id="toc-watch-it-work" class="nav-link" data-scroll-target="#watch-it-work"><span class="header-section-number">43.4</span> Watch it work</a></li>
+  <li><a href="#and-how-do-we-know-it-isnt-a-mirage" id="toc-and-how-do-we-know-it-isnt-a-mirage" class="nav-link" data-scroll-target="#and-how-do-we-know-it-isnt-a-mirage"><span class="header-section-number">43.5</span> And how do we know it isn’t a mirage?</a></li>
+  <li><a href="#where-is-the-whiteboard-and-why-there" id="toc-where-is-the-whiteboard-and-why-there" class="nav-link" data-scroll-target="#where-is-the-whiteboard-and-why-there"><span class="header-section-number">43.6</span> Where is the whiteboard — and why there?</a></li>
+  <li><a href="#measure-your-own-whiteboard" id="toc-measure-your-own-whiteboard" class="nav-link" data-scroll-target="#measure-your-own-whiteboard"><span class="header-section-number">43.7</span> Measure your own whiteboard</a></li>
+  <li><a href="#and-what-is-knowing-where-it-is-good-for" id="toc-and-what-is-knowing-where-it-is-good-for" class="nav-link" data-scroll-target="#and-what-is-knowing-where-it-is-good-for"><span class="header-section-number">43.8</span> And what is knowing where it is good for?</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">43.9</span> Summary</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">43.10</span> Exercises</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
@@ -1059,9 +1093,9 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/37-interpretabilidad.html">Part VII — Interpretability and what is real</a></li><li class="breadcrumb-item"><a href="../chapters/40-evaluacion.html"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Evaluation: measuring without fooling yourself</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/37-interpretabilidad.html">Part VII — Interpretability and what is real</a></li><li class="breadcrumb-item"><a href="../chapters/42-workspace.html"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">The global workspace: reading the model’s whiteboard</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-evaluacion" class="quarto-section-identifier"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Evaluation: measuring without fooling yourself</span></span></h1>
+<h1 class="title"><span id="sec-workspace" class="quarto-section-identifier"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">The global workspace: reading the model’s whiteboard</span></span></h1>
 </div>
 
 
@@ -1084,195 +1118,391 @@ window.Quarto = {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-body-container">
-<p><strong>Where we are.</strong> We have trained (Part IV), used (Part V), made cheaper (Part VI) and audited from the inside (Chs. 37-39) a transformer. What’s left is the question that decides everything else: <strong>how do we know a model is <em>good</em>?</strong> Evaluation is as hard —and as easy to get wrong— as training. And it belongs here, in Part VII, because it shares its backbone: <strong>almost everything you measure is an imperfect <em>proxy</em></strong>, and the biggest danger is not measuring too little, but <strong>measuring wrong and believing it</strong>.</p>
+<p><strong>Where we are.</strong> We close Part VII with a story that comes full circle. Back in <a href="03-embeddings.html" class="quarto-xref"><span>Chapter 4</span></a> we called the residual stream “the <strong>shared whiteboard</strong>” — an analogy to understand how layers communicate. In July 2026, Anthropic showed the analogy was <strong>more literal than we knew</strong>: inside that whiteboard there is a part that works as a genuine <strong>workspace</strong> — you can <em>read</em> it, you can <em>edit</em> it, and it is where the model holds its reasoning <span class="citation" data-cites="lindsey2026workspace">(<a href="#ref-lindsey2026workspace" role="doc-biblioref">Gurnee et al. 2026</a>)</span>. This chapter tells how it was discovered, what it proves (and what it doesn’t), and how you can <strong>measure it yourself</strong>.</p>
 </div>
 </div>
 </div>
-<section id="the-idea-in-one-sentence" class="level2" data-number="41.1">
-<h2 data-number="41.1" class="anchored" data-anchor-id="the-idea-in-one-sentence"><span class="header-section-number">41.1</span> The idea in one sentence</h2>
-<p>Evaluating an LLM means estimating its capability with <strong>metrics that are proxies</strong> —none measures it directly— so knowing how to evaluate is, above all, <strong>knowing the traps</strong>: data contamination, the judge that gets fooled, and Goodhart’s law.</p>
+<section id="the-idea-in-one-sentence" class="level2" data-number="43.1">
+<h2 data-number="43.1" class="anchored" data-anchor-id="the-idea-in-one-sentence"><span class="header-section-number">43.1</span> The idea in one sentence</h2>
+<p>On the big whiteboard of the residual stream there is a <strong>corner written in clean letters</strong> — a small subspace (~10 %) whose content is in “token language”, readable — and that corner is the model’s <strong>working memory</strong>: it holds the concepts of deliberate reasoning while the rest of the network scribbles in automatic shorthand.</p>
 </section>
-<section id="key-concepts-and-their-role-in-the-transformer" class="level2" data-number="41.2">
-<h2 data-number="41.2" class="anchored" data-anchor-id="key-concepts-and-their-role-in-the-transformer"><span class="header-section-number">41.2</span> Key concepts and their role in the transformer</h2>
-<p>Before the details, we define this chapter’s terms and <strong>what each is for</strong>:</p>
+<section id="key-concepts-and-their-role-in-the-transformer" class="level2" data-number="43.2">
+<h2 data-number="43.2" class="anchored" data-anchor-id="key-concepts-and-their-role-in-the-transformer"><span class="header-section-number">43.2</span> Key concepts and their role in the transformer</h2>
 <ul>
-<li><strong>Perplexity.</strong> <em>Definition:</em> <span class="math inline">\(e^{\text{loss}}\)</span>; “how many tokens the model is hesitating between” (Ch. 11). <em>In the transformer:</em> the cheapest <strong>internal</strong> metric —but only comparable with the <strong>same tokenizer</strong>, and it doesn’t tell you whether the model is <em>useful</em>—.</li>
-<li><strong>Benchmark.</strong> <em>Definition:</em> a fixed set of tasks with known answers. <em>In the transformer:</em> the standard way to put a <strong>number</strong> on a capability (knowledge, code, math, long context).</li>
-<li><strong>LLM-as-judge.</strong> <em>Definition:</em> using <strong>another LLM</strong> to score open-ended answers. <em>In the transformer:</em> it scales human evaluation, but <strong>inherits biases</strong> (position, verbosity, self-preference).</li>
-<li><strong>Data contamination.</strong> <em>Definition:</em> the test <strong>leaked</strong> into the training data. <em>In the transformer:</em> it inflates the score <strong>without</strong> the model being any better —the number-one threat to validity—.</li>
-<li><strong>Goodhart’s law.</strong> <em>Definition:</em> “when a measure becomes a target, it stops being a good measure.” <em>In the transformer:</em> optimizing <em>for</em> a benchmark <strong>degrades</strong> what the benchmark was meant to measure.</li>
-<li><strong>Construct validity.</strong> <em>Definition:</em> whether the metric really measures the <strong>capability</strong> you claim, or just a correlated shortcut. <em>In the transformer:</em> the underlying question of the whole chapter.</li>
-<li><strong>Statistical rigor.</strong> <em>Definition:</em> error bars, several seeds, significance. <em>In the transformer:</em> without them, a “+2%” can be <strong>noise</strong>.</li>
+<li><strong>Jacobian lens (J-lens).</strong> <em>Definition:</em> the logit lens (<a href="37-interpretabilidad.html" class="quarto-xref"><span>Chapter 38</span></a>) with “per-layer prescription glasses”: it transports the activation with the <strong>average Jacobian</strong> <span class="math inline">\(J_\ell = \mathbb{E}[\partial h_{final}/\partial h_\ell]\)</span> before projecting onto the vocabulary. <em>In the transformer:</em> it reads content at intermediate layers <strong>where the logit lens only sees noise</strong>.</li>
+<li><strong>Workspace (J-space).</strong> <em>Definition:</em> the part of the residual stream the J-lens can read — sparse combinations of “one-token” vectors. <em>In the transformer:</em> the <strong>clean corner of the whiteboard</strong>: ~dozens of active concepts at a time, <em>working</em> memory (not a store of facts).</li>
+<li><strong>Depth band.</strong> <em>Definition:</em> the stretch of layers where that space is populated (in the Claude models, ~38 %–92 %). <em>In the transformer:</em> before it, content is not yet readable; after it, everything is already committed to the output.</li>
+<li><strong>Automatic/deliberate dissociation.</strong> <em>Definition:</em> erasing the workspace crushes flexible reasoning and <strong>leaves automatic tasks untouched</strong>. <em>In the transformer:</em> the <strong>causal</strong> proof that it is a system, not an artifact of the lens.</li>
+<li><strong>Ignition.</strong> <em>Definition:</em> an ambiguous mixture of two concepts <strong>snaps abruptly</strong> to one of them right at the band’s entrance. <em>In the transformer:</em> that is how the model resolves ambiguity — with a threshold, not gradually.</li>
+<li><strong>Externalization.</strong> <em>Definition:</em> writing the steps out (the chain-of-thought of
+<ol class="example" type="1">
+<li>offloads the whiteboard onto paper. <em>In the transformer:</em> that is why CoT <strong>survives</strong> when the whiteboard is erased: what is written down no longer needs to be held.</li>
+</ol></li>
 </ul>
+<p>The whole journey of this chapter, at a glance:</p>
+<div class="fg-flow" style="--steps:6" role="img" aria-label="The journey of a concept through the whiteboard: the token enters, low layers work in shorthand, in the band the concept is written legibly and held, at L_crit it collapses toward the output and the model says it.">
+  <span class="fg-spark" aria-hidden="true"></span>
+  <div class="fg-step" style="--i:0">
+    <span class="fg-chip">📥</span>
+    <div class="fg-card"><b>text comes in</b><span>tokens → shared whiteboard (Ch. 3)</span></div>
+  </div>
+  <div class="fg-step" style="--i:1">
+    <span class="fg-chip">✍️</span>
+    <div class="fg-card"><b>low layers: shorthand scribbles</b><span>position and grammar, unreadable to any lens</span></div>
+  </div>
+  <div class="fg-step" style="--i:2">
+    <span class="fg-chip">💡</span>
+    <div class="fg-card"><b>entering the band: ignition</b><span>the concept is written in clean letters — "Paris", readable</span></div>
+  </div>
+  <div class="fg-step" style="--i:3">
+    <span class="fg-chip">🧠</span>
+    <div class="fg-card"><b>the whiteboard holds</b><span>working memory: the plan travels positions without being said</span></div>
+  </div>
+  <div class="fg-step" style="--i:4">
+    <span class="fg-chip">🎯</span>
+    <div class="fg-card"><b>L_crit: commitment</b><span>content collapses toward the answer</span></div>
+  </div>
+  <div class="fg-step" style="--i:5">
+    <span class="fg-chip">📤</span>
+    <div class="fg-card"><b>the model says it</b><span>"Paris" — the whiteboard knew before</span></div>
+  </div>
+</div>
 </section>
-<section id="why-a-whole-chapter" class="level2" data-number="41.3">
-<h2 data-number="41.3" class="anchored" data-anchor-id="why-a-whole-chapter"><span class="header-section-number">41.3</span> Why a whole chapter</h2>
-<p>We already saw <strong>text</strong> metrics in Ch. 29 (BLEU, ROUGE, the LLM judge). Here we go up a level: evaluating the <strong>whole model</strong>. And we put it in Part VII on purpose, because evaluation is where the book’s honesty is really tested: <strong>a high number does not prove capability</strong>. The rest of the chapter is a tour of the metrics <em>and</em> of the ways each one can fool you.</p>
-</section>
-<section id="perplexity-the-internal-metric-and-its-limits" class="level2" data-number="41.4">
-<h2 data-number="41.4" class="anchored" data-anchor-id="perplexity-the-internal-metric-and-its-limits"><span class="header-section-number">41.4</span> Perplexity: the internal metric (and its limits)</h2>
-<p>The cheapest metric is the one you already have from training (Ch. 11): <strong>perplexity</strong>, <span class="math inline">\(\text{PPL}=e^{\text{loss}}\)</span>. It measures the model’s average surprise on a text: a PPL of 8 means it hesitates, on average, “as if among 8 tokens”. Lower = predicts better.</p>
-<div class="callout callout-style-default callout-warning callout-titled" title="⚠ The perplexity trap — not comparable across tokenizers">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>⚠ The perplexity trap — not comparable across tokenizers
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>PPL depends on <strong>how you split</strong> the text: a model with a large vocabulary cuts the same text into fewer tokens and comes out with a PPL that is <strong>not</strong> comparable to another model’s. That’s why, to really compare, we use <strong>bits-per-byte</strong> (bpb), which normalizes by bytes of text, not tokens. And even so: <strong>a low PPL doesn’t say the model is useful</strong> —only that it predicts the next token well—.</p>
-</div>
-</div>
-</section>
-<section id="capability-benchmarks-putting-a-number-on-what-it-can-do" class="level2" data-number="41.5">
-<h2 data-number="41.5" class="anchored" data-anchor-id="capability-benchmarks-putting-a-number-on-what-it-can-do"><span class="header-section-number">41.5</span> Capability benchmarks: putting a number on what it can do</h2>
-<p>To measure specific <em>capabilities</em> we use <strong>benchmarks</strong>: batteries of tasks with known answers. The big axes of 2024-2026:</p>
-<div id="tbl-benchmarks" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-benchmarks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;41.1: Benchmarks by capability (2024-2026)
-</figcaption>
-<div aria-describedby="tbl-benchmarks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Capability</th>
-<th>Reference benchmarks</th>
-<th>What they measure</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Knowledge / reasoning</td>
-<td><strong>MMLU</strong> <span class="citation" data-cites="hendrycks2021mmlu">(<a href="#ref-hendrycks2021mmlu" role="doc-biblioref">Hendrycks et al. 2021</a>)</span>, MMLU-Pro, <strong>GPQA</strong>, BBH</td>
-<td>exam questions across 57 subjects; GPQA at PhD level</td>
-</tr>
-<tr class="even">
-<td>Code</td>
-<td><strong>HumanEval</strong> <span class="citation" data-cites="chen2021humaneval">(<a href="#ref-chen2021humaneval" role="doc-biblioref"><span class="nocase">Chen et al.</span> 2021</a>)</span>, MBPP, <strong>SWE-bench</strong> <span class="citation" data-cites="jimenez2024swebench">(<a href="#ref-jimenez2024swebench" role="doc-biblioref">Jimenez et al. 2024</a>)</span></td>
-<td>writing functions that pass tests; SWE-bench, solving real GitHub <em>issues</em></td>
-</tr>
-<tr class="odd">
-<td>Math</td>
-<td><strong>GSM8K</strong> <span class="citation" data-cites="cobbe2021gsm8k">(<a href="#ref-cobbe2021gsm8k" role="doc-biblioref"><span class="nocase">Cobbe et al.</span> 2021</a>)</span>, MATH, AIME</td>
-<td>word problems (GSM8K) and competition math (MATH/AIME)</td>
-</tr>
-<tr class="even">
-<td>Long context</td>
-<td><strong>NIAH</strong> (needle-in-a-haystack), <strong>RULER</strong> <span class="citation" data-cites="hsieh2024ruler">(<a href="#ref-hsieh2024ruler" role="doc-biblioref"><span class="nocase">Hsieh et al.</span> 2024</a>)</span></td>
-<td>finding/using information hidden in a huge context</td>
-</tr>
-<tr class="odd">
-<td>Chat / preference</td>
-<td><strong>Chatbot Arena</strong> (Elo), MT-Bench</td>
-<td>which answer humans prefer, head to head</td>
-</tr>
-</tbody>
-</table>
-</div>
-</figure>
-</div>
-<div class="callout callout-style-default callout-note callout-titled" title="🆕 2025-26 — benchmarks saturate (and their hard successors)">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>🆕 2025-26 — benchmarks saturate (and their hard successors)
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Benchmarks have an <strong>expiry date</strong>: MMLU, brutal in 2020, is now beaten by frontier models by over <strong>92%</strong> —a ceiling—. The community’s answer is <strong>much harder</strong> successors: <strong>ARC-AGI-2</strong> <span class="citation" data-cites="arcagi2_2025">(<a href="#ref-arcagi2_2025" role="doc-biblioref">Chollet et al. 2025</a>)</span> (fluid abstract reasoning, with a human <em>baseline</em>), <strong>Humanity’s Last Exam</strong> <span class="citation" data-cites="phan2025hle">(<a href="#ref-phan2025hle" role="doc-biblioref"><span class="nocase">Phan et al.</span> 2025</a>)</span> (expert-level questions, created <em>precisely because</em> MMLU got easy) and <strong>FrontierMath</strong> <span class="citation" data-cites="glazer2024frontiermath">(<a href="#ref-glazer2024frontiermath" role="doc-biblioref"><span class="nocase">Glazer et al.</span> 2024</a>)</span> (research mathematics, where the best models solve <strong>&lt;2%</strong>). The lesson: a saturated benchmark <strong>no longer distinguishes</strong> models —you have to raise the bar—.</p>
-</div>
-</div>
+<section id="the-whiteboard-had-a-corner-in-clean-letters" class="level2" data-number="43.3">
+<h2 data-number="43.3" class="anchored" data-anchor-id="the-whiteboard-had-a-corner-in-clean-letters"><span class="header-section-number">43.3</span> The whiteboard had a corner in clean letters</h2>
+<p>Let’s start with the question that triggers everything. If the residual stream is a whiteboard where layers take notes — <strong>could we read it ourselves?</strong></p>
+<p>You already know the first attempt from <a href="37-interpretabilidad.html" class="quarto-xref"><span>Chapter 38</span></a>: the <em>logit lens</em> projects any layer’s activation onto the vocabulary — “what would the model say if it stopped here?”. It works… but only near the end. At early and intermediate layers it returns noise.</p>
+<p>Now think: <strong>why does it fail there?</strong> Is there really nothing written across half the network — or are we reading with the wrong glasses?</p>
+<p>The answer turned out to be the latter. Each layer writes on the whiteboard in its own “coordinate system”, and the logit lens reads all of them with the last layer’s coordinates. The fix is conceptually simple: measure, averaging over ~1,000 texts, <em>how on average</em> what is written at layer ℓ translates into the final layer’s language — that is exactly an average Jacobian — and translate before reading:</p>
+<p><span class="math display">\[\text{lens}_\ell(h) = \text{unembed}\big(\,\text{norm}(J_\ell\, h)\,\big)\]</span></p>
 <div class="analogia">
-<p><strong>🧩 Analogy — the exam and the student.</strong> A benchmark is an <strong>exam</strong>; the score is a proxy for what the student <em>knows</em>. A well-made exam correlates with real knowledge… until the student <strong>gets the exam in advance</strong> (contamination) or <strong>studies only for that exam</strong> (Goodhart). Then the score rises and the knowledge doesn’t.</p>
+<p><strong>🧩 Analogy — prescription glasses for each layer.</strong> The logit lens tries to read every line of the whiteboard with the <strong>same glasses</strong> (the final line’s). The Jacobian lens is <strong>fitted for each line</strong>: it measures how much the path from that line to the end “defocuses”, and compensates before reading. With the right glasses, lines that looked like scribbles turn out to be <strong>full of words</strong>.</p>
 </div>
+<p>One important warning before we continue: this lens does <strong>not predict the next token</strong> (the model’s own output already does that). It reads which concepts the model has <em>on the table</em> — the ingredients, not the served dish. That difference is the key to the whole chapter.</p>
 </section>
-<section id="the-benchmark-mirage-contamination" class="level2" data-number="41.6">
-<h2 data-number="41.6" class="anchored" data-anchor-id="the-benchmark-mirage-contamination"><span class="header-section-number">41.6</span> The benchmark mirage: contamination</h2>
-<p>Here is the number-one threat, and the reason this chapter lives in Part VII. <strong>Contamination</strong> is when the test questions <strong>appeared in the training data</strong> (web data is enormous and benchmarks are <em>on</em> the web). The model then <strong>remembers</strong> the answer instead of reasoning it out: the score goes up, real capability doesn’t move.</p>
-<p>Move it yourself. Turn up the contamination dial and watch the <strong>score</strong> shoot up while <strong>real ability</strong> stays flat —the gap is pure <strong>mirage</strong>:</p>
-<div class="fg-mirage"></div>
-<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Verified — contamination is real and measurable">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<section id="watch-it-work" class="level2" data-number="43.4">
+<h2 data-number="43.4" class="anchored" data-anchor-id="watch-it-work"><span class="header-section-number">43.4</span> Watch it work</h2>
+<p>How many tokens <em>before</em> saying “Paris” do you think the model has already settled on it? Watch — then switch to “logit lens” to understand why nobody had seen this before:</p>
+<div class="fg-ws" id="fg-ws-1" role="img" aria-label="Animation of the model's whiteboard: a grid of layers by positions where concepts appear in the intermediate band before being emitted. Paris is readable at intermediate layers four tokens before being generated.">
+<style>
+#fg-ws-1{--band:#7c5cbf;--band-bg:rgba(124,92,191,.10);--late:#b8860b;--ok:#2e7d32;
+  border:1px solid #ddd;border-radius:10px;padding:.8rem;margin:1rem 0;font-family:Georgia,serif}
+#fg-ws-1 .ws-ctrl{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:.6rem}
+#fg-ws-1 button{font:inherit;padding:.15rem .7rem;border:1px solid #bbb;border-radius:6px;
+  background:#fafafa;cursor:pointer}
+#fg-ws-1 button.on{background:var(--band);color:#fff;border-color:var(--band)}
+#fg-ws-1 input[type=range]{flex:1;min-width:110px}
+#fg-ws-1 .ws-grid{display:grid;gap:2px;font-size:.62rem;line-height:1.25}
+#fg-ws-1 .ws-cell{border-radius:3px;background:#f4f4f4;text-align:center;padding:.12rem .05rem;
+  min-height:1.15rem;color:#999;overflow:hidden;white-space:nowrap;transition:opacity .4s,background .4s}
+#fg-ws-1 .ws-cell.dim{opacity:.14}
+#fg-ws-1 .ws-cell.band{background:var(--band-bg)}
+#fg-ws-1 .ws-cell.hit{color:var(--band);font-weight:700}
+#fg-ws-1 .ws-cell.late.hit{color:var(--late)}
+#fg-ws-1 .ws-cell.flash{animation:ws-ign .8s ease-out}
+@keyframes ws-ign{0%{box-shadow:0 0 0 0 rgba(124,92,191,.8)}100%{box-shadow:0 0 0 9px rgba(124,92,191,0)}}
+#fg-ws-1 .ws-tok{font-weight:700;color:#333;background:none;text-align:center;font-size:.66rem}
+#fg-ws-1 .ws-lab{background:none;color:#777;text-align:right;padding-right:.3rem;font-size:.6rem}
+#fg-ws-1 .ws-lcrit{grid-column:1/-1;border-top:2px dashed var(--band);color:var(--band);
+  font-size:.62rem;text-align:right;padding-top:.05rem}
+#fg-ws-1 .ws-out{color:var(--ok);font-weight:700;background:#eef7ee}
+#fg-ws-1 .ws-cap{margin-top:.55rem;font-size:.78rem;color:#444;min-height:2.2em}
+@media (prefers-reduced-motion: reduce){#fg-ws-1 .ws-cell{transition:none}
+  #fg-ws-1 .ws-cell.flash{animation:none}}
+</style>
+<div class="ws-ctrl">
+  <button type="button" data-play="">▶ Play</button>
+  <button type="button" data-lens="j" class="on">Jacobian lens</button>
+  <button type="button" data-lens="l">Logit lens</button>
+  <input type="range" min="0" max="8" value="0" step="1" aria-label="token position">
 </div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>⚠ Verified — contamination is real and measurable
+<div class="ws-grid"></div>
+<div class="ws-cap"></div>
+<script>
+(function(){
+  var root=document.getElementById('fg-ws-1');if(!root)return;
+  var TOK=['The','capital','of','France','is','the','city','of','→'];
+  var NL=10, BAND_LO=3, BAND_HI=7;           // layers 0-9; band 3..7; L_crit after 7
+  // whiteboard (J-lens): concepts per column in the band (they persist = working memory)
+  var J={1:['capital'],2:['capital'],3:['France','capital'],
+         4:['Paris','France','capital'],5:['Paris','France','city'],
+         6:['Paris','city','France'],7:['Paris','city','France'],8:['Paris','city']};
+  var LATE={7:['of'],8:['Paris']};            // late zone: already aligned with the output
+  var NOISE=['·','◦','—','·','∙','·'];
+  var grid=root.querySelector('.ws-grid'),cap=root.querySelector('.ws-cap'),
+      slider=root.querySelector('input'),cells=[],mode='j',pos=0,timer=null,flashed=false;
+  var CAPS=['The sentence enters token by token. Low layers: local processing, nothing readable.',
+    'The whiteboard (violet) starts loading the TOPIC: "capital".',
+    'The whiteboard holds "capital" — nobody wrote it down; this is working memory.',
+    '"France" enters the whiteboard and stays.',
+    '⚡ Ignition: "Paris" appears on the whiteboard… 4 tokens before it is said!',
+    'The whiteboard HOLDS "Paris" while the text goes on. That is holding a plan.',
+    '"Paris" is still loaded. Under the logit lens, none of this exists (try it).',
+    'Crossing L_crit: content collapses toward the output — the commitment.',
+    'The model finally says it: "Paris". The whiteboard knew since position 5.'];
+  grid.style.gridTemplateColumns='3.2rem repeat('+TOK.length+',1fr)';
+  function build(){
+    grid.innerHTML='';cells=[];
+    var r0=document.createElement('div');r0.className='ws-cell ws-lab';r0.textContent='tokens';grid.appendChild(r0);
+    TOK.forEach(function(t){var d=document.createElement('div');d.className='ws-cell ws-tok';d.textContent=t;grid.appendChild(d)});
+    for(var L=0;L<NL;L++){
+      if(L===BAND_HI+1){var lc=document.createElement('div');lc.className='ws-lcrit';
+        lc.textContent='L_crit — end of the whiteboard, output alignment begins';grid.appendChild(lc)}
+      var lab=document.createElement('div');lab.className='ws-cell ws-lab';
+      lab.textContent='L'+L+(L>=BAND_LO&&L<=BAND_HI?' ▉':'');grid.appendChild(lab);
+      for(var p=0;p<TOK.length;p++){
+        var c=document.createElement('div');c.className='ws-cell';
+        if(L>=BAND_LO&&L<=BAND_HI)c.classList.add('band');
+        if(L>BAND_HI)c.classList.add('late');
+        grid.appendChild(c);cells.push({el:c,L:L,p:p});
+      }
+    }
+    var ol=document.createElement('div');ol.className='ws-cell ws-lab';ol.textContent='output';grid.appendChild(ol);
+    for(var q=0;q<TOK.length;q++){var o=document.createElement('div');o.className='ws-cell ws-outcell';grid.appendChild(o);
+      cells.push({el:o,L:NL,p:q})}
+  }
+  function paint(){
+    cells.forEach(function(c){
+      var e=c.el;e.classList.remove('hit','flash');e.classList.toggle('dim',c.p>pos);
+      if(c.L===NL){e.textContent=(c.p===8&&pos>=8)?'Paris':'';e.classList.toggle('ws-out',c.p===8&&pos>=8);return}
+      var inBand=c.L>=BAND_LO&&c.L<=BAND_HI, late=c.L>BAND_HI, list=null;
+      if(inBand&&mode==='j')list=J[c.p]; if(late)list=LATE[c.p];
+      var idx=c.L-(inBand?BAND_LO:BAND_HI+1);
+      if(list&&list[idx]){e.textContent=list[idx];e.classList.add('hit');
+        if(mode==='j'&&c.p===4&&list[idx]==='Paris'&&pos===4&&!flashed){e.classList.add('flash')}}
+      else e.textContent=NOISE[(c.L*7+c.p*3)%NOISE.length];
+    });
+    if(pos===4&&mode==='j')flashed=true;
+    cap.textContent=(mode==='l'?'[logit lens] Only the post-L_crit zone is readable — the whiteboard is invisible to this lens. ':'')+CAPS[pos];
+    slider.value=pos;
+  }
+  function step(){if(pos<8){pos++;paint()}else stop()}
+  function play(){stop();flashed=false;pos=0;paint();timer=setInterval(step,900);
+    root.querySelector('[data-play]').textContent='⏸ Pause'}
+  function stop(){if(timer){clearInterval(timer);timer=null}
+    root.querySelector('[data-play]').textContent='▶ Play'}
+  root.querySelector('[data-play]').addEventListener('click',function(){timer?stop():play()});
+  root.querySelectorAll('[data-lens]').forEach(function(b){b.addEventListener('click',function(){
+    mode=b.getAttribute('data-lens');
+    root.querySelectorAll('[data-lens]').forEach(function(x){x.classList.toggle('on',x===b)});paint()})});
+  slider.addEventListener('input',function(){stop();pos=+slider.value;paint()});
+  build();paint();
+  if(!window.matchMedia||!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    try{new IntersectionObserver(function(en,ob){en.forEach(function(x){
+      if(x.isIntersecting){play();ob.disconnect()}})},{threshold:.4}).observe(root)}catch(e){}}
+})();
+</script>
 </div>
-</div>
-<div class="callout-body-container callout-body">
-<p>It’s not an abstract fear: there are methods that <strong>detect</strong> contamination (e.g.&nbsp;checking whether the model completes a test word for word, or comparing performance before/after the cutoff date <span class="citation" data-cites="golchin2023contamination">(<a href="#ref-golchin2023contamination" role="doc-biblioref">Golchin and Surdeanu 2024</a>)</span>). A concrete example: <strong>OpenAI’s audit of SWE-bench</strong> <span class="citation" data-cites="openai2026swebench">(<a href="#ref-openai2026swebench" role="doc-biblioref">OpenAI 2026</a>)</span> found that ~<strong>59%</strong> of the reviewed tasks had defective tests or signs of contamination —so much so that they <strong>stopped reporting</strong> that metric—. The honest rule: <strong>a high score on a public benchmark, with no contamination control, proves nothing</strong>. Serious benchmarks renew themselves (new versions, private sets) precisely because of this.</p>
-</div>
-</div>
-<p>And its close cousin, <strong>Goodhart’s law</strong>: as soon as a benchmark becomes <em>the target</em> (what drives headlines and funding), teams optimize <em>for it</em> —and it stops measuring what it measured—. That’s why no single number is enough.</p>
+<p>What you just watched is the paper’s central finding: <strong>“Paris” lives on the whiteboard positions before being said</strong>, is held there while the sentence advances, and collapses toward the output at the end. The model doesn’t improvise token by token as much as it seems: <strong>it plans on the whiteboard</strong>.</p>
 </section>
-<section id="the-judge-is-an-llm-and-it-can-be-fooled" class="level2" data-number="41.7">
-<h2 data-number="41.7" class="anchored" data-anchor-id="the-judge-is-an-llm-and-it-can-be-fooled"><span class="header-section-number">41.7</span> The judge is an LLM (and it can be fooled)</h2>
-<p>For <strong>open-ended</strong> answers (an essay, a chat reply) there is no single correct solution, so we use <strong>another LLM as judge</strong> —or the head-to-head human vote of the <strong>Chatbot Arena</strong> (Elo ranking)—. It’s powerful and it scales, but the judge has <strong>biases</strong> worth knowing:</p>
-<ul>
-<li><strong>Position bias:</strong> it tends to prefer the <strong>first</strong> (or the second) answer because of its order. Fixed by averaging both orders.</li>
-<li><strong>Verbosity bias:</strong> it rewards the <strong>longer</strong> answer, even when it isn’t better.</li>
-<li><strong>Self-preference:</strong> a judge tends to score its own model <strong>family</strong>’s style higher.</li>
-<li><strong>Sycophancy</strong> <span class="citation" data-cites="sharma2023sycophancy">(<a href="#ref-sharma2023sycophancy" role="doc-biblioref"><span class="nocase">Sharma et al.</span> 2023</a>)</span>: models tend to <strong>agree with you</strong>; a judge can reward the answer that <em>sounds</em> confident and agreeable over the correct one.</li>
-</ul>
-<div class="analogia">
-<p><strong>🧩 Analogy — the tired panel.</strong> An LLM judge is like a panel that, without meaning to, scores the one who speaks <strong>first</strong> higher, the one who <strong>goes on</strong> longer, and the one who <strong>resembles</strong> it. Useful for high volume, but you have to <strong>control</strong> those biases, not trust it blindly.</p>
-</div>
-</section>
-<section id="statistical-rigor-is-that-2-real" class="level2" data-number="41.8">
-<h2 data-number="41.8" class="anchored" data-anchor-id="statistical-rigor-is-that-2-real"><span class="header-section-number">41.8</span> Statistical rigor: is that “+2%” real?</h2>
-<p>One last, quieter trap: <strong>almost no</strong> model number comes with an <strong>error bar</strong>. But changing the seed, the order of the <em>few-shot</em> examples, or the prompt template moves the score by several points. A “+2% on MMLU” <strong>without</strong> a confidence interval can be pure <strong>noise</strong>. The honest move: report several <strong>seeds</strong>, <strong>error bars</strong> and significance before claiming victory.</p>
-</section>
-<section id="bridge-to-our-theme-brief-and-honest" class="level2" data-number="41.9">
-<h2 data-number="41.9" class="anchored" data-anchor-id="bridge-to-our-theme-brief-and-honest"><span class="header-section-number">41.9</span> Bridge to our theme (brief and honest)</h2>
-<p>Here evaluation touches the book directly. Our headline engineering claim —the <strong>D_f</strong> window derived from γ (Ch. 20)— <strong>is unvalidated</strong> (the <em>avenue-2</em> attempt crashed for lack of memory, Ch. 19). The place where it <em>would</em> stop being a hypothesis is exactly this one: a <strong>long-context</strong> benchmark (<strong>NIAH / RULER</strong> <span class="citation" data-cites="hsieh2024ruler">(<a href="#ref-hsieh2024ruler" role="doc-biblioref"><span class="nocase">Hsieh et al.</span> 2024</a>)</span>) comparing KV retention under D_f against the field’s heuristics (Ada-KV, LAVa). Put plainly: <strong>evaluation is the home where our own thesis gets tested</strong> —it’s not just one more topic—.</p>
-<div class="callout callout-style-default callout-note callout-titled" title="🧪 Try it — tafagent">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>🧪 Try it — tafagent
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><a href="https://karlesmarin.github.io/tafagent/">tafagent</a> ships two evaluation diagnostics that attack exactly this chapter’s traps: the <strong>Contamination Prior</strong> (estimates the risk that a model has seen a benchmark) and <strong>LongScore</strong> (measures real long context with <strong>RULER</strong>, not the <em>advertised</em> length). Before you believe a results table, run it through here.</p>
-<p><a href="https://karlesmarin.github.io/tafagent/?demo=niah" class="fg-cta" target="_blank" rel="noopener">▶ See the demo in tafagent</a></p>
-</div>
-</div>
-</section>
-<section id="summary" class="level2" data-number="41.10">
-<h2 data-number="41.10" class="anchored" data-anchor-id="summary"><span class="header-section-number">41.10</span> Summary</h2>
-<ul>
-<li><strong>Evaluating = measuring with imperfect proxies.</strong> No metric measures capability directly; knowing how to evaluate is <strong>knowing the traps</strong>.</li>
-<li><strong>Perplexity</strong> (<span class="math inline">\(e^{\text{loss}}\)</span>): cheap and internal, but <strong>not comparable</strong> across tokenizers (use <strong>bits-per-byte</strong>) and it doesn’t say whether the model is <em>useful</em>.</li>
-<li><strong>Benchmarks by capability:</strong> knowledge (<strong>MMLU/GPQA</strong>), code (<strong>HumanEval/SWE-bench</strong>), math (<strong>GSM8K/MATH</strong>), long context (<strong>NIAH/RULER</strong>), chat (<strong>Arena/Elo</strong>).</li>
-<li><strong>Contamination:</strong> the test leaked into training → the score rises, capability doesn’t (<strong>mirage</strong>). With <strong>Goodhart’s law</strong>: optimizing <em>for</em> a benchmark spoils it.</li>
-<li><strong>LLM-as-judge:</strong> it scales, but with biases of <strong>position, verbosity, self-preference</strong> and <strong>sycophancy</strong> —control them—.</li>
-<li><strong>Rigor:</strong> without <strong>error bars</strong> and several seeds, a “+2%” can be <strong>noise</strong>.</li>
-<li><strong>Bridge:</strong> long-context evaluation (RULER/NIAH) is where <strong>our</strong> D_f window must be validated —still pending—.</li>
-</ul>
-<p><strong>Next (Chapter 41):</strong> we close the book with what no metric fully captures —<strong>ethics, safety and limitations</strong>—: biases, hallucination, responsible use and, above all, what we <strong>still don’t know</strong>.</p>
-</section>
-<section id="exercises" class="level2" data-number="41.11">
-<h2 data-number="41.11" class="anchored" data-anchor-id="exercises"><span class="header-section-number">41.11</span> Exercises</h2>
+<section id="and-how-do-we-know-it-isnt-a-mirage" class="level2" data-number="43.5">
+<h2 data-number="43.5" class="anchored" data-anchor-id="and-how-do-we-know-it-isnt-a-mirage"><span class="header-section-number">43.5</span> And how do we know it isn’t a mirage?</h2>
+<p>Good question — it is exactly the one <a href="38-audit.html" class="quarto-xref"><span>Chapter 39</span></a> demands. A lens can “see” patterns that do nothing (correlation). What evidence would turn the whiteboard into a causal fact? Think about what you would ask for… The paper brings three pieces, each stronger than the last:</p>
 <ol type="1">
-<li><strong>Perplexity.</strong> Why can’t two models with <strong>different tokenizers</strong> be compared by perplexity? What metric fixes it, and why?</li>
-<li><strong>The mirage.</strong> Explain, using this chapter’s widget, why a <strong>high score</strong> on a public benchmark does <strong>not</strong> prove capability. What is contamination?</li>
-<li><strong>Goodhart.</strong> Give an example of how optimizing <em>for</em> a benchmark could <strong>worsen</strong> the model on the capability the benchmark was meant to measure.</li>
-<li><strong>The judge.</strong> Name three biases of the <strong>LLM-as-judge</strong> and how each is mitigated.</li>
-<li><strong>Rigor.</strong> A paper reports “+1.5% on MMLU” with no error bars. What do you ask before believing it?</li>
-<li><strong>Long context.</strong> Why is <strong>RULER/NIAH</strong> the natural place to validate (or refute) our D_f window from Ch. 20?</li>
+<li><strong>It can be edited.</strong> Ask the model to “think of a sport”: the J-lens shows <em>Soccer</em> before it answers. Now <strong>subtract the <em>Soccer</em> vector and add <em>Rugby</em></strong> — the model answers “Rugby” (~88 % of the time). We are not reading an echo; we are editing what the model thinks.</li>
+<li><strong>It mediates reasoning.</strong> In <em>“the number of legs of the animal that weaves webs”</em>, the word <em>spider</em> is neither in the question nor in the answer (“8”) — but it is on the whiteboard. Swap it for <em>ant</em> and the model answers “6” (~70 %). The <strong>invisible</strong> intermediate step of reasoning lives there, and manipulating it redirects the conclusion.</li>
+<li><strong>Double dissociation.</strong> The decisive experiment: erase the ~10 most active directions of the whiteboard. <strong>Automatic</strong> tasks (classifying, parsing, MMLU) barely flinch; <strong>flexible</strong> reasoning (multi-hop, mental arithmetic, trivia) collapses. Same model, same erasure, two fates — the classic signature neuroscience uses to tell real systems from correlations.</li>
+</ol>
+<p>The double dissociation is best understood by doing it. Erase the whiteboard yourself and watch which family of tasks falls and which doesn’t even notice:</p>
+<div class="fg-ws-abl" id="fg-ws-abl-1" role="img" aria-label="Interactive demonstration of the double dissociation: when the whiteboard is erased, automatic tasks barely change and flexible-reasoning tasks collapse.">
+<style>
+#fg-ws-abl-1{border:1px solid #ddd;border-radius:10px;padding:.9rem;margin:1rem 0;font-family:Georgia,serif}
+#fg-ws-abl-1 .ab-ctrl{display:flex;gap:.7rem;align-items:center;margin-bottom:.7rem;flex-wrap:wrap}
+#fg-ws-abl-1 button{font:inherit;padding:.2rem .8rem;border:1px solid #bbb;border-radius:6px;background:#fafafa;cursor:pointer}
+#fg-ws-abl-1 button.on{background:#b3262a;color:#fff;border-color:#b3262a}
+#fg-ws-abl-1 .ab-note{font-size:.78rem;color:#555}
+#fg-ws-abl-1 .ab-grid{display:grid;grid-template-columns:11rem 1fr 3rem;gap:.3rem .6rem;align-items:center;font-size:.8rem}
+#fg-ws-abl-1 .ab-head{font-weight:700;color:#444;grid-column:1/-1;margin-top:.3rem;font-size:.75rem;
+  text-transform:uppercase;letter-spacing:.04em}
+#fg-ws-abl-1 .ab-bar{height:.85rem;border-radius:4px;background:#e8e8e8;overflow:hidden}
+#fg-ws-abl-1 .ab-fill{height:100%;border-radius:4px;background:#2e7d32;transition:width 1s ease}
+#fg-ws-abl-1 .flex .ab-fill{background:#7c5cbf}
+#fg-ws-abl-1 .ab-val{font-variant-numeric:tabular-nums;color:#555;font-size:.75rem}
+@media (prefers-reduced-motion: reduce){#fg-ws-abl-1 .ab-fill{transition:none}}
+</style>
+<div class="ab-ctrl">
+  <button type="button">🧽 Erase the whiteboard</button>
+  <span class="ab-note">only ~10 directions of the residual stream are zeroed — 90 % of the model stays intact</span>
+</div>
+<div class="ab-grid"></div>
+<script>
+(function(){
+  var root=document.getElementById('fg-ws-abl-1');if(!root)return;
+  // (illustrative values, qualitative pattern from the paper: see text)
+  var TASKS=[['Automatic tasks',[['Sentiment classification',92,90],['Parsing / grammar',95,94],['MMLU (multiple choice)',78,76]]],
+             ['Flexible reasoning',[['Multi-hop (2 steps)',85,12],['Mental arithmetic (no CoT)',74,9],['Trivia (recall & compose)',70,22]]]];
+  var grid=root.querySelector('.ab-grid'),btn=root.querySelector('button'),on=false,fills=[];
+  TASKS.forEach(function(g,gi){
+    var h=document.createElement('div');h.className='ab-head';h.textContent=g[0];grid.appendChild(h);
+    g[1].forEach(function(t){
+      var lab=document.createElement('div');lab.textContent=t[0];grid.appendChild(lab);
+      var bar=document.createElement('div');bar.className='ab-bar'+(gi?' flex':'');
+      var f=document.createElement('div');f.className='ab-fill';f.style.width=t[1]+'%';bar.appendChild(f);
+      if(gi)bar.classList.add('flex');grid.appendChild(bar);
+      var v=document.createElement('div');v.className='ab-val';v.textContent=t[1]+'%';grid.appendChild(v);
+      fills.push({f:f,v:v,base:t[1],abl:t[2]});
+    });
+  });
+  btn.addEventListener('click',function(){
+    on=!on;btn.classList.toggle('on',on);
+    btn.textContent=on?'↺ Restore the whiteboard':'🧽 Erase the whiteboard';
+    fills.forEach(function(x){var val=on?x.abl:x.base;x.f.style.width=val+'%';x.v.textContent=val+'%'});
+  });
+})();
+</script>
+</div>
+<p><em>(Illustrative bars showing the qualitative pattern — the exact per-task, per-model numbers are in the paper <span class="citation" data-cites="lindsey2026workspace">(<a href="#ref-lindsey2026workspace" role="doc-biblioref">Gurnee et al. 2026</a>)</span>, Fig. 24.)</em></p>
+<p>And a fourth piece with a practical moral: <strong>chain-of-thought survives the erasure</strong>. Why? Answer before reading on… Because writing the steps <strong>externalizes</strong> working memory: the paper acts as the whiteboard. Keep this idea — we will come back to it.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Honest — what the paper does NOT prove">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>⚠ Honest — what the paper does NOT prove
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>Nothing about consciousness</strong>: the paper studies the <em>functional</em> analogue of “conscious access”; the authors take no position on subjective experience — the press headlines do. (2) The lens only sees concepts that are <strong>one token</strong>: a bias toward what is nameable in a single word. (3) The “broadcast” happens layer by layer, <strong>not through recurrence</strong> as in the brain. (4) Nanda’s review <span class="citation" data-cites="nanda2026workspacereview">(<a href="#ref-nanda2026workspacereview" role="doc-biblioref">Nanda 2026</a>)</span> classifies it as a <strong>hypothesis-generation</strong> tool: expect false positives. Anything a lens suggests needs causal confirmation — the rule of <a href="38-audit.html" class="quarto-xref"><span>Chapter 39</span></a> never sleeps.</li>
+</ol>
+</div>
+</div>
+</section>
+<section id="where-is-the-whiteboard-and-why-there" class="level2" data-number="43.6">
+<h2 data-number="43.6" class="anchored" data-anchor-id="where-is-the-whiteboard-and-why-there"><span class="header-section-number">43.6</span> Where is the whiteboard — and why there?</h2>
+<p>The whiteboard does not fill the whole network: in the Claude models it lives in a <strong>band</strong> between ~38 % and ~92 % of the depth. Before the band, nothing readable; after it, everything is already aligned with the imminent output.</p>
+<p>And something with a physics flavor happens at the band’s entrance: <strong>ignition</strong>. If you inject an ambiguous mixture of two concepts (60 % <em>France</em> + 40 % <em>China</em>), early layers treat it as what it is — a mixture. But the band <strong>does not tolerate ambiguity</strong>: it snaps to one or the other when a threshold is crossed. Try it:</p>
+<div class="fg-ws-ign" id="fg-ws-ign-1" role="img" aria-label="Ignition demonstration: a slider mixes two concepts; outside the band the representation follows the mixture gradually, inside the band it snaps abruptly to one concept or the other when the threshold is crossed.">
+<style>
+#fg-ws-ign-1{border:1px solid #ddd;border-radius:10px;padding:.9rem;margin:1rem 0;font-family:Georgia,serif}
+#fg-ws-ign-1 .ig-ctrl{display:flex;gap:.6rem;align-items:center;margin-bottom:.7rem;font-size:.8rem}
+#fg-ws-ign-1 input[type=range]{flex:1}
+#fg-ws-ign-1 .ig-row{display:grid;grid-template-columns:11rem 1fr;gap:.6rem;align-items:center;margin:.4rem 0;font-size:.8rem}
+#fg-ws-ign-1 .ig-lab{color:#555;text-align:right}
+#fg-ws-ign-1 .ig-track{position:relative;height:1.6rem;border-radius:6px;background:#f0f0f0;overflow:hidden}
+#fg-ws-ign-1 .ig-mix{position:absolute;inset:0;display:flex}
+#fg-ws-ign-1 .ig-a{background:#1f6fb2;transition:flex-basis .25s}
+#fg-ws-ign-1 .ig-b{background:#c23b22;flex:1;transition:flex-basis .25s}
+#fg-ws-ign-1 .ig-word{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:700;font-size:.78rem;text-shadow:0 1px 2px rgba(0,0,0,.45);transition:opacity .2s}
+#fg-ws-ign-1 .band .ig-a,#fg-ws-ign-1 .band .ig-b{transition:flex-basis .12s ease-in}
+#fg-ws-ign-1 .ig-flash{animation:ig-f .5s ease-out}
+@keyframes ig-f{0%{box-shadow:inset 0 0 0 3px rgba(124,92,191,.9)}100%{box-shadow:inset 0 0 0 3px rgba(124,92,191,0)}}
+#fg-ws-ign-1 .ig-cap{font-size:.75rem;color:#555;margin-top:.4rem;min-height:1.4em}
+@media (prefers-reduced-motion: reduce){#fg-ws-ign-1 .ig-a,#fg-ws-ign-1 .ig-b{transition:none}
+  #fg-ws-ign-1 .ig-flash{animation:none}}
+</style>
+<div class="ig-ctrl"><span style="color:#1f6fb2;font-weight:700">France</span>
+  <input type="range" min="0" max="100" value="60" aria-label="France-China mixture proportion">
+  <span style="color:#c23b22;font-weight:700">China</span></div>
+<div class="ig-row"><div class="ig-lab">early layer (outside the band)</div>
+  <div class="ig-track"><div class="ig-mix"><div class="ig-a" style="flex-basis:60%"></div><div class="ig-b"></div></div>
+  <div class="ig-word ig-w-early">60/40 mixture — ambiguous</div></div></div>
+<div class="ig-row"><div class="ig-lab">inside the band 💡</div>
+  <div class="ig-track band"><div class="ig-mix"><div class="ig-a" style="flex-basis:100%"></div><div class="ig-b"></div></div>
+  <div class="ig-word ig-w-band">FRANCE</div></div></div>
+<div class="ig-cap">Move the slider slowly around the middle: the top row is gradual; the bottom one has a <b>threshold</b>.</div>
+<script>
+(function(){
+  var root=document.getElementById('fg-ws-ign-1');if(!root)return;
+  var sl=root.querySelector('input'),early=root.querySelector('.ig-row .ig-a'),
+      wEarly=root.querySelector('.ig-w-early'),bandTrack=root.querySelector('.ig-track.band'),
+      bandA=bandTrack.querySelector('.ig-a'),wBand=root.querySelector('.ig-w-band'),
+      cap=root.querySelector('.ig-cap'),last='F';
+  sl.addEventListener('input',function(){
+    var a=100-sl.value;                       // % France
+    early.style.flexBasis=a+'%';
+    wEarly.textContent=a+'/'+(100-a)+' mixture'+(a>65||a<35?'':' — ambiguous');
+    var side=a>=50?'F':'C';
+    bandA.style.flexBasis=(side==='F'?100:0)+'%';
+    wBand.textContent=side==='F'?'FRANCE':'CHINA';
+    if(side!==last){bandTrack.classList.remove('ig-flash');void bandTrack.offsetWidth;
+      bandTrack.classList.add('ig-flash');
+      cap.innerHTML='⚡ <b>Ignition</b>: the band has collapsed the mixture to <b>'+(side==='F'?'FRANCE':'CHINA')+'</b> — abruptly, not gradually.';
+      last=side}
+  });
+})();
+</script>
+</div>
+<p>Here Anthropic stops — they measure <em>where</em>, they don’t explain <em>why</em>. And this is the question this book can actually try to answer, because we have spent three parts building the tool. Think about it with what you already know from <a href="14-aliasing.html" class="quarto-xref"><span>Chapter 15</span></a>: <strong>what changes inside the model at a specific depth?</strong></p>
+<p>Hint: low layers work with <strong>position</strong> — their attention follows the power law of <a href="15-ley-gamma.html" class="quarto-xref"><span>Chapter 16</span></a>, sorting “what is near what”. But RoPE’s geometry has limited reach (the three scales of <a href="14-aliasing.html" class="quarto-xref"><span>Chapter 15</span></a>): there comes a depth at which the positional scaffolding has given all it has, and layers switch to working with <strong>meaning</strong>. That boundary can be predicted from the model’s hyperparameters — without looking inside:</p>
+<p><span class="math display">\[L_{crit} = \underbrace{N_L}_{\text{total layers}} \cdot
+\underbrace{\log_\theta\!\left(\frac{T_{train}}{2\pi}\right)}_{\text{positional fraction}} \cdot
+\underbrace{\left(\frac{d_{head}}{64}\right)^{1/\sqrt{12}}}_{\text{per-head correction}}\]</span></p>
+<p>Term by term, as this book requires:</p>
+<ul>
+<li><span class="math inline">\(N_L\)</span> — the <strong>total number of layers</strong>: the formula splits the network into a positional part and a semantic part, so everything is expressed as a <em>fraction of</em> <span class="math inline">\(N_L\)</span>.</li>
+<li><span class="math inline">\(\log_\theta(T_{train}/2\pi)\)</span> — the <strong>fraction of the work that is positional</strong>. An old friend: in <a href="14-aliasing.html" class="quarto-xref"><span>Chapter 15</span></a> you saw that the fraction of RoPE bands already aliased at distance <span class="math inline">\(d\)</span> is <span class="math inline">\(\log_\theta(d/2\pi)\)</span>. Evaluated at <span class="math inline">\(d = T_{train}\)</span> (the largest distance the model saw in training) it says how much of the positional machinery is actually used — and that same fraction of layers turns out to be devoted to it. For the typical values (<span class="math inline">\(\theta = 10^4\)</span>, <span class="math inline">\(T = 2048\)</span>): <span class="math inline">\(0.628\)</span> — nearly two thirds of the network sorting positions before moving on to meaning.</li>
+<li><span class="math inline">\((d_{head}/64)^{1/\sqrt{12}}\)</span> — the <strong>head-width correction</strong>: wider heads carry more frequency bands, and the positional scaffolding takes more layers to exhaust. The exponent <span class="math inline">\(1/\sqrt{12} \approx 0.29\)</span> is not a whim: <span class="math inline">\(\sqrt{12}\)</span> is the standard deviation of a uniform distribution — and RoPE’s log-frequencies are spaced <em>uniformly</em> (<a href="14-aliasing.html" class="quarto-xref"><span>Chapter 15</span></a>). With <span class="math inline">\(d_{head}=64\)</span> (the standard) the factor equals 1 and disappears.</li>
+</ul>
+<p>Honesty first: this formula comes from our own work <span class="citation" data-cites="marin2026attend">(<a href="#ref-marin2026attend" role="doc-biblioref">Marín 2026</a>)</span> and so far it is <strong>causally validated in only two models</strong> (±0.5 layers in both) — which is why we are putting it to the test in six, with predictions frozen <em>before</em> measuring. The natural hypothesis — we call it <strong>H1</strong> — is that the boundary of the whiteboard’s band <strong>is</strong> that <span class="math inline">\(L_{crit}\)</span>: the whiteboard needs the positional scaffolding to route concepts across positions, and where the scaffolding ends, content collapses into the answer.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="🔬 Measurement in progress — the Pythia ladder">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>🔬 Measurement in progress — the Pythia ladder
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>We are testing H1 with a <strong>pre-registered</strong> protocol (predictions frozen before measuring — the standard of <a href="38-audit.html" class="quarto-xref"><span>Chapter 39</span></a>). The design is discriminating: pythia-1b has its predicted <span class="math inline">\(L_{crit}\)</span> at <strong>94 %</strong> of its depth (because of its <span class="math inline">\(d_{head}=256\)</span>) and pythia-410m at <strong>63 %</strong> — if the band were a fixed fraction of the network, they would come out equal; if it follows <span class="math inline">\(L_{crit}\)</span>, separated. First data (2 of 6 models): the logit lens knee falls at <span class="math inline">\(L_{crit}\)</span> within ≤2 layers in both. Full results — confirming or refuting — will be published here and in the atlas dataset. <em>This book does not publish results without verifiable data.</em></p>
+</div>
+</div>
+</div>
+</section>
+<section id="measure-your-own-whiteboard" class="level2" data-number="43.7">
+<h2 data-number="43.7" class="anchored" data-anchor-id="measure-your-own-whiteboard"><span class="header-section-number">43.7</span> Measure your own whiteboard</h2>
+<p>The code is public and works with open HuggingFace models (<a href="https://github.com/anthropics/jacobian-lens">github.com/anthropics/jacobian-lens</a>, Apache-2.0). On a 16 GB consumer GPU: minutes for a 70M model, hours for a 2.8B one (the cost is fitting the lens — one forward + <span class="math inline">\(d_{model}/b\)</span> backwards per text):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> transformers, jlens</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>hf  <span class="op">=</span> transformers.AutoModelForCausalLM.from_pretrained(<span class="st">"EleutherAI/pythia-410m"</span>).cuda()</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>tok <span class="op">=</span> transformers.AutoTokenizer.from_pretrained(<span class="st">"EleutherAI/pythia-410m"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> jlens.from_hf(hf, tok)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>lens <span class="op">=</span> jlens.fit(model, prompts<span class="op">=</span>pile_texts)       <span class="co"># ~100-1000 texts of 128 tokens</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>lens_logits, model_logits, _ <span class="op">=</span> lens.<span class="bu">apply</span>(model, <span class="st">"The capital of France is the city of"</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                                          positions<span class="op">=</span>[<span class="op">-</span><span class="dv">1</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>One methodological tip that cost us a day to learn: <strong>always compare against the logit lens</strong>. The real band is where the J-lens reads future <em>word-like</em> content at least <strong>2× better</strong> than its control — without that contrast, any lens will show you mirages. The already-fitted lenses for the Pythia ladder will be available for direct download, so that locating the band costs you not a single backward pass.</p>
+</section>
+<section id="and-what-is-knowing-where-it-is-good-for" class="level2" data-number="43.8">
+<h2 data-number="43.8" class="anchored" data-anchor-id="and-what-is-knowing-where-it-is-good-for"><span class="header-section-number">43.8</span> And what is knowing where it is good for?</h2>
+<p>The chapter ends the way it began: with a question. If you knew exactly which part of a small model <em>thinks</em> and which part just <em>types</em> — <strong>what would you do differently?</strong> Four answers, from most mature to most speculative:</p>
+<ul>
+<li><strong>Read it</strong> (today): monitor which concepts are loaded — debugging and auditing. In the paper, the whiteboard contained <em>leverage</em>, <em>panic</em> or <em>fake</em> that never surfaced in the output.</li>
+<li><strong>Write it</strong> (experimental): hold a concept by clamping its vector — so a small model <strong>doesn’t drop</strong> the needle in a long context.</li>
+<li><strong>Protect it</strong> (open hypothesis): asymmetric compression — quantize and prune the 90 % automatic part aggressively (<a href="35-compresion.html" class="quarto-xref"><span>Chapter 36</span></a>) and protect the corner that reasons.</li>
+<li><strong>Size it</strong> (if H1 is confirmed): choose <span class="math inline">\(\theta\)</span>, <span class="math inline">\(T\)</span>, <span class="math inline">\(d_{head}\)</span> to place the band where it suits you — the whiteboard as a <strong>design parameter</strong>.</li>
+</ul>
+<p>And the cheapest lever of all you already knew without knowing it: if a small model’s whiteboard is small, <strong>don’t ask it to think silently</strong> — give it paper (1). Chain-of-thought is not a prompt trick: it is a working-memory prosthesis.</p>
+<div class="analogia">
+<p><strong>🧩 Analogy — the operating room with X-rays.</strong> Without the lens, optimizing a small model is blind surgery: you cut where you can and pray. With the whiteboard located, you know which part of the patient <strong>thinks</strong> and which part just <strong>types</strong> — and compressing, distilling or shoring up can finally respect the difference.</p>
+</div>
+</section>
+<section id="summary" class="level2" data-number="43.9">
+<h2 data-number="43.9" class="anchored" data-anchor-id="summary"><span class="header-section-number">43.9</span> Summary</h2>
+<ul>
+<li>The “shared whiteboard” of <a href="03-embeddings.html" class="quarto-xref"><span>Chapter 4</span></a> has a <strong>corner in clean letters</strong>: a subspace (~10 %) readable in token language — the model’s <strong>workspace</strong>.</li>
+<li>It is read with the <strong>Jacobian lens</strong> (logit lens + per-layer prescription glasses); it reads <em>concepts on the table</em>, not the next token.</li>
+<li>Causal evidence in three steps: <strong>editable</strong> (concept swaps), <strong>mediates reasoning</strong> (the invisible intermediate), <strong>double dissociation</strong> (erasing the whiteboard crushes the flexible and spares the automatic).</li>
+<li>It lives in a <strong>depth band</strong>; why there is an open question — our <strong>H1</strong> proposes the positional→semantic boundary <span class="math inline">\(L_{crit}\)</span>, with a pre-registered measurement in progress.</li>
+<li><strong>Externalizing</strong> (CoT) is giving paper to a small whiteboard — the immediate practical lever for modest models.</li>
+<li>Golden rule (<a href="38-audit.html" class="quarto-xref"><span>Chapter 39</span></a>): the lens <strong>generates</strong> hypotheses; only causal intervention <strong>confirms</strong> them.</li>
+</ul>
+<p><strong>Next (Part VIII):</strong> the reference tools — formula sheet, cookbook, and how to measure every quantity in this book yourself. Now including the whiteboard.</p>
+</section>
+<section id="exercises" class="level2" data-number="43.10">
+<h2 data-number="43.10" class="anchored" data-anchor-id="exercises"><span class="header-section-number">43.10</span> Exercises</h2>
+<ol type="1">
+<li><strong>The glasses.</strong> Why does the logit lens fail at intermediate layers, and what exactly does the average Jacobian correct? Why is it fitted <em>averaging over a corpus</em>?</li>
+<li><strong>The invisible intermediate.</strong> In “the number of legs of the animal that weaves webs is”, what is on the whiteboard that is neither in the question nor in the answer? How is it shown to be causal rather than decorative?</li>
+<li><strong>Double dissociation.</strong> Which two families of tasks does erasing the whiteboard separate? Why is that separation better evidence than any correlation?</li>
+<li><strong>Externalization.</strong> Why does chain-of-thought survive the erasure of the whiteboard, and what practical recipe follows for small models?</li>
+<li><strong>H1 with numbers.</strong> For <span class="math inline">\(N_L=16\)</span>, <span class="math inline">\(\theta=10^4\)</span>, <span class="math inline">\(T=2048\)</span>, <span class="math inline">\(d_{head}=256\)</span>: at which layer does <span class="math inline">\(L_{crit}\)</span> predict the boundary? And what would you expect to see in the logit lens knee if H1 is right? (Solution in <a href="R4-medir-gamma.html" class="quarto-xref"><span>Chapter 47</span></a>… or compute it: <span class="math inline">\(\log_\theta(T/2\pi)=0.628\)</span>.)</li>
+<li><strong>Skepticism.</strong> Give two reasons why a J-lens readout could be a false positive, and design the experiment that would rule it out.</li>
 </ol>
 </section>
 <section id="references" class="level2 unnumbered">
@@ -1280,38 +1510,14 @@ Table&nbsp;41.1: Benchmarks by capability (2024-2026)
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-chen2021humaneval" class="csl-entry" role="listitem">
-<span class="nocase">Chen, Mark, Jerry Tworek, Heewoo Jun, Qiming Yuan, et al.</span> 2021. <span>“Evaluating Large Language Models Trained on Code.”</span> <em>arXiv Preprint arXiv:2107.03374</em>. <a href="https://arxiv.org/abs/2107.03374">https://arxiv.org/abs/2107.03374</a>.
+<div id="ref-lindsey2026workspace" class="csl-entry" role="listitem">
+Gurnee, Wes, Nicholas Sofroniew, Adam Pearce, et al. 2026. <em>Verbalizable Representations Form a Global Workspace in Language Models</em>. Transformer Circuits. <a href="https://transformer-circuits.pub/2026/workspace/index.html">https://transformer-circuits.pub/2026/workspace/index.html</a>.
 </div>
-<div id="ref-arcagi2_2025" class="csl-entry" role="listitem">
-Chollet, Francois, Mike Knoop, Gregory Kamradt, Bryan Landers, and Henry Pinkard. 2025. <em><span class="nocase">ARC-AGI-2: A New Challenge for Frontier AI Reasoning Systems</span></em>. <a href="https://arxiv.org/abs/2505.11831">https://arxiv.org/abs/2505.11831</a>.
+<div id="ref-marin2026attend" class="csl-entry" role="listitem">
+Marín, Carles. 2026. <em>Predicting How Transformers Attend: Analytic Power-Law Theory, Phase Transitions, and Practical Compression Tools</em>. <a href="https://zenodo.org/records/20314038">https://zenodo.org/records/20314038</a>.
 </div>
-<div id="ref-cobbe2021gsm8k" class="csl-entry" role="listitem">
-<span class="nocase">Cobbe, Karl, Vineet Kosaraju, Mohammad Bavarian, Mark Chen, et al.</span> 2021. <span>“Training Verifiers to Solve Math Word Problems.”</span> <em>arXiv Preprint arXiv:2110.14168</em>. <a href="https://arxiv.org/abs/2110.14168">https://arxiv.org/abs/2110.14168</a>.
-</div>
-<div id="ref-glazer2024frontiermath" class="csl-entry" role="listitem">
-<span class="nocase">Glazer, Elliot, Ege Erdil, Tamay Besiroglu, Diego Chicharro, Evan Chen, et al.</span> 2024. <em><span class="nocase">FrontierMath: A Benchmark for Evaluating Advanced Mathematical Reasoning in AI</span></em>. <a href="https://arxiv.org/abs/2411.04872">https://arxiv.org/abs/2411.04872</a>.
-</div>
-<div id="ref-golchin2023contamination" class="csl-entry" role="listitem">
-Golchin, Shahriar, and Mihai Surdeanu. 2024. <span>“Time Travel in LLMs: Tracing Data Contamination in Large Language Models.”</span> <em>International Conference on Learning Representations (ICLR)</em>. <a href="https://arxiv.org/abs/2308.08493">https://arxiv.org/abs/2308.08493</a>.
-</div>
-<div id="ref-hendrycks2021mmlu" class="csl-entry" role="listitem">
-Hendrycks, Dan, Collin Burns, Steven Basart, et al. 2021. <span>“Measuring Massive Multitask Language Understanding.”</span> <em>International Conference on Learning Representations (ICLR)</em>. <a href="https://arxiv.org/abs/2009.03300">https://arxiv.org/abs/2009.03300</a>.
-</div>
-<div id="ref-hsieh2024ruler" class="csl-entry" role="listitem">
-<span class="nocase">Hsieh, Cheng-Ping, Simeng Sun, Samuel Kriman, Shantanu Acharya, et al.</span> 2024. <span>“RULER: Whats the Real Context Size of Your Long-Context Language Models?”</span> <em>First Conference on Language Modeling (COLM)</em>. <a href="https://arxiv.org/abs/2404.06654">https://arxiv.org/abs/2404.06654</a>.
-</div>
-<div id="ref-jimenez2024swebench" class="csl-entry" role="listitem">
-Jimenez, Carlos E., John Yang, Alexander Wettig, et al. 2024. <span>“SWE-Bench: Can Language Models Resolve Real-World GitHub Issues?”</span> <em>International Conference on Learning Representations (ICLR)</em>. <a href="https://arxiv.org/abs/2310.06770">https://arxiv.org/abs/2310.06770</a>.
-</div>
-<div id="ref-openai2026swebench" class="csl-entry" role="listitem">
-OpenAI. 2026. <em>Why SWE-Bench Verified No Longer Measures Frontier Coding Capabilities</em>. OpenAI Blog. <a href="https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/">https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/</a>.
-</div>
-<div id="ref-phan2025hle" class="csl-entry" role="listitem">
-<span class="nocase">Phan, Long, Alice Gatti, Ziwen Han, Nathaniel Li, et al.</span> 2025. <em><span class="nocase">Humanity’s Last Exam</span></em>. <a href="https://arxiv.org/abs/2501.14249">https://arxiv.org/abs/2501.14249</a>.
-</div>
-<div id="ref-sharma2023sycophancy" class="csl-entry" role="listitem">
-<span class="nocase">Sharma, Mrinank et al.</span> 2023. <em>Towards Understanding Sycophancy in Language Models</em>. <a href="https://arxiv.org/abs/2310.13548">https://arxiv.org/abs/2310.13548</a>.
+<div id="ref-nanda2026workspacereview" class="csl-entry" role="listitem">
+Nanda, Neel. 2026. <em>A Review of Anthropic’s Global Workspace Paper</em>. LessWrong. <a href="https://www.lesswrong.com/posts/zFJ3ZdQwrTWE9jT5S/a-review-of-anthropic-s-global-workspace-paper">https://www.lesswrong.com/posts/zFJ3ZdQwrTWE9jT5S/a-review-of-anthropic-s-global-workspace-paper</a>.
 </div>
 </div>
 </section>
@@ -2720,13 +2926,13 @@ OpenAI. 2026. <em>Why SWE-Bench Verified No Longer Measures Frontier Coding Capa
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../chapters/39-mapa2026.html" class="pagination-link" aria-label="The map of the 2026 collapse landscape">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">The map of the 2026 collapse landscape</span></span>
+      <a href="../chapters/41-etica.html" class="pagination-link" aria-label="Ethics, safety and limitations">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Ethics, safety and limitations</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../chapters/41-etica.html" class="pagination-link" aria-label="Ethics, safety and limitations">
-        <span class="nav-page-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Ethics, safety and limitations</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../chapters/R1-formulario.html" class="pagination-link" aria-label="R1 · Master formulary">
+        <span class="nav-page-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R1 · Master formulary</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

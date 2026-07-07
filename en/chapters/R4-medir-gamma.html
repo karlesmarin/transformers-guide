@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>46&nbsp; R4 · Measuring your own γ (and reproducing the atlas) – How Transformers Attend</title>
+<title>47&nbsp; R4 · Measuring your own γ (and reproducing the atlas) – How Transformers Attend</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -630,7 +630,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/R1-formulario.html">Part VIII — Reference</a></li><li class="breadcrumb-item"><a href="../chapters/R4-medir-gamma.html"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R4 · Measuring your own γ (and reproducing the atlas)</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/R1-formulario.html">Part VIII — Reference</a></li><li class="breadcrumb-item"><a href="../chapters/R4-medir-gamma.html"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R4 · Measuring your own γ (and reproducing the atlas)</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -992,6 +992,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Ethics, safety and limitations</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/42-workspace.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">The global workspace: reading the model’s whiteboard</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -1006,37 +1012,37 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R1-formulario.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R1 · Master formulary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R1 · Master formulary</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R2-cookbook.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R3-glosario.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R3 · Glossary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R3 · Glossary</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R4-medir-gamma.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R4 · Measuring your own γ (and reproducing the atlas)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R4 · Measuring your own γ (and reproducing the atlas)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R5-tafagent.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R5 · tafagent manual</span></span></a>
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">R5 · tafagent manual</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R6-soluciones.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">R6 · Exercise solutions</span></span></a>
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">R6 · Exercise solutions</span></span></a>
   </div>
 </li>
       </ul>
@@ -1051,19 +1057,19 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#the-procedure-step-by-step" id="toc-the-procedure-step-by-step" class="nav-link active" data-scroll-target="#the-procedure-step-by-step"><span class="header-section-number">46.1</span> The procedure, step by step</a></li>
-  <li><a href="#the-controls-that-make-it-trustworthy-dont-fool-yourself" id="toc-the-controls-that-make-it-trustworthy-dont-fool-yourself" class="nav-link" data-scroll-target="#the-controls-that-make-it-trustworthy-dont-fool-yourself"><span class="header-section-number">46.2</span> The controls that make it trustworthy (don’t fool yourself)</a></li>
-  <li><a href="#compare-with-the-geometric-prediction" id="toc-compare-with-the-geometric-prediction" class="nav-link" data-scroll-target="#compare-with-the-geometric-prediction"><span class="header-section-number">46.3</span> Compare with the geometric prediction</a></li>
-  <li><a href="#open-data-to-reproduce-or-refute" id="toc-open-data-to-reproduce-or-refute" class="nav-link" data-scroll-target="#open-data-to-reproduce-or-refute"><span class="header-section-number">46.4</span> Open data to reproduce (or refute)</a></li>
+  <li><a href="#the-procedure-step-by-step" id="toc-the-procedure-step-by-step" class="nav-link active" data-scroll-target="#the-procedure-step-by-step"><span class="header-section-number">47.1</span> The procedure, step by step</a></li>
+  <li><a href="#the-controls-that-make-it-trustworthy-dont-fool-yourself" id="toc-the-controls-that-make-it-trustworthy-dont-fool-yourself" class="nav-link" data-scroll-target="#the-controls-that-make-it-trustworthy-dont-fool-yourself"><span class="header-section-number">47.2</span> The controls that make it trustworthy (don’t fool yourself)</a></li>
+  <li><a href="#compare-with-the-geometric-prediction" id="toc-compare-with-the-geometric-prediction" class="nav-link" data-scroll-target="#compare-with-the-geometric-prediction"><span class="header-section-number">47.3</span> Compare with the geometric prediction</a></li>
+  <li><a href="#open-data-to-reproduce-or-refute" id="toc-open-data-to-reproduce-or-refute" class="nav-link" data-scroll-target="#open-data-to-reproduce-or-refute"><span class="header-section-number">47.4</span> Open data to reproduce (or refute)</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/R1-formulario.html">Part VIII — Reference</a></li><li class="breadcrumb-item"><a href="../chapters/R4-medir-gamma.html"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R4 · Measuring your own γ (and reproducing the atlas)</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/R1-formulario.html">Part VIII — Reference</a></li><li class="breadcrumb-item"><a href="../chapters/R4-medir-gamma.html"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R4 · Measuring your own γ (and reproducing the atlas)</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-r4" class="quarto-section-identifier"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R4 · Measuring your own γ (and reproducing the atlas)</span></span></h1>
+<h1 class="title"><span id="sec-r4" class="quarto-section-identifier"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R4 · Measuring your own γ (and reproducing the atlas)</span></span></h1>
 </div>
 
 
@@ -1090,8 +1096,8 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<section id="the-procedure-step-by-step" class="level2" data-number="46.1">
-<h2 data-number="46.1" class="anchored" data-anchor-id="the-procedure-step-by-step"><span class="header-section-number">46.1</span> The procedure, step by step</h2>
+<section id="the-procedure-step-by-step" class="level2" data-number="47.1">
+<h2 data-number="47.1" class="anchored" data-anchor-id="the-procedure-step-by-step"><span class="header-section-number">47.1</span> The procedure, step by step</h2>
 <ol type="1">
 <li><strong>Collect real attention.</strong> Run a representative batch of texts through the model and save the <strong>attention weights</strong> <span class="math inline">\(A_{ij}\)</span> per head and layer. (In 🤗 Transformers: <code>output_attentions=True</code>.)</li>
 <li><strong>Collapse by distance.</strong> For each distance <span class="math inline">\(d=|i-j|\)</span>, average the weight over all pairs at that distance (and over the batch) → the curve <span class="math inline">\(A(d)\)</span>.</li>
@@ -1112,8 +1118,8 @@ window.Quarto = {
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>gamma <span class="op">=</span> <span class="op">-</span>slope                                  <span class="co"># A(d) ∝ d^(−γ)</span></span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># R² of the fit = your reliability receipt</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="the-controls-that-make-it-trustworthy-dont-fool-yourself" class="level2" data-number="46.2">
-<h2 data-number="46.2" class="anchored" data-anchor-id="the-controls-that-make-it-trustworthy-dont-fool-yourself"><span class="header-section-number">46.2</span> The controls that make it trustworthy (don’t fool yourself)</h2>
+<section id="the-controls-that-make-it-trustworthy-dont-fool-yourself" class="level2" data-number="47.2">
+<h2 data-number="47.2" class="anchored" data-anchor-id="the-controls-that-make-it-trustworthy-dont-fool-yourself"><span class="header-section-number">47.2</span> The controls that make it trustworthy (don’t fool yourself)</h2>
 <ul>
 <li><strong>R² before γ.</strong> With <strong>R² &gt; 0.95</strong> the γ is a good summary; at <strong>R² ≈ 0.85</strong> it is <strong>coarser</strong> —say so, don’t hide it—. A γ with low R² is not comparable to one with high R².</li>
 <li><strong>Don’t compare raw γ across different models.</strong> That mixes θ + data + architecture (the decomposition of Ch. 15). The <strong>clean</strong> control is <em>within-model</em>: change <strong>only</strong> θ in the <strong>same</strong> model (Ch. 16-17).</li>
@@ -1121,12 +1127,12 @@ window.Quarto = {
 <li><strong>Separate the sink.</strong> The concentration mass (sink) is an <strong>axis apart</strong> from γ (Ch. 17); don’t fold it into the tail fit.</li>
 </ul>
 </section>
-<section id="compare-with-the-geometric-prediction" class="level2" data-number="46.3">
-<h2 data-number="46.3" class="anchored" data-anchor-id="compare-with-the-geometric-prediction"><span class="header-section-number">46.3</span> Compare with the geometric prediction</h2>
+<section id="compare-with-the-geometric-prediction" class="level2" data-number="47.3">
+<h2 data-number="47.3" class="anchored" data-anchor-id="compare-with-the-geometric-prediction"><span class="header-section-number">47.3</span> Compare with the geometric prediction</h2>
 <p>Once you have measured γ, compare it with <strong>γ_Padé</strong> (Ch. 15, Recipe 2 in R2): if they differ, the gap is a signal of the <strong>γ_train + γ_arch</strong> terms of the decomposition, not a failure of the measurement. <strong>Honest:</strong> the prediction gets the <strong>center</strong> right (median error ~22% in Phase A), not the exact value.</p>
 </section>
-<section id="open-data-to-reproduce-or-refute" class="level2" data-number="46.4">
-<h2 data-number="46.4" class="anchored" data-anchor-id="open-data-to-reproduce-or-refute"><span class="header-section-number">46.4</span> Open data to reproduce (or refute)</h2>
+<section id="open-data-to-reproduce-or-refute" class="level2" data-number="47.4">
+<h2 data-number="47.4" class="anchored" data-anchor-id="open-data-to-reproduce-or-refute"><span class="header-section-number">47.4</span> Open data to reproduce (or refute)</h2>
 <ul>
 <li><strong>The γ atlas</strong> (γ measured across 42 models from 4 families) and the <em>within-model</em> experiments (θ-rescale, γ⊥sink) are <strong>published as open data</strong> alongside <strong>Paper I</strong> (Zenodo <strong>20314038</strong>) — downloadable, reproducible, criticizable.</li>
 <li>The <strong>model panel</strong> and the tool’s apparatus are open at <code>github.com/karlesmarin/tafagent-registry</code> and <code>github.com/karlesmarin/lean-taf</code> (formal proofs). <em>(The Hugging Face datasets exist for reproduction; check the exact repository handle before linking them.)</em></li>
@@ -2567,12 +2573,12 @@ window.Quarto = {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../chapters/R3-glosario.html" class="pagination-link" aria-label="R3 · Glossary">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R3 · Glossary</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R3 · Glossary</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../chapters/R5-tafagent.html" class="pagination-link" aria-label="R5 · tafagent manual">
-        <span class="nav-page-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R5 · tafagent manual</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">R5 · tafagent manual</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
