@@ -39,7 +39,7 @@ honest "verified vs folklore vs numerology" audit.
 
 ---
 
-## Interactive & animated visualizations (new — 2026-06)
+## 🎮 Interactive & animated visualizations (new — 2026-06)
 
 The topic is intensely visual, so key chapters now embed **interactive, self-contained diagrams** — pure CSS/JS plus a locally **vendored three.js** (no external CDN: they work offline and under the GitHub Pages sub-path). Everything is **bilingual** (Spanish by default, English when the page language is English) and respects `prefers-reduced-motion`:
 
@@ -49,7 +49,7 @@ The topic is intensely visual, so key chapters now embed **interactive, self-con
 - **Live formula plots** — γ_Padé(θ,T), `A(d)=d⁻ᵞ` (linear/log-log), softmax temperature, `1/√d_k` — move a slider and watch the formula respond, computed live from the real math.
 - **Concept schemas** — Q/K/V as a soft dictionary lookup (real worked example), LayerNorm step by step, KV-cache compressibility (`Σ d⁻ᵞ`), the causal mask (−∞ → softmax), attention "who-attends-to-whom" arcs, and animated step timelines across many chapters.
 
-## Updated — July 2026 · Actualizado — julio 2026
+## ✨ Updated — July 2026 · Actualizado — julio 2026
 
 **New chapter (2026-07-07) — *The global workspace: reading the model's whiteboard* / *El
 espacio de trabajo global: leer la pizarra del modelo*** (closes Part VII, ES+EN): the
@@ -68,7 +68,7 @@ A major content + freshness pass (both languages) · Gran tanda de contenido y a
 - **New interactive graphics:** a **Mixture-of-Experts router** and a **benchmark-contamination "mirage"** widget, plus **7 new animated flow diagrams** (training loop, encoder→decoder, classification, LoRA, FlashAttention, quantization, prefill→decode).
 - **Honesty pass:** rigor/consistency fixes verified against the data (γ atlas, Lévy vs fractional integration, model counts, R² floor).
 
-## What's in this repo
+## 📦 What's in this repo
 
 This is the **published static site** (GitHub Pages). It is **generated** from a
 [Quarto](https://quarto.org) book project (the `.qmd` sources live separately) — do not edit the
@@ -82,7 +82,7 @@ HTML here by hand.
 | `icon.png` | Favicon / logo |
 | `.nojekyll` | Tells GitHub Pages to serve the files as-is |
 
-## Author & links
+## 👤 Author & links
 
 - **Author:** Carles Marín
 - **Companion app:** [tafagent](https://karlesmarin.github.io/tafagent/) — browser-only LLM diagnostics
