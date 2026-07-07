@@ -51,6 +51,16 @@ The topic is intensely visual, so key chapters now embed **interactive, self-con
 
 ## Updated — July 2026 · Actualizado — julio 2026
 
+**New chapter (2026-07-07) — *The global workspace: reading the model's whiteboard* / *El
+espacio de trabajo global: leer la pizarra del modelo*** (closes Part VII, ES+EN): the
+Anthropic global-workspace result (Jacobian lens, the readable "whiteboard" inside the
+residual stream, ignition, the automatic/deliberate double dissociation), told as the
+payoff of the "shared whiteboard" analogy from Ch. 3 — with **4 new interactive widgets**
+(whiteboard-in-action with a J-lens/logit-lens toggle, erase-the-whiteboard, ignition
+slider, intro flow) and the L_crit formula term by term, with its real validation status
+and a pre-registered measurement in progress. · **Nuevo capítulo** con 4 widgets
+interactivos y honestidad explícita (predicciones congeladas antes de medir).
+
 A major content + freshness pass (both languages) · Gran tanda de contenido y actualización (ambos idiomas):
 
 - **New chapter — *Evaluation: measuring without fooling yourself*** (Part VII, now 41 chapters): perplexity & bits-per-byte, capability benchmarks (MMLU/GPQA/HumanEval/SWE-bench/GSM8K/RULER), data **contamination** & **Goodhart's law**, the **LLM-as-judge** and its biases, and statistical rigor. · **Nuevo capítulo de *Evaluación*.**
