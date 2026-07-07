@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>44&nbsp; R1 · Formulario maestro – Cómo Atienden los Transformers</title>
+<title>43&nbsp; El espacio de trabajo global: leer la pizarra del modelo – Cómo Atienden los Transformers</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -23,7 +23,61 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -32,8 +86,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../chapters/R2-cookbook.html" rel="next">
-<link href="../chapters/42-workspace.html" rel="prev">
+<link href="../chapters/R1-formulario.html" rel="next">
+<link href="../chapters/41-etica.html" rel="prev">
 <link href="../icon.png" rel="icon" type="image/png">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -595,7 +649,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/R1-formulario.html">Parte VIII — Referencia</a></li><li class="breadcrumb-item"><a href="../chapters/R1-formulario.html"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R1 · Formulario maestro</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/37-interpretabilidad.html">Parte VII — Interpretabilidad y qué es real</a></li><li class="breadcrumb-item"><a href="../chapters/42-workspace.html"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">El espacio de trabajo global: leer la pizarra del modelo</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -959,7 +1013,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/42-workspace.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/42-workspace.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">El espacio de trabajo global: leer la pizarra del modelo</span></span></a>
   </div>
 </li>
@@ -976,7 +1030,7 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/R1-formulario.html" class="sidebar-item-text sidebar-link active">
+  <a href="../chapters/R1-formulario.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R1 · Formulario maestro</span></span></a>
   </div>
 </li>
@@ -1022,23 +1076,26 @@ window.Quarto = {
     <h2 id="toc-title">En esta página</h2>
    
   <ul>
-  <li><a href="#leyenda-de-recibos" id="toc-leyenda-de-recibos" class="nav-link active" data-scroll-target="#leyenda-de-recibos"><span class="header-section-number">44.1</span> Leyenda de recibos</a></li>
-  <li><a href="#parte-i-fundamentos" id="toc-parte-i-fundamentos" class="nav-link" data-scroll-target="#parte-i-fundamentos"><span class="header-section-number">44.2</span> Parte I — Fundamentos</a></li>
-  <li><a href="#parte-i-entrenamiento-e-inferencia" id="toc-parte-i-entrenamiento-e-inferencia" class="nav-link" data-scroll-target="#parte-i-entrenamiento-e-inferencia"><span class="header-section-number">44.3</span> Parte I — Entrenamiento e inferencia</a></li>
-  <li><a href="#parte-iiiii-nuestra-teoría-atención-sobre-la-distancia-edge" id="toc-parte-iiiii-nuestra-teoría-atención-sobre-la-distancia-edge" class="nav-link" data-scroll-target="#parte-iiiii-nuestra-teoría-atención-sobre-la-distancia-edge"><span class="header-section-number">44.4</span> Parte II–III — Nuestra teoría: atención sobre la distancia [EDGE]</a></li>
-  <li><a href="#parte-iii-lente-física-edge" id="toc-parte-iii-lente-física-edge" class="nav-link" data-scroll-target="#parte-iii-lente-física-edge"><span class="header-section-number">44.5</span> Parte III — Lente física [EDGE]</a></li>
-  <li><a href="#parte-ivv-adaptación-y-uso" id="toc-parte-ivv-adaptación-y-uso" class="nav-link" data-scroll-target="#parte-ivv-adaptación-y-uso"><span class="header-section-number">44.6</span> Parte IV–V — Adaptación y uso</a></li>
-  <li><a href="#parte-vi-eficiencia" id="toc-parte-vi-eficiencia" class="nav-link" data-scroll-target="#parte-vi-eficiencia"><span class="header-section-number">44.7</span> Parte VI — Eficiencia</a></li>
-  <li><a href="#cómo-leer-esta-tabla" id="toc-cómo-leer-esta-tabla" class="nav-link" data-scroll-target="#cómo-leer-esta-tabla"><span class="header-section-number">44.8</span> Cómo leer esta tabla</a></li>
+  <li><a href="#la-idea-en-una-frase" id="toc-la-idea-en-una-frase" class="nav-link active" data-scroll-target="#la-idea-en-una-frase"><span class="header-section-number">43.1</span> La idea en una frase</a></li>
+  <li><a href="#conceptos-clave-y-su-papel-en-el-transformer" id="toc-conceptos-clave-y-su-papel-en-el-transformer" class="nav-link" data-scroll-target="#conceptos-clave-y-su-papel-en-el-transformer"><span class="header-section-number">43.2</span> Conceptos clave y su papel en el transformer</a></li>
+  <li><a href="#la-pizarra-tenía-una-esquina-en-limpio" id="toc-la-pizarra-tenía-una-esquina-en-limpio" class="nav-link" data-scroll-target="#la-pizarra-tenía-una-esquina-en-limpio"><span class="header-section-number">43.3</span> La pizarra tenía una esquina en limpio</a></li>
+  <li><a href="#míralo-funcionar" id="toc-míralo-funcionar" class="nav-link" data-scroll-target="#míralo-funcionar"><span class="header-section-number">43.4</span> Míralo funcionar</a></li>
+  <li><a href="#y-cómo-sabemos-que-no-es-un-espejismo" id="toc-y-cómo-sabemos-que-no-es-un-espejismo" class="nav-link" data-scroll-target="#y-cómo-sabemos-que-no-es-un-espejismo"><span class="header-section-number">43.5</span> ¿Y cómo sabemos que no es un espejismo?</a></li>
+  <li><a href="#dónde-está-la-pizarra-y-por-qué-ahí" id="toc-dónde-está-la-pizarra-y-por-qué-ahí" class="nav-link" data-scroll-target="#dónde-está-la-pizarra-y-por-qué-ahí"><span class="header-section-number">43.6</span> ¿Dónde está la pizarra — y por qué ahí?</a></li>
+  <li><a href="#mide-tu-propia-pizarra" id="toc-mide-tu-propia-pizarra" class="nav-link" data-scroll-target="#mide-tu-propia-pizarra"><span class="header-section-number">43.7</span> Mide tu propia pizarra</a></li>
+  <li><a href="#y-para-qué-sirve-saber-dónde-está" id="toc-y-para-qué-sirve-saber-dónde-está" class="nav-link" data-scroll-target="#y-para-qué-sirve-saber-dónde-está"><span class="header-section-number">43.8</span> ¿Y para qué sirve saber dónde está?</a></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">43.9</span> Resumen</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">43.10</span> Ejercicios</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias">Referencias</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/R1-formulario.html">Parte VIII — Referencia</a></li><li class="breadcrumb-item"><a href="../chapters/R1-formulario.html"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R1 · Formulario maestro</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/37-interpretabilidad.html">Parte VII — Interpretabilidad y qué es real</a></li><li class="breadcrumb-item"><a href="../chapters/42-workspace.html"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">El espacio de trabajo global: leer la pizarra del modelo</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-r1" class="quarto-section-identifier"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R1 · Formulario maestro</span></span></h1>
+<h1 class="title"><span id="sec-workspace" class="quarto-section-identifier"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">El espacio de trabajo global: leer la pizarra del modelo</span></span></h1>
 </div>
 
 
@@ -1061,416 +1118,403 @@ window.Quarto = {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-body-container">
-<p><strong>Qué es.</strong> La <strong>tabla de consulta</strong> de todas las fórmulas importantes del libro, cada una con qué hace, dónde se explica a fondo, y —lo que nos distingue— su <strong>recibo</strong>: si está <strong>probada en Lean</strong>, <strong>respaldada por datos</strong>, <strong>derivada</strong>, es una <strong>analogía etiquetada</strong> o fue <strong>corregida</strong> (erratum). Aquí no hay narrativa: es para <strong>buscar y comprobar</strong>.</p>
+<p><strong>Dónde estamos.</strong> Cerramos la Parte VII con una historia circular. En el <a href="03-embeddings.html" class="quarto-xref"><span>Capítulo 4</span></a> llamamos al flujo residual “la <strong>pizarra compartida</strong>” del modelo — una analogía para entender cómo las capas se comunican. En julio de 2026, Anthropic demostró que la analogía era <strong>más literal de lo que sabíamos</strong>: dentro de esa pizarra hay una parte que funciona como un verdadero <strong>espacio de trabajo</strong> — se puede <em>leer</em>, se puede <em>editar</em>, y es donde el modelo sostiene su razonamiento <span class="citation" data-cites="lindsey2026workspace">(<a href="#ref-lindsey2026workspace" role="doc-biblioref">Gurnee et&nbsp;al. 2026</a>)</span>. Este capítulo cuenta cómo se descubrió, qué demuestra (y qué no), y cómo puedes <strong>medirla tú mismo</strong>.</p>
 </div>
 </div>
 </div>
-<section id="leyenda-de-recibos" class="level2" data-number="44.1">
-<h2 data-number="44.1" class="anchored" data-anchor-id="leyenda-de-recibos"><span class="header-section-number">44.1</span> Leyenda de recibos</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Marca</th>
-<th>Significado</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>📐 Lean</strong></td>
-<td>Identidad <strong>probada formalmente</strong> en Lean (consistencia algebraica, no causalidad sobre el modelo)</td>
-</tr>
-<tr class="even">
-<td><strong>📊 Datos</strong></td>
-<td>Respaldada por <strong>datos reproducibles</strong> (atlas, experimentos)</td>
-</tr>
-<tr class="odd">
-<td><strong>✓ Derivado</strong></td>
-<td><strong>Derivada</strong> de primeros principios o definición estándar</td>
-</tr>
-<tr class="even">
-<td><strong>~ Analogía</strong></td>
-<td><strong>Analogía/lente</strong> útil, <strong>etiquetada como tal</strong> (no teorema)</td>
-</tr>
-<tr class="odd">
-<td><strong>✗→✓ Erratum</strong></td>
-<td>Tenía un <strong>error</strong>, corregido (y, si aplica, re-probado)</td>
-</tr>
-<tr class="even">
-<td><strong>🟡 Provisional</strong></td>
-<td>Afirmación <strong>no validada</strong> del todo / pendiente de réplica</td>
-</tr>
-</tbody>
-</table>
-<p><em>(La filosofía detrás de esta columna es el Cap. 38: la honestidad se <strong>demuestra</strong> con recibos.)</em></p>
+<section id="la-idea-en-una-frase" class="level2" data-number="43.1">
+<h2 data-number="43.1" class="anchored" data-anchor-id="la-idea-en-una-frase"><span class="header-section-number">43.1</span> La idea en una frase</h2>
+<p>En la gran pizarra del flujo residual hay una <strong>esquina escrita en limpio</strong> —un subespacio pequeño (~10 %) cuyo contenido está en “idioma token”, legible— y esa esquina es la <strong>memoria de trabajo</strong> del modelo: sostiene los conceptos del razonamiento deliberado mientras el resto de la red teclea en taquigrafía automática.</p>
 </section>
-<section id="parte-i-fundamentos" class="level2" data-number="44.2">
-<h2 data-number="44.2" class="anchored" data-anchor-id="parte-i-fundamentos"><span class="header-section-number">44.2</span> Parte I — Fundamentos</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Fórmula</th>
-<th>Qué hace</th>
-<th>Cap.</th>
-<th>Recibo</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><span class="math inline">\(\mathrm{Attention}(Q,K,V)=\mathrm{softmax}\!\big(\tfrac{QK^\top}{\sqrt{d_k}}\big)V\)</span></td>
-<td>Mezcla ponderada: cada token recoge info de los demás según afinidad</td>
-<td>4</td>
-<td>✓ Derivado</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(1/\sqrt{d_k}\)</span> (escalado)</td>
-<td>Evita que los productos escalares crezcan con <span class="math inline">\(d_k\)</span> y saturen el softmax</td>
-<td>4</td>
-<td>✓ Derivado</td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(\mathrm{MHA}=\mathrm{Concat}(\text{cabezas})\,W^O\)</span></td>
-<td>Varias cabezas en paralelo + proyección de salida</td>
-<td>5</td>
-<td>✓ Derivado</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(\mathrm{FFN}(x)=\sigma(xW_1+b_1)W_2+b_2\)</span></td>
-<td>Procesa cada token por separado (memoria clave-valor)</td>
-<td>6</td>
-<td>✓ Derivado</td>
-</tr>
-<tr class="odd">
-<td>SwiGLU: <span class="math inline">\((\mathrm{Swish}(xW)\odot xV)W_2\)</span></td>
-<td>Variante con <em>gating</em> de la FFN (estándar moderno)</td>
-<td>6</td>
-<td>📊 Datos</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(\mathrm{LayerNorm}(x)=\gamma\tfrac{x-\mu}{\sigma}+\beta\)</span></td>
-<td>Reescala la activación → estabilidad</td>
-<td>7</td>
-<td>✓ Derivado</td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(\mathrm{RMSNorm}(x)=\gamma\,\tfrac{x}{\sqrt{\overline{x^2}}}\)</span></td>
-<td>Como LayerNorm sin centrar (más barata)</td>
-<td>7</td>
-<td>✓ Derivado</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(\omega_i=\theta^{-2i/d}\)</span> (frecuencias RoPE)</td>
-<td>Cada par de dimensiones rota a su velocidad</td>
-<td>8</td>
-<td>✓ Derivado</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="parte-i-entrenamiento-e-inferencia" class="level2" data-number="44.3">
-<h2 data-number="44.3" class="anchored" data-anchor-id="parte-i-entrenamiento-e-inferencia"><span class="header-section-number">44.3</span> Parte I — Entrenamiento e inferencia</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Fórmula</th>
-<th>Qué hace</th>
-<th>Cap.</th>
-<th>Recibo</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><span class="math inline">\(\mathcal{L}=-\log p_\text{modelo}(\text{token correcto})\)</span></td>
-<td>Entropía cruzada: el objetivo de entrenamiento</td>
-<td>11</td>
-<td>✓ Derivado</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(\text{perplejidad}=e^{\mathcal{L}}\)</span></td>
-<td>“Entre cuántos tokens duda” (legible)</td>
-<td>11</td>
-<td>✓ Derivado</td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(C\approx 6ND\)</span></td>
-<td>Coste de cómputo ≈ 6 × parámetros × tokens</td>
-<td>25</td>
-<td>✓ Derivado</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(L(N,D)=E+\tfrac{A}{N^\alpha}+\tfrac{B}{D^\beta}\)</span></td>
-<td>Ley de escala: la pérdida frente a tamaño y datos</td>
-<td>25</td>
-<td>📊 Datos</td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(\mathrm{softmax}(z/\tau)\)</span> (temperatura)</td>
-<td><span class="math inline">\(\tau\)</span> controla cuán “aventurado” es el muestreo</td>
-<td>12, 29</td>
-<td>✓ Derivado</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="parte-iiiii-nuestra-teoría-atención-sobre-la-distancia-edge" class="level2" data-number="44.4">
-<h2 data-number="44.4" class="anchored" data-anchor-id="parte-iiiii-nuestra-teoría-atención-sobre-la-distancia-edge"><span class="header-section-number">44.4</span> Parte II–III — Nuestra teoría: atención sobre la distancia [EDGE]</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Fórmula</th>
-<th>Qué hace</th>
-<th>Cap.</th>
-<th>Recibo</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><span class="math inline">\(A(d)\propto d^{-\gamma}\)</span></td>
-<td>La <strong>ley de decaimiento</strong>: atención media vs distancia</td>
-<td>15</td>
-<td>📊 Datos (R²&gt;0,95, 30+ modelos)</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(\gamma_{\text{Padé}}=\dfrac{2\theta-T\sqrt2}{2\theta+T\sqrt2}\)</span></td>
-<td><strong>Predice</strong> γ desde la geometría (θ, T), sin entrenar</td>
-<td>15</td>
-<td>📐 Lean (Cayley) · 📊 (mediana ~22% error, Fase A)</td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(\lambda_i=2\pi\,\theta^{2i/d}\)</span></td>
-<td>Longitud de onda de cada par de RoPE (aliasing)</td>
-<td>14</td>
-<td>✓ Derivado</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(n_{\text{active}}(d)=\tfrac{d_\text{head}}{2}\big(1-\log_\theta\tfrac{d}{2\pi}\big)\)</span></td>
-<td>Cuántos pares conservan señal posicional a distancia <span class="math inline">\(d\)</span></td>
-<td>14</td>
-<td>✓ Derivado</td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(T_{\text{cross}}=2\pi\sqrt\theta,\ \ T_{\text{max}}=2\pi\theta\)</span></td>
-<td>Las dos escalas: empieza a degradarse / se agota</td>
-<td>14</td>
-<td>✓ Derivado</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(\gamma_{\text{obs}}=\gamma_{\text{geom}}+\gamma_{\text{train}}+\gamma_{\text{arch}}+\varepsilon\)</span></td>
-<td>Descompone γ medido en sus fuentes</td>
-<td>15</td>
-<td>📊 Datos · 🟡 (eje <em>imprint</em> provisional)</td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(D_f\sim\varepsilon^{-1/(\gamma-1)}\)</span></td>
-<td>Ventana de KV necesaria derivada de γ (γ&gt;1)</td>
-<td>20</td>
-<td>🟡 Provisional (falta benchmark)</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="parte-iii-lente-física-edge" class="level2" data-number="44.5">
-<h2 data-number="44.5" class="anchored" data-anchor-id="parte-iii-lente-física-edge"><span class="header-section-number">44.5</span> Parte III — Lente física [EDGE]</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Fórmula</th>
-<th>Qué hace</th>
-<th>Cap.</th>
-<th>Recibo</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><span class="math inline">\(Z=\mathrm{Li}_\gamma(e^{-\lambda})\)</span></td>
-<td>Función de partición (polilogaritmo) de la atención</td>
-<td>21</td>
-<td>✓ Derivado</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(\text{Fisher}=C_V/\gamma^2\)</span></td>
-<td>Sensibilidad estadística = fluctuación térmica</td>
-<td>22</td>
-<td><strong>📐 Lean</strong></td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(C_V(\gamma{=}1,N)=\dfrac{(\log N)^2}{12}\)</span></td>
-<td>Capacidad calorífica en la frontera</td>
-<td>22</td>
-<td><strong>✗→✓ Erratum</strong> (era /4) · 📐 Lean</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(S_\gamma\sim\log N\)</span> (área-ley)</td>
-<td>La entropía de atención crece logarítmicamente</td>
-<td>22</td>
-<td>📊 Datos (42 modelos)</td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(s=(\gamma-1)/2,\ \ \alpha=\gamma-1\)</span></td>
-<td>Orden fraccionario / índice de Lévy a partir de γ</td>
-<td>23</td>
-<td>~ Analogía (mapeo etiquetado)</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(\chi=1/|\gamma-1|\)</span></td>
-<td>Susceptibilidad cerca de la frontera γ=1</td>
-<td>21</td>
-<td>✓ Derivado</td>
-</tr>
-<tr class="odd">
-<td>γ=1 ↔︎ temperatura de Hagedorn</td>
-<td>La frontera de fase (Fase A / Fase B)</td>
-<td>21, 39</td>
-<td>~ Analogía (síntesis nuestra)</td>
-</tr>
-<tr class="even">
-<td>Imprint: pendiente <span class="math inline">\(\nu\approx-1/(2\pi)\)</span></td>
-<td>“Huella” de los datos de entrenamiento en γ</td>
-<td>15, 38</td>
-<td><strong>✗ Refutado en datos</strong> (Lean sí; no reproduce)</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="parte-ivv-adaptación-y-uso" class="level2" data-number="44.6">
-<h2 data-number="44.6" class="anchored" data-anchor-id="parte-ivv-adaptación-y-uso"><span class="header-section-number">44.6</span> Parte IV–V — Adaptación y uso</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Fórmula</th>
-<th>Qué hace</th>
-<th>Cap.</th>
-<th>Recibo</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><span class="math inline">\(\mathcal{L}_R=-\log\sigma\big(r(x,y_w)-r(x,y_l)\big)\)</span></td>
-<td>Modelo de recompensa (Bradley-Terry) desde preferencias</td>
-<td>27</td>
-<td>✓ Derivado</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(\max\ \mathbb{E}[r]-\beta\,\mathrm{KL}(\pi_\theta\|\pi_\text{ref})\)</span></td>
-<td>Objetivo RLHF: maximizar recompensa con correa KL</td>
-<td>27</td>
-<td>✓ Derivado</td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(\mathcal{L}_{\text{DPO}}=-\log\sigma\big(\beta\log\tfrac{\pi_\theta(y_w)}{\pi_\text{ref}(y_w)}-\beta\log\tfrac{\pi_\theta(y_l)}{\pi_\text{ref}(y_l)}\big)\)</span></td>
-<td>Optimiza preferencias <strong>sin</strong> RL ni modelo de recompensa</td>
-<td>27</td>
-<td>✓ Derivado</td>
-</tr>
-<tr class="even">
-<td>NT-Xent: <span class="math inline">\(-\log\tfrac{e^{\mathrm{sim}(h,h^+)/\tau}}{\sum_j e^{\mathrm{sim}(h,h_j)/\tau}}\)</span></td>
-<td>Pérdida contrastiva (acercar positivos, alejar negativos)</td>
-<td>26, 33</td>
-<td>✓ Derivado</td>
-</tr>
-<tr class="odd">
-<td>CFG: <span class="math inline">\(\text{logits}_\text{sin}+\gamma(\text{logits}_\text{con}-\text{logits}_\text{sin})\)</span></td>
-<td>Guía sin clasificador: amplifica el efecto del prompt</td>
-<td>29</td>
-<td>✓ Derivado</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="parte-vi-eficiencia" class="level2" data-number="44.7">
-<h2 data-number="44.7" class="anchored" data-anchor-id="parte-vi-eficiencia"><span class="header-section-number">44.7</span> Parte VI — Eficiencia</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Fórmula</th>
-<th>Qué hace</th>
-<th>Cap.</th>
-<th>Recibo</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><span class="math inline">\(h=W_0x+\tfrac{\alpha}{r}BAx\)</span> (LoRA)</td>
-<td>Delta de <strong>rango bajo</strong>; <span class="math inline">\(B{=}0\)</span> al inicio; fusionable</td>
-<td>28</td>
-<td>📊 Datos</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(x\approx S\,(x_q-Z)\)</span> (cuantización)</td>
-<td>Mapa real↔︎entero: escala <span class="math inline">\(S\)</span> + zero-point <span class="math inline">\(Z\)</span></td>
-<td>35</td>
-<td>✓ Derivado</td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(\big(\varphi(Q)\varphi(K)^\top\big)V=\varphi(Q)\big(\varphi(K)^\top V\big)\)</span></td>
-<td>Reasociación → atención lineal O(n)</td>
-<td>34</td>
-<td>✓ Derivado</td>
-</tr>
-<tr class="even">
-<td>Coste atención <span class="math inline">\(=O(n^2 d)\)</span> cómputo, <span class="math inline">\(O(n^2)\)</span> memoria</td>
-<td>Por qué la atención es cara en contexto largo</td>
-<td>34</td>
-<td>✓ Derivado</td>
-</tr>
-<tr class="odd">
-<td>Latencia <span class="math inline">\(\approx \text{TTFT}+\text{TPOT}\times n_\text{tokens}\)</span></td>
-<td>Descompone la latencia de servir</td>
-<td>36</td>
-<td>✓ Derivado</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="cómo-leer-esta-tabla" class="level2" data-number="44.8">
-<h2 data-number="44.8" class="anchored" data-anchor-id="cómo-leer-esta-tabla"><span class="header-section-number">44.8</span> Cómo leer esta tabla</h2>
+<section id="conceptos-clave-y-su-papel-en-el-transformer" class="level2" data-number="43.2">
+<h2 data-number="43.2" class="anchored" data-anchor-id="conceptos-clave-y-su-papel-en-el-transformer"><span class="header-section-number">43.2</span> Conceptos clave y su papel en el transformer</h2>
 <ul>
-<li>Para <strong>entender</strong> una fórmula término a término, ve al <strong>capítulo</strong> indicado: ahí está definida cada letra, su función en el transformer y su analogía.</li>
-<li>La columna <strong>Recibo</strong> te dice <strong>cuánto fiarte</strong>: una <strong>📐 Lean</strong> está probada algebraicamente; <strong>📊 Datos</strong>, comprobada empíricamente; <strong>~ Analogía</strong>, es una lente útil pero <strong>no</strong> un teorema; <strong>🟡</strong> y <strong>✗</strong> te avisan de lo no validado o refutado —incluidos <strong>nuestros propios</strong> casos—.</li>
-<li>Las identidades <strong>Lean</strong> enlazan a las pruebas formales (📐); los resultados con <strong>📊</strong> a los datos abiertos del Paper I (Zenodo). <em>Nada</em> aquí te pide que nos creas: te da <strong>dónde comprobarlo</strong>.</li>
+<li><strong>Lente Jacobiana (J-lens).</strong> <em>Definición:</em> el <em>logit lens</em> (<a href="37-interpretabilidad.html" class="quarto-xref"><span>Capítulo 38</span></a>) con “gafas graduadas por capa”: transporta la activación con el <strong>Jacobiano promedio</strong> <span class="math inline">\(J_\ell = \mathbb{E}[\partial h_{final}/\partial h_\ell]\)</span> antes de proyectar al vocabulario. <em>En el transformer:</em> lee contenido en capas intermedias <strong>donde el logit lens solo ve ruido</strong>.</li>
+<li><strong>Espacio de trabajo (J-space).</strong> <em>Definición:</em> la parte del flujo residual que el J-lens sabe leer — combinaciones dispersas de vectores “un token”. <em>En el transformer:</em> la <strong>esquina en limpio de la pizarra</strong>: ~decenas de conceptos activos a la vez, memoria <em>de trabajo</em> (no un almacén de hechos).</li>
+<li><strong>Banda de profundidad.</strong> <em>Definición:</em> el tramo de capas donde ese espacio está poblado (en los modelos Claude, ~38 %–92 %). <em>En el transformer:</em> antes, el contenido aún no es legible; después, ya está comprometido con la salida.</li>
+<li><strong>Disociación automático/deliberado.</strong> <em>Definición:</em> borrar el espacio de trabajo hunde el razonamiento flexible y <strong>no toca</strong> las tareas automáticas. <em>En el transformer:</em> la prueba <strong>causal</strong> de que es un sistema, no una casualidad de la lente.</li>
+<li><strong>Ignición.</strong> <em>Definición:</em> una mezcla ambigua de dos conceptos <strong>colapsa de golpe</strong> a uno de ellos justo al entrar en la banda. <em>En el transformer:</em> así resuelve el modelo la ambigüedad — con umbral, no gradualmente.</li>
+<li><strong>Externalización.</strong> <em>Definición:</em> escribir los pasos (el chain-of-thought del
+<ol class="example" type="1">
+<li>descarga la pizarra al papel. <em>En el transformer:</em> por eso el CoT <strong>sobrevive</strong> cuando se borra la pizarra: lo escrito ya no hay que sostenerlo.</li>
+</ol></li>
 </ul>
-<p><strong>Siguiente referencia (R2):</strong> el <em>cookbook</em> —recetas paso a paso para medir γ, dimensionar el KV y aplicar estas fórmulas a tu propio modelo—.</p>
+<p>El viaje completo que vamos a recorrer, de un vistazo:</p>
+<div class="fg-flow" style="--steps:6" role="img" aria-label="El viaje de un concepto por la pizarra: el token entra, las capas bajas trabajan en taquigrafía, en la banda el concepto se escribe legible y se sostiene, en L_crit colapsa hacia la salida y el modelo lo pronuncia.">
+  <span class="fg-spark" aria-hidden="true"></span>
+  <div class="fg-step" style="--i:0">
+    <span class="fg-chip">📥</span>
+    <div class="fg-card"><b>el texto entra</b><span>tokens → pizarra compartida (Cap. 3)</span></div>
+  </div>
+  <div class="fg-step" style="--i:1">
+    <span class="fg-chip">✍️</span>
+    <div class="fg-card"><b>capas bajas: taquigarabatos</b><span>posición y gramática, ilegibles para cualquier lente</span></div>
+  </div>
+  <div class="fg-step" style="--i:2">
+    <span class="fg-chip">💡</span>
+    <div class="fg-card"><b>entra en la banda: ignición</b><span>el concepto se escribe en limpio — "París", legible</span></div>
+  </div>
+  <div class="fg-step" style="--i:3">
+    <span class="fg-chip">🧠</span>
+    <div class="fg-card"><b>la pizarra sostiene</b><span>memoria de trabajo: el plan viaja posiciones sin decirse</span></div>
+  </div>
+  <div class="fg-step" style="--i:4">
+    <span class="fg-chip">🎯</span>
+    <div class="fg-card"><b>L_crit: compromiso</b><span>el contenido colapsa hacia la respuesta</span></div>
+  </div>
+  <div class="fg-step" style="--i:5">
+    <span class="fg-chip">📤</span>
+    <div class="fg-card"><b>el modelo lo dice</b><span>"París" — la pizarra lo sabía desde antes</span></div>
+  </div>
+</div>
+</section>
+<section id="la-pizarra-tenía-una-esquina-en-limpio" class="level2" data-number="43.3">
+<h2 data-number="43.3" class="anchored" data-anchor-id="la-pizarra-tenía-una-esquina-en-limpio"><span class="header-section-number">43.3</span> La pizarra tenía una esquina en limpio</h2>
+<p>Empecemos por la pregunta que lo desencadena todo. Si el flujo residual es una pizarra donde las capas anotan — <strong>¿podríamos leerla nosotros?</strong></p>
+<p>El primer intento ya lo conoces del <a href="37-interpretabilidad.html" class="quarto-xref"><span>Capítulo 38</span></a>: el <em>logit lens</em> proyecta la activación de cualquier capa al vocabulario, “¿qué diría el modelo si terminara aquí?”. Funciona… pero solo cerca del final. En capas tempranas e intermedias devuelve ruido.</p>
+<p>Ahora piensa: <strong>¿por qué falla ahí?</strong> ¿De verdad no hay nada escrito en media red — o es que estamos leyendo con las gafas equivocadas?</p>
+<p>La respuesta resultó ser lo segundo. Cada capa escribe en la pizarra con su propio “sistema de coordenadas”, y el logit lens lee todas con las coordenadas de la última. La corrección es conceptualmente simple: medir, promediando sobre ~1 000 textos, <em>cómo se traduce en promedio</em> lo escrito en la capa ℓ al idioma de la capa final — eso es exactamente un Jacobiano promedio — y traducir antes de leer:</p>
+<p><span class="math display">\[\text{lens}_\ell(h) = \text{unembed}\big(\,\text{norm}(J_\ell\, h)\,\big)\]</span></p>
+<div class="analogia">
+<p><strong>🧩 Analogía — las gafas graduadas por capa.</strong> El logit lens intenta leer todos los renglones de la pizarra con las <strong>mismas gafas</strong> (las del renglón final). La lente Jacobiana se <strong>gradúa para cada renglón</strong>: mide cuánto “desenfoca” el camino desde ese renglón hasta el final, y lo compensa. Con las gafas correctas, renglones que parecían garabatos resultan estar <strong>llenos de palabras</strong>.</p>
+</div>
+<p>Una advertencia importante antes de seguir: esta lente <strong>no predice el siguiente token</strong> (para eso ya está la salida del modelo). Lee qué conceptos tiene el modelo <em>sobre la mesa</em> — los ingredientes, no el plato servido. Esa diferencia es la clave de todo el capítulo.</p>
+</section>
+<section id="míralo-funcionar" class="level2" data-number="43.4">
+<h2 data-number="43.4" class="anchored" data-anchor-id="míralo-funcionar"><span class="header-section-number">43.4</span> Míralo funcionar</h2>
+<p>¿Cuántos tokens <em>antes</em> de decir “París” crees que el modelo ya lo tiene decidido? Obsérvalo — y luego cambia a “logit lens” para entender por qué nadie había visto esto antes:</p>
+<div class="fg-ws" id="fg-ws-1" role="img" aria-label="Animación de la pizarra del modelo: rejilla de capas por posiciones donde los conceptos aparecen en la banda intermedia antes de emitirse. París se lee en capas intermedias cuatro tokens antes de ser generado.">
+<style>
+#fg-ws-1{--band:#7c5cbf;--band-bg:rgba(124,92,191,.10);--late:#b8860b;--ok:#2e7d32;
+  border:1px solid #ddd;border-radius:10px;padding:.8rem;margin:1rem 0;font-family:Georgia,serif}
+#fg-ws-1 .ws-ctrl{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:.6rem}
+#fg-ws-1 button{font:inherit;padding:.15rem .7rem;border:1px solid #bbb;border-radius:6px;
+  background:#fafafa;cursor:pointer}
+#fg-ws-1 button.on{background:var(--band);color:#fff;border-color:var(--band)}
+#fg-ws-1 input[type=range]{flex:1;min-width:110px}
+#fg-ws-1 .ws-grid{display:grid;gap:2px;font-size:.62rem;line-height:1.25}
+#fg-ws-1 .ws-cell{border-radius:3px;background:#f4f4f4;text-align:center;padding:.12rem .05rem;
+  min-height:1.15rem;color:#999;overflow:hidden;white-space:nowrap;transition:opacity .4s,background .4s}
+#fg-ws-1 .ws-cell.dim{opacity:.14}
+#fg-ws-1 .ws-cell.band{background:var(--band-bg)}
+#fg-ws-1 .ws-cell.hit{color:var(--band);font-weight:700}
+#fg-ws-1 .ws-cell.late.hit{color:var(--late)}
+#fg-ws-1 .ws-cell.flash{animation:ws-ign .8s ease-out}
+@keyframes ws-ign{0%{box-shadow:0 0 0 0 rgba(124,92,191,.8)}100%{box-shadow:0 0 0 9px rgba(124,92,191,0)}}
+#fg-ws-1 .ws-tok{font-weight:700;color:#333;background:none;text-align:center;font-size:.66rem}
+#fg-ws-1 .ws-lab{background:none;color:#777;text-align:right;padding-right:.3rem;font-size:.6rem}
+#fg-ws-1 .ws-lcrit{grid-column:1/-1;border-top:2px dashed var(--band);color:var(--band);
+  font-size:.62rem;text-align:right;padding-top:.05rem}
+#fg-ws-1 .ws-out{color:var(--ok);font-weight:700;background:#eef7ee}
+#fg-ws-1 .ws-cap{margin-top:.55rem;font-size:.78rem;color:#444;min-height:2.2em}
+@media (prefers-reduced-motion: reduce){#fg-ws-1 .ws-cell{transition:none}
+  #fg-ws-1 .ws-cell.flash{animation:none}}
+</style>
+<div class="ws-ctrl">
+  <button type="button" data-play="">▶ Reproducir</button>
+  <button type="button" data-lens="j" class="on">Lente Jacobiana</button>
+  <button type="button" data-lens="l">Logit lens</button>
+  <input type="range" min="0" max="8" value="0" step="1" aria-label="posición del token">
+</div>
+<div class="ws-grid"></div>
+<div class="ws-cap"></div>
+<script>
+(function(){
+  var root=document.getElementById('fg-ws-1');if(!root)return;
+  var TOK=['La','capital','de','Francia','es','la','ciudad','de','→'];
+  var NL=10, BAND_LO=3, BAND_HI=7;           // capas 0-9; banda 3..7; L_crit tras la 7
+  // pizarra (J-lens): conceptos por columna en la banda (persisten = memoria de trabajo)
+  var J={1:['capital'],2:['capital'],3:['Francia','capital'],
+         4:['París','Francia','capital'],5:['París','Francia','ciudad'],
+         6:['París','ciudad','Francia'],7:['París','ciudad','Francia'],8:['París','ciudad']};
+  var LATE={7:['de'],8:['París']};            // zona tardía: ya alineada con la salida
+  var NOISE=['·','◦','—','·','∙','·'];
+  var grid=root.querySelector('.ws-grid'),cap=root.querySelector('.ws-cap'),
+      slider=root.querySelector('input'),cells=[],mode='j',pos=0,timer=null,flashed=false;
+  var CAPS=['La frase entra token a token. Capas bajas: procesamiento local, nada legible.',
+    'La pizarra (violeta) empieza a cargar el TEMA: “capital”.',
+    'La pizarra sostiene “capital” — nadie lo ha escrito, es memoria de trabajo.',
+    '“Francia” entra en la pizarra y se queda.',
+    '⚡ Ignición: “París” aparece en la pizarra… ¡y faltan 4 tokens para decirlo!',
+    'La pizarra SOSTIENE “París” mientras el texto sigue. Eso es sostener un plan.',
+    '“París” sigue cargado. En logit lens, nada de esto existe (pruébalo).',
+    'Cruzando L_crit: el contenido colapsa hacia la salida — el compromiso.',
+    'El modelo por fin lo dice: “París”. La pizarra lo sabía desde la posición 5.'];
+  grid.style.gridTemplateColumns='3.2rem repeat('+TOK.length+',1fr)';
+  function build(){
+    grid.innerHTML='';cells=[];
+    var r0=document.createElement('div');r0.className='ws-cell ws-lab';r0.textContent='tokens';grid.appendChild(r0);
+    TOK.forEach(function(t){var d=document.createElement('div');d.className='ws-cell ws-tok';d.textContent=t;grid.appendChild(d)});
+    for(var L=0;L<NL;L++){
+      if(L===BAND_HI+1){var lc=document.createElement('div');lc.className='ws-lcrit';
+        lc.textContent='L_crit — fin de la pizarra, empieza la alineación con la salida';grid.appendChild(lc)}
+      var lab=document.createElement('div');lab.className='ws-cell ws-lab';
+      lab.textContent='L'+L+(L>=BAND_LO&&L<=BAND_HI?' ▉':'');grid.appendChild(lab);
+      for(var p=0;p<TOK.length;p++){
+        var c=document.createElement('div');c.className='ws-cell';
+        if(L>=BAND_LO&&L<=BAND_HI)c.classList.add('band');
+        if(L>BAND_HI)c.classList.add('late');
+        grid.appendChild(c);cells.push({el:c,L:L,p:p});
+      }
+    }
+    var ol=document.createElement('div');ol.className='ws-cell ws-lab';ol.textContent='salida';grid.appendChild(ol);
+    for(var q=0;q<TOK.length;q++){var o=document.createElement('div');o.className='ws-cell ws-outcell';grid.appendChild(o);
+      cells.push({el:o,L:NL,p:q})}
+  }
+  function paint(){
+    cells.forEach(function(c){
+      var e=c.el;e.classList.remove('hit','flash');e.classList.toggle('dim',c.p>pos);
+      if(c.L===NL){e.textContent=(c.p===8&&pos>=8)?'París':'';e.classList.toggle('ws-out',c.p===8&&pos>=8);return}
+      var inBand=c.L>=BAND_LO&&c.L<=BAND_HI, late=c.L>BAND_HI, list=null;
+      if(inBand&&mode==='j')list=J[c.p]; if(late)list=LATE[c.p];
+      var idx=c.L-(inBand?BAND_LO:BAND_HI+1);
+      if(list&&list[idx]){e.textContent=list[idx];e.classList.add('hit');
+        if(mode==='j'&&c.p===4&&list[idx]==='París'&&pos===4&&!flashed){e.classList.add('flash')}}
+      else e.textContent=NOISE[(c.L*7+c.p*3)%NOISE.length];
+    });
+    if(pos===4&&mode==='j')flashed=true;
+    cap.textContent=(mode==='l'?'[logit lens] Solo la zona post-L_crit es legible — la pizarra es invisible para esta lente. ':'')+CAPS[pos];
+    slider.value=pos;
+  }
+  function step(){if(pos<8){pos++;paint()}else stop()}
+  function play(){stop();flashed=false;pos=0;paint();timer=setInterval(step,900);
+    root.querySelector('[data-play]').textContent='⏸ Pausa'}
+  function stop(){if(timer){clearInterval(timer);timer=null}
+    root.querySelector('[data-play]').textContent='▶ Reproducir'}
+  root.querySelector('[data-play]').addEventListener('click',function(){timer?stop():play()});
+  root.querySelectorAll('[data-lens]').forEach(function(b){b.addEventListener('click',function(){
+    mode=b.getAttribute('data-lens');
+    root.querySelectorAll('[data-lens]').forEach(function(x){x.classList.toggle('on',x===b)});paint()})});
+  slider.addEventListener('input',function(){stop();pos=+slider.value;paint()});
+  build();paint();
+  if(!window.matchMedia||!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    try{new IntersectionObserver(function(en,ob){en.forEach(function(x){
+      if(x.isIntersecting){play();ob.disconnect()}})},{threshold:.4}).observe(root)}catch(e){}}
+})();
+</script>
+</div>
+<p>Lo que acabas de ver es el hallazgo central del paper: <strong>“París” vive en la pizarra posiciones antes de pronunciarse</strong>, se sostiene ahí mientras la frase avanza, y colapsa hacia la salida al final. El modelo no improvisa token a token tanto como parece: <strong>planea en la pizarra</strong>.</p>
+</section>
+<section id="y-cómo-sabemos-que-no-es-un-espejismo" class="level2" data-number="43.5">
+<h2 data-number="43.5" class="anchored" data-anchor-id="y-cómo-sabemos-que-no-es-un-espejismo"><span class="header-section-number">43.5</span> ¿Y cómo sabemos que no es un espejismo?</h2>
+<p>Buena pregunta — es exactamente la que exige el <a href="38-audit.html" class="quarto-xref"><span>Capítulo 39</span></a>. Una lente puede “ver” patrones que no hacen nada (correlación). ¿Qué evidencia convertiría la pizarra en un hecho causal? Piensa qué pedirías tú… El paper aporta tres piezas, cada una más fuerte que la anterior:</p>
+<ol type="1">
+<li><strong>Se puede editar.</strong> Pide al modelo “piensa en un deporte”: el J-lens muestra <em>Soccer</em> antes de que responda. Ahora <strong>resta el vector de <em>Soccer</em> y suma el de <em>Rugby</em></strong> — el modelo responde “Rugby” (~88 % de las veces). No estamos leyendo un eco; estamos editando lo que el modelo piensa.</li>
+<li><strong>Media el razonamiento.</strong> En <em>“las patas del animal que teje telarañas”</em>, la palabra <em>spider</em> no está ni en la pregunta ni en la respuesta (“8”) — pero sí en la pizarra. Intercámbiala por <em>ant</em> y el modelo responde “6” (~70 %). El paso intermedio <strong>invisible</strong> del razonamiento vive ahí, y manipularlo redirige la conclusión.</li>
+<li><strong>Doble disociación.</strong> El experimento decisivo: borra las ~10 direcciones más activas de la pizarra. Las tareas <strong>automáticas</strong> (clasificar, parsear, MMLU) casi ni se inmutan; el razonamiento <strong>flexible</strong> (multi-hop, aritmética mental, trivia) se hunde. Mismo modelo, mismo borrado, dos destinos — la firma clásica con la que la neurociencia separa sistemas de verdad de correlaciones.</li>
+</ol>
+<p>La doble disociación se entiende mejor haciéndola. Borra tú mismo la pizarra y observa qué familia de tareas cae y cuál ni se entera:</p>
+<div class="fg-ws-abl" id="fg-ws-abl-1" role="img" aria-label="Demostración interactiva de la doble disociación: al borrar la pizarra, las tareas automáticas apenas cambian y las de razonamiento flexible se hunden.">
+<style>
+#fg-ws-abl-1{border:1px solid #ddd;border-radius:10px;padding:.9rem;margin:1rem 0;font-family:Georgia,serif}
+#fg-ws-abl-1 .ab-ctrl{display:flex;gap:.7rem;align-items:center;margin-bottom:.7rem;flex-wrap:wrap}
+#fg-ws-abl-1 button{font:inherit;padding:.2rem .8rem;border:1px solid #bbb;border-radius:6px;background:#fafafa;cursor:pointer}
+#fg-ws-abl-1 button.on{background:#b3262a;color:#fff;border-color:#b3262a}
+#fg-ws-abl-1 .ab-note{font-size:.78rem;color:#555}
+#fg-ws-abl-1 .ab-grid{display:grid;grid-template-columns:11rem 1fr 3rem;gap:.3rem .6rem;align-items:center;font-size:.8rem}
+#fg-ws-abl-1 .ab-head{font-weight:700;color:#444;grid-column:1/-1;margin-top:.3rem;font-size:.75rem;
+  text-transform:uppercase;letter-spacing:.04em}
+#fg-ws-abl-1 .ab-bar{height:.85rem;border-radius:4px;background:#e8e8e8;overflow:hidden}
+#fg-ws-abl-1 .ab-fill{height:100%;border-radius:4px;background:#2e7d32;transition:width 1s ease}
+#fg-ws-abl-1 .flex .ab-fill{background:#7c5cbf}
+#fg-ws-abl-1 .ab-val{font-variant-numeric:tabular-nums;color:#555;font-size:.75rem}
+@media (prefers-reduced-motion: reduce){#fg-ws-abl-1 .ab-fill{transition:none}}
+</style>
+<div class="ab-ctrl">
+  <button type="button">🧽 Borrar la pizarra</button>
+  <span class="ab-note">se anulan solo ~10 direcciones del flujo residual — el 90 % del modelo queda intacto</span>
+</div>
+<div class="ab-grid"></div>
+<script>
+(function(){
+  var root=document.getElementById('fg-ws-abl-1');if(!root)return;
+  // (valores ilustrativos, patrón cualitativo del paper: ver texto)
+  var TASKS=[['Tareas automáticas',[['Clasificar sentimiento',92,90],['Parsing / gramática',95,94],['MMLU (opción múltiple)',78,76]]],
+             ['Razonamiento flexible',[['Multi-hop (2 saltos)',85,12],['Aritmética mental (sin CoT)',74,9],['Trivia (recordar y componer)',70,22]]]];
+  var grid=root.querySelector('.ab-grid'),btn=root.querySelector('button'),on=false,fills=[];
+  TASKS.forEach(function(g,gi){
+    var h=document.createElement('div');h.className='ab-head';h.textContent=g[0];grid.appendChild(h);
+    g[1].forEach(function(t){
+      var lab=document.createElement('div');lab.textContent=t[0];grid.appendChild(lab);
+      var bar=document.createElement('div');bar.className='ab-bar'+(gi?' flex':'');
+      var f=document.createElement('div');f.className='ab-fill';f.style.width=t[1]+'%';bar.appendChild(f);
+      if(gi)bar.classList.add('flex');grid.appendChild(bar);
+      var v=document.createElement('div');v.className='ab-val';v.textContent=t[1]+'%';grid.appendChild(v);
+      fills.push({f:f,v:v,base:t[1],abl:t[2]});
+    });
+  });
+  btn.addEventListener('click',function(){
+    on=!on;btn.classList.toggle('on',on);
+    btn.textContent=on?'↺ Restaurar la pizarra':'🧽 Borrar la pizarra';
+    fills.forEach(function(x){var val=on?x.abl:x.base;x.f.style.width=val+'%';x.v.textContent=val+'%'});
+  });
+})();
+</script>
+</div>
+<p><em>(Barras ilustrativas del patrón cualitativo — los números exactos, por tarea y modelo, están en el paper <span class="citation" data-cites="lindsey2026workspace">(<a href="#ref-lindsey2026workspace" role="doc-biblioref">Gurnee et&nbsp;al. 2026</a>)</span>, Fig. 24.)</em></p>
+<p>Y una cuarta pieza con moraleja práctica: <strong>el chain-of-thought sobrevive al borrado</strong>. ¿Por qué? Responde antes de seguir leyendo… Porque escribir los pasos <strong>externaliza</strong> la memoria de trabajo: el papel hace de pizarra. Guarda esta idea — volveremos a ella.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Honesto — lo que el paper NO demuestra">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>⚠ Honesto — lo que el paper NO demuestra
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>Nada sobre consciencia</strong>: se estudia el análogo <em>funcional</em> del “acceso consciente”; los autores no toman posición sobre experiencia subjetiva — los titulares de prensa, sí.</li>
+<li>La lente solo ve conceptos que son <strong>un token</strong>: sesgo hacia lo nombrable en una palabra. (3) El “broadcast” ocurre capa a capa, <strong>no por recurrencia</strong> como en el cerebro.</li>
+<li>La review de Nanda <span class="citation" data-cites="nanda2026workspacereview">(<a href="#ref-nanda2026workspacereview" role="doc-biblioref">Nanda 2026</a>)</span> la clasifica como herramienta de <strong>generación de hipótesis</strong>: espera falsos positivos. Todo lo que una lente sugiera necesita confirmación causal — la regla del <a href="38-audit.html" class="quarto-xref"><span>Capítulo 39</span></a> no descansa.</li>
+</ol>
+</div>
+</div>
+</section>
+<section id="dónde-está-la-pizarra-y-por-qué-ahí" class="level2" data-number="43.6">
+<h2 data-number="43.6" class="anchored" data-anchor-id="dónde-está-la-pizarra-y-por-qué-ahí"><span class="header-section-number">43.6</span> ¿Dónde está la pizarra — y por qué ahí?</h2>
+<p>La pizarra no ocupa toda la red: en los Claude vive en una <strong>banda</strong> entre el ~38 % y el ~92 % de la profundidad. Antes de la banda, nada legible; después, todo está ya alineado con la salida inminente.</p>
+<p>Y al entrar en la banda pasa algo con sabor a física: la <strong>ignición</strong>. Si inyectas una mezcla ambigua de dos conceptos (60 % <em>Francia</em> + 40 % <em>China</em>), las capas tempranas la tratan como lo que es — una mezcla. Pero la banda <strong>no admite ambigüedad</strong>: colapsa de golpe a uno u otro al cruzar un umbral. Pruébalo:</p>
+<div class="fg-ws-ign" id="fg-ws-ign-1" role="img" aria-label="Demostración de la ignición: un deslizador mezcla dos conceptos; fuera de la banda la representación sigue la mezcla gradualmente, dentro de la banda colapsa bruscamente a uno u otro concepto al cruzar el umbral.">
+<style>
+#fg-ws-ign-1{border:1px solid #ddd;border-radius:10px;padding:.9rem;margin:1rem 0;font-family:Georgia,serif}
+#fg-ws-ign-1 .ig-ctrl{display:flex;gap:.6rem;align-items:center;margin-bottom:.7rem;font-size:.8rem}
+#fg-ws-ign-1 input[type=range]{flex:1}
+#fg-ws-ign-1 .ig-row{display:grid;grid-template-columns:11rem 1fr;gap:.6rem;align-items:center;margin:.4rem 0;font-size:.8rem}
+#fg-ws-ign-1 .ig-lab{color:#555;text-align:right}
+#fg-ws-ign-1 .ig-track{position:relative;height:1.6rem;border-radius:6px;background:#f0f0f0;overflow:hidden}
+#fg-ws-ign-1 .ig-mix{position:absolute;inset:0;display:flex}
+#fg-ws-ign-1 .ig-a{background:#1f6fb2;transition:flex-basis .25s}
+#fg-ws-ign-1 .ig-b{background:#c23b22;flex:1;transition:flex-basis .25s}
+#fg-ws-ign-1 .ig-word{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:700;font-size:.78rem;text-shadow:0 1px 2px rgba(0,0,0,.45);transition:opacity .2s}
+#fg-ws-ign-1 .band .ig-a,#fg-ws-ign-1 .band .ig-b{transition:flex-basis .12s ease-in}
+#fg-ws-ign-1 .ig-flash{animation:ig-f .5s ease-out}
+@keyframes ig-f{0%{box-shadow:inset 0 0 0 3px rgba(124,92,191,.9)}100%{box-shadow:inset 0 0 0 3px rgba(124,92,191,0)}}
+#fg-ws-ign-1 .ig-cap{font-size:.75rem;color:#555;margin-top:.4rem;min-height:1.4em}
+@media (prefers-reduced-motion: reduce){#fg-ws-ign-1 .ig-a,#fg-ws-ign-1 .ig-b{transition:none}
+  #fg-ws-ign-1 .ig-flash{animation:none}}
+</style>
+<div class="ig-ctrl"><span style="color:#1f6fb2;font-weight:700">Francia</span>
+  <input type="range" min="0" max="100" value="60" aria-label="proporción de la mezcla Francia-China">
+  <span style="color:#c23b22;font-weight:700">China</span></div>
+<div class="ig-row"><div class="ig-lab">capa temprana (fuera de la banda)</div>
+  <div class="ig-track"><div class="ig-mix"><div class="ig-a" style="flex-basis:60%"></div><div class="ig-b"></div></div>
+  <div class="ig-word ig-w-early">mezcla 60/40 — ambigua</div></div></div>
+<div class="ig-row"><div class="ig-lab">dentro de la banda 💡</div>
+  <div class="ig-track band"><div class="ig-mix"><div class="ig-a" style="flex-basis:100%"></div><div class="ig-b"></div></div>
+  <div class="ig-word ig-w-band">FRANCIA</div></div></div>
+<div class="ig-cap">Mueve el deslizador despacio alrededor del centro: arriba todo es gradual; abajo hay un <b>umbral</b>.</div>
+<script>
+(function(){
+  var root=document.getElementById('fg-ws-ign-1');if(!root)return;
+  var sl=root.querySelector('input'),early=root.querySelector('.ig-row .ig-a'),
+      wEarly=root.querySelector('.ig-w-early'),bandTrack=root.querySelector('.ig-track.band'),
+      bandA=bandTrack.querySelector('.ig-a'),wBand=root.querySelector('.ig-w-band'),
+      cap=root.querySelector('.ig-cap'),last='F';
+  sl.addEventListener('input',function(){
+    var a=100-sl.value;                       // % Francia
+    early.style.flexBasis=a+'%';
+    wEarly.textContent='mezcla '+a+'/'+(100-a)+(a>65||a<35?'':' — ambigua');
+    var side=a>=50?'F':'C';
+    bandA.style.flexBasis=(side==='F'?100:0)+'%';
+    wBand.textContent=side==='F'?'FRANCIA':'CHINA';
+    if(side!==last){bandTrack.classList.remove('ig-flash');void bandTrack.offsetWidth;
+      bandTrack.classList.add('ig-flash');
+      cap.innerHTML='⚡ <b>Ignición</b>: la banda ha colapsado la mezcla a <b>'+(side==='F'?'FRANCIA':'CHINA')+'</b> — de golpe, no gradualmente.';
+      last=side}
+  });
+})();
+</script>
+</div>
+<p>Aquí Anthropic se detiene — miden <em>dónde</em>, no explican <em>por qué</em>. Y esta es la pregunta que este libro sí puede intentar responder, porque llevamos tres partes construyendo la herramienta. Piénsalo con lo que ya sabes del <a href="14-aliasing.html" class="quarto-xref"><span>Capítulo 15</span></a>: <strong>¿qué cambia dentro del modelo a una profundidad concreta?</strong></p>
+<p>Pista: las capas bajas trabajan con <strong>posición</strong> — su atención sigue la ley de potencias del <a href="15-ley-gamma.html" class="quarto-xref"><span>Capítulo 16</span></a>, ordenando “qué está cerca de qué”. Pero la geometría de RoPE tiene alcance limitado (las tres escalas del <a href="14-aliasing.html" class="quarto-xref"><span>Capítulo 15</span></a>): llega una profundidad en la que el andamiaje posicional ya dio de sí, y las capas pasan a trabajar con <strong>significado</strong>. Esa frontera se puede predecir desde los hiperparámetros del modelo — sin mirar dentro:</p>
+<p><span class="math display">\[L_{crit} = N_L \cdot \log_\theta\!\left(\frac{T_{train}}{2\pi}\right) \cdot
+\left(\frac{d_{head}}{64}\right)^{1/\sqrt{12}}\]</span></p>
+<p>donde <span class="math inline">\(N_L\)</span> es el número de capas, <span class="math inline">\(\theta\)</span> y <span class="math inline">\(T_{train}\)</span> los de siempre (<a href="14-aliasing.html" class="quarto-xref"><span>Capítulo 15</span></a>) y <span class="math inline">\(d_{head}\)</span> la dimensión de cabeza. Honestidad primero: esta fórmula viene de nuestro trabajo <span class="citation" data-cites="marin2026attend">(<a href="#ref-marin2026attend" role="doc-biblioref">Marín 2026</a>)</span> y hasta hoy está <strong>validada causalmente en solo dos modelos</strong> (±0.5 capas en ambos) — por eso la estamos poniendo a prueba en seis, con las predicciones congeladas <em>antes</em> de medir. La hipótesis natural — la llamamos <strong>H1</strong> — es que la frontera de la banda de la pizarra <strong>es</strong> esa <span class="math inline">\(L_{crit}\)</span>: la pizarra necesita el andamiaje posicional para rutear conceptos entre posiciones, y donde el andamiaje termina, el contenido colapsa en la respuesta.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="🔬 Medición en curso — la escalera Pythia">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>🔬 Medición en curso — la escalera Pythia
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Estamos testeando H1 con protocolo <strong>pre-registrado</strong> (predicciones congeladas antes de medir — el estándar del <a href="38-audit.html" class="quarto-xref"><span>Capítulo 39</span></a>). El diseño es discriminante: pythia-1b tiene <span class="math inline">\(L_{crit}\)</span> predicho al <strong>94 %</strong> de su profundidad (por su <span class="math inline">\(d_{head}=256\)</span>) y pythia-410m al <strong>63 %</strong> — si la banda fuera una fracción fija de la red, saldrían iguales; si sigue a <span class="math inline">\(L_{crit}\)</span>, separados. Primeros datos (2 de 6 modelos): el codo del logit lens cae en <span class="math inline">\(L_{crit}\)</span> con error ≤2 capas en ambos. Los resultados completos — confirmen o refuten — se publicarán aquí y en el dataset del atlas. <em>Este libro no publica resultados sin datos verificables.</em></p>
+</div>
+</div>
+</div>
+</section>
+<section id="mide-tu-propia-pizarra" class="level2" data-number="43.7">
+<h2 data-number="43.7" class="anchored" data-anchor-id="mide-tu-propia-pizarra"><span class="header-section-number">43.7</span> Mide tu propia pizarra</h2>
+<p>El código es público y funciona con modelos abiertos de HuggingFace (<a href="https://github.com/anthropics/jacobian-lens">github.com/anthropics/jacobian-lens</a>, Apache-2.0). En una GPU doméstica de 16 GB: minutos para un modelo de 70M, horas para uno de 2.8B (el coste está en ajustar la lente — un forward + <span class="math inline">\(d_{model}/b\)</span> backwards por texto):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> transformers, jlens</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>hf  <span class="op">=</span> transformers.AutoModelForCausalLM.from_pretrained(<span class="st">"EleutherAI/pythia-410m"</span>).cuda()</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>tok <span class="op">=</span> transformers.AutoTokenizer.from_pretrained(<span class="st">"EleutherAI/pythia-410m"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> jlens.from_hf(hf, tok)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>lens <span class="op">=</span> jlens.fit(model, prompts<span class="op">=</span>textos_pile)      <span class="co"># ~100-1000 textos de 128 tokens</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>logits_lens, logits_modelo, _ <span class="op">=</span> lens.<span class="bu">apply</span>(model, <span class="st">"The capital of France is the city of"</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                                           positions<span class="op">=</span>[<span class="op">-</span><span class="dv">1</span>])</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Un consejo de método que nos costó un día aprender: <strong>compara siempre contra el logit lens</strong>. La banda real es donde el J-lens lee contenido futuro <em>word-like</em> al menos <strong>2× mejor</strong> que su control — sin ese contraste, cualquier lente te enseña espejismos. Las lentes ya ajustadas de la escalera Pythia estarán disponibles para descarga, para que localizar la banda no te cueste ni un backward.</p>
+</section>
+<section id="y-para-qué-sirve-saber-dónde-está" class="level2" data-number="43.8">
+<h2 data-number="43.8" class="anchored" data-anchor-id="y-para-qué-sirve-saber-dónde-está"><span class="header-section-number">43.8</span> ¿Y para qué sirve saber dónde está?</h2>
+<p>Termina el capítulo como empezó: con una pregunta. Si supieras exactamente qué parte de un modelo pequeño <em>piensa</em> y qué parte solo <em>teclea</em> — <strong>¿qué harías distinto?</strong> Cuatro respuestas, de más madura a más especulativa:</p>
+<ul>
+<li><strong>Leerla</strong> (hoy): monitorizar qué conceptos están cargados — depuración y auditoría. En el paper, la pizarra contenía <em>leverage</em>, <em>panic</em> o <em>fake</em> que jamás asomaron a la salida.</li>
+<li><strong>Escribirla</strong> (experimental): sostener un concepto clampando su vector — que un modelo pequeño <strong>no suelte</strong> la aguja en un contexto largo.</li>
+<li><strong>Protegerla</strong> (hipótesis abierta): compresión asimétrica — cuantizar y podar agresivamente el 90 % automático (<a href="35-compresion.html" class="quarto-xref"><span>Capítulo 36</span></a>) y proteger la esquina que razona.</li>
+<li><strong>Dimensionarla</strong> (si H1 se confirma): elegir <span class="math inline">\(\theta\)</span>, <span class="math inline">\(T\)</span>, <span class="math inline">\(d_{head}\)</span> para colocar la banda donde convenga — la pizarra como <strong>parámetro de diseño</strong>.</li>
+</ul>
+<p>Y la palanca más barata de todas ya la conocías sin saberlo: si la pizarra de un modelo pequeño es pequeña, <strong>no le pidas que piense en silencio</strong> — dale papel (1). El chain-of-thought no es un truco de prompt: es una prótesis de memoria de trabajo.</p>
+<div class="analogia">
+<p><strong>🧩 Analogía — el quirófano con rayos X.</strong> Sin la lente, optimizar un modelo pequeño es cirugía a ciegas: cortas donde puedes y rezas. Con la pizarra localizada, sabes qué parte del paciente <strong>piensa</strong> y qué parte solo <strong>teclea</strong> — y comprimir, destilar o apuntalar puede por fin respetar la diferencia.</p>
+</div>
+</section>
+<section id="resumen" class="level2" data-number="43.9">
+<h2 data-number="43.9" class="anchored" data-anchor-id="resumen"><span class="header-section-number">43.9</span> Resumen</h2>
+<ul>
+<li>La “pizarra compartida” del <a href="03-embeddings.html" class="quarto-xref"><span>Capítulo 4</span></a> tiene una <strong>esquina en limpio</strong>: un subespacio (~10 %) legible en idioma token — el <strong>espacio de trabajo</strong> del modelo.</li>
+<li>Se lee con la <strong>lente Jacobiana</strong> (logit lens + gafas graduadas por capa); lee <em>conceptos sobre la mesa</em>, no el siguiente token.</li>
+<li>Evidencia causal en tres pasos: <strong>editable</strong> (swap de conceptos), <strong>media el razonamiento</strong> (el intermediario invisible), <strong>doble disociación</strong> (borrar la pizarra hunde lo flexible y respeta lo automático).</li>
+<li>Vive en una <strong>banda de profundidad</strong>; por qué ahí es pregunta abierta — nuestra <strong>H1</strong> propone la frontera posicional→semántica <span class="math inline">\(L_{crit}\)</span>, con medición pre-registrada en curso.</li>
+<li><strong>Externalizar</strong> (CoT) es dar papel a una pizarra pequeña — la palanca práctica inmediata para modelos modestos.</li>
+<li>Regla de oro (<a href="38-audit.html" class="quarto-xref"><span>Capítulo 39</span></a>): la lente <strong>genera</strong> hipótesis; solo la intervención causal las <strong>confirma</strong>.</li>
+</ul>
+<p><strong>Siguiente (Parte VIII):</strong> las herramientas de referencia — formulario, cookbook, y cómo medir tú mismo cada cantidad de este libro. Ahora también la pizarra.</p>
+</section>
+<section id="ejercicios" class="level2" data-number="43.10">
+<h2 data-number="43.10" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">43.10</span> Ejercicios</h2>
+<ol type="1">
+<li><strong>Las gafas.</strong> ¿Por qué el logit lens falla en capas intermedias, y qué corrige exactamente el Jacobiano promedio? ¿Por qué se ajusta <em>promediando sobre un corpus</em>?</li>
+<li><strong>El intermediario invisible.</strong> En “las patas del animal que teje telarañas es”, ¿qué hay en la pizarra que no está ni en la pregunta ni en la respuesta? ¿Cómo se demuestra que es causal y no decorativo?</li>
+<li><strong>Doble disociación.</strong> ¿Qué dos familias de tareas separa el borrado de la pizarra? ¿Por qué esa separación es mejor evidencia que cualquier correlación?</li>
+<li><strong>Externalización.</strong> ¿Por qué el chain-of-thought sobrevive al borrado de la pizarra, y qué receta práctica se deduce para modelos pequeños?</li>
+<li><strong>H1 con números.</strong> Para <span class="math inline">\(N_L=16\)</span>, <span class="math inline">\(\theta=10^4\)</span>, <span class="math inline">\(T=2048\)</span>, <span class="math inline">\(d_{head}=256\)</span>: ¿en qué capa predice <span class="math inline">\(L_{crit}\)</span> la frontera? ¿Y qué esperarías ver en el codo del logit lens si H1 es correcta? (Solución en el <a href="R4-medir-gamma.html" class="quarto-xref"><span>Capítulo 47</span></a> del formulario… o calcúlalo: <span class="math inline">\(\log_\theta(T/2\pi)=0.628\)</span>.)</li>
+<li><strong>Escepticismo.</strong> Da dos razones por las que un readout del J-lens podría ser un falso positivo, y diseña el experimento que lo descartaría.</li>
+</ol>
+</section>
+<section id="referencias" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="referencias">Referencias</h2>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-lindsey2026workspace" class="csl-entry" role="listitem">
+Gurnee, Wes, Nicholas Sofroniew, Adam Pearce, et&nbsp;al. 2026. <em>Verbalizable Representations Form a Global Workspace in Language Models</em>. Transformer Circuits. <a href="https://transformer-circuits.pub/2026/workspace/index.html">https://transformer-circuits.pub/2026/workspace/index.html</a>.
+</div>
+<div id="ref-marin2026attend" class="csl-entry" role="listitem">
+Marín, Carles. 2026. <em>Predicting How Transformers Attend: Analytic Power-Law Theory, Phase Transitions, and Practical Compression Tools</em>. <a href="https://zenodo.org/records/20314038">https://zenodo.org/records/20314038</a>.
+</div>
+<div id="ref-nanda2026workspacereview" class="csl-entry" role="listitem">
+Nanda, Neel. 2026. <em>A Review of Anthropic’s Global Workspace Paper</em>. LessWrong. <a href="https://www.lesswrong.com/posts/zFJ3ZdQwrTWE9jT5S/a-review-of-anthropic-s-global-workspace-paper">https://www.lesswrong.com/posts/zFJ3ZdQwrTWE9jT5S/a-review-of-anthropic-s-global-workspace-paper</a>.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -2877,13 +2921,13 @@ window.Quarto = {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../chapters/42-workspace.html" class="pagination-link" aria-label="El espacio de trabajo global: leer la pizarra del modelo">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">El espacio de trabajo global: leer la pizarra del modelo</span></span>
+      <a href="../chapters/41-etica.html" class="pagination-link" aria-label="Ética, seguridad y limitaciones">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Ética, seguridad y limitaciones</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../chapters/R2-cookbook.html" class="pagination-link" aria-label="R2 · Cookbook">
-        <span class="nav-page-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../chapters/R1-formulario.html" class="pagination-link" aria-label="R1 · Formulario maestro">
+        <span class="nav-page-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R1 · Formulario maestro</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

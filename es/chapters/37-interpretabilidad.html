@@ -947,6 +947,12 @@ div.csl-indent {
  <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Ética, seguridad y limitaciones</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/42-workspace.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">El espacio de trabajo global: leer la pizarra del modelo</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -961,37 +967,37 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R1-formulario.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">R1 · Formulario maestro</span></span></a>
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R1 · Formulario maestro</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R2-cookbook.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R2 · Cookbook</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R3-glosario.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">R3 · Glosario</span></span></a>
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R3 · Glosario</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R4-medir-gamma.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">R4 · Medir tu propio γ (y reproducir el atlas)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R4 · Medir tu propio γ (y reproducir el atlas)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R5-tafagent.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">R5 · Manual de tafagent</span></span></a>
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">R5 · Manual de tafagent</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/R6-soluciones.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">R6 · Soluciones de los ejercicios</span></span></a>
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">R6 · Soluciones de los ejercicios</span></span></a>
   </div>
 </li>
       </ul>
@@ -1134,7 +1140,7 @@ div.csl-indent {
 <section id="los-métodos-ver-y-sobre-todo-intervenir" class="level2" data-number="38.6">
 <h2 data-number="38.6" class="anchored" data-anchor-id="los-métodos-ver-y-sobre-todo-intervenir"><span class="header-section-number">38.6</span> Los métodos: ver y, sobre todo, intervenir</h2>
 <ul>
-<li><strong>Logit lens</strong> <span class="citation" data-cites="nostalgebraist2020logitlens">(<a href="#ref-nostalgebraist2020logitlens" role="doc-biblioref"><span class="nocase">nostalgebraist</span> 2020</a>)</span>: proyecta la activación del flujo residual en una capa intermedia a través de la <strong>matriz de salida</strong> (<em>unembedding</em>) para leer la “apuesta actual” del modelo en ese piso. Revela que la predicción <strong>se forma gradualmente</strong> con la profundidad. La <strong>tuned lens</strong> <span class="citation" data-cites="belrose2023tunedlens">(<a href="#ref-belrose2023tunedlens" role="doc-biblioref"><span class="nocase">Belrose et&nbsp;al.</span> 2023</a>)</span> lo afina con una sonda lineal por capa (más fiable que la versión cruda).</li>
+<li><strong>Logit lens</strong> <span class="citation" data-cites="nostalgebraist2020logitlens">(<a href="#ref-nostalgebraist2020logitlens" role="doc-biblioref"><span class="nocase">nostalgebraist</span> 2020</a>)</span>: proyecta la activación del flujo residual en una capa intermedia a través de la <strong>matriz de salida</strong> (<em>unembedding</em>) para leer la “apuesta actual” del modelo en ese piso. Revela que la predicción <strong>se forma gradualmente</strong> con la profundidad. La <strong>tuned lens</strong> <span class="citation" data-cites="belrose2023tunedlens">(<a href="#ref-belrose2023tunedlens" role="doc-biblioref"><span class="nocase">Belrose et&nbsp;al.</span> 2023</a>)</span> lo afina con una sonda lineal por capa (más fiable que la versión cruda). Y la <strong>lente Jacobiana</strong> (J-lens) <span class="citation" data-cites="lindsey2026workspace">(<a href="#ref-lindsey2026workspace" role="doc-biblioref">Gurnee et&nbsp;al. 2026</a>)</span> lo corrige con el <strong>Jacobiano promedio</strong> entre la capa ℓ y la final — lee contenido interpretable en capas intermedias donde el logit lens solo ve ruido; con ella se descubrió el <strong>espacio de trabajo global</strong> del modelo (<a href="42-workspace.html" class="quarto-xref"><span>Capítulo 43</span></a>).</li>
 <li><strong><em>Activation patching</em> / rastreo causal:</strong> el método <strong>causal</strong> central. Ejecutas una pasada <strong>limpia</strong> y otra <strong>corrupta</strong>, <strong>trasplantas</strong> una activación de una a la otra y mides cuánto cambia la salida → localizas qué componente es <strong>causalmente</strong> responsable. Con esta técnica, ROME <span class="citation" data-cites="meng2022rome">(<a href="#ref-meng2022rome" role="doc-biblioref">Meng, Bau, et&nbsp;al. 2022</a>)</span> localizó el <strong>conocimiento factual</strong> en los MLP de capas intermedias (y luego lo <strong>editó</strong>; MEMIT <span class="citation" data-cites="meng2022memit">(<a href="#ref-meng2022memit" role="doc-biblioref">Meng, Sen Sharma, et&nbsp;al. 2022</a>)</span> lo escaló a miles de hechos). El ejemplo canónico de circuito completo es el de <strong>identificación de objeto indirecto (IOI)</strong> en GPT-2 <span class="citation" data-cites="wang2022ioi">(<a href="#ref-wang2022ioi" role="doc-biblioref">Wang et&nbsp;al. 2023</a>)</span>: 26 cabezas en 7 clases, evaluadas por fidelidad/completitud/minimalidad.</li>
 <li><strong>Probing (sondeo):</strong> entrenar un <strong>clasificador lineal</strong> sobre las activaciones para ver si cierta información <strong>está presente</strong>. Su límite, importante: <strong>correlación ≠ uso</strong> —una sonda muestra que el dato es <em>decodable</em>, no que el modelo lo <em>use</em>—. Por eso la MI prefiere los métodos <strong>causales</strong>.</li>
 </ul>
@@ -1227,6 +1233,9 @@ Cunningham, Hoagy, Aidan Ewart, Logan Riggs, Robert Huben, y Lee Sharkey. 2023. 
 </div>
 <div id="ref-elhage2022superposition" class="csl-entry" role="listitem">
 <span class="nocase">Elhage, Nelson et&nbsp;al.</span> 2022. <span>«Toy Models of Superposition»</span>. <em>Transformer Circuits Thread (Anthropic)</em>. <a href="https://arxiv.org/abs/2209.10652">https://arxiv.org/abs/2209.10652</a>.
+</div>
+<div id="ref-lindsey2026workspace" class="csl-entry" role="listitem">
+Gurnee, Wes, Nicholas Sofroniew, Adam Pearce, et&nbsp;al. 2026. <em>Verbalizable Representations Form a Global Workspace in Language Models</em>. Transformer Circuits. <a href="https://transformer-circuits.pub/2026/workspace/index.html">https://transformer-circuits.pub/2026/workspace/index.html</a>.
 </div>
 <div id="ref-lindsey2025biology" class="csl-entry" role="listitem">
 <span class="nocase">Lindsey, Jack, Wes Gurnee, Emmanuel Ameisen, Brian Chen, Adam Pearce, et&nbsp;al.</span> 2025. <em>On the Biology of a Large Language Model</em>. Transformer Circuits. <a href="https://transformer-circuits.pub/2025/attribution-graphs/biology.html">https://transformer-circuits.pub/2025/attribution-graphs/biology.html</a>.
