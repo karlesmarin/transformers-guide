@@ -1449,7 +1449,7 @@ window.Quarto = {
 <ul>
 <li>En 70m y 410m (ambos con <span class="math inline">\(L_{crit}/N = 0.63\)</span>), el codo del logit lens cayó en la predicción con error ≤2 capas — pero ahí <span class="math inline">\(L_{crit}\)</span> coincide con la fracción típica, así que no discrimina.</li>
 <li>El modelo discriminante era <strong>pythia-1b</strong> (<span class="math inline">\(d_{head}=256\)</span> → <span class="math inline">\(L_{crit}/N = 0.94\)</span>): su codo salió en <strong>L11/16 = 0.69</strong>, en el rango de la hipótesis nula (fracción fija), no en el de H1. Su banda de ventaja J-lens además no existe (el J-lens nunca dobla al logit lens en ninguna capa).</li>
-<li>Los tres modelos juntos: codo en fracción <strong>0.67 / 0.71 / 0.69</strong> — constante ≈ 0.69.</li>
+<li>Los tres primeros modelos sugerían una constante ≈ 0.69 — pero la escalera completa la desmintió: <strong>0.667 / 0.750 / 0.708 / 0.688 / 0.542 / 0.656</strong> en los seis Pythia, y 0.81–0.84 en dos Llama. El codo resulta ser <strong>propiedad de familia con dispersión interna</strong>, no una constante universal ni una función limpia de hiperparámetros.</li>
 </ul>
 <p>El fallo se localiza en el factor <span class="math inline">\((d_{head}/64)^{1/\sqrt{12}}\)</span>, que estaba validado con n=2. Queda una pista abierta: la fracción <em>sin</em> ese factor, <span class="math inline">\(\log_\theta(T/2\pi) = 0.628\)</span>, predice los tres codos con ≤2 capas de error — pero en Pythia (θ y T idénticos en toda la escalera) es indistinguible de una constante universal. El test que las separa (un modelo con θ distinto, p.&nbsp;ej. Llama-3-8B → predicción 0.55 vs ~0.69) está registrado como H1b y pendiente de ejecutar. Datos, figura y pre-registro: <a href="https://github.com/karlesmarin/predicting-how-transformers-attend">repo de investigación</a>.</p>
 </div>
@@ -1490,7 +1490,7 @@ window.Quarto = {
 <li>La “pizarra compartida” del <a href="03-embeddings.html" class="quarto-xref"><span>Capítulo 4</span></a> tiene una <strong>esquina en limpio</strong>: un subespacio (~10 %) legible en idioma token — el <strong>espacio de trabajo</strong> del modelo.</li>
 <li>Se lee con la <strong>lente Jacobiana</strong> (logit lens + gafas graduadas por capa); lee <em>conceptos sobre la mesa</em>, no el siguiente token.</li>
 <li>Evidencia causal en tres pasos: <strong>editable</strong> (swap de conceptos), <strong>media el razonamiento</strong> (el intermediario invisible), <strong>doble disociación</strong> (borrar la pizarra hunde lo flexible y respeta lo automático).</li>
-<li>Vive en una <strong>banda de profundidad</strong>; por qué ahí sigue abierto. En nuestra medición (escalera Pythia), el codo de legibilidad cae a fracción ≈ 0.69 constante y la candidata <span class="math inline">\(L_{crit}\)</span> quedó refutada.</li>
+<li>Vive en una <strong>banda de profundidad</strong>; por qué ahí sigue abierto. En nuestra medición (8 modelos, 2 familias), el codo de legibilidad es una propiedad de familia (Pythia 0.54–0.75, Llama 0.81–0.84); la candidata <span class="math inline">\(L_{crit}\)</span> quedó refutada y ningún predictor desde hiperparámetros sobrevivió.</li>
 <li><strong>Externalizar</strong> (CoT) es dar papel a una pizarra pequeña — la palanca práctica inmediata para modelos modestos.</li>
 <li>Regla de oro (<a href="38-audit.html" class="quarto-xref"><span>Capítulo 39</span></a>): la lente <strong>genera</strong> hipótesis; solo la intervención causal las <strong>confirma</strong>.</li>
 </ul>

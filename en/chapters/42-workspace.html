@@ -1447,7 +1447,7 @@ window.Quarto = {
 <ul>
 <li>In 70m and 410m (both with <span class="math inline">\(L_{crit}/N = 0.63\)</span>), the logit lens knee fell on the prediction within ≤2 layers — but there <span class="math inline">\(L_{crit}\)</span> coincides with the typical fraction, so it does not discriminate.</li>
 <li>The discriminating model was <strong>pythia-1b</strong> (<span class="math inline">\(d_{head}=256\)</span> → <span class="math inline">\(L_{crit}/N = 0.94\)</span>): its knee came out at <strong>L11/16 = 0.69</strong>, in the null-hypothesis range (fixed fraction), not in H1’s. Its J-lens advantage band also does not exist (the J-lens never doubles the logit lens at any layer).</li>
-<li>All three models together: knee at fraction <strong>0.67 / 0.71 / 0.69</strong> — constant ≈ 0.69.</li>
+<li>The first three models suggested a constant ≈ 0.69 — but the full ladder disproved it: <strong>0.667 / 0.750 / 0.708 / 0.688 / 0.542 / 0.656</strong> across the six Pythias, and 0.81–0.84 on two Llamas. The knee turns out to be a <strong>family property with internal scatter</strong>, neither a universal constant nor a clean function of hyperparameters.</li>
 </ul>
 <p>The failure localizes to the <span class="math inline">\((d_{head}/64)^{1/\sqrt{12}}\)</span> factor, which had been validated with n=2. One lead remains open: the fraction <em>without</em> that factor, <span class="math inline">\(\log_\theta(T/2\pi) = 0.628\)</span>, predicts all three knees within ≤2 layers — but on Pythia (identical θ and T across the ladder) it is indistinguishable from a universal constant. The test that separates them (a model with a different θ, e.g.&nbsp;Llama-3-8B → prediction 0.55 vs ~0.69) is registered as H1b and pending execution. Data, figure and pre-registration: <a href="https://github.com/karlesmarin/predicting-how-transformers-attend">research repo</a>.</p>
 </div>
@@ -1488,7 +1488,7 @@ window.Quarto = {
 <li>The “shared whiteboard” of <a href="03-embeddings.html" class="quarto-xref"><span>Chapter 4</span></a> has a <strong>corner in clean letters</strong>: a subspace (~10 %) readable in token language — the model’s <strong>workspace</strong>.</li>
 <li>It is read with the <strong>Jacobian lens</strong> (logit lens + per-layer prescription glasses); it reads <em>concepts on the table</em>, not the next token.</li>
 <li>Causal evidence in three steps: <strong>editable</strong> (concept swaps), <strong>mediates reasoning</strong> (the invisible intermediate), <strong>double dissociation</strong> (erasing the whiteboard crushes the flexible and spares the automatic).</li>
-<li>It lives in a <strong>depth band</strong>; why there remains open. In our measurement (the Pythia ladder), the readability knee sits at a constant fraction ≈ 0.69 and the candidate <span class="math inline">\(L_{crit}\)</span> was refuted.</li>
+<li>It lives in a <strong>depth band</strong>; why there remains open. In our measurement (8 models, 2 families), the readability knee is a family property (Pythia 0.54–0.75, Llama 0.81–0.84); the candidate <span class="math inline">\(L_{crit}\)</span> was refuted and no hyperparameter-based predictor survived.</li>
 <li><strong>Externalizing</strong> (CoT) is giving paper to a small whiteboard — the immediate practical lever for modest models.</li>
 <li>Golden rule (<a href="38-audit.html" class="quarto-xref"><span>Chapter 39</span></a>): the lens <strong>generates</strong> hypotheses; only causal intervention <strong>confirms</strong> them.</li>
 </ul>
