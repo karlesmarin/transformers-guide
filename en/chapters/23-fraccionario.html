@@ -544,6 +544,130 @@ div.csl-indent {
 .fg-mirage-ctrl{ display:flex; align-items:center; gap:.55rem; justify-content:center; margin:.5rem 0 .2rem; font-size:.8rem; color:#5b7790; }
 .fg-mirage-ctrl input[type=range]{ accent-color:rgb(var(--red)); width:200px; max-width:60%; }
 .fg-mirage-ctrl .cv{ font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:700; color:rgb(var(--red)); min-width:34px; }
+
+/* ============================================================
+   .fg-pizarra3d — the residual stream as a 3D blackboard (Cap. 3).
+   Two modes: ① additive writes (stepper: attention+FFN arrows chain
+   into a necklace) and ② superposition (K feature directions repel
+   live on the sphere; max-cosine readout). JS-built, WebGL via
+   vendored three.js (see _diagram-script.html §1s).
+   ============================================================ */
+.fg-pz-tabs{ display:flex; gap:.45rem; justify-content:center; margin-bottom:.55rem; }
+.fg-pz-ctrl{ display:flex; align-items:center; gap:.55rem; justify-content:center; flex-wrap:wrap;
+  margin:.55rem 0 .1rem; font-size:.78rem; color:#5b7790; }
+.fg-pz-ctrl .fg-arch-range{ width:180px; }
+.fg-pz-ctrl button[disabled]{ opacity:.45; cursor:default; }
+.fg-pz-read{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.8rem; text-align:center;
+  color:#5b7790; min-height:1.3em; margin-top:.3rem; }
+.fg-pz-read b{ color:rgb(var(--blue)); }
+.fg-pz-read .done{ color:rgb(var(--green)); font-weight:700; }
+.fg-pz-read .warn{ color:rgb(var(--red)); font-weight:700; }
+
+/* ============================================================
+   .fg-colapso — rank collapse of pure attention (Cap. 7, Dong et al.).
+   Coloured token cloud in 3D + linked views: live diversity bar and a
+   diversity-vs-layer sparkline where the previous run stays as a ghost
+   (toggle residual+FFN and compare both fates). JS-built, WebGL via
+   vendored three.js (see _diagram-script.html §1t). Reuses .fg-pz-ctrl.
+   ============================================================ */
+.fg-cl-div{ display:flex; align-items:center; gap:.5rem; margin:.5rem auto .1rem; max-width:440px;
+  font-size:.78rem; color:#5b7790; }
+.fg-cl-div .st{ color:rgb(var(--blue)); font-family:ui-monospace,Menlo,Consolas,monospace; }
+.fg-cl-div .wb{ flex:1; height:14px; border-radius:7px; background:#e9eef3; overflow:hidden; }
+.fg-cl-div .wb i{ display:block; height:100%; border-radius:7px; background:rgb(var(--green));
+  transition:width .35s ease, background .35s ease; }
+.fg-cl-div .dv{ font-family:ui-monospace,Menlo,Consolas,monospace; min-width:52px; text-align:right; color:#33536e; }
+.fg-cl-spark{ width:100%; height:74px; display:block; margin-top:.25rem; }
+.fg-cl-spark .axis{ stroke:#c7d6e2; stroke-width:1; }
+.fg-cl-spark .grid{ stroke:#e4ecf2; stroke-width:1; stroke-dasharray:3 3; }
+.fg-cl-spark .cur{ fill:none; stroke-width:2; }
+.fg-cl-spark .ghost{ fill:none; stroke:#b6c6d4; stroke-width:1.5; stroke-dasharray:4 3; }
+.fg-cl-sparklab{ font-size:.72rem; color:#9bb4c9; text-align:center; margin-top:.1rem; }
+@media (prefers-reduced-motion:reduce){ .fg-cl-div .wb i{ transition:none; } }
+</style>
+<style>
+/* ============================================================
+   Widgets de función en vivo (bloque aparte para evitar colisiones):
+   .fg-termostato — dial de temperatura + cortina top-p + lluvia de muestras (cap. 12)
+   .fg-paisaje    — paisaje de pérdida 3D + canica + schedule del lr enlazado (cap. 11)
+   .fg-serie      — la serie-p Σ d^-γ apilándose hacia ζ(γ) + aguja χ (cap. 21)
+   JS en el <script> homólogo al final de _diagram-script.html.
+   ============================================================ */
+/* ---- fg-termostato ---- */
+.fg-termostato{ max-width:640px; }
+.fg-termo-sent{ text-align:center; font-size:1.05rem; color:#33536e; font-style:italic; margin:.1rem 0 .7rem; }
+.fg-termo-sent b{ color:rgb(0,114,178); font-style:normal; }
+.fg-termo-main{ display:flex; gap:1.1rem; align-items:center; justify-content:center; flex-wrap:wrap; }
+.fg-termo-dial svg{ width:150px; height:150px; cursor:grab; touch-action:none; outline-offset:3px; display:block; }
+.fg-termo-dial svg:active{ cursor:grabbing; }
+.fg-termo-right{ flex:1; min-width:270px; }
+.fg-termo-bars{ position:relative; display:flex; align-items:flex-end; gap:3px; height:132px; padding-top:14px; }
+.fg-termo-bars .tb{ flex:1; position:relative; background:rgb(0,114,178); border-radius:3px 3px 0 0;
+  transition:height .25s ease, opacity .25s ease; }
+.fg-termo-bars .tb span{ position:absolute; top:-13px; left:-8px; right:-8px; text-align:center;
+  font-size:.6rem; color:rgb(0,114,178); font-weight:600; }
+.fg-termo-bars .tb.out{ opacity:.3; }
+.fg-termo-curtain{ position:absolute; top:0; bottom:-4px; right:-3px; border-left:2px dashed rgb(213,94,0);
+  background:repeating-linear-gradient(45deg, rgba(213,94,0,.06) 0 6px, rgba(213,94,0,.14) 6px 12px);
+  transition:left .25s ease; pointer-events:none; }
+.fg-termo-curtain i{ position:absolute; top:-1px; left:4px; font-style:normal; font-size:.62rem;
+  font-weight:700; color:rgb(213,94,0); white-space:nowrap; }
+.fg-termo-words{ display:flex; gap:3px; margin-top:.3rem; height:1.9em; }
+.fg-termo-words span{ flex:1; text-align:center; font-size:.62rem; color:#5b7790;
+  transform:rotate(-38deg); transform-origin:center; white-space:nowrap; }
+.fg-termo-read{ text-align:center; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.82rem;
+  color:#33536e; margin-top:.9rem; }
+.fg-termo-read b{ color:rgb(213,94,0); }
+.fg-termo-rain{ display:flex; flex-wrap:wrap; gap:4px; justify-content:center; min-height:26px; margin-top:.5rem; }
+.fg-termo-rain .chip{ font-size:.74rem; padding:.1rem .45rem; border-radius:1rem; background:rgba(0,114,178,.1);
+  border:1px solid rgba(0,114,178,.3); color:#33536e; opacity:0; transform:translateY(-14px);
+  animation:fg-termo-drop .45s ease-out forwards; }
+.fg-termo-rain .chip.rep{ background:rgba(213,94,0,.1); border-color:rgba(213,94,0,.35); }
+@keyframes fg-termo-drop{ to{ opacity:1; transform:translateY(0); } }
+.fg-termo-sum{ text-align:center; font-size:.78rem; color:#5b7790; margin-top:.3rem; min-height:1.2em; }
+.fg-termo-sum b{ color:rgb(0,114,178); }
+@media (prefers-reduced-motion:reduce){
+  .fg-termo-bars .tb, .fg-termo-curtain{ transition:none; }
+  .fg-termo-rain .chip{ animation:none; opacity:1; transform:none; } }
+/* ---- fg-paisaje ---- */
+.fg-paisaje{ max-width:700px; }
+.fg-pais-wrap{ display:flex; gap:.9rem; flex-wrap:wrap; align-items:stretch; }
+.fg-pais-v{ flex:1 1 300px; min-width:260px; position:relative; }
+.fg-pais-canvas{ width:100%; height:300px; display:block; border:1px solid #dce7f0; border-radius:.7rem;
+  background:radial-gradient(120% 120% at 50% 25%, #fbfdff, #e9f1f9); cursor:grab; touch-action:none; }
+.fg-pais-canvas:active{ cursor:grabbing; }
+.fg-pais-side{ flex:0 1 238px; min-width:212px; display:flex; flex-direction:column; gap:.45rem; justify-content:center; }
+.fg-pais-chart{ width:100%; height:auto; display:block; border:1px solid #e3ebf2; border-radius:.5rem; background:#fbfdff; }
+.fg-pais-chart .lbl{ font-size:9.5px; fill:#7a8aa0; }
+.fg-pais-chart .axis{ stroke:#c7d6e2; stroke-width:1; }
+.fg-pais-chart .lr{ fill:none; stroke:rgb(0,114,178); stroke-width:2; }
+.fg-pais-chart .loss{ fill:none; stroke:rgb(213,94,0); stroke-width:2; }
+.fg-pais-chart .cur{ fill:rgb(213,94,0); }
+.fg-pais-chart .curl{ stroke:rgba(213,94,0,.5); stroke-dasharray:3 3; }
+.fg-pais-read{ text-align:center; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.78rem; color:#33536e; min-height:1.3em; }
+.fg-pais-status{ text-align:center; font-size:.82rem; min-height:1.3em; color:#5b7790; }
+.fg-pais-status .boom{ color:rgb(213,94,0); font-weight:700; }
+.fg-pais-status .ok{ color:rgb(31,157,107); font-weight:700; }
+/* ---- fg-serie ---- */
+.fg-serie{ max-width:640px; }
+.fg-serie-svg{ width:100%; height:auto; display:block; }
+.fg-serie-svg .lbl{ font-size:10px; fill:#7a8aa0; }
+.fg-serie-svg .axis{ stroke:#c7d6e2; stroke-width:1.5; }
+.fg-serie-svg .brick{ fill:rgb(0,114,178); }
+.fg-serie-svg .brick.alt{ fill:rgba(0,114,178,.62); }
+.fg-serie-svg .merged{ fill:rgba(0,114,178,.5); }
+.fg-serie-svg .asym{ stroke:rgb(31,157,107); stroke-width:2; stroke-dasharray:6 4; }
+.fg-serie-svg .asymlbl{ font-size:11px; font-weight:700; fill:rgb(31,157,107); }
+.fg-serie-svg .comb{ fill:#d3dde6; }
+.fg-serie-svg .comb.usedc{ fill:rgb(0,114,178); }
+.fg-serie-svg .comb.cur{ fill:rgb(213,94,0); }
+.fg-serie-svg .needle{ stroke:rgb(213,94,0); stroke-width:3; stroke-linecap:round; }
+.fg-serie-svg .gaugebg{ stroke:#e3ebf2; stroke-width:9; fill:none; }
+.fg-serie-svg .gaugehot{ stroke:rgba(213,94,0,.45); stroke-width:9; fill:none; }
+.fg-serie-read{ text-align:center; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.8rem;
+  color:#33536e; margin-top:.3rem; min-height:1.3em; }
+.fg-serie-read b{ color:rgb(0,114,178); }
+.fg-serie-read .hot{ color:rgb(213,94,0); font-weight:700; }
 </style>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
@@ -1144,7 +1268,7 @@ window.Quarto = {
 <ol type="1">
 <li><strong>“Attention is fractional/Lévy” is NOT our novelty.</strong> <em>Fractional Neural Attention</em> (FNA) <span class="citation" data-cites="qu2025fna">(<a href="#ref-qu2025fna" role="doc-biblioref">Qu et al. 2025</a>)</span> already <strong>designs</strong> attention as a fractional-Laplacian operator with a hand-<strong>chosen</strong> order α. The framework is taken.</li>
 <li><strong>What’s plausibly ours:</strong> <em>reading</em> the <strong>measured</strong> γ (from the atlas, tied to RoPE) as a fractional order, and <strong>placing trained models in the smoothing regime</strong> —a descriptive claim, not a new operator—.</li>
-<li><strong>Caveats:</strong> FNA decays by distance in <em>feature space</em>; we do it by <em>position in the sequence</em> —the analogy is by structural similarity of power-law kernels, not an identity—. And <strong>α=γ−1, s=(γ−1)/2 are interpretive mappings</strong>, not theorems. Also, a <em>real</em> Lévy index requires α∈(0,2): a large γ would push α&gt;2 (out of the stable range) → the analogy holds <strong>within a regime</strong>, not always.</li>
+<li><strong>Caveats:</strong> FNA decays by distance in <em>feature space</em>; we do it by <em>position in the sequence</em> —the analogy is by structural similarity of power-law kernels, not an identity—. And <strong>α=γ−1, s=(γ−1)/2 are interpretive mappings</strong>, not theorems. Also, a <em>real</em> Lévy index requires α∈(0,2): a large γ would push α&gt;2 (out of the stable range) → the analogy holds <strong>within a regime</strong>, not always. Quantified over the atlas’s <strong>79 measurements</strong> —the same <strong>42 unique models</strong> of Ch. 16, counting the measurement on text and the one on random tokens separately—: <strong>77% (61/79) fall outside that window from below</strong> —γ&lt;1, i.e.&nbsp;smoothing/fractional integration, not a Lévy flight— and none from above (γ≥3); the boundary γ∈(1,3) is verified symbolically in Sage (2026-06) and the count is reproducible from the atlas CSV.</li>
 </ol>
 </div>
 </div>
@@ -2195,6 +2319,516 @@ Qu, Xiao, Cheng Ly, and Pulin Gong. 2025. <em>Fractional Neural Attention for Ef
     }
   } catch (e) {}
 
+  // ---- 1s. Build .fg-pizarra3d: the residual stream as a 3D blackboard ----
+  // Two modes, two interaction grammars. ① "escrituras": a stepper — each press
+  // ADDS the layer's two arrows (attention blue, FFN green) to one token vector;
+  // the trajectory stays as a chained necklace and a dashed line shows the total
+  // sum x−x₀ (message: layers add, they never replace). ② "superposición": a
+  // slider — K feature directions repel LIVE on the sphere (Thomson-style
+  // relaxation, Fibonacci init) while a numeric readout tracks the max cosine /
+  // min angle between the worst pair (highlighted in red with its arc).
+  // WebGL via vendored three.js; text fallback if unavailable.
+  try {
+    var pzNodes = document.querySelectorAll('.fg-pizarra3d');
+    if (pzNodes.length) {
+      var loadPz3 = function (cb) { if (window.THREE) { cb(true); return; } var sc = document.createElement('script'); sc.src = '../vendor/three.min.js'; sc.onload = function () { cb(!!window.THREE); }; sc.onerror = function () { cb(false); }; document.head.appendChild(sc); };
+      loadPz3(function (ok) { pzNodes.forEach(function (box) { initPizarra3d(box, ok); }); });
+    }
+    function initPizarra3d(box, ok) {
+      var NL = +(box.dataset.layers || 6);                     // layers in mode ①
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      box.className = 'fg-pizarra3d fg-sch';
+      var hd = document.createElement('div'); hd.className = 'fg-sch-h';
+      hd.textContent = L('La pizarra en 3D: escrituras aditivas y superposición', 'The blackboard in 3D: additive writes and superposition');
+      box.appendChild(hd);
+      var tabs = document.createElement('div'); tabs.className = 'fg-pz-tabs';
+      tabs.innerHTML = '<button type="button" class="fg-sch-btn on" data-m="a">' + L('① escrituras', '① writes') + '</button>' +
+        '<button type="button" class="fg-sch-btn" data-m="b">' + L('② superposición', '② superposition') + '</button>';
+      box.appendChild(tabs);
+      var canvas = document.createElement('canvas'); canvas.className = 'fg-g3d-canvas';
+      var cap = document.createElement('div'); cap.className = 'fg-sch-cap';
+      var ctx = null; try { ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl'); } catch (e) {}
+      if (!ok || !ctx) {
+        var fb = document.createElement('div'); fb.className = 'fg-rope3d-fallback';
+        fb.innerHTML = L('🧮 <b>El flujo residual es una pizarra aditiva:</b> cada capa <b>suma</b> sus flechas (atención + FFN) al mismo vector —el estado final es la suma de todas las escrituras—, y los rasgos conviven como <b>direcciones superpuestas</b> que interfieren más cuanto más se llena el espacio. (Tu navegador no tiene WebGL para la versión 3D interactiva.)',
+          '🧮 <b>The residual stream is an additive blackboard:</b> each layer <b>adds</b> its arrows (attention + FFN) to the same vector —the final state is the sum of all the writes—, and features coexist as <b>superposed directions</b> that interfere more as the space fills up. (Your browser has no WebGL for the interactive 3D version.)');
+        box.appendChild(fb); box.appendChild(cap); return;
+      }
+      var ctrlA = document.createElement('div'); ctrlA.className = 'fg-pz-ctrl';
+      ctrlA.innerHTML = '<button type="button" class="fg-arch-btn" data-act="step">＋ ' + L('avanzar capa', 'advance layer') + '</button>' +
+        '<button type="button" class="fg-arch-btn" data-act="reset">⟲ ' + L('reiniciar', 'reset') + '</button>';
+      var ctrlB = document.createElement('div'); ctrlB.className = 'fg-pz-ctrl'; ctrlB.style.display = 'none';
+      ctrlB.innerHTML = '<span>' + L('K direcciones-rasgo', 'K feature directions') + '</span>' +
+        '<input class="fg-arch-range" type="range" min="3" max="48" step="1" value="12" aria-label="K">';
+      var read = document.createElement('div'); read.className = 'fg-pz-read';
+      box.appendChild(canvas); box.appendChild(ctrlA); box.appendChild(ctrlB); box.appendChild(read); box.appendChild(cap);
+
+      var THREE = window.THREE, scene = new THREE.Scene();
+      var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+      var camera = new THREE.PerspectiveCamera(45, 2, 0.1, 100);
+      function rng(seed) { var s = seed >>> 0; return function () { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
+
+      // —— mode ① scene: the write necklace ——
+      var gA = new THREE.Group(); scene.add(gA);
+      var C_AT = 0x0072b2, C_FF = 0x1f9d6b, C_TOK = 0xe69f00, C_GRAY = 0x9fb3c4;
+      [[0.5, 0, 0], [0, 0.5, 0], [0, 0, 0.5]].forEach(function (a) {
+        gA.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-a[0], -a[1], -a[2]), new THREE.Vector3(a[0], a[1], a[2])]),
+          new THREE.LineBasicMaterial({ color: 0xc2d3e0, transparent: true, opacity: 0.55 })));
+      });
+      var hub0 = new THREE.Mesh(new THREE.SphereGeometry(0.055, 12, 12), new THREE.MeshBasicMaterial({ color: C_GRAY })); gA.add(hub0);
+      var tok = new THREE.Mesh(new THREE.SphereGeometry(0.1, 16, 16), new THREE.MeshBasicMaterial({ color: C_TOK })); gA.add(tok);
+      // deterministic contributions per layer (attention + FFN), with a drift so the walk is pretty
+      var rA = rng(97531);
+      function rv(mag, bias) {
+        var v = new THREE.Vector3(rA() * 2 - 1, rA() * 2 - 1, rA() * 2 - 1);
+        v.add(bias); return v.normalize().multiplyScalar(mag);
+      }
+      var wSteps = [], pAcc = new THREE.Vector3(0, 0, 0);
+      for (var li = 0; li < NL; li++) {
+        var drift = new THREE.Vector3(Math.sin(li * 2.1) * 0.45, 0.38, Math.cos(li * 1.7) * 0.45);
+        var va = rv(0.62 * Math.pow(0.9, li), drift), vf = rv(0.45 * Math.pow(0.9, li), drift);
+        var from = pAcc.clone(), mid = from.clone().add(va), to = mid.clone().add(vf);
+        wSteps.push({ from: from, va: va, vf: vf, mid: mid, to: to });
+        pAcc = to;
+      }
+      var sumGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
+      var sumLine = new THREE.Line(sumGeo, new THREE.LineDashedMaterial({ color: 0x8fa6b8, dashSize: 0.12, gapSize: 0.07, transparent: true, opacity: 0.95 }));
+      gA.add(sumLine);
+      function setSum(v) { sumGeo.setFromPoints([new THREE.Vector3(0, 0, 0), v.clone()]); sumLine.computeLineDistances(); }
+      setSum(tok.position);
+      var curL = 0, anim = null, addedA = [];
+      var btnStep = ctrlA.querySelector('[data-act="step"]');
+      function mkArrow(dir, origin, len, color) {
+        var a = new THREE.ArrowHelper(dir.clone().normalize(), origin, Math.max(len, 1e-4), color, Math.min(0.16, len * 0.45), 0.07);
+        gA.add(a); addedA.push(a); return a;
+      }
+      function updA() {
+        read.innerHTML = L('capa', 'layer') + ' <b>' + curL + '</b>/' + NL + ' · ' + (2 * curL) + L(' escrituras', ' writes') +
+          ' · ‖x−x₀‖ = <b>' + tok.position.length().toFixed(2) + '</b>' +
+          (curL >= NL ? ' · <span class="done">' + L('estado final = x₀ + Σ contribuciones', 'final state = x₀ + Σ contributions') + '</span>' : '');
+      }
+      function advance() {
+        if (curL >= NL || anim) return;
+        var st = wSteps[curL];
+        var aAt = mkArrow(st.va, st.from, st.va.length(), C_AT);
+        var aFf = mkArrow(st.vf, st.mid, st.vf.length(), C_FF);
+        var mk = new THREE.Mesh(new THREE.SphereGeometry(0.035, 10, 10), new THREE.MeshBasicMaterial({ color: C_GRAY }));
+        mk.position.copy(st.from); gA.add(mk); addedA.push(mk);
+        curL++;
+        if (curL >= NL) btnStep.disabled = true;
+        if (reduce) { tok.position.copy(st.to); setSum(tok.position); updA(); return; }
+        aAt.setLength(1e-4, 1e-4, 0.07); aFf.setLength(1e-4, 1e-4, 0.07); aFf.visible = false;
+        anim = { t0: 0, dur: 760, st: st, aAt: aAt, aFf: aFf };
+        updA();
+      }
+      function tickAnim(now) {
+        if (!anim) return;
+        if (!anim.t0) anim.t0 = now;
+        var q = Math.min(1, (now - anim.t0) / anim.dur), st = anim.st;
+        var la = st.va.length(), lf = st.vf.length();
+        if (q < 0.5) {
+          var qa = q * 2;
+          anim.aAt.setLength(Math.max(la * qa, 1e-4), Math.min(0.16, la * qa * 0.45), 0.07);
+          tok.position.copy(st.from).addScaledVector(st.va, qa);
+        } else {
+          var qf = (q - 0.5) * 2;
+          anim.aAt.setLength(la, Math.min(0.16, la * 0.45), 0.07);
+          anim.aFf.visible = true;
+          anim.aFf.setLength(Math.max(lf * qf, 1e-4), Math.min(0.16, lf * qf * 0.45), 0.07);
+          tok.position.copy(st.mid).addScaledVector(st.vf, qf);
+        }
+        setSum(tok.position);
+        if (q >= 1) { anim = null; updA(); }
+      }
+      function resetA() {
+        anim = null; curL = 0; btnStep.disabled = false;
+        addedA.forEach(function (o) { gA.remove(o); }); addedA = [];
+        tok.position.set(0, 0, 0); setSum(tok.position); updA();
+      }
+      btnStep.addEventListener('click', advance);
+      ctrlA.querySelector('[data-act="reset"]').addEventListener('click', resetA);
+
+      // —— mode ② scene: superposition on the sphere ——
+      var gB = new THREE.Group(); gB.visible = false; scene.add(gB);
+      gB.add(new THREE.Mesh(new THREE.SphereGeometry(1, 32, 20), new THREE.MeshBasicMaterial({ color: 0x9fc3dd, transparent: true, opacity: 0.07 })));
+      for (var gc = 0; gc < 3; gc++) {
+        var gcp = [];
+        for (var ga2 = 0; ga2 <= 72; ga2++) {
+          var an = ga2 / 72 * Math.PI * 2, cxx = Math.cos(an), sxx = Math.sin(an);
+          gcp.push(gc === 0 ? new THREE.Vector3(0, cxx, sxx) : (gc === 1 ? new THREE.Vector3(cxx, 0, sxx) : new THREE.Vector3(cxx, sxx, 0)));
+        }
+        gB.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(gcp), new THREE.LineBasicMaterial({ color: 0xb9cddd, transparent: true, opacity: 0.35 })));
+      }
+      var KMAX = 48, dirs = [], slots = [];
+      for (var s2 = 0; s2 < KMAX; s2++) {
+        var lg = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
+        var lmat = new THREE.LineBasicMaterial({ color: 0x0072b2, transparent: true, opacity: 0.75 });
+        var lin = new THREE.Line(lg, lmat);
+        var tp = new THREE.Mesh(new THREE.SphereGeometry(0.045, 10, 10), new THREE.MeshBasicMaterial({ color: 0x0072b2 }));
+        lin.visible = tp.visible = false; gB.add(lin); gB.add(tp);
+        slots.push({ g: lg, lm: lmat, tip: tp, line: lin });
+      }
+      var arcPts = []; for (var ap = 0; ap < 25; ap++) arcPts.push(new THREE.Vector3());
+      var arcGeo = new THREE.BufferGeometry().setFromPoints(arcPts);
+      var arcLine = new THREE.Line(arcGeo, new THREE.LineBasicMaterial({ color: 0xd55e00 })); arcLine.visible = false; gB.add(arcLine);
+      var K = 12, rangeK = ctrlB.querySelector('input');
+      function fibInit(k) {
+        dirs = [];
+        var gr = Math.PI * (3 - Math.sqrt(5)), rj = rng(4242 + k);
+        for (var i = 0; i < k; i++) {
+          var y = 1 - 2 * (i + 0.5) / k, r = Math.sqrt(Math.max(0, 1 - y * y)), th = gr * i;
+          var vx = Math.cos(th) * r + (rj() - 0.5) * 0.25, vy = y + (rj() - 0.5) * 0.25, vz = Math.sin(th) * r + (rj() - 0.5) * 0.25;
+          var n = Math.sqrt(vx * vx + vy * vy + vz * vz) || 1;
+          dirs.push([vx / n, vy / n, vz / n]);
+        }
+      }
+      function relax(iters) {                                  // Thomson-style repulsion of the K directions
+        var k = dirs.length;
+        for (var t = 0; t < iters; t++) {
+          var F = [];
+          for (var i0 = 0; i0 < k; i0++) F.push([0, 0, 0]);
+          for (var i1 = 0; i1 < k; i1++) for (var j1 = 0; j1 < k; j1++) {
+            if (i1 === j1) continue;
+            var dx = dirs[i1][0] - dirs[j1][0], dy = dirs[i1][1] - dirs[j1][1], dz = dirs[i1][2] - dirs[j1][2];
+            var r2 = dx * dx + dy * dy + dz * dz + 1e-6, w = 1 / (r2 * Math.sqrt(r2));
+            F[i1][0] += dx * w; F[i1][1] += dy * w; F[i1][2] += dz * w;
+          }
+          for (var i2 = 0; i2 < k; i2++) {
+            var u = dirs[i2], f = F[i2], dt = u[0] * f[0] + u[1] * f[1] + u[2] * f[2];
+            var tx = 0.05 * (f[0] - dt * u[0]), ty = 0.05 * (f[1] - dt * u[1]), tz = 0.05 * (f[2] - dt * u[2]);
+            var m = Math.sqrt(tx * tx + ty * ty + tz * tz);
+            if (m > 0.08) { tx *= 0.08 / m; ty *= 0.08 / m; tz *= 0.08 / m; }
+            var wx = u[0] + tx, wy = u[1] + ty, wz = u[2] + tz, nn = Math.sqrt(wx * wx + wy * wy + wz * wz) || 1;
+            dirs[i2] = [wx / nn, wy / nn, wz / nn];
+          }
+        }
+      }
+      function updB() {
+        var k = dirs.length, wi = 0, wj = 1, wc = -2;
+        for (var i = 0; i < k; i++) for (var j = i + 1; j < k; j++) {
+          var c = dirs[i][0] * dirs[j][0] + dirs[i][1] * dirs[j][1] + dirs[i][2] * dirs[j][2];
+          if (c > wc) { wc = c; wi = i; wj = j; }
+        }
+        for (var s3 = 0; s3 < KMAX; s3++) {
+          var sl = slots[s3], on = s3 < k;
+          sl.line.visible = sl.tip.visible = on;
+          if (!on) continue;
+          var d = dirs[s3];
+          sl.g.setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(d[0], d[1], d[2])]);
+          sl.tip.position.set(d[0], d[1], d[2]);
+          var hot = (s3 === wi || s3 === wj);
+          sl.lm.color.setHex(hot ? 0xd55e00 : 0x0072b2);
+          sl.tip.material.color.setHex(hot ? 0xd55e00 : 0x0072b2);
+          sl.tip.scale.setScalar(hot ? 1.7 : 1);
+        }
+        var av = new THREE.Vector3(dirs[wi][0], dirs[wi][1], dirs[wi][2]), bv = new THREE.Vector3(dirs[wj][0], dirs[wj][1], dirs[wj][2]);
+        var om = Math.acos(Math.max(-1, Math.min(1, av.dot(bv)))), so = Math.sin(om) || 1e-6;
+        var pts2 = [];
+        for (var q2 = 0; q2 <= 24; q2++) {
+          var tq = q2 / 24, w1 = Math.sin((1 - tq) * om) / so, w2 = Math.sin(tq * om) / so;
+          pts2.push(new THREE.Vector3(av.x * w1 + bv.x * w2, av.y * w1 + bv.y * w2, av.z * w1 + bv.z * w2).multiplyScalar(1.02));
+        }
+        arcGeo.setFromPoints(pts2); arcLine.visible = true;
+        var cls = wc < 0.35 ? 'done' : (wc < 0.7 ? '' : 'warn');
+        read.innerHTML = 'K = <b>' + k + '</b> · ' + L('coseno máximo', 'max cosine') + ' = <span class="' + cls + '">' + wc.toFixed(2) + '</span> · ' +
+          L('ángulo mínimo', 'min angle') + ' ≈ <span class="' + cls + '">' + (om * 180 / Math.PI).toFixed(0) + '°</span>';
+      }
+      rangeK.addEventListener('input', function () { K = +rangeK.value; fibInit(K); if (reduce) relax(400); updB(); });
+
+      // —— shared: tabs, orbit camera, loop ——
+      var capA = L('Cada capa <b>no reemplaza</b> el vector: le <b>suma</b> dos flechas —<b>atención</b> (azul) y <b>FFN</b> (verde)—. El punto ámbar es el token; la línea gris punteada, la suma total x−x₀. El estado final es el <b>collar entero</b> de escrituras encadenadas. Arrastra para girar.',
+        'Each layer does <b>not replace</b> the vector: it <b>adds</b> two arrows —<b>attention</b> (blue) and <b>FFN</b> (green)—. The amber dot is the token; the dashed grey line, the total sum x−x₀. The final state is the <b>whole necklace</b> of chained writes. Drag to rotate.');
+      var capB = L('K direcciones-rasgo compiten por 3 dimensiones: se <b>repelen</b> en vivo hasta repartirse la esfera. El par <span class="hot">más solapado</span> se marca en rojo con su arco: su coseno es la <b>interferencia</b> mínima inevitable. Sube K y mira cómo crece. Arrastra para girar.',
+        'K feature directions compete for 3 dimensions: they <b>repel</b> live until they share out the sphere. The <span class="hot">most overlapping</span> pair is marked in red with its arc: its cosine is the unavoidable minimum <b>interference</b>. Raise K and watch it grow. Drag to rotate.');
+      var mode = 'a';
+      function setMode(m) {
+        mode = m;
+        gA.visible = m === 'a'; gB.visible = m === 'b';
+        ctrlA.style.display = m === 'a' ? '' : 'none';
+        ctrlB.style.display = m === 'b' ? '' : 'none';
+        cap.innerHTML = m === 'a' ? capA : capB;
+        tabs.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b.dataset.m === m); });
+        if (m === 'a') updA(); else updB();
+      }
+      tabs.querySelectorAll('button').forEach(function (b) { b.addEventListener('click', function () { setMode(b.dataset.m); }); });
+      var target = new THREE.Vector3(0, 0, 0), camR = 5.0, az = 0.85, pol = 1.15;
+      function placeCam() {
+        camera.position.set(target.x + camR * Math.sin(pol) * Math.cos(az), target.y + camR * Math.cos(pol), target.z + camR * Math.sin(pol) * Math.sin(az));
+        camera.lookAt(target);
+      }
+      var dragging = false, lx = 0, ly = 0;
+      canvas.addEventListener('pointerdown', function (e) { dragging = true; lx = e.clientX; ly = e.clientY; canvas.setPointerCapture(e.pointerId); });
+      canvas.addEventListener('pointermove', function (e) {
+        if (!dragging) return;
+        az -= (e.clientX - lx) * 0.008; pol -= (e.clientY - ly) * 0.008;
+        pol = Math.max(0.25, Math.min(Math.PI - 0.25, pol)); lx = e.clientX; ly = e.clientY;
+      });
+      canvas.addEventListener('pointerup', function () { dragging = false; });
+      canvas.addEventListener('pointercancel', function () { dragging = false; });
+      function resize() { var w = box.clientWidth || 600, h = 340; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+      window.addEventListener('resize', resize); resize();
+      fibInit(K); if (reduce) relax(400);
+      updB(); setMode('a'); placeCam();
+      var tgtTmp = new THREE.Vector3();
+      function loop(now) {
+        requestAnimationFrame(loop);
+        var rb = box.getBoundingClientRect();
+        if (rb.bottom < 0 || rb.top > (window.innerHeight || 9999)) return;   // off-screen → skip
+        if (!dragging && !reduce) az += 0.0015;                               // gentle idle auto-orbit
+        if (mode === 'a') {
+          tickAnim(now || 0);
+          tgtTmp.copy(tok.position).multiplyScalar(0.5);
+          target.lerp(tgtTmp, 0.05);
+          camR += (5.0 + tok.position.length() * 0.35 - camR) * 0.05;
+        } else {
+          if (!reduce) { relax(2); updB(); }                                  // live repulsion + live readout
+          tgtTmp.set(0, 0, 0); target.lerp(tgtTmp, 0.08);
+          camR += (4.1 - camR) * 0.08;
+        }
+        placeCam(); renderer.render(scene, camera);
+      }
+      loop(0);
+    }
+  } catch (e) {}
+
+  // ---- 1t. Build .fg-colapso: rank collapse of pure attention (Dong et al.) ----
+  // N coloured token-points in 3D. Each "＋1 capa" replaces every token by a soft
+  // random weighted average of the others (row-stochastic attention): the cloud
+  // converges to ONE point (rank 1) while a diversity bar + sparkline plummet.
+  // Toggle "residual + FFN" on: the update becomes x + 0.5·mix + small FFN write
+  // (re-centred, scale-capped) and the cloud stays alive — the previous run's
+  // curve stays as a ghost so both fates can be compared on one plot.
+  // Dynamics tuned offline: tau=3 (softmax sharpness); FFN write = 0.30·tanh(1.2·A·x)
+  // with A fixed + 0.15·tanh(1.2·A_l·x) with A_l fresh per layer (real transformers
+  // have a different FFN per layer); cap=1.15·D0. Pure mode dies by ~8 layers;
+  // scaffolded mode holds ≥99% diversity for 200+ layers (verified numerically).
+  try {
+    var clNodes = document.querySelectorAll('.fg-colapso');
+    if (clNodes.length) {
+      var loadCl3 = function (cb) { if (window.THREE) { cb(true); return; } var sc = document.createElement('script'); sc.src = '../vendor/three.min.js'; sc.onload = function () { cb(!!window.THREE); }; sc.onerror = function () { cb(false); }; document.head.appendChild(sc); };
+      loadCl3(function (ok) { clNodes.forEach(function (box) { initColapso(box, ok); }); });
+    }
+    function initColapso(box, ok) {
+      var N = Math.max(4, Math.min(20, +(box.dataset.n || 12)));
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      box.className = 'fg-colapso fg-sch';
+      var hd = document.createElement('div'); hd.className = 'fg-sch-h';
+      hd.textContent = L('El colapso de rango: atención pura vs. residual + FFN', 'Rank collapse: pure attention vs. residual + FFN');
+      box.appendChild(hd);
+      var canvas = document.createElement('canvas'); canvas.className = 'fg-g3d-canvas';
+      var cap = document.createElement('div'); cap.className = 'fg-sch-cap';
+      var ctx = null; try { ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl'); } catch (e) {}
+      if (!ok || !ctx) {
+        var fb = document.createElement('div'); fb.className = 'fg-rope3d-fallback';
+        fb.innerHTML = L('💀 <b>Sin residual ni FFN, la atención pura colapsa:</b> cada capa promedia los tokens entre sí y, capa tras capa, todos convergen al mismo vector (rango 1) — la información muere. Con la suma residual y la FFN, la nube de tokens se mantiene separada. (Tu navegador no tiene WebGL para la versión interactiva.)',
+          '💀 <b>Without residuals or FFN, pure attention collapses:</b> each layer averages the tokens together and, layer after layer, they all converge to the same vector (rank 1) — the information dies. With the residual sum and the FFN, the token cloud stays apart. (Your browser has no WebGL for the interactive version.)');
+        box.appendChild(fb); box.appendChild(cap); return;
+      }
+      var ctrl = document.createElement('div'); ctrl.className = 'fg-pz-ctrl';
+      ctrl.innerHTML = '<button type="button" class="fg-sch-btn" data-act="tog">' + L('residual + FFN: ✗', 'residual + FFN: ✗') + '</button>' +
+        '<button type="button" class="fg-arch-btn" data-act="step">＋1 ' + L('capa', 'layer') + '</button>' +
+        (reduce ? '' : '<button type="button" class="fg-arch-btn" data-act="auto">▶ auto</button>') +
+        '<button type="button" class="fg-arch-btn" data-act="reset">⟲ ' + L('reiniciar', 'reset') + '</button>';
+      var dbar = document.createElement('div'); dbar.className = 'fg-cl-div';
+      dbar.innerHTML = '<span>' + L('capa', 'layer') + ' <b class="st">0</b></span><span>' + L('diversidad', 'diversity') + '</span><span class="wb"><i style="width:100%"></i></span><b class="dv">100%</b>';
+      var sparkWrap = document.createElement('div');
+      sparkWrap.innerHTML = '<svg class="fg-cl-spark" viewBox="0 0 320 74" preserveAspectRatio="none"></svg>' +
+        '<div class="fg-cl-sparklab">' + L('diversidad (% del inicio) por capa — la curva gris punteada es la pasada anterior', 'diversity (% of start) per layer — the dashed grey curve is the previous run') + '</div>';
+      box.appendChild(canvas); box.appendChild(ctrl); box.appendChild(dbar); box.appendChild(sparkWrap); box.appendChild(cap);
+      var svg = sparkWrap.querySelector('svg');
+
+      // —— dynamics (numbers verified offline, see comment above) ——
+      var TAU = 3, G1 = 0.30, G2 = 0.15, KK = 1.2, CAPM = 1.15, SEED = 20260708;
+      function rng(seed) { var s = seed >>> 0; return function () { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
+      var A = (function () { var r = rng(777), m = []; for (var i = 0; i < 3; i++) m.push([r() * 2 - 1, r() * 2 - 1, r() * 2 - 1]); return m; })();
+      var wRng, X, D0, stepCount, hist, ghost = null, scaffold = false, playing = false, dead = false;
+      function centroid(P) { var c = [0, 0, 0]; for (var i = 0; i < N; i++) for (var d = 0; d < 3; d++) c[d] += P[i][d] / N; return c; }
+      function meanPairDist(P) {
+        var s = 0, c = 0;
+        for (var i = 0; i < N; i++) for (var j = i + 1; j < N; j++) {
+          var dx = P[i][0] - P[j][0], dy = P[i][1] - P[j][1], dz = P[i][2] - P[j][2];
+          s += Math.sqrt(dx * dx + dy * dy + dz * dz); c++;
+        }
+        return s / c;
+      }
+      function initCloud() {
+        wRng = rng(SEED); X = [];
+        for (var i = 0; i < N; i++) X.push([wRng() * 2 - 1, wRng() * 2 - 1, wRng() * 2 - 1]);
+        var c = centroid(X); X.forEach(function (x) { for (var d = 0; d < 3; d++) x[d] -= c[d]; });
+        D0 = meanPairDist(X); stepCount = 0; hist = [1]; dead = false;
+      }
+      function freshW() {
+        var W = [];
+        for (var i = 0; i < N; i++) {
+          var row = [], mx = -1e9;
+          for (var j = 0; j < N; j++) { var l = (wRng() * 2 - 1) * TAU; row.push(l); if (l > mx) mx = l; }
+          var s = 0;
+          for (var j2 = 0; j2 < N; j2++) { row[j2] = Math.exp(row[j2] - mx); s += row[j2]; }
+          for (var j3 = 0; j3 < N; j3++) row[j3] /= s;
+          W.push(row);
+        }
+        return W;
+      }
+      function stepOnce() {
+        if (dead || stepCount >= 400) return;
+        var W = freshW(), M = [];
+        for (var i = 0; i < N; i++) {
+          var v = [0, 0, 0];
+          for (var j = 0; j < N; j++) for (var d = 0; d < 3; d++) v[d] += W[i][j] * X[j][d];
+          M.push(v);
+        }
+        if (!scaffold) { X = M; }                                  // pure attention: replace by the average
+        else {
+          var A2 = [];                                             // this layer's own FFN matrix
+          for (var a2 = 0; a2 < 3; a2++) A2.push([wRng() * 2 - 1, wRng() * 2 - 1, wRng() * 2 - 1]);
+          for (var i2 = 0; i2 < N; i2++) {                         // residual: x + 0.5·mix + small FFN write
+            var x = X[i2], f = [0, 0, 0];
+            for (var a = 0; a < 3; a++) f[a] = G1 * Math.tanh(KK * (A[a][0] * x[0] + A[a][1] * x[1] + A[a][2] * x[2])) +
+              G2 * Math.tanh(KK * (A2[a][0] * x[0] + A2[a][1] * x[1] + A2[a][2] * x[2]));
+            for (var d2 = 0; d2 < 3; d2++) X[i2][d2] += 0.5 * M[i2][d2] + f[d2];
+          }
+          var c = centroid(X); X.forEach(function (x2) { for (var d3 = 0; d3 < 3; d3++) x2[d3] -= c[d3]; });   // camera keeps the cloud centred
+          var dv = meanPairDist(X);
+          if (dv > CAPM * D0) { var sc2 = CAPM * D0 / dv; X.forEach(function (x3) { for (var d4 = 0; d4 < 3; d4++) x3[d4] *= sc2; }); }  // norm caps the scale
+        }
+        stepCount++;
+        var divNow = meanPairDist(X) / D0;
+        hist.push(divNow);
+        if (!scaffold && divNow < 0.004) { dead = true; playing = false; if (btnAuto) btnAuto.textContent = '▶ auto'; }
+        moveTargets(); updHud();
+      }
+      // —— THREE scene ——
+      var THREE = window.THREE, scene = new THREE.Scene();
+      var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+      var camera = new THREE.PerspectiveCamera(45, 2, 0.1, 100);
+      var SC = 1.5;                                                // sim units → scene units
+      [[2, 0, 0], [0, 2, 0], [0, 0, 2]].forEach(function (a) {
+        scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-a[0], -a[1], -a[2]), new THREE.Vector3(a[0], a[1], a[2])]),
+          new THREE.LineBasicMaterial({ color: 0xdce7f0, transparent: true, opacity: 0.45 })));
+      });
+      var toks = [], trails = [], trailPts = [], moveFrom = [], moveTo = [], moveQ = 1;
+      for (var it = 0; it < N; it++) {
+        var col = new THREE.Color(); col.setHSL(it / N, 0.72, 0.5);
+        var mts = new THREE.Mesh(new THREE.SphereGeometry(0.11, 14, 14), new THREE.MeshBasicMaterial({ color: col }));
+        scene.add(mts); toks.push(mts);
+        var tg = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
+        var tl = new THREE.Line(tg, new THREE.LineBasicMaterial({ color: col, transparent: true, opacity: 0.4 }));
+        tl.visible = false; scene.add(tl); trails.push(tl);
+        trailPts.push([]); moveFrom.push(new THREE.Vector3()); moveTo.push(new THREE.Vector3());
+      }
+      function syncFromSim(snap) {
+        for (var i = 0; i < N; i++) {
+          var v = new THREE.Vector3(X[i][0] * SC, X[i][1] * SC, X[i][2] * SC);
+          if (snap) { toks[i].position.copy(v); moveFrom[i].copy(v); }
+          else moveFrom[i].copy(toks[i].position);
+          moveTo[i].copy(v);
+        }
+        moveQ = (snap || reduce) ? 1 : 0;
+        if (moveQ >= 1) for (var i3 = 0; i3 < N; i3++) toks[i3].position.copy(moveTo[i3]);
+      }
+      function moveTargets() {
+        for (var i = 0; i < N; i++) {
+          var v = new THREE.Vector3(X[i][0] * SC, X[i][1] * SC, X[i][2] * SC);
+          var tp = trailPts[i]; tp.push(v.clone());
+          if (tp.length > 26) tp.shift();
+          if (tp.length > 1) { trails[i].geometry.setFromPoints(tp); trails[i].visible = true; }
+        }
+        syncFromSim(false);
+      }
+      function resetTrails() {
+        for (var i = 0; i < N; i++) {
+          trailPts[i] = [new THREE.Vector3(X[i][0] * SC, X[i][1] * SC, X[i][2] * SC)];
+          trails[i].visible = false;
+        }
+      }
+      // —— HUD: bar + sparkline + captions ——
+      var stEl = dbar.querySelector('.st'), dvEl = dbar.querySelector('.dv'), barEl = dbar.querySelector('.wb i');
+      var capOff = L('<b>Solo atención:</b> cada capa reemplaza cada token por una <b>media ponderada</b> de los demás (una matriz aleatoria suave, filas que suman 1). Mezcla tras mezcla, los ' + N + ' tokens convergen a <span class="hot">un solo punto</span>: rango 1, información muerta [Dong et al. 2021]. Arrastra para girar.',
+        '<b>Attention only:</b> each layer replaces every token by a <b>weighted average</b> of the others (a smooth random matrix, rows summing to 1). Mix after mix, the ' + N + ' tokens converge to <span class="hot">a single point</span>: rank 1, dead information [Dong et al. 2021]. Drag to rotate.');
+      var capOn = L('<b>Con residual + FFN:</b> la misma atención, pero cada capa solo <b>añade una corrección</b> (x + ½·mezcla) y la FFN vuelve a separar los tokens. La nube <span class="ok">ya no colapsa</span>: la diversidad se estabiliza. El andamiaje no es opcional. Arrastra para girar.',
+        '<b>With residual + FFN:</b> the same attention, but each layer only <b>adds a correction</b> (x + ½·mix) and the FFN pulls the tokens apart again. The cloud <span class="ok">no longer collapses</span>: diversity stabilises. The scaffolding is not optional. Drag to rotate.');
+      function drawSpark() {
+        var xmax = Math.max(24, hist.length - 1, ghost ? ghost.length - 1 : 0);
+        function px(s) { return 10 + s / xmax * 300; }
+        function py(d) { return 66 - Math.min(d, 1.4) / 1.4 * 58; }
+        function poly(h) { var p = ''; for (var s = 0; s < h.length; s++) p += px(s).toFixed(1) + ',' + py(h[s]).toFixed(1) + ' '; return p; }
+        var s = '<line class="grid" x1="10" y1="' + py(1).toFixed(1) + '" x2="310" y2="' + py(1).toFixed(1) + '"/>' +
+          '<line class="axis" x1="10" y1="66" x2="310" y2="66"/>';
+        if (ghost && ghost.length > 1) s += '<polyline class="ghost" points="' + poly(ghost) + '"/>';
+        if (hist.length > 1) {
+          var last = hist[hist.length - 1];
+          var colr = scaffold ? 'rgb(31,157,107)' : 'rgb(213,94,0)';
+          s += '<polyline class="cur" stroke="' + colr + '" points="' + poly(hist) + '"/>' +
+            '<circle cx="' + px(hist.length - 1).toFixed(1) + '" cy="' + py(last).toFixed(1) + '" r="2.6" fill="' + colr + '"/>';
+        }
+        svg.innerHTML = s;
+      }
+      function updHud() {
+        var divNow = hist[hist.length - 1];
+        stEl.textContent = stepCount;
+        dvEl.textContent = (divNow * 100).toFixed(divNow < 0.1 && divNow > 0 ? 1 : 0) + '%';
+        barEl.style.width = Math.min(100, divNow * 100).toFixed(1) + '%';
+        barEl.style.background = divNow > 0.6 ? 'rgb(31,157,107)' : (divNow > 0.2 ? 'rgb(230,159,0)' : 'rgb(213,94,0)');
+        cap.innerHTML = (scaffold ? capOn : capOff) +
+          (dead ? ' <span class="hot">💀 ' + L('Rango 1 alcanzado en ' + stepCount + ' capas.', 'Rank 1 reached in ' + stepCount + ' layers.') + '</span>' : '');
+        drawSpark();
+      }
+      // —— controls ——
+      var btnTog = ctrl.querySelector('[data-act="tog"]'), btnAuto = ctrl.querySelector('[data-act="auto"]');
+      function fullReset() {
+        if (hist && hist.length > 2) ghost = hist.slice();        // keep last run for comparison
+        initCloud(); resetTrails(); syncFromSim(true); updHud();
+      }
+      btnTog.addEventListener('click', function () {
+        scaffold = !scaffold;
+        btnTog.classList.toggle('on', scaffold);
+        btnTog.textContent = L('residual + FFN: ', 'residual + FFN: ') + (scaffold ? '✓' : '✗');
+        fullReset();
+      });
+      ctrl.querySelector('[data-act="step"]').addEventListener('click', stepOnce);
+      ctrl.querySelector('[data-act="reset"]').addEventListener('click', function () { playing = false; if (btnAuto) btnAuto.textContent = '▶ auto'; fullReset(); });
+      if (btnAuto) btnAuto.addEventListener('click', function () {
+        playing = !playing;
+        btnAuto.textContent = playing ? '⏸ auto' : '▶ auto';
+      });
+      // —— orbit camera + loop ——
+      var target = new THREE.Vector3(0, 0, 0), camR = 6.2, az = 0.8, pol = 1.12;
+      function placeCam() {
+        camera.position.set(camR * Math.sin(pol) * Math.cos(az), camR * Math.cos(pol), camR * Math.sin(pol) * Math.sin(az));
+        camera.lookAt(target);
+      }
+      var dragging = false, lx = 0, ly = 0;
+      canvas.addEventListener('pointerdown', function (e) { dragging = true; lx = e.clientX; ly = e.clientY; canvas.setPointerCapture(e.pointerId); });
+      canvas.addEventListener('pointermove', function (e) {
+        if (!dragging) return;
+        az -= (e.clientX - lx) * 0.008; pol -= (e.clientY - ly) * 0.008;
+        pol = Math.max(0.25, Math.min(Math.PI - 0.25, pol)); lx = e.clientX; ly = e.clientY;
+      });
+      canvas.addEventListener('pointerup', function () { dragging = false; });
+      canvas.addEventListener('pointercancel', function () { dragging = false; });
+      function resize() { var w = box.clientWidth || 600, h = 340; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+      window.addEventListener('resize', resize); resize();
+      initCloud(); resetTrails(); syncFromSim(true); updHud();
+      var lastStep = 0;
+      function loop(now) {
+        requestAnimationFrame(loop);
+        var rb = box.getBoundingClientRect();
+        if (rb.bottom < 0 || rb.top > (window.innerHeight || 9999)) return;   // off-screen → skip
+        if (!dragging && !reduce) az += 0.0014;                               // gentle idle auto-orbit
+        if (playing && now - lastStep > 900) { lastStep = now; stepOnce(); }
+        if (moveQ < 1) {                                                      // smooth glide to the new layer state
+          moveQ = Math.min(1, moveQ + 0.055);
+          var e2 = moveQ * (2 - moveQ);                                       // easeOut
+          for (var i = 0; i < N; i++) toks[i].position.copy(moveFrom[i]).lerp(moveTo[i], e2);
+        }
+        placeCam(); renderer.render(scene, camera);
+      }
+      loop(0);
+    }
+  } catch (e) {}
+
   // ---- 2. Scroll-trigger: play diagrams only when in view ----
   try {
     var nodes = document.querySelectorAll('.fg-flow, .fg-attn-fig, .fg-demo');
@@ -2210,6 +2844,435 @@ Qu, Xiao, Cheng Ly, and Pulin Gong. 2025. <em>Fractional Neural Attention for Ef
   } catch (err) {
     document.documentElement.classList.remove('fg-armed');
   }
+})();
+</script>
+<!-- Widgets de función en vivo (caps. 11, 12, 21): fg-termostato, fg-paisaje, fg-serie.
+     IIFE aparte del bloque principal (mismas convenciones: L(), prefers-reduced-motion,
+     pausa fuera de pantalla, three.js vendorizado con fallback 2D). -->
+<script>
+(function () {
+  var FG_LANG = (document.documentElement.lang || 'es').toLowerCase().slice(0, 2);
+  function L(es, en) { return FG_LANG === 'en' ? en : es; }
+  var REDUCE = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function offscreen(el) { var r = el.getBoundingClientRect(); return r.bottom < 0 || r.top > (window.innerHeight || 9999); }
+
+  // ---- W1. fg-termostato: dial de T + cortina top-p + lluvia de muestras (cap. 12) ----
+  try {
+    document.querySelectorAll('.fg-termostato').forEach(function (box) {
+      var WORDS = [[L('pizza', 'pizza'), 3.2], [L('pasta', 'pasta'), 3.0], [L('sushi', 'sushi'), 2.5],
+        [L('fuera', 'out'), 2.3], [L('pronto', 'soon'), 2.1], [L('juntos', 'together'), 1.8],
+        [L('tarde', 'late'), 1.5], [L('pollo', 'chicken'), 1.3], [L('algo', 'something'), 1.1],
+        [L('sopa', 'soup'), 0.8], [L('paella', 'salad'), 0.6], [L('verdura', 'greens'), 0.3]];
+      var n = WORDS.length, T = 0.8, P = 0.92;
+      box.className = 'fg-termostato fg-sch';
+      box.innerHTML = '<div class="fg-sch-h">' + L('El termostato del muestreo: la misma distribución, otro carácter', 'The sampling thermostat: same distribution, different character') + '</div>' +
+        '<div class="fg-termo-sent">' + L('«Esta noche vamos a cenar <b>___</b>»', '«Tonight we are going to eat <b>___</b>»') + '</div>' +
+        '<div class="fg-termo-main">' +
+          '<div class="fg-termo-dial"><svg viewBox="0 0 150 150" tabindex="0" role="slider" aria-label="' + L('temperatura', 'temperature') + '" aria-valuemin="0.1" aria-valuemax="2" aria-valuenow="0.8"></svg></div>' +
+          '<div class="fg-termo-right"><div class="fg-termo-bars"></div><div class="fg-termo-words"></div></div>' +
+        '</div>' +
+        '<div class="fg-termo-read"></div>' +
+        '<div class="fg-kvc-ctrl"><span>top-p</span><input class="ip" type="range" min="0.3" max="1" step="0.01" value="0.92" aria-label="top-p"><span class="pv gv">p=<b>0.92</b></span>' +
+          '<button class="fg-sch-btn" data-t="0.2" type="button">T=0.2</button><button class="fg-sch-btn" data-t="1.0" type="button">T=1.0</button><button class="fg-sch-btn" data-t="1.5" type="button">T=1.5</button>' +
+          '<button class="fg-sch-btn smp" type="button">🎲 ' + L('muestrear ×20', 'sample ×20') + '</button></div>' +
+        '<div class="fg-termo-rain"></div><div class="fg-termo-sum"></div>' +
+        '<div class="fg-sch-cap">' + L('Gira el <b>dial</b> (arrastra sobre él, o flechas del teclado): α = softmax(z/T) se recalcula en vivo sobre los <b>mismos logits</b>. La <span class="hot">cortina rayada</span> es el corte <b>top-p</b>: lo que queda detrás no se muestrea. Pulsa «muestrear ×20» con T=0.2 y luego con T=1.5 — <b>repetitivo</b> contra <span class="hot">caótico</span>, sin tocar el modelo.', 'Turn the <b>dial</b> (drag on it, or use the arrow keys): α = softmax(z/T) recomputes live on the <b>same logits</b>. The <span class="hot">hatched curtain</span> is the <b>top-p</b> cut: whatever falls behind it never gets sampled. Hit «sample ×20» at T=0.2 and then at T=1.5 — <b>repetitive</b> versus <span class="hot">chaotic</span>, without touching the model.') + '</div>';
+      var dial = box.querySelector('.fg-termo-dial svg'), barsEl = box.querySelector('.fg-termo-bars'),
+        wordsEl = box.querySelector('.fg-termo-words'), read = box.querySelector('.fg-termo-read'),
+        ip = box.querySelector('.ip'), pv = box.querySelector('.pv b'),
+        rain = box.querySelector('.fg-termo-rain'), sum = box.querySelector('.fg-termo-sum');
+      var curtain = document.createElement('div'); curtain.className = 'fg-termo-curtain'; curtain.innerHTML = '<i>top-p</i>';
+      var bars = WORDS.map(function () { var d = document.createElement('div'); d.className = 'tb'; d.innerHTML = '<span></span>'; barsEl.appendChild(d); return d; });
+      barsEl.appendChild(curtain);
+      WORDS.forEach(function (w) { var s = document.createElement('span'); s.textContent = w[0]; wordsEl.appendChild(s); });
+      function probs() {
+        var ex = WORDS.map(function (w) { return Math.exp((w[1] - WORDS[0][1]) / T); });
+        var Z = ex.reduce(function (a, b) { return a + b; }, 0);
+        return ex.map(function (e) { return e / Z; });
+      }
+      function cutoff(al) { var c = 0, k; for (k = 0; k < n; k++) { c += al[k]; if (c >= P - 1e-9) return k + 1; } return n; }
+      function polar(r, a) { var rad = a * Math.PI / 180; return [75 + r * Math.sin(rad), 75 - r * Math.cos(rad)]; }
+      function arc(r, a0, a1) { var p0 = polar(r, a0), p1 = polar(r, a1); return 'M' + p0[0].toFixed(1) + ' ' + p0[1].toFixed(1) + ' A' + r + ' ' + r + ' 0 ' + ((a1 - a0) > 180 ? 1 : 0) + ' 1 ' + p1[0].toFixed(1) + ' ' + p1[1].toFixed(1); }
+      function mix(t) { var c0 = [0, 114, 178], c1 = [213, 94, 0]; return 'rgb(' + c0.map(function (v, i) { return Math.round(v + (c1[i] - v) * t); }).join(',') + ')'; }
+      function drawDial() {
+        var t = (T - 0.1) / 1.9, a = -135 + 270 * t, col = mix(t), tip = polar(48, a), tip0 = polar(24, a);
+        var s = '<path d="' + arc(56, -135, 135) + '" fill="none" stroke="#e3ebf2" stroke-width="10" stroke-linecap="round"/>' +
+          '<path d="' + arc(56, -135, Math.max(a, -134.5)) + '" fill="none" stroke="' + col + '" stroke-width="10" stroke-linecap="round"/>';
+        [['0.1', -135], ['1', -135 + 270 * (0.9 / 1.9)], ['2', 135]].forEach(function (tk) {
+          var p = polar(70, tk[1]);
+          s += '<text x="' + p[0].toFixed(1) + '" y="' + (p[1] + 3).toFixed(1) + '" text-anchor="middle" font-size="9" fill="#7a8aa0">' + tk[0] + '</text>';
+        });
+        s += '<circle cx="75" cy="75" r="34" fill="#fff" stroke="#dce7f0"/>' +
+          '<line x1="' + tip0[0].toFixed(1) + '" y1="' + tip0[1].toFixed(1) + '" x2="' + tip[0].toFixed(1) + '" y2="' + tip[1].toFixed(1) + '" stroke="' + col + '" stroke-width="3.5" stroke-linecap="round"/>' +
+          '<text x="75" y="70" text-anchor="middle" font-size="10" fill="#7a8aa0">T</text>' +
+          '<text x="75" y="88" text-anchor="middle" font-size="17" font-weight="700" fill="' + col + '">' + T.toFixed(2) + '</text>';
+        dial.innerHTML = s;
+        dial.setAttribute('aria-valuenow', T.toFixed(2));
+      }
+      function render() {
+        var al = probs(), k = cutoff(al), mx = al[0], cum = 0, i;
+        bars.forEach(function (b, j) {
+          b.style.height = (4 + al[j] / mx * 106) + 'px';
+          b.querySelector('span').textContent = al[j] >= 0.02 ? (al[j] >= 0.095 ? Math.round(al[j] * 100) + '%' : (al[j] * 100).toFixed(1) + '%') : '';
+          b.classList.toggle('out', j >= k);
+        });
+        for (i = 0; i < k; i++) cum += al[i];
+        curtain.style.left = (k / n * 100) + '%';
+        curtain.style.display = k >= n ? 'none' : 'block';
+        read.innerHTML = 'α = softmax(z / <b>T=' + T.toFixed(2) + '</b>) · ' + L('núcleo top-p', 'top-p nucleus') + ': <b>' + k + '</b>/' + n + ' ' + L('palabras', 'words') + ' (Σα=' + Math.round(cum * 100) + '%)';
+        drawDial();
+      }
+      var dragging = false;
+      function setFromEvent(e) {
+        var r = dial.getBoundingClientRect(), dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+        var a = Math.max(-135, Math.min(135, Math.atan2(dx, -dy) * 180 / Math.PI));
+        T = Math.round((0.1 + (a + 135) / 270 * 1.9) * 100) / 100;
+        render();
+      }
+      dial.addEventListener('pointerdown', function (e) { dragging = true; dial.setPointerCapture(e.pointerId); setFromEvent(e); e.preventDefault(); });
+      dial.addEventListener('pointermove', function (e) { if (dragging) setFromEvent(e); });
+      dial.addEventListener('pointerup', function () { dragging = false; });
+      dial.addEventListener('pointercancel', function () { dragging = false; });
+      dial.addEventListener('keydown', function (e) {
+        var d = (e.key === 'ArrowUp' || e.key === 'ArrowRight') ? 0.05 : ((e.key === 'ArrowDown' || e.key === 'ArrowLeft') ? -0.05 : 0);
+        if (!d) return;
+        e.preventDefault(); T = Math.round(Math.max(0.1, Math.min(2, T + d)) * 100) / 100; render();
+      });
+      ip.addEventListener('input', function () { P = +ip.value; pv.textContent = P.toFixed(2); render(); });
+      box.querySelectorAll('button[data-t]').forEach(function (b) { b.addEventListener('click', function () { T = +b.dataset.t; render(); }); });
+      box.querySelector('.smp').addEventListener('click', function () {
+        var al = probs(), k = cutoff(al), Z = 0, i, s;
+        for (i = 0; i < k; i++) Z += al[i];
+        rain.innerHTML = '';
+        var seen = {}, distinct = 0;
+        for (s = 0; s < 20; s++) {
+          var u = Math.random() * Z, acc = 0, pick = k - 1;
+          for (i = 0; i < k; i++) { acc += al[i]; if (u <= acc) { pick = i; break; } }
+          var w = WORDS[pick][0];
+          var chip = document.createElement('span');
+          chip.className = 'chip' + (seen[w] ? ' rep' : '');
+          if (!seen[w]) { seen[w] = 1; distinct++; }
+          chip.textContent = w;
+          chip.style.animationDelay = (REDUCE ? 0 : s * 70) + 'ms';
+          rain.appendChild(chip);
+        }
+        sum.innerHTML = 'T=' + T.toFixed(2) + ', p=' + P.toFixed(2) + ' → 20 ' + L('muestras', 'samples') + ', <b>' + distinct + '</b> ' + L('palabras distintas', 'distinct words') +
+          (distinct <= 3 ? L(' — <b>repetitivo</b>', ' — <b>repetitive</b>') : (distinct >= 8 ? ' — <span style="color:rgb(213,94,0);font-weight:700">' + L('caótico', 'chaotic') + '</span>' : ''));
+      });
+      render();
+    });
+  } catch (e) {}
+
+  // ---- W2. fg-paisaje: paisaje de pérdida + canica por gradiente + schedule enlazado (cap. 11) ----
+  try {
+    var pNodes = document.querySelectorAll('.fg-paisaje');
+    if (pNodes.length) {
+      var loadT = function (cb) {
+        if (window.THREE) { cb(true); return; }
+        var s = document.createElement('script'); s.src = '../vendor/three.min.js';
+        s.onload = function () { cb(!!window.THREE); }; s.onerror = function () { cb(false); };
+        document.head.appendChild(s);
+      };
+      loadT(function (ok) { pNodes.forEach(function (box) { initPaisaje(box, ok); }); });
+    }
+    function initPaisaje(box, haveThree) {
+      // superficie: cuenco suave (mínimo en (-1,-0.6)) + dos lomas, una escarpada — parámetros verificados por simulación:
+      // con warmup la canica siempre llega; sin warmup explota para lr>=0.8; el clipping la rescata.
+      var MINX = -1.0, MINY = -0.6, BUMPS = [[1.05, 0.75, 2.2, 0.15], [-0.1, 1.15, 0.8, 0.30]];
+      function fxy(x, y) {
+        var v = 0.18 * ((x - MINX) * (x - MINX) + (y - MINY) * (y - MINY));
+        BUMPS.forEach(function (b) { v += b[2] * Math.exp(-((x - b[0]) * (x - b[0]) + (y - b[1]) * (y - b[1])) / b[3]); });
+        return v;
+      }
+      function grad(x, y) {
+        var gx = 0.36 * (x - MINX), gy = 0.36 * (y - MINY);
+        BUMPS.forEach(function (b) {
+          var e = b[2] * Math.exp(-((x - b[0]) * (x - b[0]) + (y - b[1]) * (y - b[1])) / b[3]);
+          gx += e * (-2 * (x - b[0]) / b[3]); gy += e * (-2 * (y - b[1]) / b[3]);
+        });
+        return [gx, gy];
+      }
+      function pal(t) {
+        t = Math.max(0, Math.min(1, t));
+        if (t < 0.45) { var u = t / 0.45; return [232 * u, 114 + 125 * u, 178 + 67 * u]; }
+        var u2 = (t - 0.45) / 0.55; return [232 - 19 * u2, 239 - 145 * u2, 245 - 245 * u2];
+      }
+      var TOT = 320, WARM = 60, CMAX = 1.0, X0 = 1.35, Y0 = 1.05;
+      var lrBase = 0.85, warm = true, clip = false;
+      function lrAt(t) {
+        if (warm && t < WARM) return lrBase * (t + 1) / WARM;
+        var t0 = warm ? WARM : 0, prog = (t - t0) / (TOT - t0);
+        return lrBase * 0.5 * (1 + Math.cos(Math.PI * Math.min(1, Math.max(0, prog))));
+      }
+      var st = {};
+      function reset() { st.x = X0; st.y = Y0; st.t = 0; st.done = false; st.boom = false; st.fly = 0; st.hist = [fxy(X0, Y0)]; st.trail = [[X0, Y0]]; st.ver = 0; }
+      reset();
+      function step() {
+        if (st.done) return;
+        var lr = lrAt(st.t), g = grad(st.x, st.y), gn = Math.sqrt(g[0] * g[0] + g[1] * g[1]);
+        if (clip && gn > CMAX) { g[0] *= CMAX / gn; g[1] *= CMAX / gn; }
+        var dx = -lr * g[0], dy = -lr * g[1];
+        st.x += dx; st.y += dy; st.t++;
+        var loss = fxy(st.x, st.y);
+        if (!isFinite(loss) || Math.abs(st.x) > 3.2 || Math.abs(st.y) > 3.2 || loss > 25) {
+          st.boom = true; st.done = true; st.fly = 16;
+          st.x = Math.max(-3.1, Math.min(3.1, st.x)); st.y = Math.max(-3.1, Math.min(3.1, st.y));
+          var vn = Math.sqrt(dx * dx + dy * dy) || 1;
+          st.fx = st.x; st.fz = st.y; st.fup = 0; st.fvx = dx / vn * 0.2; st.fvz = dy / vn * 0.2;
+          st.hist.push(30);
+        } else st.hist.push(loss);
+        st.trail.push([st.x, st.y]); if (st.trail.length > 400) st.trail.shift();
+        if (st.t >= TOT) st.done = true;
+        st.ver++;
+      }
+      box.className = 'fg-paisaje fg-sch';
+      box.innerHTML = '<div class="fg-sch-h">' + L('El paisaje de la pérdida: la canica, el warmup y el clipping', 'The loss landscape: the marble, warmup and clipping') + '</div>' +
+        '<div class="fg-pais-wrap"><div class="fg-pais-v"></div>' +
+        '<div class="fg-pais-side">' +
+          '<svg class="fg-pais-chart lrch" viewBox="0 0 230 92" preserveAspectRatio="xMidYMid meet"></svg>' +
+          '<svg class="fg-pais-chart lsch" viewBox="0 0 230 92" preserveAspectRatio="xMidYMid meet"></svg>' +
+          '<div class="fg-pais-read"></div><div class="fg-pais-status"></div>' +
+        '</div></div>' +
+        '<div class="fg-kvc-ctrl">' +
+          '<button class="fg-sch-btn pp" type="button">' + (REDUCE ? '▶' : '⏸') + '</button>' +
+          '<button class="fg-sch-btn rst" type="button">⟲ ' + L('reiniciar', 'restart') + '</button>' +
+          '<button class="fg-sch-btn tenb" type="button">⏭ +10</button>' +
+          '<span>lr</span><input class="ilr" type="range" min="0.1" max="1.4" step="0.05" value="0.85" aria-label="learning rate"><span class="lrv gv">lr=<b>0.85</b></span>' +
+        '</div>' +
+        '<div class="fg-kvc-ctrl" style="margin-top:.15rem">' +
+          '<button class="fg-sch-btn wub on" type="button">warmup: ON</button>' +
+          '<button class="fg-sch-btn clb" type="button">clipping: OFF</button>' +
+        '</div>' +
+        '<div class="fg-sch-cap">' + L('Dos vistas <b>enlazadas</b>: el paisaje (arrastra para girarlo) y el <b>schedule del learning rate</b> (warmup→coseno) con su cursor. La canica baja por <b>gradiente</b>: paso = −lr·∇L. Apaga el warmup: los primeros pasos, ya grandes, caen en la <span class="hot">zona escarpada</span> y la canica <span class="hot">sale disparada</span> — mira el pico en la curva de pérdida. Vuelve a encenderlo y baja mansa. El <b>clipping</b> la salva incluso sin warmup.', 'Two <b>linked</b> views: the landscape (drag to rotate) and the <b>learning-rate schedule</b> (warmup→cosine) with its cursor. The marble descends by <b>gradient</b>: step = −lr·∇L. Turn warmup off: the very first steps, already large, land on the <span class="hot">steep zone</span> and the marble <span class="hot">gets catapulted</span> — watch the spike in the loss curve. Turn it back on and it rolls down tame. <b>Clipping</b> saves it even without warmup.') + '</div>';
+      var vwrap = box.querySelector('.fg-pais-v');
+      var canvas = document.createElement('canvas'); canvas.className = 'fg-pais-canvas'; vwrap.appendChild(canvas);
+      var glctx = null;
+      try { glctx = haveThree ? (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')) : null; } catch (e) {}
+      function view3d() {
+        var THREE = window.THREE, scene = new THREE.Scene();
+        var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+        renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+        var camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+        var HS = 0.5, EXT = 2.6, SEG = 60;
+        var geo = new THREE.PlaneGeometry(EXT * 2, EXT * 2, SEG, SEG); geo.rotateX(-Math.PI / 2);
+        var pos = geo.attributes.position, cols = [], i;
+        for (i = 0; i < pos.count; i++) {
+          var x = pos.getX(i), z = pos.getZ(i), h = fxy(x, z);
+          pos.setY(i, h * HS);
+          var c = pal(h / 4.4);
+          cols.push(c[0] / 255, c[1] / 255, c[2] / 255);
+        }
+        geo.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3));
+        scene.add(new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.DoubleSide })));
+        scene.add(new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ wireframe: true, color: 0x33536e, transparent: true, opacity: 0.07 })));
+        var marble = new THREE.Mesh(new THREE.SphereGeometry(0.1, 18, 18), new THREE.MeshBasicMaterial({ color: 0xd64500 }));
+        scene.add(marble);
+        var trail = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0x2b3a49, transparent: true, opacity: 0.85 }));
+        scene.add(trail);
+        var target = new THREE.Vector3(0, 0.55, 0), camR = 6.8, az = 0.85, pol = 1.02;
+        function placeCam() { camera.position.set(target.x + camR * Math.sin(pol) * Math.cos(az), target.y + camR * Math.cos(pol), target.z + camR * Math.sin(pol) * Math.sin(az)); camera.lookAt(target); }
+        var dragging = false, lx = 0, ly = 0;
+        canvas.addEventListener('pointerdown', function (e) { dragging = true; lx = e.clientX; ly = e.clientY; canvas.setPointerCapture(e.pointerId); });
+        canvas.addEventListener('pointermove', function (e) { if (!dragging) return; az -= (e.clientX - lx) * 0.008; pol -= (e.clientY - ly) * 0.008; pol = Math.max(0.3, Math.min(1.45, pol)); lx = e.clientX; ly = e.clientY; });
+        canvas.addEventListener('pointerup', function () { dragging = false; });
+        canvas.addEventListener('pointercancel', function () { dragging = false; });
+        function resize() { var w = vwrap.clientWidth || 320, h = 300; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+        window.addEventListener('resize', resize); resize();
+        var lastVer = -1;
+        return {
+          frame: function () {
+            if (st.ver !== lastVer) {
+              lastVer = st.ver;
+              trail.geometry.setFromPoints(st.trail.map(function (p) { return new THREE.Vector3(p[0], fxy(p[0], p[1]) * HS + 0.04, p[1]); }));
+            }
+            marble.material.color.setHex(st.boom ? 0xb00020 : 0xd64500);
+            if (st.boom) marble.position.set(st.fx, fxy(st.fx, st.fz) * HS + 0.1 + st.fup, st.fz);
+            else marble.position.set(st.x, fxy(st.x, st.y) * HS + 0.1, st.y);
+            if (!dragging) az += 0.0012;
+            placeCam(); renderer.render(scene, camera);
+          }
+        };
+      }
+      function view2d() {
+        var c2 = canvas.getContext('2d'), W2 = 0, H2 = 300, off = document.createElement('canvas');
+        function toPx(x) { return (x + 2.6) / 5.2 * W2; }
+        function toPy(y) { return (y + 2.6) / 5.2 * H2; }
+        function buildHeat() {
+          W2 = vwrap.clientWidth || 320; canvas.width = W2; canvas.height = H2;
+          var Nn = 104; off.width = Nn; off.height = Nn;
+          var oc = off.getContext('2d'), img = oc.createImageData(Nn, Nn), i, j;
+          for (j = 0; j < Nn; j++) for (i = 0; i < Nn; i++) {
+            var x = -2.6 + i / (Nn - 1) * 5.2, y = -2.6 + j / (Nn - 1) * 5.2;
+            var t = Math.round(Math.max(0, Math.min(1, fxy(x, y) / 4.4)) * 9) / 9;  // bandas = curvas de nivel
+            var c = pal(t), o = (j * Nn + i) * 4;
+            img.data[o] = c[0]; img.data[o + 1] = c[1]; img.data[o + 2] = c[2]; img.data[o + 3] = 255;
+          }
+          oc.putImageData(img, 0, 0);
+        }
+        buildHeat(); window.addEventListener('resize', buildHeat);
+        canvas.style.cursor = 'default';
+        return {
+          frame: function () {
+            c2.clearRect(0, 0, W2, H2);
+            c2.drawImage(off, 0, 0, W2, H2);
+            c2.strokeStyle = 'rgba(43,58,73,.85)'; c2.lineWidth = 1.5; c2.beginPath();
+            st.trail.forEach(function (p, i) { i ? c2.lineTo(toPx(p[0]), toPy(p[1])) : c2.moveTo(toPx(p[0]), toPy(p[1])); });
+            c2.stroke();
+            var mx = st.boom ? st.fx : st.x, my = st.boom ? st.fz : st.y;
+            c2.fillStyle = st.boom ? '#b00020' : '#d64500';
+            c2.beginPath(); c2.arc(toPx(mx), toPy(my), 6, 0, 6.3); c2.fill();
+          }
+        };
+      }
+      var view = glctx ? view3d() : view2d();
+      var lrch = box.querySelector('.lrch'), lsch = box.querySelector('.lsch');
+      var CW = 230, CH = 92, cl = 30, cr = 8, ct = 12, cb = 16;
+      function cX(t) { return cl + t / TOT * (CW - cl - cr); }
+      function drawLr() {
+        var vmax = lrBase * 1.1 || 0.1, p = '', t;
+        function Y(v) { return CH - cb - v / vmax * (CH - ct - cb); }
+        for (t = 0; t <= TOT; t += 4) p += (t ? 'L' : 'M') + cX(t).toFixed(1) + ' ' + Y(lrAt(t)).toFixed(1) + ' ';
+        var curT = Math.min(st.t, TOT);
+        lrch.innerHTML = '<text class="lbl" x="4" y="10">learning rate</text>' +
+          '<line class="axis" x1="' + cl + '" y1="' + (CH - cb) + '" x2="' + (CW - cr) + '" y2="' + (CH - cb) + '"/>' +
+          (warm ? '<line x1="' + cX(WARM).toFixed(1) + '" y1="' + ct + '" x2="' + cX(WARM).toFixed(1) + '" y2="' + (CH - cb) + '" stroke="#c7d6e2" stroke-dasharray="3 3"/><text class="lbl" x="' + (cX(WARM) + 3).toFixed(1) + '" y="' + (CH - cb - 3) + '">warmup</text>' : '') +
+          '<path class="lr" d="' + p + '"/>' +
+          '<line class="curl" x1="' + cX(curT).toFixed(1) + '" y1="' + ct + '" x2="' + cX(curT).toFixed(1) + '" y2="' + (CH - cb) + '"/>' +
+          '<circle class="cur" r="4" cx="' + cX(curT).toFixed(1) + '" cy="' + Y(lrAt(Math.min(curT, TOT - 1))).toFixed(1) + '"/>' +
+          '<text class="lbl" x="' + (CW - cr) + '" y="' + (CH - 4) + '" text-anchor="end">' + L('paso', 'step') + ' ' + curT + '/' + TOT + '</text>';
+      }
+      function lossY(v) { var lg = Math.log10(Math.max(v, 0.01)); return CH - cb - (lg + 2) / 3.8 * (CH - ct - cb); }
+      function drawLoss() {
+        var p = '', stride = Math.max(1, Math.floor(st.hist.length / 200)), i;
+        for (i = 0; i < st.hist.length; i += stride) p += (p ? 'L' : 'M') + cX(i).toFixed(1) + ' ' + lossY(st.hist[i]).toFixed(1) + ' ';
+        var li = st.hist.length - 1, last = st.hist[li];
+        p += 'L' + cX(li).toFixed(1) + ' ' + lossY(last).toFixed(1);
+        lsch.innerHTML = '<text class="lbl" x="4" y="10">' + L('pérdida (escala log)', 'loss (log scale)') + '</text>' +
+          '<line class="axis" x1="' + cl + '" y1="' + (CH - cb) + '" x2="' + (CW - cr) + '" y2="' + (CH - cb) + '"/>' +
+          '<path class="loss" d="' + p + '"/>' +
+          '<circle class="cur" r="3.5" cx="' + cX(li).toFixed(1) + '" cy="' + lossY(last).toFixed(1) + '"/>' +
+          (st.boom ? '<text x="' + Math.min(cX(li) + 4, CW - 60).toFixed(1) + '" y="' + (ct + 8) + '" font-size="11" font-weight="700" fill="rgb(213,94,0)">💥 ' + L('¡pico!', 'spike!') + '</text>' : '');
+      }
+      var read = box.querySelector('.fg-pais-read'), status = box.querySelector('.fg-pais-status');
+      function updateText() {
+        var loss = st.hist[st.hist.length - 1];
+        read.innerHTML = 't=' + st.t + ' · lr=' + lrAt(Math.min(st.t, TOT - 1)).toFixed(3) + ' · ' + L('pérdida', 'loss') + '=' +
+          (loss >= 25 ? '<span style="color:rgb(213,94,0);font-weight:700">≥' + loss.toFixed(0) + '</span>' : loss.toFixed(3));
+        status.innerHTML = st.boom
+          ? '<span class="boom">💥 ' + L('el gradiente explotó — reinicia y prueba con warmup o clipping', 'the gradient exploded — restart and try warmup or clipping') + '</span>'
+          : (st.done ? '<span class="ok">✓ ' + L('la canica reposa en el valle', 'the marble rests in the valley') + '</span>' : '');
+      }
+      var playing = !REDUCE, ppb = box.querySelector('.pp'), ilr = box.querySelector('.ilr'), lrv = box.querySelector('.lrv b');
+      var wub = box.querySelector('.wub'), clb = box.querySelector('.clb');
+      function redraw() { drawLr(); drawLoss(); updateText(); }
+      function doReset() { reset(); redraw(); }
+      ppb.addEventListener('click', function () { playing = !playing; ppb.textContent = playing ? '⏸' : '▶'; });
+      box.querySelector('.rst').addEventListener('click', doReset);
+      box.querySelector('.tenb').addEventListener('click', function () { for (var i = 0; i < 10; i++) step(); redraw(); });
+      ilr.addEventListener('input', function () { lrBase = +ilr.value; lrv.textContent = lrBase.toFixed(2); doReset(); });
+      wub.addEventListener('click', function () { warm = !warm; wub.textContent = 'warmup: ' + (warm ? 'ON' : 'OFF'); wub.classList.toggle('on', warm); doReset(); });
+      clb.addEventListener('click', function () { clip = !clip; clb.textContent = 'clipping: ' + (clip ? 'ON' : 'OFF'); clb.classList.toggle('on', clip); doReset(); });
+      redraw();
+      var fcount = 0;
+      function loop() {
+        requestAnimationFrame(loop);
+        if (offscreen(box)) return;
+        fcount++;
+        if (playing && !st.done && fcount % 2 === 0) { step(); redraw(); }
+        if (st.boom && st.fly > 0) { st.fly--; st.fx += st.fvx; st.fz += st.fvz; st.fup += 0.11; }
+        view.frame();
+      }
+      loop();
+    }
+  } catch (e) {}
+
+  // ---- W3. fg-serie: la serie-p Σ 1/d^γ apilándose hacia ζ(γ) + aguja de criticidad χ (cap. 21) ----
+  try {
+    document.querySelectorAll('.fg-serie').forEach(function (box) {
+      var G = 1.5;
+      box.className = 'fg-serie fg-sch';
+      box.innerHTML = '<div class="fg-sch-h">' + L('La serie Σ 1/d^γ, ladrillo a ladrillo: ¿hay techo?', 'The series Σ 1/d^γ, brick by brick: is there a ceiling?') + '</div>' +
+        '<svg class="fg-serie-svg" viewBox="0 0 460 262" preserveAspectRatio="xMidYMid meet"></svg>' +
+        '<div class="fg-serie-read"></div>' +
+        '<div class="fg-kvc-ctrl"><span>γ</span><input class="ig" type="range" min="0.5" max="2.5" step="0.01" value="1.5" aria-label="γ"><span class="gv">γ=<b>1.50</b></span>' +
+          '<button class="fg-sch-btn" data-g="0.7" type="button">γ=0.7</button><button class="fg-sch-btn" data-g="1" type="button">γ=1</button><button class="fg-sch-btn" data-g="1.5" type="button">γ=1.5</button>' +
+          '<button class="fg-sch-btn rp" type="button">⟲ ' + L('reapilar', 'restack') + '</button></div>' +
+        '<div class="fg-sch-cap"></div>';
+      var svg = box.querySelector('svg'), read = box.querySelector('.fg-serie-read'), cap = box.querySelector('.fg-sch-cap'),
+        ig = box.querySelector('.ig'), gvb = box.querySelector('.gv b');
+      var y0 = 208, y1 = 16, tx0 = 50, tx1 = 190, GCX = 330, GCY = 150;
+      var d = 0, S = 0, hold = 0;
+      function zeta(g) { var s = 0, N = 4000, k; for (k = 1; k <= N; k++) s += Math.pow(k, -g); return s + Math.pow(N, 1 - g) / (g - 1); }
+      function polarG(r, a) { var rad = a * Math.PI / 180; return [(GCX + r * Math.sin(rad)).toFixed(1), (GCY - r * Math.cos(rad)).toFixed(1)]; }
+      function garc(r, a0, a1) { var p0 = polarG(r, a0), p1 = polarG(r, a1); return 'M' + p0[0] + ' ' + p0[1] + ' A' + r + ' ' + r + ' 0 ' + ((a1 - a0) > 180 ? 1 : 0) + ' 1 ' + p1[0] + ' ' + p1[1]; }
+      function render() {
+        var conv = G > 1.0001, nearOne = Math.abs(G - 1) < 0.005, z = conv ? zeta(G) : 0, s = '', k;
+        var ceil = conv ? z * 1.08 : Math.max(S / 0.72, 1.6);
+        var ys = (y0 - y1) / ceil;
+        // — torre: los primeros 60 términos como ladrillos, el resto fusionado
+        var acc = 0, nb = Math.min(d, 60);
+        for (k = 1; k <= nb; k++) {
+          var tv = Math.pow(k, -G), yb = y0 - (acc + tv) * ys;
+          s += '<rect class="brick' + (k % 2 ? '' : ' alt') + '" x="' + tx0 + '" width="' + (tx1 - tx0) + '" y="' + yb.toFixed(2) + '" height="' + Math.max(tv * ys, 0.5).toFixed(2) + '"/>';
+          acc += tv;
+        }
+        if (d > 60) s += '<rect class="merged" x="' + tx0 + '" width="' + (tx1 - tx0) + '" y="' + (y0 - S * ys).toFixed(1) + '" height="' + Math.max((S - acc) * ys, 0.5).toFixed(1) + '"/>';
+        s += '<line class="axis" x1="' + (tx0 - 8) + '" y1="' + y0 + '" x2="' + (tx1 + 8) + '" y2="' + y0 + '"/>';
+        if (!conv && d > 0) s += '<text class="lbl" x="' + (tx0 - 8) + '" y="' + (y1 - 4) + '">' + L('techo del dibujo: ' + ceil.toFixed(1) + ' — y la pila sigue…', 'top of frame: ' + ceil.toFixed(1) + ' — and the pile keeps going…') + '</text>';
+        if (conv) {
+          var ya = y0 - z * ys;
+          s += '<line class="asym" x1="' + (tx0 - 10) + '" y1="' + ya.toFixed(1) + '" x2="' + (tx1 + 14) + '" y2="' + ya.toFixed(1) + '"/>' +
+            '<text class="asymlbl" x="' + (tx1 + 18) + '" y="' + (ya + 4).toFixed(1) + '">ζ(' + G.toFixed(2) + ') = ' + z.toFixed(3) + '</text>';
+        }
+        // — peine de términos: la función 1/d^γ que alimenta la pila
+        var combW = (tx1 - tx0 + 20) / 60;
+        for (k = 1; k <= 60; k++) {
+          var th = Math.max(24 * Math.pow(k, -G), 1);
+          s += '<rect class="comb' + (k <= d ? (k === d ? ' cur' : ' usedc') : '') + '" x="' + (tx0 - 10 + (k - 1) * combW).toFixed(1) + '" y="' + (246 - th).toFixed(1) + '" width="' + (combW - 0.8).toFixed(1) + '" height="' + th.toFixed(1) + '"/>';
+        }
+        s += '<text class="lbl" x="' + (tx0 - 10) + '" y="258">' + L('términos 1/d^γ · d = 1…60', 'terms 1/d^γ · d = 1…60') + '</text>';
+        // — aguja de criticidad χ = 1/|γ−1|
+        var chi = 1 / Math.max(Math.abs(G - 1), 1e-9), u = Math.min(chi, 40) / 40, ga = -90 + 180 * u;
+        var tip = polarG(46, ga);
+        s += '<path class="gaugebg" d="' + garc(56, -90, 90) + '"/>' +
+          '<path class="gaugehot" d="' + garc(56, 18, 90) + '"/>' +
+          '<line class="needle" x1="' + GCX + '" y1="' + GCY + '" x2="' + tip[0] + '" y2="' + tip[1] + '"/>' +
+          '<circle cx="' + GCX + '" cy="' + GCY + '" r="5" fill="#33536e"/>' +
+          '<text class="lbl" x="' + GCX + '" y="' + (GCY + 22) + '" text-anchor="middle">χ = 1/|γ−1|</text>' +
+          '<text x="' + GCX + '" y="' + (GCY + 42) + '" text-anchor="middle" font-size="15" font-weight="700" fill="' + (u > 0.55 ? 'rgb(213,94,0)' : '#33536e') + '">' + (chi > 40 ? 'χ → ∞' : 'χ = ' + chi.toFixed(1)) + '</text>' +
+          '<text class="lbl" x="' + polarG(70, -92)[0] + '" y="' + polarG(70, -92)[1] + '" text-anchor="middle">0</text>' +
+          '<text class="lbl" x="' + polarG(70, 92)[0] + '" y="' + polarG(70, 92)[1] + '" text-anchor="middle">∞</text>' +
+          '<text class="lbl" x="' + polarG(76, 55)[0] + '" y="' + polarG(76, 55)[1] + '" fill="rgb(213,94,0)">' + L('zona crítica', 'critical zone') + '</text>';
+        svg.innerHTML = s;
+        read.innerHTML = 'γ=<b>' + G.toFixed(2) + '</b> · n=' + d + ' · Sₙ=<b>' + S.toFixed(3) + '</b> · ' +
+          (conv ? 'ζ(γ)=' + z.toFixed(3) : '<span class="hot">' + (nearOne ? L('diverge ~ log n', 'diverges ~ log n') : L('diverge ~ n^', 'diverges ~ n^') + (1 - G).toFixed(2)) + '</span>');
+        cap.innerHTML = conv
+          ? L('Con <b>γ&gt;1</b> la pila se frena bajo un <span style="color:rgb(31,157,107);font-weight:700">techo</span>: la serie <b>converge</b> a ζ(γ) — cola ligera, casi toda la masa cabe en una ventana finita. Es la <b>misma serie-p</b> que el Cap. 20 llama la frontera de compresibilidad del KV-cache. (Cerca de γ=1 converge, pero a un techo altísimo y a cámara lenta.)', 'With <b>γ&gt;1</b> the pile brakes under a <span style="color:rgb(31,157,107);font-weight:700">ceiling</span>: the series <b>converges</b> to ζ(γ) — light tail, almost all the mass fits in a finite window. It is the <b>same p-series</b> Ch. 20 calls the KV-cache compressibility boundary. (Near γ=1 it converges, but to a huge ceiling, in slow motion.)')
+          : (nearOne
+            ? L('<b>γ=1</b>, la frontera exacta: la pila crece como <b>log n</b> — sin techo, pero a cámara lenta. Justo aquí la aguja χ se dispara: un cambio diminuto de γ cambia el destino de la serie.', '<b>γ=1</b>, the exact boundary: the pile grows like <b>log n</b> — no ceiling, but in slow motion. Right here the χ needle blows up: a tiny change in γ changes the fate of the series.')
+            : L('Con <span class="hot">γ&lt;1</span> no hay techo: la escala persigue a la pila y <b>nunca la alcanza</b> — la serie <b>diverge</b> (cola pesada). Ninguna ventana finita captura la masa: es el otro lado de la frontera de compresibilidad.', 'With <span class="hot">γ&lt;1</span> there is no ceiling: the frame chases the pile and <b>never catches it</b> — the series <b>diverges</b> (heavy tail). No finite window captures the mass: the other side of the compressibility boundary.'));
+      }
+      function finishInstant() { var lim = (G > 1.0001) ? 60 : 600; d = 0; S = 0; while (d < lim) { d++; S += Math.pow(d, -G); } }
+      function resetAnim() { d = 0; S = 0; hold = 0; if (REDUCE) finishInstant(); render(); }
+      function tick() {
+        if (offscreen(box)) return;
+        if (hold > 0) { hold--; if (hold === 0) { d = 0; S = 0; render(); } return; }
+        if (G > 1.0001) {
+          if (d < 60) { d++; S += Math.pow(d, -G); } else { hold = 30; return; }
+        } else {
+          var batch = Math.max(1, Math.round(d * 0.06)), i;
+          for (i = 0; i < batch && d < 6000; i++) { d++; S += Math.pow(d, -G); }
+          if (d >= 6000) { hold = 30; }
+        }
+        render();
+      }
+      ig.addEventListener('input', function () { G = +ig.value; gvb.textContent = G.toFixed(2); resetAnim(); });
+      box.querySelectorAll('button[data-g]').forEach(function (b) { b.addEventListener('click', function () { G = +b.dataset.g; ig.value = G; gvb.textContent = G.toFixed(2); resetAnim(); }); });
+      box.querySelector('.rp').addEventListener('click', resetAnim);
+      resetAnim();
+      if (!REDUCE) setInterval(tick, 90);
+    });
+  } catch (e) {}
 })();
 </script>
 <script id="quarto-html-after-body" type="application/javascript">
