@@ -39,6 +39,14 @@ honest "verified vs folklore vs numerology" audit.
 
 ---
 
+## 🪜 New — 2026-07-11 · One-click into the Depth map (Part III)
+
+**Depth-map deep-links** — Ch. 08 (RoPE) and Ch. 42 (the whiteboard) now open tafagent's new
+**🪜 Depth map** demo (Part III, `?demo=depth`): the two geometric axes (distance γ ⟂ depth
+L_crit), the three RoPE scales and the δ band-position lead — config-only, no inference, honest
+that L_crit is not the commitment knee. · **Enlaces directos** al nuevo modo *Mapa de
+profundidad* de tafagent desde los cap. 08 y 42.
+
 ## 🧊 New — 2026-07-10 · Part III lands + a campaign of analogies & 3D widgets
 
 **Part III integrated** into *The global workspace* chapter (ES+EN): the J-lens advantage band
@@ -69,12 +77,6 @@ nuevos, cada uno con su metáfora:
   sink pillar doesn't budge.
 - 🔭 **Two workspace widgets** (Ch. 42) — the Jacobian's "echo of the future" (transport vs
   writing, anticorrelated), and the "three clocks" tunnel (decode < write < commit).
-
-**One-click deep-links to the tool** — Ch. 08 (RoPE) and Ch. 42 (the whiteboard) now open
-tafagent's new **🪜 Depth map** demo (Part III, `?demo=depth`): the two geometric axes
-(distance γ ⟂ depth L_crit), the three RoPE scales and the δ band-position lead — config-only,
-no inference, with the honest caveat that L_crit is not the commitment knee. · **Enlaces
-directos a la demo** del nuevo modo *Mapa de profundidad* de tafagent en los cap. 08 y 42.
 
 **Formula audit** of all 49 sections: everything checks out; one glossary imprecision fixed
 (Lévy *index* α = γ−1 vs fractional *order* s = (γ−1)/2). · **Repaso completo de fórmulas.**
