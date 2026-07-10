@@ -39,6 +39,40 @@ honest "verified vs folklore vs numerology" audit.
 
 ---
 
+## 🧊 New — 2026-07-10 · Part III lands + a campaign of analogies & 3D widgets
+
+**Part III integrated** into *The global workspace* chapter (ES+EN): the J-lens advantage band
+is reframed —honestly— as a property of the **transport operator** (not a store of content), the
+residual computation is split into **three observables** (transport → writing → commitment, with
+an *exact* direct-logit-attribution identity), and the γ↔band link is corrected to
+*inconclusive* (the live lead is the **trained displacement** δ = γ_obs − γ_geom). · **Part III
+integrada** en el capítulo del *espacio de trabajo global* (ES+EN), con la corrección honesta
+γ→δ y dos widgets 3D nuevos.
+
+**A whole campaign of clarity** across the physics / γ / systems chapters (14, 16, 17, 20, 21,
+22, 23, 24): a plain-language **analogy** for each hard idea and **9 brand-new bespoke 3D
+widgets** (Three.js) — each a *distinct* visual metaphor, all with play/pause + sliders and a
+text fallback. · **Una campaña de claridad**: una analogía por cada idea difícil + 9 widgets 3D
+nuevos, cada uno con su metáfora:
+
+- 🌡️ **Attention as a gas** (Ch. 22) — γ is the cold: slide it and watch the distribution freeze
+  or evaporate; the bars shudder ∝ heat capacity C_V near the critical point.
+- ⛰️ **The χ mountain** (Ch. 21) — transition vs crossover: raise N and watch the divergence
+  spike round into a finite bump.
+- 🐜🕊️ **Ant vs albatross** (Ch. 23) — a Brownian walk beside a Lévy flight, driven by γ.
+- 🧩 **The circuit under the plateau** (Ch. 24) — grokking's inter-layer coordination (CKA)
+  re-weaving before the test jump; a weight-decay slider that can stall it.
+- 📏 **The resolution waterfall** (Ch. 14) — RoPE pairs aliasing one by one; sweep distance for
+  n_active, raise θ to stretch the three scales.
+- 🗄️ **The KV-cache growing** (Ch. 20) — O(n) memory, and what compression keeps (sink + D_f).
+- 🚰 **The drain and the slope** (Ch. 17) — γ ⊥ sink: move θ and the tail reshapes while the
+  sink pillar doesn't budge.
+- 🔭 **Two workspace widgets** (Ch. 42) — the Jacobian's "echo of the future" (transport vs
+  writing, anticorrelated), and the "three clocks" tunnel (decode < write < commit).
+
+**Formula audit** of all 49 sections: everything checks out; one glossary imprecision fixed
+(Lévy *index* α = γ−1 vs fractional *order* s = (γ−1)/2). · **Repaso completo de fórmulas.**
+
 ## 🎮 Interactive & animated visualizations (new — 2026-06)
 
 The topic is intensely visual, so key chapters now embed **interactive, self-contained diagrams** — pure CSS/JS plus a locally **vendored three.js** (no external CDN: they work offline and under the GitHub Pages sub-path). Everything is **bilingual** (Spanish by default, English when the page language is English) and respects `prefers-reduced-motion`:

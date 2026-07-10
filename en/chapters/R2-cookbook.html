@@ -2304,6 +2304,971 @@ window.Quarto = {
     }
   } catch (e) {}
 
+  // ---- 1r2. Build .fg-sink: 3D — gamma is independent of the attention sink (the clean result) ----
+  // Cap 17: concentration (the SINK, a fixed amplitude phenomenon ~0.38 on token 0) and
+  // positional decay (gamma) are INDEPENDENT. Within-model theta-rescale (256x) moves gamma
+  // 0.75 -> ~1.0 while the sink mass stays flat. Widget: a tall fixed PILLAR (the drain) at
+  // token 0 + a decaying HILL (the tail ~ d^-gamma) over the other tokens. The theta slider
+  // reshapes only the hill (gamma), the pillar never moves. Two side gauges make the two
+  // independent axes concrete.
+  try {
+    var skNodes = document.querySelectorAll('.fg-sink');
+    if (skNodes.length) {
+      var loadSk = function (cb) { if (window.THREE) { cb(true); return; } var s = document.createElement('script'); s.src = '../vendor/three.min.js'; s.onload = function () { cb(!!window.THREE); }; s.onerror = function () { cb(false); }; document.head.appendChild(s); };
+      loadSk(function (ok) { skNodes.forEach(function (box) { initSink(box, ok); }); });
+    }
+    function initSink(box, ok) {
+      box.className = 'fg-sink fg-sch';
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var N = 22, SINK = 0.38;
+      var hd = document.createElement('div'); hd.className = 'fg-sch-h';
+      hd.textContent = L('γ ⊥ sumidero: dos mecanismos, dos mandos', 'γ ⊥ sink: two mechanisms, two knobs');
+      box.appendChild(hd);
+      var ctrl = document.createElement('div'); ctrl.className = 'fg-pz-ctrl';
+      ctrl.innerHTML = '<button type="button" class="fg-arch-btn" data-act="pp">' + (reduce ? L('▶ Reanudar', '▶ Resume') : L('⏸ Pausar', '⏸ Pause')) + '</button>' +
+        '<span>θ ×</span><input class="fg-arch-range" type="range" min="0" max="8" step="0.1" value="0" aria-label="' + L('reescalado de θ (log2)', 'theta rescale (log2)') + '">';
+      var read = document.createElement('div'); read.className = 'fg-pz-read';
+      var cap = document.createElement('div'); cap.className = 'fg-sch-cap';
+      cap.innerHTML = L('El <span style="color:#0072b2"><b>pilar</b></span> alto de la izquierda es el <b>sumidero</b> (la masa que el softmax vuelca en el primer token — un fenómeno de <b>amplitud</b>). La <span style="color:#1f9d6b"><b>colina</b></span> que decae es la <b>cola posicional</b> A(d)∝d<sup>−γ</sup>. Mueve <b>θ</b>: la colina cambia de pendiente (<b>γ</b> sube de 0,75 a 1,0) pero el <b>pilar no se inmuta</b> (sumidero ≈0,38). Dos mandos que no se tocan: <b>independientes</b>. Los medidores de la izquierda lo confirman. Arrastra para girar.',
+        'The tall left <span style="color:#0072b2"><b>pillar</b></span> is the <b>sink</b> (the mass softmax dumps on the first token — an <b>amplitude</b> thing). The decaying <span style="color:#1f9d6b"><b>hill</b></span> is the <b>positional tail</b> A(d)∝d<sup>−γ</sup>. Move <b>θ</b>: the hill changes slope (<b>γ</b> rises 0.75→1.0) but the <b>pillar doesn\'t budge</b> (sink ≈0.38). Two knobs that don\'t touch: <b>independent</b>. The left gauges confirm it. Drag to rotate.');
+      var canvas = document.createElement('canvas'); canvas.className = 'fg-g3d-canvas';
+      var ctx = null; try { ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl'); } catch (e) {}
+      if (!ok || !ctx) {
+        var fb = document.createElement('div'); fb.className = 'fg-rope3d-fallback';
+        fb.innerHTML = L('🚰 <b>La concentración (sumidero) y el decaimiento (γ) son independientes.</b> El sumidero es la masa que el softmax vuelca en el primer token (amplitud, ≈0,38); γ es cómo cae la atención con la distancia (posición). Reescalar θ 256× dentro del mismo modelo mueve γ (0,75→1,0) y deja el sumidero <b>plano</b>: dos mandos que no se tocan. (Tu navegador no tiene WebGL para la versión 3D.)',
+          '🚰 <b>Concentration (sink) and decay (γ) are independent.</b> The sink is the mass softmax dumps on the first token (amplitude, ≈0.38); γ is how attention falls with distance (position). Rescaling θ 256× within the same model moves γ (0.75→1.0) and leaves the sink <b>flat</b>: two knobs that don\'t touch. (Your browser has no WebGL for the 3D version.)');
+        box.appendChild(fb); box.appendChild(cap); return;
+      }
+      box.appendChild(canvas); box.appendChild(ctrl); box.appendChild(read); box.appendChild(cap);
+
+      var THREE = window.THREE, scene = new THREE.Scene();
+      var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+      var camera = new THREE.PerspectiveCamera(45, 2, 0.1, 100);
+      var C_SINK = 0x0072b2, C_TAIL = 0x1f9d6b, C_GAM = 0xe69f00, YSC = 7.0, BW = 0.36;
+      var xSink = -4.4, xTail0 = -3.5;
+      function xOf(d) { return xTail0 + (d - 1) * BW; }
+      var pillar = new THREE.Mesh(new THREE.BoxGeometry(0.5, 1, 0.5), new THREE.MeshBasicMaterial({ color: C_SINK }));
+      pillar.scale.y = SINK * YSC; pillar.position.set(xSink, SINK * YSC / 2, 0); scene.add(pillar);
+      var funnel = new THREE.Mesh(new THREE.ConeGeometry(0.4, 0.5, 4), new THREE.MeshBasicMaterial({ color: C_SINK, transparent: true, opacity: 0.6 }));
+      funnel.position.set(xSink, SINK * YSC + 0.25, 0); scene.add(funnel);
+      scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(xSink - 0.5, 0, 0), new THREE.Vector3(xOf(N) + 0.3, 0, 0)]), new THREE.LineBasicMaterial({ color: 0xb9c8d6, transparent: true, opacity: 0.4 })));
+      var tailGeo = new THREE.BufferGeometry(); tailGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array((N - 1) * 18), 3));
+      scene.add(new THREE.Mesh(tailGeo, new THREE.MeshBasicMaterial({ color: C_TAIL, transparent: true, opacity: 0.35, side: THREE.DoubleSide })));
+      var topGeo = new THREE.BufferGeometry(); topGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(N * 3), 3));
+      scene.add(new THREE.Line(topGeo, new THREE.LineBasicMaterial({ color: C_TAIL })));
+      var GX = xSink - 1.2, GH = 3.4;
+      var gGam = new THREE.Mesh(new THREE.BoxGeometry(0.26, 1, 0.26), new THREE.MeshBasicMaterial({ color: C_GAM }));
+      var gSink = new THREE.Mesh(new THREE.BoxGeometry(0.26, 1, 0.26), new THREE.MeshBasicMaterial({ color: C_SINK }));
+      scene.add(gGam); scene.add(gSink);
+      gSink.scale.y = SINK * GH; gSink.position.set(GX + 0.38, SINK * GH / 2, 0);
+
+      function gammaOf(l2) { return 0.75 + 0.25 * (l2 / 8); }
+      var curG = 0.75;
+      function build(gamma) {
+        curG = gamma;
+        var raw = [], sum = 0; for (var d = 1; d <= N; d++) { var v = Math.pow(d, -gamma); raw.push(v); sum += v; }
+        var tp = topGeo.attributes.position.array, fp = tailGeo.attributes.position.array;
+        var ys = [];
+        for (var d2 = 1; d2 <= N; d2++) { var mass = (1 - SINK) * raw[d2 - 1] / sum, y = mass * YSC; ys.push(y); tp[(d2 - 1) * 3] = xOf(d2); tp[(d2 - 1) * 3 + 1] = Math.max(0.005, y); tp[(d2 - 1) * 3 + 2] = 0; }
+        for (var i = 0; i < N - 1; i++) {
+          var xa = xOf(i + 1), xb = xOf(i + 2), ya = Math.max(0.005, ys[i]), yb = Math.max(0.005, ys[i + 1]), o = i * 18;
+          fp[o] = xa; fp[o + 1] = 0; fp[o + 2] = 0; fp[o + 3] = xa; fp[o + 4] = ya; fp[o + 5] = 0; fp[o + 6] = xb; fp[o + 7] = 0; fp[o + 8] = 0;
+          fp[o + 9] = xb; fp[o + 10] = 0; fp[o + 11] = 0; fp[o + 12] = xa; fp[o + 13] = ya; fp[o + 14] = 0; fp[o + 15] = xb; fp[o + 16] = yb; fp[o + 17] = 0;
+        }
+        topGeo.attributes.position.needsUpdate = true; tailGeo.attributes.position.needsUpdate = true;
+        gGam.scale.y = Math.max(0.02, (gamma - 0.5) / 0.6 * GH); gGam.position.set(GX, gGam.scale.y / 2, 0);
+        var thetaX = Math.round(Math.pow(2, curL2));
+        read.innerHTML = 'θ × <b>' + thetaX + '</b> · <span style="color:#e69f00">γ = <b>' + gamma.toFixed(3) + '</b></span> · <span style="color:#0072b2">' + L('sumidero', 'sink') + ' = <b>' + SINK.toFixed(2) + '</b> (' + L('plano', 'flat') + ')</span> → <b>⊥ ' + L('independientes', 'independent') + '</b>';
+      }
+      var rng = ctrl.querySelector('.fg-arch-range'), btn = ctrl.querySelector('[data-act="pp"]');
+      var playing = !reduce, curL2 = 0, sweep = -1.57;
+      btn.addEventListener('click', function () { playing = !playing; btn.textContent = playing ? L('⏸ Pausar', '⏸ Pause') : L('▶ Reanudar', '▶ Resume'); });
+      rng.addEventListener('input', function () { playing = false; btn.textContent = L('▶ Reanudar', '▶ Resume'); curL2 = +rng.value; build(gammaOf(curL2)); });
+
+      var target = new THREE.Vector3(-0.5, 1.0, 0), camR = 9.0, az = 0.6, pol = 1.1;
+      function placeCam() { camera.position.set(target.x + camR * Math.sin(pol) * Math.cos(az), target.y + camR * Math.cos(pol), target.z + camR * Math.sin(pol) * Math.sin(az)); camera.lookAt(target); }
+      var dragging = false, lx = 0, ly = 0;
+      canvas.addEventListener('pointerdown', function (e) { dragging = true; lx = e.clientX; ly = e.clientY; canvas.setPointerCapture(e.pointerId); });
+      canvas.addEventListener('pointerup', function () { dragging = false; });
+      canvas.addEventListener('pointermove', function (e) { if (!dragging) return; az -= (e.clientX - lx) * 0.008; pol -= (e.clientY - ly) * 0.008; pol = Math.max(0.35, Math.min(Math.PI - 0.35, pol)); lx = e.clientX; ly = e.clientY; });
+      function resize() { var w = box.clientWidth || 600, h = 380; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+      window.addEventListener('resize', resize); resize(); build(gammaOf(0));
+
+      function loop() {
+        requestAnimationFrame(loop);
+        var rb = box.getBoundingClientRect(); if (rb.bottom < 0 || rb.top > (window.innerHeight || 9999)) return;
+        if (!dragging) az += 0.0014;
+        if (playing) { sweep += 0.012; curL2 = 4 + 4 * Math.sin(sweep); build(gammaOf(curL2)); rng.value = curL2.toFixed(1); }
+        placeCam(); renderer.render(scene, camera);
+      }
+      loop();
+    }
+  } catch (e) {}
+
+  // ---- 1s2. Build .fg-kvgrow: 3D — the KV-cache growing O(n) and what compression keeps ----
+  // Cap 20: the KV-cache stores K/V of every past token -> grows linearly (memory bottleneck).
+  // Compression keeps the attention SINK (first tokens) + a recent window of size D_f derived
+  // from gamma (gamma>1 -> tiny window, very compressible; gamma<1 -> heavy tail, keep almost
+  // everything). Blocks pile up as generation proceeds; toggle compression to drop the middle
+  // and watch the memory bar flatten. gamma slider sets D_f.
+  try {
+    var kgNodes = document.querySelectorAll('.fg-kvgrow');
+    if (kgNodes.length) {
+      var loadKg = function (cb) { if (window.THREE) { cb(true); return; } var s = document.createElement('script'); s.src = '../vendor/three.min.js'; s.onload = function () { cb(!!window.THREE); }; s.onerror = function () { cb(false); }; document.head.appendChild(s); };
+      loadKg(function (ok) { kgNodes.forEach(function (box) { initKvGrow(box, ok); }); });
+    }
+    function initKvGrow(box, ok) {
+      box.className = 'fg-kvgrow fg-sch';
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var NMAX = 36, S = 2;
+      var hd = document.createElement('div'); hd.className = 'fg-sch-h';
+      hd.textContent = L('La caché KV que crece — y qué guarda la compresión', 'The KV-cache growing — and what compression keeps');
+      box.appendChild(hd);
+      var ctrl = document.createElement('div'); ctrl.className = 'fg-pz-ctrl';
+      ctrl.innerHTML = '<button type="button" class="fg-arch-btn" data-act="pp">' + (reduce ? L('▶ Generar', '▶ Generate') : L('⏸ Pausar', '⏸ Pause')) + '</button>' +
+        '<button type="button" class="fg-arch-btn" data-act="rs">⟲ ' + L('reiniciar', 'reset') + '</button>' +
+        '<button type="button" class="fg-arch-btn on" data-act="cmp">🗜 ' + L('comprimir', 'compress') + '</button>' +
+        '<span>γ</span><input class="fg-arch-range" type="range" min="0.50" max="1.60" step="0.05" value="1.20" aria-label="' + L('exponente γ', 'exponent γ') + '">';
+      var read = document.createElement('div'); read.className = 'fg-pz-read';
+      var cap = document.createElement('div'); cap.className = 'fg-sch-cap';
+      cap.innerHTML = L('Cada bloque es el K/V de un token generado: la caché crece <b>O(n)</b> (barra <span style="color:#8a8f98"><b>gris</b></span>). Con <b>compresión</b>, solo sobreviven el <span style="color:#0072b2"><b>sumidero</b></span> (primeros tokens) y la <span style="color:#1f9d6b"><b>ventana D<sub>f</sub></b></span> reciente (derivada de γ); el medio se <b>tira</b>. Baja γ (cola pesada) → D<sub>f</sub> engorda y casi no se puede comprimir; súbelo → ventana diminuta. Arrastra para girar.',
+        'Each block is one generated token\'s K/V: the cache grows <b>O(n)</b> (<span style="color:#8a8f98"><b>grey</b></span> bar). With <b>compression</b>, only the <span style="color:#0072b2"><b>sink</b></span> (first tokens) and the recent <span style="color:#1f9d6b"><b>D<sub>f</sub> window</b></span> (from γ) survive; the middle is <b>dropped</b>. Lower γ (heavy tail) → D<sub>f</sub> grows and almost nothing compresses; raise it → tiny window. Drag to rotate.');
+      var canvas = document.createElement('canvas'); canvas.className = 'fg-g3d-canvas';
+      var ctx = null; try { ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl'); } catch (e) {}
+      if (!ok || !ctx) {
+        var fb = document.createElement('div'); fb.className = 'fg-rope3d-fallback';
+        fb.innerHTML = L('🗄️ <b>El KV-cache crece O(n)</b> (un bloque por token): el cuello de botella del contexto largo. La compresión guarda el <b>sumidero</b> (primeros tokens) + una <b>ventana reciente D<sub>f</sub></b> derivada de γ, y tira el medio. Con γ&gt;1 (cola ligera) basta una ventana pequeña; con γ&lt;1 (cola pesada) la masa está repartida y no hay ventana finita que valga. (Tu navegador no tiene WebGL para la versión 3D.)',
+          '🗄️ <b>The KV-cache grows O(n)</b> (one block per token): the long-context bottleneck. Compression keeps the <b>sink</b> (first tokens) + a recent <b>D<sub>f</sub> window</b> from γ, dropping the middle. With γ&gt;1 (light tail) a small window suffices; with γ&lt;1 (heavy tail) the mass is spread and no finite window works. (Your browser has no WebGL for the 3D version.)');
+        box.appendChild(fb); box.appendChild(cap); return;
+      }
+      box.appendChild(canvas); box.appendChild(ctrl); box.appendChild(read); box.appendChild(cap);
+
+      var THREE = window.THREE, scene = new THREE.Scene();
+      var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+      var camera = new THREE.PerspectiveCamera(45, 2, 0.1, 100);
+      var C_SINK = 0x0072b2, C_DF = 0x1f9d6b, C_DROP = 0x8a8f98, BW = 0.28, HB = 0.42;
+      var x0 = -(NMAX - 1) * BW / 2;
+      var blocks = [];
+      for (var i = 0; i < NMAX; i++) {
+        var m = new THREE.Mesh(new THREE.BoxGeometry(BW * 0.82, HB, 0.34), new THREE.MeshBasicMaterial({ color: C_DF, transparent: true, opacity: 0.9 }));
+        m.position.set(x0 + i * BW, HB / 2, 0); m.visible = false; scene.add(m); blocks.push(m);
+      }
+      scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x0 - 0.2, 0, 0), new THREE.Vector3(x0 + NMAX * BW, 0, 0)]), new THREE.LineBasicMaterial({ color: 0xb9c8d6, transparent: true, opacity: 0.4 })));
+      // memory bars: full (grey) vs compressed (green)
+      var MBX = x0 - 1.1, MH = 3.0;
+      var barFull = new THREE.Mesh(new THREE.BoxGeometry(0.3, 1, 0.3), new THREE.MeshBasicMaterial({ color: C_DROP, transparent: true, opacity: 0.5 }));
+      var barComp = new THREE.Mesh(new THREE.BoxGeometry(0.3, 1, 0.3), new THREE.MeshBasicMaterial({ color: C_DF }));
+      scene.add(barFull); scene.add(barComp);
+
+      var n = 1, gamma = 1.2, compressed = true;
+      function dfWin() { var w = Math.min(1, Math.max(0.12, 1.0 - (gamma - 0.7) * 1.1)); return Math.max(3, Math.round(w * NMAX)); }
+      function refresh() {
+        var Df = dfWin();
+        for (var i = 0; i < NMAX; i++) {
+          var b = blocks[i]; b.visible = i < n;
+          if (i >= n) continue;
+          var kept = !compressed || (i < S) || (i >= n - Df);
+          b.material.color.setHex(!compressed ? C_DF : (i < S ? C_SINK : (i >= n - Df ? C_DF : C_DROP)));
+          b.material.opacity = kept ? 0.92 : 0.14;
+          b.scale.y = kept ? 1 : 0.4; b.position.y = (kept ? HB : HB * 0.4) / 2;
+        }
+        var memF = n, memC = compressed ? Math.min(n, S + Df) : n;
+        barFull.scale.y = Math.max(0.02, memF / NMAX * MH); barFull.position.set(MBX, barFull.scale.y / 2, 0);
+        barComp.scale.y = Math.max(0.02, memC / NMAX * MH); barComp.position.set(MBX + 0.42, barComp.scale.y / 2, 0);
+        var save = memF > 0 ? Math.round((1 - memC / memF) * 100) : 0;
+        var reg = gamma > 1.05 ? L('γ>1 · comprimible', 'γ>1 · compressible') : gamma < 0.95 ? L('γ<1 · cola pesada, difícil', 'γ<1 · heavy tail, hard') : L('γ≈1 · frontera', 'γ≈1 · borderline');
+        read.innerHTML = L('tokens', 'tokens') + ' <b>' + n + '</b> · ' + L('memoria', 'memory') + ': ' + L('sin comprimir', 'uncompressed') + ' <b>' + memF + '</b> → ' + L('comprimida', 'compressed') + ' <b style="color:#1f9d6b">' + memC + '</b> (' + L('sumidero', 'sink') + ' ' + S + ' + D_f ' + Df + ') · ' + L('ahorro', 'saved') + ' <b>' + (compressed ? save : 0) + '%</b> · ' + reg;
+      }
+      var rng = ctrl.querySelector('.fg-arch-range'), btn = ctrl.querySelector('[data-act="pp"]'), rs = ctrl.querySelector('[data-act="rs"]'), cmp = ctrl.querySelector('[data-act="cmp"]');
+      var playing = !reduce;
+      btn.addEventListener('click', function () { playing = !playing; btn.textContent = playing ? L('⏸ Pausar', '⏸ Pause') : L('▶ Generar', '▶ Generate'); });
+      rs.addEventListener('click', function () { n = 1; refresh(); });
+      cmp.addEventListener('click', function () { compressed = !compressed; cmp.classList.toggle('on', compressed); refresh(); });
+      rng.addEventListener('input', function () { gamma = +rng.value; refresh(); });
+
+      var target = new THREE.Vector3(0, 0.6, 0), camR = 8.2, az = 0.62, pol = 1.08;
+      function placeCam() { camera.position.set(target.x + camR * Math.sin(pol) * Math.cos(az), target.y + camR * Math.cos(pol), target.z + camR * Math.sin(pol) * Math.sin(az)); camera.lookAt(target); }
+      var dragging = false, lx = 0, ly = 0;
+      canvas.addEventListener('pointerdown', function (e) { dragging = true; lx = e.clientX; ly = e.clientY; canvas.setPointerCapture(e.pointerId); });
+      canvas.addEventListener('pointerup', function () { dragging = false; });
+      canvas.addEventListener('pointermove', function (e) { if (!dragging) return; az -= (e.clientX - lx) * 0.008; pol -= (e.clientY - ly) * 0.008; pol = Math.max(0.35, Math.min(Math.PI - 0.35, pol)); lx = e.clientX; ly = e.clientY; });
+      function resize() { var w = box.clientWidth || 600, h = 380; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+      window.addEventListener('resize', resize); resize(); refresh();
+
+      var fr = 0;
+      function loop() {
+        requestAnimationFrame(loop);
+        var rb = box.getBoundingClientRect(); if (rb.bottom < 0 || rb.top > (window.innerHeight || 9999)) return;
+        fr++;
+        if (!dragging) az += 0.0014;
+        if (playing && fr % 14 === 0) { n = n < NMAX ? n + 1 : 1; refresh(); }
+        placeCam(); renderer.render(scene, camera);
+      }
+      loop();
+    }
+  } catch (e) {}
+
+  // ---- 1t. Build .fg-alias: 3D — the resolution waterfall: n_active & the three scales ----
+  // RoPE aliasing (Part I / Cap 14): pair i has wavelength lambda_i = 2*pi*theta^(2i/d_head).
+  // Past its lambda it can't tell distance r from r+lambda -> it "folds" (aliases). One bar
+  // per pair (fast/short at the front, slow/long at the back): GREEN where it still resolves
+  // position, RED beyond lambda_i where it has aliased. A sweep plane at distance d counts the
+  // survivors n_active(d). Slider theta stretches every wavelength (context extension). The
+  // three scales: lambda_0 ~ 2*pi, T_cross = 2*pi*sqrt(theta), T_max = 2*pi*theta.
+  try {
+    var alNodes = document.querySelectorAll('.fg-alias');
+    if (alNodes.length) {
+      var loadAl = function (cb) { if (window.THREE) { cb(true); return; } var s = document.createElement('script'); s.src = '../vendor/three.min.js'; s.onload = function () { cb(!!window.THREE); }; s.onerror = function () { cb(false); }; document.head.appendChild(s); };
+      loadAl(function (ok) { alNodes.forEach(function (box) { initAlias(box, ok); }); });
+    }
+    function initAlias(box, ok) {
+      box.className = 'fg-alias fg-sch';
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var DHEAD = 128, PAIRS = DHEAD / 2, P = 16, TWOPI = 2 * Math.PI;
+      var hd = document.createElement('div'); hd.className = 'fg-sch-h';
+      hd.textContent = L('La cascada de resolución: cuántos pares siguen vivos', 'The resolution waterfall: how many pairs survive');
+      box.appendChild(hd);
+      var ctrl = document.createElement('div'); ctrl.className = 'fg-pz-ctrl';
+      ctrl.innerHTML = '<button type="button" class="fg-arch-btn" data-act="pp">' + (reduce ? L('▶ Reanudar', '▶ Resume') : L('⏸ Pausar', '⏸ Pause')) + '</button>' +
+        '<span>' + L('distancia', 'distance') + '</span><input class="fg-arch-range" data-k="d" type="range" min="0.80" max="6.80" step="0.02" value="2.80" aria-label="' + L('distancia (log)', 'distance (log)') + '">' +
+        '<span>θ=10^</span><input class="fg-arch-range" data-k="t" type="range" min="3" max="6" step="0.1" value="4" aria-label="' + L('base θ', 'base θ') + '">';
+      var read = document.createElement('div'); read.className = 'fg-pz-read';
+      var cap = document.createElement('div'); cap.className = 'fg-sch-cap';
+      cap.innerHTML = L('Cada barra es un par de frecuencia de RoPE (rápidos <b>delante</b>, lentos <b>detrás</b>). En <span style="color:#1f9d6b"><b>verde</b></span>, las distancias donde ese par aún <b>distingue</b> la posición; en <span style="color:#c0392b"><b>rojo</b></span>, donde ya ha <b>aliasado</b> (pasada su longitud de onda λ). El plano barre la <b>distancia d</b>: los pares verdes que aún cruza son <b>n<sub>active</sub></b>, y menguan con la distancia. Sube <b>θ</b> y mira estirarse todas las escalas (extensión de contexto). Arrastra para girar.',
+        'Each bar is a RoPE frequency pair (fast <b>front</b>, slow <b>back</b>). <span style="color:#1f9d6b"><b>Green</b></span>: distances where it still <b>resolves</b> position; <span style="color:#c0392b"><b>red</b></span>: where it has <b>aliased</b> (past its wavelength λ). The plane sweeps <b>distance d</b>: the green bars it still crosses are <b>n<sub>active</sub></b>, shrinking with distance. Raise <b>θ</b> to watch every scale stretch (context extension). Drag to rotate.');
+      var canvas = document.createElement('canvas'); canvas.className = 'fg-g3d-canvas';
+      var ctx = null; try { ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl'); } catch (e) {}
+      if (!ok || !ctx) {
+        var fb = document.createElement('div'); fb.className = 'fg-rope3d-fallback';
+        fb.innerHTML = L('📏 <b>La geometría de RoPE acota la resolución.</b> Cada par de frecuencia distingue posición solo hasta su longitud de onda λ=2π·θ<sup>2i/d</sup>; más allá <b>aliasa</b> (una distancia r y r+λ dan el mismo ángulo). Cuanto más lejos, menos pares sobreviven (n<sub>active</sub>→0 en T<sub>max</sub>=2πθ). Las tres escalas: λ₀≈2π, T<sub>cross</sub>=2π√θ, T<sub>max</sub>=2πθ. (Tu navegador no tiene WebGL para la versión 3D.)',
+          '📏 <b>RoPE geometry bounds resolution.</b> Each frequency pair resolves position only up to its wavelength λ=2π·θ<sup>2i/d</sup>; beyond it <b>aliases</b> (r and r+λ give the same angle). The farther out, the fewer pairs survive (n<sub>active</sub>→0 at T<sub>max</sub>=2πθ). The three scales: λ₀≈2π, T<sub>cross</sub>=2π√θ, T<sub>max</sub>=2πθ. (Your browser has no WebGL for the 3D version.)');
+        box.appendChild(fb); box.appendChild(cap); return;
+      }
+      box.appendChild(canvas); box.appendChild(ctrl); box.appendChild(read); box.appendChild(cap);
+
+      var THREE = window.THREE, scene = new THREE.Scene();
+      var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+      var camera = new THREE.PerspectiveCamera(45, 2, 0.1, 100);
+      var X0 = -5.4, X1 = 5.4, LG0 = 0.7, LG1 = 6.9, C_G = 0x1f9d6b, C_R = 0xc0392b;
+      function xOf(d) { return X0 + (Math.log(Math.max(d, TWOPI)) / Math.LN10 - LG0) / (LG1 - LG0) * (X1 - X0); }
+      var bars = [];
+      for (var k = 0; k < P; k++) {
+        var i = Math.round(k * (PAIRS - 1) / (P - 1)), zk = (k - (P - 1) / 2) * 0.5;
+        var g = new THREE.Mesh(new THREE.BoxGeometry(1, 0.16, 0.34), new THREE.MeshBasicMaterial({ color: C_G, transparent: true, opacity: 0.9 }));
+        var r = new THREE.Mesh(new THREE.BoxGeometry(1, 0.16, 0.34), new THREE.MeshBasicMaterial({ color: C_R, transparent: true, opacity: 0.12 }));
+        g.position.z = zk; r.position.z = zk; g.position.y = 0.09; r.position.y = 0.09; scene.add(g); scene.add(r); bars.push({ i: i, g: g, r: r, z: zk });
+      }
+      // sweep plane + 3 scale markers
+      var zSpan = P * 0.5;
+      var plane = new THREE.Mesh(new THREE.PlaneGeometry(1.2, zSpan), new THREE.MeshBasicMaterial({ color: 0x7c5cbf, transparent: true, opacity: 0.18, side: THREE.DoubleSide }));
+      plane.rotation.y = Math.PI / 2; scene.add(plane);
+      function marker(col) { var m = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, -zSpan / 2), new THREE.Vector3(0, 0, zSpan / 2)]), new THREE.LineBasicMaterial({ color: col, transparent: true, opacity: 0.7 })); scene.add(m); return m; }
+      var mk0 = marker(0x8a8f98), mkC = marker(0xe69f00), mkM = marker(0xc0392b);
+
+      var theta = 1e4, dCur = Math.pow(10, 2.8);
+      function lam(i) { return TWOPI * Math.pow(theta, i / PAIRS); }
+      function setTheta(t) {
+        theta = t;
+        for (var b = 0; b < bars.length; b++) {
+          var li = lam(bars[b].i), xs = xOf(TWOPI), xl = xOf(li);
+          var gw = Math.max(0.02, xl - xs); bars[b].g.scale.x = gw; bars[b].g.position.x = (xs + xl) / 2;
+          var rw = Math.max(0.02, X1 - xl); bars[b].r.scale.x = rw; bars[b].r.position.x = (xl + X1) / 2;
+        }
+        mk0.position.x = xOf(TWOPI); mkC.position.x = xOf(TWOPI * Math.sqrt(theta)); mkM.position.x = xOf(TWOPI * theta);
+        setD(dCur);
+      }
+      function setD(d) {
+        dCur = d; plane.position.x = xOf(d);
+        var nact = 0;
+        for (var b = 0; b < bars.length; b++) { var alive = lam(bars[b].i) > d; bars[b].g.material.opacity = alive ? 0.92 : 0.22; if (alive) nact++; }
+        var exact = Math.max(0, PAIRS * (1 - Math.log(d / TWOPI) / Math.log(theta)));
+        var scale = d < TWOPI * 3 ? L('grano local (λ₀)', 'local grain (λ₀)') : d < TWOPI * Math.sqrt(theta) * 1.3 ? L('empieza a degradarse (T_cross)', 'starting to degrade (T_cross)') : d < TWOPI * theta ? L('casi agotada', 'nearly exhausted') : L('agotada (T_max): n_active→0', 'exhausted (T_max): n_active→0');
+        read.innerHTML = L('distancia', 'distance') + ' d ≈ <b>' + Math.round(d).toLocaleString() + '</b> · n<sub>active</sub> ≈ <b style="color:#1f9d6b">' + exact.toFixed(1) + '</b> / ' + PAIRS + ' (' + nact + '/' + P + L(' visibles', ' shown') + ') · θ=<b>' + theta.toExponential(0) + '</b> · ' + scale;
+      }
+      var dS = ctrl.querySelector('[data-k="d"]'), tS = ctrl.querySelector('[data-k="t"]'), btn = ctrl.querySelector('[data-act="pp"]');
+      var playing = !reduce, sweep = 0;
+      btn.addEventListener('click', function () { playing = !playing; btn.textContent = playing ? L('⏸ Pausar', '⏸ Pause') : L('▶ Reanudar', '▶ Resume'); });
+      dS.addEventListener('input', function () { playing = false; btn.textContent = L('▶ Reanudar', '▶ Resume'); setD(Math.pow(10, +dS.value)); });
+      tS.addEventListener('input', function () { setTheta(Math.pow(10, +tS.value)); });
+
+      var target = new THREE.Vector3(0, 0.1, 0), camR = 10.5, az = 0.72, pol = 1.02;
+      function placeCam() { camera.position.set(target.x + camR * Math.sin(pol) * Math.cos(az), target.y + camR * Math.cos(pol), target.z + camR * Math.sin(pol) * Math.sin(az)); camera.lookAt(target); }
+      var dragging = false, lx = 0, ly = 0;
+      canvas.addEventListener('pointerdown', function (e) { dragging = true; lx = e.clientX; ly = e.clientY; canvas.setPointerCapture(e.pointerId); });
+      canvas.addEventListener('pointerup', function () { dragging = false; });
+      canvas.addEventListener('pointermove', function (e) { if (!dragging) return; az -= (e.clientX - lx) * 0.008; pol -= (e.clientY - ly) * 0.008; pol = Math.max(0.35, Math.min(Math.PI - 0.35, pol)); lx = e.clientX; ly = e.clientY; });
+      function resize() { var w = box.clientWidth || 600, h = 380; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+      window.addEventListener('resize', resize); resize(); setTheta(1e4);
+
+      function loop() {
+        requestAnimationFrame(loop);
+        var rb = box.getBoundingClientRect(); if (rb.bottom < 0 || rb.top > (window.innerHeight || 9999)) return;
+        if (!dragging) az += 0.0013;
+        if (playing) { sweep += 0.006; var lv = 3.8 + 3.0 * Math.sin(sweep); setD(Math.pow(10, lv)); dS.value = lv.toFixed(2); }
+        placeCam(); renderer.render(scene, camera);
+      }
+      loop();
+    }
+  } catch (e) {}
+
+  // ---- 1u. Build .fg-grok: 3D — the generalizing circuit forming under the plateau ----
+  // Grokking (Part III): a net memorizes fast, sits on a long plateau, then generalizes
+  // suddenly. Nanda: the Fourier circuit forms GRADUALLY underneath. Our pilot: the
+  // inter-layer CKA O_01 (coordination between layer 0 and 1) dips during memorization and
+  // RE-RISES ~3000 steps before the test jump. Widget: two node-layers with green links
+  // (the coordinating circuit = CKA) that dissolve while memorizing (red halos) and re-weave
+  // before the grok. Weight-decay slider: too low -> stuck on the plateau, never groks.
+  try {
+    var gkNodes = document.querySelectorAll('.fg-grok');
+    if (gkNodes.length) {
+      var loadGk = function (cb) { if (window.THREE) { cb(true); return; } var s = document.createElement('script'); s.src = '../vendor/three.min.js'; s.onload = function () { cb(!!window.THREE); }; s.onerror = function () { cb(false); }; document.head.appendChild(s); };
+      loadGk(function (ok) { gkNodes.forEach(function (box) { initGrok(box, ok); }); });
+    }
+    function initGrok(box, ok) {
+      box.className = 'fg-grok fg-sch';
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      function sig(x, c, w) { return 1 / (1 + Math.exp(-(x - c) / w)); }
+      function cka(p) { return Math.min(0.95, Math.max(0.2, 0.85 - 0.55 * sig(p, 0.28, 0.05) + 0.55 * sig(p, 0.6, 0.05))); }
+      function mem(p) { return Math.max(0, sig(p, 0.12, 0.04) - sig(p, 0.82, 0.04)); }
+      function testA(p) { return sig(p, 0.72, 0.03); }
+      function trainA(p) { return sig(p, 0.06, 0.02); }
+      var hd = document.createElement('div'); hd.className = 'fg-sch-h';
+      hd.textContent = L('El circuito que se forma bajo la meseta', 'The circuit forming under the plateau');
+      box.appendChild(hd);
+      var ctrl = document.createElement('div'); ctrl.className = 'fg-pz-ctrl';
+      ctrl.innerHTML = '<button type="button" class="fg-arch-btn" data-act="pp">' + (reduce ? L('▶ Reanudar', '▶ Resume') : L('⏸ Pausar', '⏸ Pause')) + '</button>' +
+        '<button type="button" class="fg-arch-btn" data-act="rs">⟲ ' + L('reiniciar', 'reset') + '</button>' +
+        '<span>weight decay</span><input class="fg-arch-range" type="range" min="0" max="1" step="0.02" value="0.70" aria-label="' + L('weight decay', 'weight decay') + '">';
+      var read = document.createElement('div'); read.className = 'fg-pz-read';
+      var cap = document.createElement('div'); cap.className = 'fg-sch-cap';
+      cap.innerHTML = L('Dos capas de nodos. Los <span style="color:#1f9d6b"><b>enlaces verdes</b></span> son la coordinación entre capas (el <b>CKA</b>, nuestra señal); los <span style="color:#c0392b"><b>halos rojos</b></span>, la memorización pura de cada capa por su cuenta. Dale al play: primero <b>memoriza</b> (verde se disuelve, rojo crece), larga <b>meseta</b>, y el circuito verde <b>se re-teje</b> —el CKA re-asciende— justo <b>antes</b> del <b>grok</b> (el test salta). Baja el <b>weight decay</b> y verás que se <b>atasca</b> y nunca generaliza. Arrastra para girar.',
+        'Two node-layers. The <span style="color:#1f9d6b"><b>green links</b></span> are the inter-layer coordination (the <b>CKA</b>, our signal); the <span style="color:#c0392b"><b>red halos</b></span>, each layer memorizing on its own. Hit play: it first <b>memorizes</b> (green dissolves, red grows), a long <b>plateau</b>, then the green circuit <b>re-weaves</b> —CKA re-rises— just <b>before</b> the <b>grok</b> (test jumps). Lower the <b>weight decay</b> and it <b>stalls</b>, never generalizing. Drag to rotate.');
+      var canvas = document.createElement('canvas'); canvas.className = 'fg-g3d-canvas';
+      var ctx = null; try { ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl'); } catch (e) {}
+      if (!ok || !ctx) {
+        var fb = document.createElement('div'); fb.className = 'fg-rope3d-fallback';
+        fb.innerHTML = L('🧩 <b>El grokking no es súbito por dentro.</b> Bajo la meseta, el circuito que generaliza (coordinación entre capas, el CKA) se teje poco a poco: el CKA <b>cae</b> al memorizar y <b>re-asciende ~3000 pasos antes</b> del salto de test. El weight decay arrastra los pesos de la solución memorizadora (norma alta) a la generalizadora (norma baja); sin suficiente, nunca grokea. (Tu navegador no tiene WebGL para la versión 3D.)',
+          '🧩 <b>Grokking is not sudden inside.</b> Under the plateau, the generalizing circuit (inter-layer coordination, the CKA) weaves gradually: CKA <b>dips</b> while memorizing and <b>re-rises ~3000 steps before</b> the test jump. Weight decay drags the weights from the memorizing solution (high norm) to the generalizing one (low norm); without enough, it never groks. (Your browser has no WebGL for the 3D version.)');
+        box.appendChild(fb); box.appendChild(cap); return;
+      }
+      box.appendChild(canvas); box.appendChild(ctrl); box.appendChild(read); box.appendChild(cap);
+
+      var THREE = window.THREE, scene = new THREE.Scene();
+      var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+      var camera = new THREE.PerspectiveCamera(45, 2, 0.1, 100);
+      var K = 6, C_G = 0x1f9d6b, C_R = 0xc0392b;
+      var n0 = [], n1 = [], halos = [];
+      for (var i = 0; i < K; i++) {
+        var x = (i - (K - 1) / 2) * 0.72;
+        var a = new THREE.Vector3(x, -0.95, 0), b = new THREE.Vector3(x, 0.95, 0);
+        n0.push(a); n1.push(b);
+        [a, b].forEach(function (pos) {
+          scene.add(new THREE.Mesh(new THREE.SphereGeometry(0.09, 12, 12), new THREE.MeshBasicMaterial({ color: 0x9fb3c4 })).translateX(pos.x).translateY(pos.y));
+          var h = new THREE.Mesh(new THREE.SphereGeometry(0.22, 14, 14), new THREE.MeshBasicMaterial({ color: C_R, transparent: true, opacity: 0 })); h.position.copy(pos); scene.add(h); halos.push(h);
+        });
+      }
+      // green links: aligned + woven cross links (the coordinating circuit)
+      var linkPts = [];
+      for (var i2 = 0; i2 < K; i2++) { linkPts.push(n0[i2], n1[i2]); if (i2 < K - 1) { linkPts.push(n0[i2], n1[i2 + 1]); linkPts.push(n0[i2 + 1], n1[i2]); } }
+      var linkMat = new THREE.LineBasicMaterial({ color: C_G, transparent: true, opacity: 0.7 });
+      scene.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(linkPts), linkMat));
+
+      var p = 0, wd = 0.7, grokked = false;
+      function pMax() { return 0.35 + 0.63 * wd; }
+      function refresh() {
+        var c = cka(p), m = mem(p), ta = testA(p) * (pMax() >= 0.72 ? 1 : 0), tr = trainA(p);
+        linkMat.opacity = 0.12 + 0.8 * c;
+        for (var i = 0; i < halos.length; i++) { halos[i].material.opacity = 0.6 * m; halos[i].scale.setScalar(0.6 + m); }
+        if (ta > 0.5 && !grokked) grokked = true;
+        var step = Math.round(Math.pow(10, 1 + p * 4));
+        var etapa = tr < 0.6 ? L('memorizando', 'memorizing')
+          : ta > 0.5 ? L('¡GROK! generaliza', 'GROK! generalizes')
+            : (pMax() < 0.72 && p >= pMax() - 1e-3) ? L('ATASCADO en la meseta — weight decay insuficiente', 'STUCK on the plateau — weight decay too low')
+              : c > 0.55 ? L('formando el circuito (CKA re-asciende)', 'forming the circuit (CKA re-rising)')
+                : L('meseta (memorización)', 'plateau (memorizing)');
+        var ecol = ta > 0.5 ? '#1f9d6b' : (pMax() < 0.72 && p >= pMax() - 1e-3) ? '#c0392b' : '#7c5cbf';
+        read.innerHTML = L('paso', 'step') + ' ≈ <b>' + step.toLocaleString() + '</b> · train <b>' + Math.round(tr * 100) + '%</b> · test <b>' + Math.round(ta * 100) + '%</b> · CKA <b style="color:#1f9d6b">' + c.toFixed(2) + '</b> → <b style="color:' + ecol + '">' + etapa + '</b>';
+      }
+      var rng = ctrl.querySelector('.fg-arch-range'), btn = ctrl.querySelector('[data-act="pp"]'), rs = ctrl.querySelector('[data-act="rs"]');
+      var playing = !reduce;
+      btn.addEventListener('click', function () { playing = !playing; btn.textContent = playing ? L('⏸ Pausar', '⏸ Pause') : L('▶ Reanudar', '▶ Resume'); });
+      rs.addEventListener('click', function () { p = 0; grokked = false; refresh(); });
+      rng.addEventListener('input', function () { wd = +rng.value; refresh(); });
+
+      var target = new THREE.Vector3(0, 0, 0), camR = 6.4, az = 0.5, pol = 1.25;
+      function placeCam() { camera.position.set(target.x + camR * Math.sin(pol) * Math.cos(az), target.y + camR * Math.cos(pol), target.z + camR * Math.sin(pol) * Math.sin(az)); camera.lookAt(target); }
+      var dragging = false, lx = 0, ly = 0;
+      canvas.addEventListener('pointerdown', function (e) { dragging = true; lx = e.clientX; ly = e.clientY; canvas.setPointerCapture(e.pointerId); });
+      canvas.addEventListener('pointerup', function () { dragging = false; });
+      canvas.addEventListener('pointermove', function (e) { if (!dragging) return; az -= (e.clientX - lx) * 0.008; pol -= (e.clientY - ly) * 0.008; pol = Math.max(0.35, Math.min(Math.PI - 0.35, pol)); lx = e.clientX; ly = e.clientY; });
+      function resize() { var w = box.clientWidth || 600, h = 380; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+      window.addEventListener('resize', resize); resize(); refresh();
+
+      var fr = 0;
+      function loop() {
+        requestAnimationFrame(loop);
+        var rb = box.getBoundingClientRect(); if (rb.bottom < 0 || rb.top > (window.innerHeight || 9999)) return;
+        fr++;
+        if (!dragging) az += 0.0016;
+        if (playing) { var pm = pMax(); if (p < pm) { p = Math.min(pm, p + 0.0016); refresh(); } }
+        placeCam(); renderer.render(scene, camera);
+      }
+      loop();
+    }
+  } catch (e) {}
+
+  // ---- 1v. Build .fg-levy: 3D — Brownian walk (ant) vs Lévy flight (albatross) ----
+  // Part III fractional-transport lens: A(d) proportional to d^-gamma is a power-law jump
+  // kernel, so attention "transports" like an anomalous (Lévy) diffusion with index
+  // alpha = gamma - 1. Two 3D walkers leave trails: the ant (Brownian, fixed small steps,
+  // stays local) vs the albatross (Lévy, Pareto step lengths -> rare huge jumps). Slide gamma
+  // to make the tail heavier/lighter. Honest regime readout: gamma<1 smoothing (outside the
+  // Lévy window), 1..3 a genuine flight, >3 alpha>2 back to Brownian.
+  try {
+    var lvNodes = document.querySelectorAll('.fg-levy');
+    if (lvNodes.length) {
+      var loadLv = function (cb) { if (window.THREE) { cb(true); return; } var s = document.createElement('script'); s.src = '../vendor/three.min.js'; s.onload = function () { cb(!!window.THREE); }; s.onerror = function () { cb(false); }; document.head.appendChild(s); };
+      loadLv(function (ok) { lvNodes.forEach(function (box) { initLevy(box, ok); }); });
+    }
+    function initLevy(box, ok) {
+      box.className = 'fg-levy fg-sch';
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var hd = document.createElement('div'); hd.className = 'fg-sch-h';
+      hd.textContent = L('Hormiga y albatros: paseo browniano vs vuelo de Lévy', 'Ant and albatross: Brownian walk vs Lévy flight');
+      box.appendChild(hd);
+      var ctrl = document.createElement('div'); ctrl.className = 'fg-pz-ctrl';
+      ctrl.innerHTML = '<button type="button" class="fg-arch-btn" data-act="pp">' + (reduce ? L('▶ Reanudar', '▶ Resume') : L('⏸ Pausar', '⏸ Pause')) + '</button>' +
+        '<button type="button" class="fg-arch-btn" data-act="rs">⟲ ' + L('reiniciar', 'reset') + '</button>' +
+        '<span>γ</span><input class="fg-arch-range" type="range" min="0.40" max="3.20" step="0.05" value="1.50" aria-label="' + L('exponente γ', 'exponent γ') + '">';
+      var read = document.createElement('div'); read.className = 'fg-pz-read';
+      var cap = document.createElement('div'); cap.className = 'fg-sch-cap';
+      cap.innerHTML = L('Dos caminantes desde el mismo punto. La <span style="color:#0072b2"><b>hormiga</b></span> (browniana) da pasitos iguales y se queda en un ovillo local. El <span style="color:#d55e00"><b>albatros</b></span> (Lévy) saca la longitud de cada salto de una cola de potencia con índice α=γ−1: casi siempre corto, pero de vez en cuando un <b>salto enorme</b>. Baja γ → cola más pesada (saltos más brutos); súbelo → se parece a la hormiga. Arrastra para girar.',
+        'Two walkers from the same point. The <span style="color:#0072b2"><b>ant</b></span> (Brownian) takes equal small steps and stays in a local tangle. The <span style="color:#d55e00"><b>albatross</b></span> (Lévy) draws each jump length from a power-law tail with index α=γ−1: usually short, but every so often a <b>huge jump</b>. Lower γ → heavier tail (wilder jumps); raise it → it resembles the ant. Drag to rotate.');
+      var canvas = document.createElement('canvas'); canvas.className = 'fg-g3d-canvas';
+      var ctx = null; try { ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl'); } catch (e) {}
+      if (!ok || !ctx) {
+        var fb = document.createElement('div'); fb.className = 'fg-rope3d-fallback';
+        fb.innerHTML = L('🐜🕊️ <b>La atención transporta como una difusión de Lévy.</b> La hormiga (browniana) explora con pasitos locales; el albatros (Lévy) da saltos raros y enormes de cola de potencia (índice α=γ−1). La atención A(d)∝d<sup>−γ</sup> es ese núcleo de saltos: mucha mezcla local + algún salto lejano. Régimen honesto: γ&lt;1 = suavizado (fuera de Lévy), 1–3 = vuelo, &gt;3 = browniano. (Tu navegador no tiene WebGL para la versión 3D.)',
+          '🐜🕊️ <b>Attention transports like a Lévy diffusion.</b> The ant (Brownian) explores with local steps; the albatross (Lévy) makes rare huge power-law jumps (index α=γ−1). Attention A(d)∝d<sup>−γ</sup> is that jump kernel: lots of local mixing + the occasional far jump. Honest regime: γ&lt;1 = smoothing (outside Lévy), 1–3 = a flight, &gt;3 = Brownian. (Your browser has no WebGL for the 3D version.)');
+        box.appendChild(fb); box.appendChild(cap); return;
+      }
+      box.appendChild(canvas); box.appendChild(ctrl); box.appendChild(read); box.appendChild(cap);
+
+      var THREE = window.THREE, scene = new THREE.Scene();
+      var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+      var camera = new THREE.PerspectiveCamera(45, 2, 0.1, 100);
+      var R = 4.2, MAXP = 300, C_B = 0x0072b2, C_L = 0xd55e00;
+      var seed = 20260708 >>> 0;
+      function rnd() { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }
+      function dir() { var th = rnd() * Math.PI * 2, cph = 2 * rnd() - 1, sph = Math.sqrt(Math.max(0, 1 - cph * cph)); return new THREE.Vector3(sph * Math.cos(th), sph * Math.sin(th), cph); }
+      function reflect(v) { ['x', 'y', 'z'].forEach(function (a) { if (v[a] > R) v[a] = 2 * R - v[a]; else if (v[a] < -R) v[a] = -2 * R - v[a]; }); }
+      // faint bounding cube
+      var box3 = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(2 * R, 2 * R, 2 * R)), new THREE.LineBasicMaterial({ color: 0xb9c8d6, transparent: true, opacity: 0.18 })); scene.add(box3);
+      var trailB = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: C_B, transparent: true, opacity: 0.85 })); scene.add(trailB);
+      var trailL = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: C_L, transparent: true, opacity: 0.85 })); scene.add(trailL);
+      var dotB = new THREE.Mesh(new THREE.SphereGeometry(0.16, 14, 14), new THREE.MeshBasicMaterial({ color: C_B })); scene.add(dotB);
+      var dotL = new THREE.Mesh(new THREE.SphereGeometry(0.18, 14, 14), new THREE.MeshBasicMaterial({ color: C_L })); scene.add(dotL);
+      var pB = new THREE.Vector3(0, 0, 0), pL = new THREE.Vector3(0, 0, 0), ptsB = [pB.clone()], ptsL = [pL.clone()];
+      var curG = 1.5;
+      function levyLen(alpha) { var u = rnd(); return Math.min(0.14 * Math.pow(1 - u * 0.999, -1 / alpha), R * 1.6); }
+      function step() {
+        pB.add(dir().multiplyScalar(0.22)); reflect(pB); ptsB.push(pB.clone());
+        var a = Math.min(2.0, Math.max(0.12, curG - 1)); pL.add(dir().multiplyScalar(levyLen(a))); reflect(pL); ptsL.push(pL.clone());
+        if (ptsB.length > MAXP) ptsB.shift(); if (ptsL.length > MAXP) ptsL.shift();
+        trailB.geometry.setFromPoints(ptsB); trailL.geometry.setFromPoints(ptsL);
+        dotB.position.copy(pB); dotL.position.copy(pL);
+      }
+      function reset() { seed = 20260708 >>> 0; pB.set(0, 0, 0); pL.set(0, 0, 0); ptsB = [pB.clone()]; ptsL = [pL.clone()]; trailB.geometry.setFromPoints(ptsB); trailL.geometry.setFromPoints(ptsL); }
+      function readOut() {
+        var a = (curG - 1), s = (curG - 1) / 2;
+        var reg = curG < 1 ? L('γ<1 · suavizado (fuera de la ventana de Lévy)', 'γ<1 · smoothing (outside the Lévy window)')
+          : curG <= 3 ? L('1≤γ≤3 · vuelo de Lévy genuino', '1≤γ≤3 · genuine Lévy flight')
+            : L('γ>3 · α>2 · vuelve a ser browniano', 'γ>3 · α>2 · back to Brownian');
+        var rcol = curG < 1 ? '#0072b2' : curG <= 3 ? '#d55e00' : '#7c5cbf';
+        read.innerHTML = 'γ = <b>' + curG.toFixed(2) + '</b> · α = γ−1 = <b>' + a.toFixed(2) + '</b> · s = (γ−1)/2 = <b>' + s.toFixed(2) + '</b> → <b style="color:' + rcol + '">' + reg + '</b>';
+      }
+      var rng2 = ctrl.querySelector('.fg-arch-range'), btn = ctrl.querySelector('[data-act="pp"]'), rs = ctrl.querySelector('[data-act="rs"]');
+      var playing = !reduce;
+      btn.addEventListener('click', function () { playing = !playing; btn.textContent = playing ? L('⏸ Pausar', '⏸ Pause') : L('▶ Reanudar', '▶ Resume'); });
+      rs.addEventListener('click', function () { reset(); });
+      rng2.addEventListener('input', function () { curG = +rng2.value; readOut(); });
+
+      var target = new THREE.Vector3(0, 0, 0), camR = 12.5, az = 0.6, pol = 1.15;
+      function placeCam() { camera.position.set(target.x + camR * Math.sin(pol) * Math.cos(az), target.y + camR * Math.cos(pol), target.z + camR * Math.sin(pol) * Math.sin(az)); camera.lookAt(target); }
+      var dragging = false, lx = 0, ly = 0;
+      canvas.addEventListener('pointerdown', function (e) { dragging = true; lx = e.clientX; ly = e.clientY; canvas.setPointerCapture(e.pointerId); });
+      canvas.addEventListener('pointerup', function () { dragging = false; });
+      canvas.addEventListener('pointermove', function (e) { if (!dragging) return; az -= (e.clientX - lx) * 0.008; pol -= (e.clientY - ly) * 0.008; pol = Math.max(0.35, Math.min(Math.PI - 0.35, pol)); lx = e.clientX; ly = e.clientY; });
+      function resize() { var w = box.clientWidth || 600, h = 380; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+      window.addEventListener('resize', resize); resize(); readOut(); if (reduce) { for (var k = 0; k < 120; k++) step(); }
+
+      var fr = 0;
+      function loop() {
+        requestAnimationFrame(loop);
+        var rb = box.getBoundingClientRect(); if (rb.bottom < 0 || rb.top > (window.innerHeight || 9999)) return;
+        fr++;
+        if (!dragging) az += 0.0013;
+        if (playing && fr % 2 === 0) step();
+        placeCam(); renderer.render(scene, camera);
+      }
+      loop();
+    }
+  } catch (e) {}
+
+  // ---- 1w. Build .fg-fase: 3D — susceptibility mountain: transition vs crossover at gamma=1 ----
+  // Part III phase structure: chi(gamma)=1/|gamma-1| diverges at the gamma=1 boundary (Phase A
+  // gamma<1 "looks far" vs Phase B gamma>1 "concentrates"). But at FINITE context length N the
+  // ideal spike rounds into a finite bump of height ~log N (Li_1 ~ log N) — a crossover, not a
+  // true transition (the chapter's honest open question). Slide N to sharpen the peak; slide/auto
+  // -sweep gamma to roll the ball across the boundary. A filled chi(gamma) profile, two phases
+  // coloured, orbitable.
+  try {
+    var faNodes = document.querySelectorAll('.fg-fase');
+    if (faNodes.length) {
+      var loadFa = function (cb) { if (window.THREE) { cb(true); return; } var s = document.createElement('script'); s.src = '../vendor/three.min.js'; s.onload = function () { cb(!!window.THREE); }; s.onerror = function () { cb(false); }; document.head.appendChild(s); };
+      loadFa(function (ok) { faNodes.forEach(function (box) { initFase(box, ok); }); });
+    }
+    function initFase(box, ok) {
+      box.className = 'fg-fase fg-sch';
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var hd = document.createElement('div'); hd.className = 'fg-sch-h';
+      hd.textContent = L('γ=1: ¿transición o cruce? La montaña de χ', 'γ=1: transition or crossover? The χ mountain');
+      box.appendChild(hd);
+      var ctrl = document.createElement('div'); ctrl.className = 'fg-pz-ctrl';
+      ctrl.innerHTML = '<button type="button" class="fg-arch-btn" data-act="pp">' + (reduce ? L('▶ Reanudar', '▶ Resume') : L('⏸ Pausar', '⏸ Pause')) + '</button>' +
+        '<span>γ</span><input class="fg-arch-range" data-k="g" type="range" min="0.40" max="1.60" step="0.01" value="0.60" aria-label="' + L('exponente γ', 'exponent γ') + '">' +
+        '<span>N</span><input class="fg-arch-range" data-k="n" type="range" min="16" max="4096" step="16" value="256" aria-label="' + L('longitud de contexto N', 'context length N') + '">';
+      var read = document.createElement('div'); read.className = 'fg-pz-read';
+      var cap = document.createElement('div'); cap.className = 'fg-sch-cap';
+      cap.innerHTML = L('La <b>susceptibilidad</b> χ=1/|γ−1| mide cuánto reacciona el sistema a un empujón diminuto de γ. En el límite ideal (N→∞) <b>diverge</b> en γ=1 (línea violeta) — una <b>transición</b>. Pero con N <b>finito</b> el pico se <b>redondea</b> en un bulto de altura ~log N — un <b>cruce</b>. Sube N y mira el bulto afilarse hacia la aguja. Izquierda <span style="color:#0072b2"><b>Fase A</b></span> (γ&lt;1, mira lejos), derecha <span style="color:#d55e00"><b>Fase B</b></span> (γ&gt;1, concentra). Arrastra para girar.',
+        'The <b>susceptibility</b> χ=1/|γ−1| measures how hard the system reacts to a tiny nudge of γ. In the ideal limit (N→∞) it <b>diverges</b> at γ=1 (violet line) — a <b>transition</b>. But at <b>finite</b> N the peak <b>rounds</b> into a bump of height ~log N — a <b>crossover</b>. Raise N and watch the bump sharpen toward the spike. Left <span style="color:#0072b2"><b>Phase A</b></span> (γ&lt;1, looks far), right <span style="color:#d55e00"><b>Phase B</b></span> (γ&gt;1, concentrates). Drag to rotate.');
+      var canvas = document.createElement('canvas'); canvas.className = 'fg-g3d-canvas';
+      var ctx = null; try { ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl'); } catch (e) {}
+      if (!ok || !ctx) {
+        var fb = document.createElement('div'); fb.className = 'fg-rope3d-fallback';
+        fb.innerHTML = L('⛰️ <b>χ=1/|γ−1| se dispara en γ=1</b>, la frontera entre Fase A (γ&lt;1, mira lejos) y Fase B (γ&gt;1, concentra). Ideal (N→∞): diverge → transición. Finito: el pico se redondea (altura ~log N) → cruce. Si γ=1 es transición o cruce es una pregunta abierta. (Tu navegador no tiene WebGL para la versión 3D.)',
+          '⛰️ <b>χ=1/|γ−1| spikes at γ=1</b>, the boundary between Phase A (γ&lt;1, looks far) and Phase B (γ&gt;1, concentrates). Ideal (N→∞): diverges → transition. Finite: the peak rounds (height ~log N) → crossover. Whether γ=1 is a transition or a crossover is an open question. (Your browser has no WebGL for the 3D version.)');
+        box.appendChild(fb); box.appendChild(cap); return;
+      }
+      box.appendChild(canvas); box.appendChild(ctrl); box.appendChild(read); box.appendChild(cap);
+
+      var THREE = window.THREE, scene = new THREE.Scene();
+      var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+      var camera = new THREE.PerspectiveCamera(45, 2, 0.1, 100);
+      var M = 90, G0 = 0.35, G1 = 1.65, XS = 3.1, YSC = 0.42, YMAX = 3.3;
+      function gOf(i) { return G0 + (G1 - G0) * i / (M - 1); }
+      function xOf(g) { return (g - 1) * XS; }
+      function chi(g, N) { var w = 1 / Math.log(Math.max(N, 3)); return 1 / Math.sqrt((g - 1) * (g - 1) + w * w); }
+      function yOf(g, N) { return Math.min(chi(g, N) * YSC, YMAX); }
+      function phaseCol(g) { return g < 0.97 ? new THREE.Color(0.0, 0.447, 0.698) : g > 1.03 ? new THREE.Color(0.835, 0.369, 0.0) : new THREE.Color(0.486, 0.361, 0.71); }
+      // comb (filled body) as LineSegments with vertex colours; top edge as a polyline
+      var comb = new Float32Array(M * 6), combCol = new Float32Array(M * 6), topPos = new Float32Array(M * 3), topCol = new Float32Array(M * 3);
+      for (var i = 0; i < M; i++) {
+        var g = gOf(i), x = xOf(g), c = phaseCol(g);
+        comb[i * 6] = x; comb[i * 6 + 1] = 0; comb[i * 6 + 2] = 0; comb[i * 6 + 3] = x; comb[i * 6 + 4] = 0.01; comb[i * 6 + 5] = 0;
+        combCol[i * 6] = combCol[i * 6 + 3] = c.r; combCol[i * 6 + 1] = combCol[i * 6 + 4] = c.g; combCol[i * 6 + 2] = combCol[i * 6 + 5] = c.b;
+        topPos[i * 3] = x; topPos[i * 3 + 1] = 0.01; topPos[i * 3 + 2] = 0;
+        topCol[i * 3] = c.r; topCol[i * 3 + 1] = c.g; topCol[i * 3 + 2] = c.b;
+      }
+      var combGeo = new THREE.BufferGeometry();
+      combGeo.setAttribute('position', new THREE.BufferAttribute(comb, 3));
+      combGeo.setAttribute('color', new THREE.BufferAttribute(combCol, 3));
+      scene.add(new THREE.LineSegments(combGeo, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.55 })));
+      var topGeo = new THREE.BufferGeometry();
+      topGeo.setAttribute('position', new THREE.BufferAttribute(topPos, 3));
+      topGeo.setAttribute('color', new THREE.BufferAttribute(topCol, 3));
+      scene.add(new THREE.Line(topGeo, new THREE.LineBasicMaterial({ vertexColors: true })));
+      // ground + gamma=1 boundary + ideal-divergence spike
+      scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(xOf(G0) - 0.2, 0, 0), new THREE.Vector3(xOf(G1) + 0.2, 0, 0)]), new THREE.LineBasicMaterial({ color: 0xb9c8d6, transparent: true, opacity: 0.5 })));
+      scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, YMAX + 0.4, 0)]), new THREE.LineBasicMaterial({ color: 0x7c5cbf, transparent: true, opacity: 0.9 })));
+      var spikeTip = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.3, 12), new THREE.MeshBasicMaterial({ color: 0x7c5cbf })); spikeTip.position.set(0, YMAX + 0.55, 0); scene.add(spikeTip);
+      // rolling ball
+      var ball = new THREE.Mesh(new THREE.SphereGeometry(0.14, 16, 16), new THREE.MeshBasicMaterial({ color: 0x0072b2 })); scene.add(ball);
+
+      var curN = 256, curG = 0.6;
+      function rebuild(N) {
+        curN = N;
+        for (var i = 0; i < M; i++) { var y = yOf(gOf(i), N); comb[i * 6 + 4] = Math.max(0.01, y); topPos[i * 3 + 1] = Math.max(0.01, y); }
+        combGeo.attributes.position.needsUpdate = true; topGeo.attributes.position.needsUpdate = true;
+        setGamma(curG);
+      }
+      function setGamma(g) {
+        curG = g; var y = yOf(g, curN), c = phaseCol(g); ball.position.set(xOf(g), y, 0.03); ball.material.color = c;
+        var fase = g < 0.97 ? L('Fase A · mira lejos', 'Phase A · looks far') : g > 1.03 ? L('Fase B · concentra', 'Phase B · concentrates') : L('frontera crítica γ≈1', 'critical boundary γ≈1');
+        var peak = Math.log(curN), sharp = peak > 6 ? L('afilándose → parece transición', 'sharpening → looks like a transition') : L('bulto redondeado → parece cruce', 'rounded bump → looks like a crossover');
+        read.innerHTML = 'γ = <b>' + g.toFixed(2) + '</b> · <b style="color:#' + c.getHexString() + '">' + fase + '</b> · χ<sub>N</sub> = <b>' + chi(g, curN).toFixed(2) + '</b> · N = <b>' + curN + '</b> (pico ~log N ≈ ' + peak.toFixed(1) + ') · ' + sharp;
+      }
+      var gS = ctrl.querySelector('[data-k="g"]'), nS = ctrl.querySelector('[data-k="n"]'), btn = ctrl.querySelector('[data-act="pp"]');
+      var playing = !reduce, sweep = -0.9;
+      btn.addEventListener('click', function () { playing = !playing; btn.textContent = playing ? L('⏸ Pausar', '⏸ Pause') : L('▶ Reanudar', '▶ Resume'); });
+      gS.addEventListener('input', function () { playing = false; btn.textContent = L('▶ Reanudar', '▶ Resume'); setGamma(+gS.value); });
+      nS.addEventListener('input', function () { rebuild(+nS.value); });
+
+      var target = new THREE.Vector3(0, 1.2, 0), camR = 7.6, az = 0.55, pol = 1.12;
+      function placeCam() { camera.position.set(target.x + camR * Math.sin(pol) * Math.cos(az), target.y + camR * Math.cos(pol), target.z + camR * Math.sin(pol) * Math.sin(az)); camera.lookAt(target); }
+      var dragging = false, lx = 0, ly = 0;
+      canvas.addEventListener('pointerdown', function (e) { dragging = true; lx = e.clientX; ly = e.clientY; canvas.setPointerCapture(e.pointerId); });
+      canvas.addEventListener('pointerup', function () { dragging = false; });
+      canvas.addEventListener('pointermove', function (e) { if (!dragging) return; az -= (e.clientX - lx) * 0.008; pol -= (e.clientY - ly) * 0.008; pol = Math.max(0.35, Math.min(Math.PI - 0.35, pol)); lx = e.clientX; ly = e.clientY; });
+      function resize() { var w = box.clientWidth || 600, h = 380; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+      window.addEventListener('resize', resize); resize(); rebuild(256);
+
+      function loop() {
+        requestAnimationFrame(loop);
+        var rb = box.getBoundingClientRect(); if (rb.bottom < 0 || rb.top > (window.innerHeight || 9999)) return;
+        if (!dragging) az += 0.0015;
+        if (playing) { sweep += 0.011; var g = 1 + 0.58 * Math.sin(sweep); setGamma(g); gS.value = g.toFixed(2); }
+        placeCam(); renderer.render(scene, camera);
+      }
+      loop();
+    }
+  } catch (e) {}
+
+  // ---- 1x. Build .fg-gamma-temp: 3D — attention as a gas at temperature T=1/gamma ----
+  // The thermodynamic dictionary (Part I/II): A(d) proportional to d^-gamma is a Boltzmann
+  // distribution at temperature T=1/gamma. Slide gamma: cold (high gamma) -> mass condenses
+  // on the nearest tokens (localised, low entropy); hot (low gamma) -> mass spreads over all
+  // distances (delocalised, high entropy). Bars jitter with amplitude ~ C_V (energy
+  // fluctuation), largest near the critical point gamma~1. A thermometer tracks T=1/gamma.
+  try {
+    var gtNodes = document.querySelectorAll('.fg-gamma-temp');
+    if (gtNodes.length) {
+      var loadGt = function (cb) { if (window.THREE) { cb(true); return; } var s = document.createElement('script'); s.src = '../vendor/three.min.js'; s.onload = function () { cb(!!window.THREE); }; s.onerror = function () { cb(false); }; document.head.appendChild(s); };
+      loadGt(function (ok) { gtNodes.forEach(function (box) { initGammaTemp(box, ok); }); });
+    }
+    function initGammaTemp(box, ok) {
+      box.className = 'fg-gamma-temp fg-sch';
+      var N = 14;
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      function stats(g) {
+        var p = [], E = [], Z = 0, i;
+        for (i = 1; i <= N; i++) { var a = Math.pow(i, -g); p.push(a); Z += a; }
+        for (i = 0; i < N; i++) p[i] /= Z;
+        var Em = 0; for (i = 0; i < N; i++) { E[i] = g * Math.log(i + 1); Em += p[i] * E[i]; }
+        var V = 0, S = 0; for (i = 0; i < N; i++) { V += p[i] * (E[i] - Em) * (E[i] - Em); if (p[i] > 1e-12) S += -p[i] * Math.log(p[i]); }
+        return { p: p, S: S, CV: V / (1 / g / g), T: 1 / g }; // CV = V*g^2
+      }
+      var hd = document.createElement('div'); hd.className = 'fg-sch-h';
+      hd.textContent = L('La atención como un gas: T = 1/γ', 'Attention as a gas: T = 1/γ');
+      box.appendChild(hd);
+      var ctrl = document.createElement('div'); ctrl.className = 'fg-pz-ctrl';
+      ctrl.innerHTML = '<button type="button" class="fg-arch-btn" data-act="pp">' + (reduce ? L('▶ Reanudar', '▶ Resume') : L('⏸ Pausar', '⏸ Pause')) + '</button><span>γ</span><input class="fg-arch-range" type="range" min="0.30" max="2.50" step="0.05" value="1.00" aria-label="' + L('exponente γ (mando)', 'exponent γ (knob)') + '">';
+      var read = document.createElement('div'); read.className = 'fg-pz-read';
+      var cap = document.createElement('div'); cap.className = 'fg-sch-cap';
+      cap.innerHTML = L('Cada barra es la masa de atención a distancia d, A(d)∝d<sup>−γ</sup> (una distribución de Boltzmann a temperatura T=1/γ). Baja γ = <b>caliente</b>: la masa se <b>evapora</b> y se reparte lejos (deslocalizada, mucha entropía). Sube γ = <b>frío</b>: se <b>congela</b> sobre los tokens cercanos (localizada). Las barras <b>tiemblan</b> con amplitud ∝ C<sub>V</sub> (la fluctuación), máxima cerca de γ≈1. Arrastra para girar.',
+        'Each bar is the attention mass at distance d, A(d)∝d<sup>−γ</sup> (a Boltzmann distribution at temperature T=1/γ). Low γ = <b>hot</b>: the mass <b>evaporates</b> and spreads far (delocalised, high entropy). High γ = <b>cold</b>: it <b>freezes</b> onto the nearby tokens (localised). The bars <b>jitter</b> with amplitude ∝ C<sub>V</sub> (the fluctuation), largest near γ≈1. Drag to rotate.');
+      var canvas = document.createElement('canvas'); canvas.className = 'fg-g3d-canvas';
+      var ctx = null; try { ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl'); } catch (e) {}
+      if (!ok || !ctx) {
+        var fb = document.createElement('div'); fb.className = 'fg-rope3d-fallback';
+        fb.innerHTML = L('🌡️ <b>La atención es un gas a temperatura T=1/γ.</b> Con γ alto (frío) la masa se concentra en los tokens cercanos (localizada, poca entropía); con γ bajo (caliente) se reparte por todo el contexto (deslocalizada). La capacidad calorífica C<sub>V</sub> mide cuánto fluctúa, y es máxima cerca del punto crítico γ≈1. (Tu navegador no tiene WebGL para la versión 3D.)',
+          '🌡️ <b>Attention is a gas at temperature T=1/γ.</b> High γ (cold) concentrates the mass on nearby tokens (localised, low entropy); low γ (hot) spreads it across the whole context (delocalised). The heat capacity C<sub>V</sub> measures how much it fluctuates, largest near the critical point γ≈1. (Your browser has no WebGL for the 3D version.)');
+        box.appendChild(fb); box.appendChild(cap); return;
+      }
+      box.appendChild(canvas); box.appendChild(ctrl); box.appendChild(read); box.appendChild(cap);
+
+      var THREE = window.THREE, scene = new THREE.Scene();
+      var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+      var camera = new THREE.PerspectiveCamera(45, 2, 0.1, 100);
+      function lerp(a, b, t) { return a + (b - a) * t; }
+      function heatColor(t) { return new THREE.Color(lerp(0.0, 0.9, t), lerp(0.45, 0.30, t), lerp(0.80, 0.0, t)); } // cool blue -> hot vermillion
+      var SP = 0.52, X0 = -(N - 1) * SP / 2, BW = 0.34, HS = 3.0;
+      var bars = [], baseH = [];
+      for (var i = 0; i < N; i++) {
+        var m = new THREE.Mesh(new THREE.BoxGeometry(BW, 1, BW), new THREE.MeshBasicMaterial({ color: heatColor(i / (N - 1)) }));
+        m.position.x = X0 + i * SP; scene.add(m); bars.push(m); baseH.push(0.01);
+      }
+      // ground line
+      scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(X0 - 0.4, 0, 0), new THREE.Vector3(X0 + (N - 1) * SP + 0.4, 0, 0)]), new THREE.LineBasicMaterial({ color: 0xb9c8d6, transparent: true, opacity: 0.5 })));
+      // thermometer (left): tube + mercury + bulb
+      var TX = X0 - 1.15, TH = 3.0;
+      scene.add(new THREE.Mesh(new THREE.CylinderGeometry(0.10, 0.10, TH, 16, 1, true), new THREE.MeshBasicMaterial({ color: 0xcfd8e0, transparent: true, opacity: 0.5, side: THREE.DoubleSide })).translateX(TX).translateY(TH / 2));
+      var bulb = new THREE.Mesh(new THREE.SphereGeometry(0.2, 16, 16), new THREE.MeshBasicMaterial({ color: 0xc0392b })); bulb.position.set(TX, 0, 0); scene.add(bulb);
+      var merc = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 1, 12), new THREE.MeshBasicMaterial({ color: 0xc0392b })); scene.add(merc);
+
+      var curG = 1.0, jitter = 0;
+      function apply(g) {
+        curG = g; var st = stats(g), pmax = st.p[0];
+        for (var i = 0; i < N; i++) baseH[i] = Math.max(0.01, st.p[i] / pmax * HS);
+        var Tn = Math.min(1, Math.max(0, (st.T - 0.4) / (3.33 - 0.4)));
+        merc.scale.y = Math.max(0.02, Tn * TH); merc.position.set(TX, merc.scale.y / 2, 0);
+        jitter = Math.min(0.32, st.CV * 0.06);
+        var phase = g < 0.85 ? L('caliente · deslocalizada', 'hot · delocalised') : g > 1.15 ? L('fría · localizada', 'cold · localised') : L('crítica γ≈1', 'critical γ≈1');
+        var pcol = g < 0.85 ? '#d55e00' : g > 1.15 ? '#0072b2' : '#7c5cbf';
+        read.innerHTML = 'γ = <b>' + g.toFixed(2) + '</b> · T = 1/γ = <b>' + st.T.toFixed(2) + '</b> · S = <b>' + st.S.toFixed(2) + '</b> · C<sub>V</sub> = <b>' + st.CV.toFixed(2) + '</b> → <b style="color:' + pcol + '">' + phase + '</b>';
+      }
+      var rng = ctrl.querySelector('.fg-arch-range'), btn = ctrl.querySelector('[data-act="pp"]');
+      var playing = !reduce, sweep = 0;
+      btn.addEventListener('click', function () { playing = !playing; btn.textContent = playing ? L('⏸ Pausar', '⏸ Pause') : L('▶ Reanudar', '▶ Resume'); });
+      rng.addEventListener('input', function () { playing = false; btn.textContent = L('▶ Reanudar', '▶ Resume'); apply(+rng.value); });
+
+      var target = new THREE.Vector3(0, 1.1, 0), camR = 7.2, az = 0.6, pol = 1.15;
+      function placeCam() { camera.position.set(target.x + camR * Math.sin(pol) * Math.cos(az), target.y + camR * Math.cos(pol), target.z + camR * Math.sin(pol) * Math.sin(az)); camera.lookAt(target); }
+      var dragging = false, lx = 0, ly = 0;
+      canvas.addEventListener('pointerdown', function (e) { dragging = true; lx = e.clientX; ly = e.clientY; canvas.setPointerCapture(e.pointerId); });
+      canvas.addEventListener('pointerup', function () { dragging = false; });
+      canvas.addEventListener('pointermove', function (e) { if (!dragging) return; az -= (e.clientX - lx) * 0.008; pol -= (e.clientY - ly) * 0.008; pol = Math.max(0.35, Math.min(Math.PI - 0.35, pol)); lx = e.clientX; ly = e.clientY; });
+      function resize() { var w = box.clientWidth || 600, h = 380; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+      window.addEventListener('resize', resize); resize(); apply(1.0);
+
+      var fr = 0;
+      function loop() {
+        requestAnimationFrame(loop);
+        var rb = box.getBoundingClientRect(); if (rb.bottom < 0 || rb.top > (window.innerHeight || 9999)) return;
+        fr++;
+        if (!dragging) az += 0.0014;
+        if (playing) { sweep += 0.010; var gg = 1.4 + 1.1 * Math.sin(sweep); apply(gg); rng.value = gg.toFixed(2); }
+        for (var i = 0; i < N; i++) {
+          var j = reduce ? 0 : jitter * Math.sin(fr * 0.14 + i * 1.7) * baseH[i] * 0.5;
+          var h = Math.max(0.01, baseH[i] + j);
+          bars[i].scale.y = h; bars[i].position.y = h / 2;
+        }
+        placeCam(); renderer.render(scene, camera);
+      }
+      loop();
+    }
+  } catch (e) {}
+
+  // ---- 1y. Build .fg-ws-chrono: 3D — three clocks (decode<write<commit) + Type A/B ----
+  // Part III: residual computation has THREE observables at THREE depths — decodable
+  // (tau_decode), written (tau_write, DLA), committed (tau_commit) — a front sweeping
+  // depth, not one event. Delta_prep = tau_write - tau_decode classifies families
+  // (Type A early-decode >=0.5 vs Type B <=0.3). The residual stream as a tunnel with
+  // three gate-rings; a concept travels through them; switch family to see the spacing.
+  try {
+    var chNodes = document.querySelectorAll('.fg-ws-chrono');
+    if (chNodes.length) {
+      var loadChr = function (cb) { if (window.THREE) { cb(true); return; } var s = document.createElement('script'); s.src = '../vendor/three.min.js'; s.onload = function () { cb(!!window.THREE); }; s.onerror = function () { cb(false); }; document.head.appendChild(s); };
+      loadChr(function (ok) { chNodes.forEach(function (box) { initWsChrono(box, ok); }); });
+    }
+    function initWsChrono(box, ok) {
+      box.className = 'fg-ws-chrono fg-sch';
+      var FAM = {
+        'pythia-410m': { d: 0.17, w: 0.66, c: 0.96, dp: 0.49, t: 'A' },
+        'qwen2.5-3b':  { d: 0.09, w: 0.84, c: 0.97, dp: 0.75, t: 'A' },
+        'qwen3-1.7b':  { d: 0.63, w: 0.91, c: 0.98, dp: 0.28, t: 'B' },
+        'qwen3-4b':    { d: 0.69, w: 0.91, c: 0.98, dp: 0.22, t: 'B' },
+        'gpt2-small':  { d: 0.82, w: 0.70, c: 0.99, dp: -0.12, t: 'B' }
+      };
+      var ORDER = ['pythia-410m', 'qwen2.5-3b', 'qwen3-1.7b', 'qwen3-4b', 'gpt2-small'];
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var hd = document.createElement('div'); hd.className = 'fg-sch-h';
+      hd.textContent = L('Tres relojes: se puede leer < se escribe < se fija', 'Three clocks: readable < written < locked');
+      box.appendChild(hd);
+      var tabs = document.createElement('div'); tabs.className = 'fg-pz-tabs';
+      ORDER.forEach(function (m, i) { tabs.innerHTML += '<button type="button" class="fg-sch-btn' + (i === 0 ? ' on' : '') + '" data-m="' + m + '">' + m.replace('-small', '') + '</button>'; });
+      box.appendChild(tabs);
+      var canvas = document.createElement('canvas'); canvas.className = 'fg-g3d-canvas';
+      var read = document.createElement('div'); read.className = 'fg-pz-read';
+      var cap = document.createElement('div'); cap.className = 'fg-sch-cap';
+      cap.innerHTML = L('El flujo residual como un <b>túnel</b> (entrada cerca → salida al fondo). Un concepto lo recorre y cruza tres puertas: <span style="color:#1f9d6b"><b>se puede leer</b></span> (τ<sub>decode</sub>), <span style="color:#e69f00"><b>se escribe</b></span> (τ<sub>write</sub>, DLA), <span style="color:#c0392b"><b>se fija</b></span> (τ<sub>commit</sub>). El tramo violeta es Δ<sub>prep</sub>=τ<sub>write</sub>−τ<sub>decode</sub>. Cambia de familia: el <b>orden</b> es universal, el <b>espaciado</b> no. Arrastra para girar.',
+        'The residual stream as a <b>tunnel</b> (input near → output far). A concept travels it and crosses three gates: <span style="color:#1f9d6b"><b>readable</b></span> (τ<sub>decode</sub>), <span style="color:#e69f00"><b>written</b></span> (τ<sub>write</sub>, DLA), <span style="color:#c0392b"><b>locked</b></span> (τ<sub>commit</sub>). The violet stretch is Δ<sub>prep</sub>=τ<sub>write</sub>−τ<sub>decode</sub>. Switch family: the <b>order</b> is universal, the <b>spacing</b> is not. Drag to rotate.');
+      var ctx = null; try { ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl'); } catch (e) {}
+      if (!ok || !ctx) {
+        var fb = document.createElement('div'); fb.className = 'fg-rope3d-fallback';
+        fb.innerHTML = L('⏱️ <b>El cómputo residual tiene tres relojes, no uno:</b> el contenido primero se vuelve <b>legible</b> (τ_decode), luego se <b>escribe</b> en la respuesta (τ_write) y por fin se <b>fija</b> (τ_commit) — un frente que barre la profundidad. El espaciado Δ_prep=τ_write−τ_decode separa familias: Tipo A (Pythia, Qwen2.5) prepara largo; Tipo B (Qwen3, GPT-2) tarde o invertido. (Tu navegador no tiene WebGL para la versión 3D.)',
+          '⏱️ <b>Residual computation has three clocks, not one:</b> content first becomes <b>readable</b> (τ_decode), then gets <b>written</b> into the answer (τ_write), then <b>locks</b> (τ_commit) — a front sweeping depth. The spacing Δ_prep=τ_write−τ_decode splits families: Type A (Pythia, Qwen2.5) prepares long; Type B (Qwen3, GPT-2) late or inverted. (Your browser has no WebGL for the 3D version.)');
+        box.appendChild(fb); box.appendChild(cap); return;
+      }
+      box.appendChild(canvas); box.appendChild(read); box.appendChild(cap);
+
+      var THREE = window.THREE, scene = new THREE.Scene();
+      var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+      var camera = new THREE.PerspectiveCamera(45, 2, 0.1, 100);
+      var C_D = 0x1f9d6b, C_W = 0xe69f00, C_C = 0xc0392b, C_AX = 0xb9c8d6, C_PREP = 0x7c5cbf, C_TOK = 0x3b6fd4;
+      var ZN = 0.8, ZF = -5.4, R = 1.15;
+      function zOf(f) { return ZN + f * (ZF - ZN); }
+      // faint tunnel rings (the residual stream receding)
+      for (var f = 0; f <= 1.0001; f += 1 / 12) {
+        var pts = []; for (var a = 0; a <= 48; a++) { var an = a / 48 * Math.PI * 2; pts.push(new THREE.Vector3(Math.cos(an) * R, Math.sin(an) * R, zOf(f))); }
+        scene.add(new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: C_AX, transparent: true, opacity: 0.14 })));
+      }
+      scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, ZN), new THREE.Vector3(0, 0, ZF)]), new THREE.LineBasicMaterial({ color: C_AX, transparent: true, opacity: 0.4 })));
+      // three gate rings
+      function gate(col) { var g = new THREE.Mesh(new THREE.TorusGeometry(R, 0.05, 10, 40), new THREE.MeshBasicMaterial({ color: col })); scene.add(g); return g; }
+      var gD = gate(C_D), gW = gate(C_W), gC = gate(C_C);
+      // Delta_prep band (a translucent tube between decode and write)
+      var prep = new THREE.Mesh(new THREE.CylinderGeometry(R * 0.96, R * 0.96, 1, 24, 1, true), new THREE.MeshBasicMaterial({ color: C_PREP, transparent: true, opacity: 0.16, side: THREE.DoubleSide }));
+      prep.rotation.x = Math.PI / 2; scene.add(prep);
+      // travelling concept
+      var tok = new THREE.Mesh(new THREE.SphereGeometry(0.16, 16, 16), new THREE.MeshBasicMaterial({ color: C_TOK })); scene.add(tok);
+
+      var cur = FAM['pythia-410m'], curName = 'pythia-410m';
+      function setFam(name) {
+        cur = FAM[name]; curName = name;
+        gD.position.z = zOf(cur.d); gW.position.z = zOf(cur.w); gC.position.z = zOf(cur.c);
+        var lo = Math.min(cur.d, cur.w), hi = Math.max(cur.d, cur.w);
+        var z1 = zOf(lo), z2 = zOf(hi);
+        prep.scale.y = Math.max(Math.abs(z2 - z1), 0.001); prep.position.z = (z1 + z2) / 2;
+        tabs.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b.dataset.m === name); });
+        updRead(null);
+      }
+      function updRead(ev) {
+        var tag = cur.t === 'A' ? L('Tipo A · decode temprano, prepara largo', 'Type A · early decode, long prep')
+          : L('Tipo B · decode tardío' + (cur.dp < 0 ? '/invertido' : ''), 'Type B · late decode' + (cur.dp < 0 ? '/inverted' : ''));
+        var tagcol = cur.t === 'A' ? '#0072b2' : '#d55e00';
+        read.innerHTML = '<b>' + curName + '</b> · <span style="color:#1f9d6b">τ_decode ' + cur.d.toFixed(2) + '</span> · <span style="color:#e69f00">τ_write ' + cur.w.toFixed(2) + '</span> · <span style="color:#c0392b">τ_commit ' + cur.c.toFixed(2) + '</span> · Δ_prep <b>' + (cur.dp >= 0 ? '+' : '') + cur.dp.toFixed(2) + '</b> → <b style="color:' + tagcol + '">' + tag + '</b>' + (ev ? ' · <b>' + ev + '</b>' : '');
+      }
+      tabs.querySelectorAll('button').forEach(function (b) { b.addEventListener('click', function () { setFam(b.dataset.m); }); });
+
+      // camera down the tunnel
+      var midZ = (ZN + ZF) / 2, target = new THREE.Vector3(0, 0, midZ), camR = 6.6, az = 0.9, pol = 1.15;
+      function placeCam() { camera.position.set(target.x + camR * Math.sin(pol) * Math.cos(az), target.y + camR * Math.cos(pol), target.z + camR * Math.sin(pol) * Math.sin(az)); camera.lookAt(target); }
+      var dragging = false, lx = 0, ly = 0;
+      canvas.addEventListener('pointerdown', function (e) { dragging = true; lx = e.clientX; ly = e.clientY; canvas.setPointerCapture(e.pointerId); });
+      canvas.addEventListener('pointerup', function () { dragging = false; });
+      canvas.addEventListener('pointermove', function (e) { if (!dragging) return; az -= (e.clientX - lx) * 0.008; pol -= (e.clientY - ly) * 0.008; pol = Math.max(0.3, Math.min(Math.PI - 0.3, pol)); lx = e.clientX; ly = e.clientY; });
+      function resize() { var w = box.clientWidth || 600, h = 380; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+      window.addEventListener('resize', resize); resize(); setFam('pythia-410m');
+
+      var tf = reduce ? 0.5 : 0, lastEv = '';
+      function loop() {
+        requestAnimationFrame(loop);
+        var rb = box.getBoundingClientRect(); if (rb.bottom < 0 || rb.top > (window.innerHeight || 9999)) return;
+        if (!dragging) az += 0.0016;
+        if (!reduce) { tf += 0.0045; if (tf > 1) tf = 0; }
+        tok.position.z = zOf(tf);
+        var ev = '';
+        if (Math.abs(tf - cur.d) < 0.02) { ev = L('🔓 legible', '🔓 readable'); gD.scale.setScalar(1.25); } else gD.scale.setScalar(1);
+        if (Math.abs(tf - cur.w) < 0.02) { ev = L('✍️ escrita', '✍️ written'); gW.scale.setScalar(1.25); } else gW.scale.setScalar(1);
+        if (Math.abs(tf - cur.c) < 0.02) { ev = L('🔒 fijada', '🔒 locked'); gC.scale.setScalar(1.25); } else gC.scale.setScalar(1);
+        if (ev && ev !== lastEv) { updRead(ev); lastEv = ev; }
+        else if (!ev && lastEv) { updRead(null); lastEv = ''; }
+        placeCam(); renderer.render(scene, camera);
+      }
+      loop();
+    }
+  } catch (e) {}
+
+  // ---- 1z. Build .fg-ws-operator: 3D "echo of the future" — transport vs injection ----
+  // The J-lens advantage band is an OPERATOR property (Part III, Thm 6.1): a layer's
+  // Jacobian J_l = prod_{k>=l}(I+w'_k) is a property of its FUTURE, so "the lens reads
+  // this layer well" (transport, violet) is anticorrelated (rho=-0.80) with "this layer
+  // writes the answer" (net injection / DLA, amber). Pick/sweep a layer -> a violet beam
+  // climbs its future assembling J_l; transport and writing visibly trade places.
+  try {
+    var wsoNodes = document.querySelectorAll('.fg-ws-operator');
+    if (wsoNodes.length) {
+      var loadWso = function (cb) { if (window.THREE) { cb(true); return; } var s = document.createElement('script'); s.src = '../vendor/three.min.js'; s.onload = function () { cb(!!window.THREE); }; s.onerror = function () { cb(false); }; document.head.appendChild(s); };
+      loadWso(function (ok) { wsoNodes.forEach(function (box) { initWsOperator(box, ok); }); });
+    }
+    function initWsOperator(box, ok) {
+      box.className = 'fg-ws-operator fg-sch';
+      // pythia-410m, 24 layers — illustrative profile; the measured rank corr is rho=-0.80
+      var A  = [0.14, 0.16, 0.18, 0.22, 0.30, 0.42, 0.58, 0.76, 0.90, 0.98, 1.00, 0.90, 0.72, 0.52, 0.38, 0.28, 0.22, 0.18, 0.15, 0.13, 0.12, 0.11, 0.10, 0.09];
+      var MU = [0.05, 0.05, 0.06, 0.06, 0.07, 0.08, 0.09, 0.10, 0.11, 0.13, 0.15, 0.18, 0.22, 0.28, 0.35, 0.43, 0.51, 0.57, 0.63, 0.70, 0.78, 0.86, 0.93, 1.00];
+      var NL = A.length, BAND_LO = 6, BAND_HI = 13;
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var hd = document.createElement('div'); hd.className = 'fg-sch-h';
+      hd.textContent = L('El eco del futuro: por qué el J-lens lee el transporte, no la escritura', 'The echo of the future: why the J-lens reads transport, not writing');
+      box.appendChild(hd);
+      var canvas = document.createElement('canvas'); canvas.className = 'fg-g3d-canvas';
+      var ctrl = document.createElement('div'); ctrl.className = 'fg-pz-ctrl';
+      ctrl.innerHTML = '<button type="button" class="fg-arch-btn" data-act="pp">' + (reduce ? L('▶ Reanudar', '▶ Resume') : L('⏸ Pausar', '⏸ Pause')) + '</button>' +
+        '<span>' + L('capa', 'layer') + '</span><input class="fg-arch-range" type="range" min="0" max="' + (NL - 1) + '" step="1" value="10" aria-label="' + L('elige la capa', 'pick the layer') + '">';
+      var read = document.createElement('div'); read.className = 'fg-pz-read';
+      var cap = document.createElement('div'); cap.className = 'fg-sch-cap';
+      cap.innerHTML = L('De abajo (entrada) a arriba (salida). Cada capa tira <span style="color:#7c5cbf"><b>violeta</b></span> = cuánto <b>transporta</b> (lo que lee el J-lens) y <span style="color:#d55e00"><b>ámbar</b></span> = cuánto <b>escribe</b> la respuesta (DLA). Elige una capa: un <b>haz violeta trepa por su futuro</b> ensamblando su Jacobiano J<sub>ℓ</sub>=∏(I+w′). Sube la capa y verás cómo transporte y escritura <b>se turnan</b>. Arrastra para girar.',
+        'Bottom (input) to top (output). Each layer pulls <span style="color:#7c5cbf"><b>violet</b></span> = how much it <b>transports</b> (what the J-lens reads) and <span style="color:#d55e00"><b>amber</b></span> = how much it <b>writes</b> the answer (DLA). Pick a layer: a <b>violet beam climbs its future</b> assembling its Jacobian J<sub>ℓ</sub>=∏(I+w′). Raise the layer and watch transport and writing <b>trade places</b>. Drag to rotate.');
+      var ctx = null; try { ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl'); } catch (e) {}
+      if (!ok || !ctx) {
+        var fb = document.createElement('div'); fb.className = 'fg-rope3d-fallback';
+        fb.innerHTML = L('🛣️ <b>La banda del J-lens marca transporte, no escritura.</b> Donde la lente lee mejor (transporte alto), la capa casi no escribe la respuesta (inyección baja) — y al revés. El motivo: el Jacobiano de una capa es el producto de <i>todo su futuro</i> (J<sub>ℓ</sub>=∏(I+w′)), así que mide cómo viaja su contenido hacia adelante, no lo que ella decide. Anticorrelación medida: −0.80. (Tu navegador no tiene WebGL para la versión 3D.)',
+          '🛣️ <b>The J-lens band marks transport, not writing.</b> Where the lens reads best (high transport), the layer barely writes the answer (low injection) — and vice versa. Why: a layer\'s Jacobian is the product of <i>its whole future</i> (J<sub>ℓ</sub>=∏(I+w′)), so it measures how its content travels forward, not what it decides. Measured anticorrelation: −0.80. (Your browser has no WebGL for the 3D version.)');
+        box.appendChild(fb); box.appendChild(cap); return;
+      }
+      box.appendChild(canvas); box.appendChild(ctrl); box.appendChild(read); box.appendChild(cap);
+
+      var THREE = window.THREE, scene = new THREE.Scene();
+      var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+      var camera = new THREE.PerspectiveCamera(45, 2, 0.1, 100);
+      var C_T = 0x7c5cbf, C_I = 0xd55e00, C_AX = 0xb9c8d6, C_HUB = 0x9fb3c4, C_BEAM = 0x9a78e0;
+      var W = 2.2;
+      function yOf(i) { return (i / (NL - 1) - 0.5) * 4.2; }
+      // spine (the residual stream, input bottom -> output top)
+      scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, yOf(0) - 0.3, 0), new THREE.Vector3(0, yOf(NL - 1) + 0.3, 0)]), new THREE.LineBasicMaterial({ color: C_AX, transparent: true, opacity: 0.5 })));
+      // translucent slab over the advantage band
+      var slab = new THREE.Mesh(new THREE.PlaneGeometry(2 * W, yOf(BAND_HI) - yOf(BAND_LO)), new THREE.MeshBasicMaterial({ color: C_T, transparent: true, opacity: 0.08, side: THREE.DoubleSide }));
+      slab.position.set(0, (yOf(BAND_LO) + yOf(BAND_HI)) / 2, 0); scene.add(slab);
+      var hubs = [], tTips = [], iTips = [], stamps = [];
+      for (var i = 0; i < NL; i++) {
+        var y = yOf(i);
+        var hub = new THREE.Mesh(new THREE.SphereGeometry(0.045, 10, 10), new THREE.MeshBasicMaterial({ color: C_HUB })); hub.position.set(0, y, 0); scene.add(hub); hubs.push(hub);
+        var xt = A[i] * W;   // transport spoke (+X, violet)
+        scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, y, 0), new THREE.Vector3(xt, y, 0)]), new THREE.LineBasicMaterial({ color: C_T, transparent: true, opacity: 0.75 })));
+        var tt = new THREE.Mesh(new THREE.SphereGeometry(0.05, 10, 10), new THREE.MeshBasicMaterial({ color: C_T })); tt.position.set(xt, y, 0); scene.add(tt); tTips.push(new THREE.Vector3(xt, y, 0));
+        var xi = MU[i] * W;  // injection spoke (-X, amber)
+        scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, y, 0), new THREE.Vector3(-xi, y, 0)]), new THREE.LineBasicMaterial({ color: C_I, transparent: true, opacity: 0.75 })));
+        var it = new THREE.Mesh(new THREE.SphereGeometry(0.05, 10, 10), new THREE.MeshBasicMaterial({ color: C_I })); it.position.set(-xi, y, 0); scene.add(it); iTips.push(new THREE.Vector3(-xi, y, 0));
+        var st = new THREE.Mesh(new THREE.SphereGeometry(0.02 + 0.09 * MU[i], 12, 12), new THREE.MeshBasicMaterial({ color: C_I, transparent: true, opacity: 0.0 })); st.position.set(-xi, y, 0); scene.add(st); stamps.push(st);
+      }
+      // the two envelopes (the anticorrelation "braid")
+      scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(tTips), new THREE.LineBasicMaterial({ color: C_T })));
+      scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(iTips), new THREE.LineBasicMaterial({ color: C_I })));
+      // read-head ring + future beam + travelling pulse
+      var ring = new THREE.Mesh(new THREE.TorusGeometry(0.16, 0.03, 8, 24), new THREE.MeshBasicMaterial({ color: C_BEAM })); ring.rotation.x = Math.PI / 2; scene.add(ring);
+      var beamGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
+      var beam = new THREE.Line(beamGeo, new THREE.LineBasicMaterial({ color: C_BEAM, transparent: true, opacity: 0.9 })); scene.add(beam);
+      var pulse = new THREE.Mesh(new THREE.SphereGeometry(0.08, 12, 12), new THREE.MeshBasicMaterial({ color: C_BEAM })); scene.add(pulse);
+
+      var head = 10, pulseT = 0;
+      function setHead(i) {
+        head = Math.max(0, Math.min(NL - 1, i));
+        var y0 = yOf(head), yT = yOf(NL - 1);
+        beamGeo.setFromPoints([new THREE.Vector3(0, y0, 0), new THREE.Vector3(0, yT, 0)]);
+        beam.material.opacity = 0.35 + 0.6 * A[head];        // brighter where transport is high
+        ring.position.set(0, y0, 0); pulseT = 0;
+        var inBand = head >= BAND_LO && head <= BAND_HI, frac = head / (NL - 1);
+        var kind = A[head] > MU[head] + 0.15 ? L('rampa de entrada — mucho transporte, casi no escribe', 'input on-ramp — high transport, barely writes')
+          : MU[head] > A[head] + 0.15 ? L('imprenta — escribe la respuesta, poco transporte', 'printing press — writes the answer, low transport')
+            : L('zona de relevo', 'hand-off zone');
+        read.innerHTML = '<b>L' + head + '</b> (' + frac.toFixed(2) + ')' + (inBand ? ' · ' + L('en la banda', 'in the band') : '') +
+          ' · ' + L('transporte', 'transport') + ' <b style="color:#7c5cbf">' + A[head].toFixed(2) + '</b>' +
+          ' · ' + L('escritura', 'writing') + ' <b style="color:#d55e00">' + MU[head].toFixed(2) + '</b> → <b>' + kind + '</b>' +
+          ' · J<sub>' + head + '</sub>=∏<sub>k≥' + head + '</sub>(I+w′), ' + L('futuro', 'future') + ' ' + (NL - 1 - head) + ' ' + L('capas', 'layers');
+      }
+      var rng = ctrl.querySelector('.fg-arch-range'), btn = ctrl.querySelector('[data-act="pp"]');
+      var playing = !reduce;
+      btn.addEventListener('click', function () { playing = !playing; btn.textContent = playing ? L('⏸ Pausar', '⏸ Pause') : L('▶ Reanudar', '▶ Resume'); });
+      rng.addEventListener('input', function () { playing = false; btn.textContent = L('▶ Reanudar', '▶ Resume'); setHead(+rng.value); });
+
+      // manual orbit camera
+      var target = new THREE.Vector3(0, 0, 0), camR = 7.8, az = 0.7, pol = 1.12;
+      function placeCam() { camera.position.set(target.x + camR * Math.sin(pol) * Math.cos(az), target.y + camR * Math.cos(pol), target.z + camR * Math.sin(pol) * Math.sin(az)); camera.lookAt(target); }
+      var dragging = false, lx = 0, ly = 0;
+      canvas.addEventListener('pointerdown', function (e) { dragging = true; lx = e.clientX; ly = e.clientY; canvas.setPointerCapture(e.pointerId); });
+      canvas.addEventListener('pointerup', function () { dragging = false; });
+      canvas.addEventListener('pointermove', function (e) { if (!dragging) return; az -= (e.clientX - lx) * 0.008; pol -= (e.clientY - ly) * 0.008; pol = Math.max(0.3, Math.min(Math.PI - 0.3, pol)); lx = e.clientX; ly = e.clientY; });
+      function resize() { var w = box.clientWidth || 600, h = 380; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+      window.addEventListener('resize', resize); resize(); setHead(10);
+
+      var fr = 0;
+      function loop() {
+        requestAnimationFrame(loop);
+        var rb = box.getBoundingClientRect(); if (rb.bottom < 0 || rb.top > (window.innerHeight || 9999)) return;
+        fr++;
+        if (!dragging) az += 0.0012;                          // gentle idle orbit
+        pulseT += 0.02; if (pulseT > 1) pulseT = 1;           // pulse climbs the future beam
+        var y0 = yOf(head), yT = yOf(NL - 1);
+        pulse.position.set(0, y0 + (yT - y0) * pulseT, 0); pulse.visible = A[head] > 0.02;
+        for (var i = 0; i < NL; i++) stamps[i].material.opacity = (i >= head ? Math.min(0.85, MU[i]) : 0.0);
+        if (playing && fr % 42 === 0) { var n = head + 1; if (n >= NL) n = 0; setHead(n); rng.value = n; }
+        ring.material.opacity = 0.7 + 0.3 * Math.sin(fr * 0.1);
+        placeCam(); renderer.render(scene, camera);
+      }
+      loop();
+    }
+  } catch (e) {}
+
   // ---- 1s. Build .fg-pizarra3d: the residual stream as a 3D blackboard ----
   // Two modes, two interaction grammars. ① "escrituras": a stepper — each press
   // ADDS the layer's two arrows (attention blue, FFN green) to one token vector;
