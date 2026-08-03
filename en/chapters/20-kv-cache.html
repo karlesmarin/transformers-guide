@@ -1223,7 +1223,7 @@ window.Quarto = {
 <li><strong>The D_f window (ours).</strong> <em>Definition:</em> the number of nearby tokens it’s enough to keep to capture a fraction <span class="math inline">\((1-\varepsilon)\)</span> of the attention, computed in closed form from γ. <em>In the transformer:</em> a <strong>predictive, parameter-free</strong> KV budget, derived from a γ measured once.</li>
 <li><strong>Tolerance ε.</strong> <em>Definition:</em> the small fraction of attention mass we accept <em>losing</em> when we trim. <em>In the transformer:</em> it’s the knob that sets the size of D_f —smaller ε, larger window—.</li>
 <li><strong>Phase A / Phase B (γ&lt;1 / γ&gt;1).</strong> <em>Definition:</em> the two regimes that γ=1 separates; with γ&gt;1 the sum <span class="math inline">\(\sum d^{-\gamma}\)</span> converges (light tail), with γ&lt;1 it diverges (heavy tail). <em>In the transformer:</em> they mark whether a model is <strong>compressible</strong> (a finite window is enough) or not (the mass is spread across the whole context).</li>
-<li><strong>Heuristic vs.&nbsp;principled methods.</strong> <em>Definition:</em> the former pick the budget by position or observed mass (StreamingLLM, H2O, SnapKV); the latter by a loss bound (Ada-KV, LAVa). <em>In the transformer:</em> it’s the field D_f is compared against; none derives the budget from a <strong>decay exponent</strong>.</li>
+<li><strong>Heuristic vs.&nbsp;principled methods.</strong> <em>Definition:</em> the former pick the budget by position or observed mass (StreamingLLM, H2O, SnapKV); the latter by a loss bound (Ada-KV, LAVa). <em>In the transformer:</em> it’s the field D_f is compared against; as of Part I (April 2026) none derived the budget from a <strong>decay exponent</strong> (see §21.5 for concurrent work).</li>
 <li><strong>Mass ≠ fidelity.</strong> <em>Definition:</em> capturing the attention mass doesn’t guarantee preserving the output, because a low-mass token can carry weight through the norm of its value. <em>In the transformer:</em> it’s the honest limit of D_f —it reasons about mass, <em>necessary but not sufficient</em>—.</li>
 </ul>
 <p>With the vocabulary pinned down, let’s get to the problem and the math of D_f.</p>
@@ -1320,7 +1320,7 @@ Table&nbsp;21.1: KV-cache compression methods
 </div>
 </figure>
 </div>
-<p>Look at the “Basis” column: they all pick the budget from <strong>position</strong>, from <strong>observed attention mass</strong>, or from a <strong>loss bound</strong> —none derives it from a <em>decay exponent</em>—.</p>
+<p>Look at the “Basis” column: they all pick the budget from <strong>position</strong>, from <strong>observed attention mass</strong>, or from a <strong>loss bound</strong> —none derived it from a <em>decay exponent</em> at the time of Part I—.</p>
 </section>
 <section id="our-d_f-the-window-derived-from-γ" class="level2" data-number="21.5">
 <h2 data-number="21.5" class="anchored" data-anchor-id="our-d_f-the-window-derived-from-γ"><span class="header-section-number">21.5</span> Our D_f: the window derived from γ</h2>
@@ -1347,7 +1347,8 @@ Figure&nbsp;21.1: Fraction of attention mass captured by keeping the D nearest t
 <div class="fg-kvc"></div>
 <p>That’s why <strong>γ=1 separates two regimes of compressibility</strong> (it’s result Q3 of Paper I <span class="citation" data-cites="marin2026attend">(<a href="#ref-marin2026attend" role="doc-biblioref">Marín 2026</a>)</span>), and the window <strong>D_f</strong> comes out <strong>in closed form from γ itself</strong> —measured once, with no parameters to tune—. That’s the difference from the field:</p>
 <blockquote class="blockquote">
-<p><strong>The gap we fill:</strong> no method derives the KV budget from a <strong>decay exponent</strong>. They all use observed mass, heuristics, or bounds. Our novelty isn’t “compressing the KV” (that’s done a lot already), but the <strong>mechanism</strong>: a <strong>predictive, parameter-free</strong> budget from a measured γ.</p>
+<p><strong>The gap we fill:</strong> at the time of Part I (April 2026), no method derived the KV budget from a <strong>decay exponent</strong> — they all used observed mass, heuristics, or bounds. Our novelty isn’t “compressing the KV” (that’s done a lot already), but the <strong>mechanism</strong>: a <strong>predictive, parameter-free</strong> budget from a measured γ.</p>
+<p><em>Concurrent independent work.</em> Wyner–Ziv bounds for KV compression (arXiv:2605.25085, 24 May 2026 — 27 days after Part I v1) reach the same functional form by a rate-distortion route: a window <code>w = Θ(ε^(−1/α))</code>, which is our <code>D_f ∼ ε^(−1/(γ−1))</code> under a different name for the exponent. That is corroboration, not a scoop — and the halves are complementary: their α is <em>assumed</em> as a modelling premise (Def. 3.3), and they state explicitly that they “do not attempt a mechanistic explanation of α”. Predicting the exponent from architecture is precisely the part that remains ours.</p>
 </blockquote>
 </section>
 <section id="honesty-whats-left-to-validate" class="level2" data-number="21.6">
@@ -1390,7 +1391,7 @@ Figure&nbsp;21.1: Fraction of attention mass captured by keeping the D nearest t
 <h2 data-number="21.7" class="anchored" data-anchor-id="summary"><span class="header-section-number">21.7</span> Summary</h2>
 <ul>
 <li>The <strong>KV-cache</strong> grows O(n) → bottleneck; compressing = which K/V to keep.</li>
-<li>The field picks the budget by <strong>position/observed mass/bounds</strong> (StreamingLLM, H2O, SnapKV, Ada-KV, LAVa…); <strong>none derives it from a decay exponent</strong>.</li>
+<li>The field picks the budget by <strong>position/observed mass/bounds</strong> (StreamingLLM, H2O, SnapKV, Ada-KV, LAVa…); <strong>none derived it from a decay exponent at the time of Part I</strong> (concurrent: arXiv:2605.25085).</li>
 <li><strong>Our D_f:</strong> since <code>A(d)∝d^−γ</code>, a finite window captures <span class="math inline">\((1-\varepsilon)\)</span> of the mass <strong>if γ&gt;1</strong> (compressible), not if γ&lt;1; <strong>γ=1 is the boundary</strong> and <strong>D_f comes out in closed form</strong> from γ (no parameters).</li>
 <li><strong>Honest:</strong> the head-to-head with Ada-KV/LAVa is <strong>pending</strong>; mass ≠ fidelity; D_f goes <em>on top of</em> sink+recency; measure the task, not perplexity.</li>
 </ul>

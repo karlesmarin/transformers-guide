@@ -1270,8 +1270,8 @@ Tabla&nbsp;39.1: Audit de nuestras propias fórmulas y resultados
 </tr>
 <tr class="even">
 <td>Imprint ν ≈ −1/(2π)</td>
-<td>❌ <strong>Refutado en datos</strong></td>
-<td>Probado en Lean, <strong>no reproduce</strong>; CI ancho</td>
+<td>🟡 <strong>No identificada</strong></td>
+<td>El álgebra en Lean se sostiene; el control AbsPE pasa (ν≈0 sin periodo 2π). Pero Part II lo dice de entrada: ν <strong>sigue sin estar constreñida por los datos actuales</strong> — CI bootstrap 95% [−0.260, −0.008], sólo un 11,1% de remuestreos a menos del 1% de −1/(2π), y pythia-31m arrastra buena parte de la pendiente. Consistente, <em>no</em> refutada — y demasiado débil para construir encima</td>
 </tr>
 <tr class="odd">
 <td>Forzar CKA→1 impide el grokking</td>
@@ -1286,7 +1286,7 @@ Tabla&nbsp;39.1: Audit de nuestras propias fórmulas y resultados
 <p>Tres lecturas honestas de esta tabla:</p>
 <ul>
 <li><strong>El erratum del C_V.</strong> En el Paper I afirmamos que la capacidad calorífica en γ=1 era (logN)²/<strong>4</strong>. Era un <strong>error de un factor 3</strong>: el valor correcto es (logN)²/<strong>12</strong>, al que llegan dos derivaciones independientes y que <strong>re-probamos en Lean</strong> (Cap. 22). Lo contamos <strong>porque</strong> es nuestro: un libro que enseña dónde se equivocó es más fiable, no menos.</li>
-<li><strong>El imprint ν, refutado por los datos.</strong> Teníamos una identidad para el “sexto eje” (cuánto imprimen los datos su huella en γ), con pendiente ν≈−1/(2π). Está <strong>probada en Lean</strong>… pero <strong>no reproduce en los datos</strong> (intervalo de confianza ancho, no converge en Pythia-70M). La marcamos como <strong>provisional/refutada en datos</strong>: el álgebra puede ser correcta y la afirmación empírica <strong>falsa</strong> a la vez.</li>
+<li><strong>El imprint ν, no identificado por los datos.</strong> Teníamos una identidad para el “sexto eje” (cuánto imprimen los datos su huella en γ), con pendiente ν≈−1/(2π). Está <strong>probada en Lean</strong>, y el control AbsPE se comporta justo como predice el mecanismo (GPT-2, sin periodo 2π → ν≈0)… pero el panel <strong>no fija el valor</strong>: Part II lo dice de entrada, ν “remains unconstrained by the current data” — CI bootstrap 95% [−0.260, −0.008], sólo un 11,1% de remuestreos a menos del 1% de −1/(2π), y pythia-31m arrastra buena parte de la pendiente. La marcamos como <strong>no identificada</strong>, que es <em>más débil</em> que refutada: los datos son compatibles con el valor, simplemente no lo establecen. La distinción importa — un intervalo ancho que contiene tu número no es evidencia en contra, es ausencia de evidencia a favor.</li>
 <li><strong>Forzar el CKA no causa el grokking.</strong> Creímos que el re-ascenso del CKA inter-capa (Cap. 24) podía ser una <strong>palanca causal</strong>. El experimento lo <strong>tumbó</strong>: 2 de 3 modelos con el CKA forzado <strong>grokean igualmente</strong>. Lo enseñamos como <strong>refutación trabajada</strong> —señal predictiva, no causal—.</li>
 </ul>
 <div class="callout callout-style-default callout-warning callout-titled" title="⚠ La distinción que más importa: Lean prueba álgebra, no realidad">
@@ -1299,7 +1299,7 @@ Tabla&nbsp;39.1: Audit de nuestras propias fórmulas y resultados
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Un recibo <strong>Lean</strong> demuestra que <strong>las fórmulas cuadran</strong> (consistencia algebraica), <strong>no</strong> que describan causalmente a un transformer. Por eso el imprint ν puede estar “probado en Lean” y <strong>fallar en los datos</strong>: son dos cosas distintas. Una cosa es “el álgebra es correcta”; otra, “esto es lo que hace el modelo”. Cada afirmación necesita <strong>su tipo de recibo</strong>: las identidades → Lean; las afirmaciones empíricas → datos reproducibles; las lentes (termodinámica, fraccionario) → se etiquetan como <strong>analogía</strong>, no como teorema.</p>
+<p>Un recibo <strong>Lean</strong> demuestra que <strong>las fórmulas cuadran</strong> (consistencia algebraica), <strong>no</strong> que describan causalmente a un transformer. Por eso el imprint ν puede estar “probado en Lean” y aun así <strong>no quedar establecido por los datos</strong>: son dos cosas distintas. Una cosa es “el álgebra es correcta”; otra, “esto es lo que hace el modelo”. Cada afirmación necesita <strong>su tipo de recibo</strong>: las identidades → Lean; las afirmaciones empíricas → datos reproducibles; las lentes (termodinámica, fraccionario) → se etiquetan como <strong>analogía</strong>, no como teorema.</p>
 </div>
 </div>
 <div class="analogia">
@@ -1340,7 +1340,7 @@ Tabla&nbsp;39.1: Audit de nuestras propias fórmulas y resultados
 <ol type="1">
 <li><strong>Los tres cubos.</strong> Define verificado, folclore y numerología, y da un ejemplo de cada uno (puede ser del campo o nuestro).</li>
 <li><strong>El recibo.</strong> ¿Qué tipo de recibo necesita una <strong>identidad</strong> matemática frente a una <strong>afirmación empírica</strong>? ¿Por qué no sirve el mismo para ambas?</li>
-<li><strong>Lean ≠ realidad.</strong> Explica con el caso del imprint ν cómo algo puede estar “probado en Lean” y ser <strong>falso en los datos</strong>.</li>
+<li><strong>Lean ≠ realidad.</strong> Explica con el caso del imprint ν cómo algo puede estar “probado en Lean” y aun así <strong>no quedar establecido por los datos</strong> — y por qué eso no es lo mismo que ser falso.</li>
 <li><strong>Erratum.</strong> ¿Por qué contar el error del C_V (factor 3) hace el libro <strong>más</strong> fiable?</li>
 <li><strong>Mito.</strong> Toma “la atención explica la decisión del modelo” y argumenta, con lo del Cap. 37, por qué es folclore.</li>
 <li><strong>Aplícalo.</strong> Te encuentras una fórmula nueva en un paper con un número que ajusta muy bien. ¿Qué tres preguntas le haces antes de creerla?</li>

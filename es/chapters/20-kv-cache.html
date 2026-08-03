@@ -1223,7 +1223,7 @@ window.Quarto = {
 <li><strong>Ventana D_f (nuestra).</strong> <em>Definición:</em> el número de tokens cercanos que basta conservar para capturar una fracción <span class="math inline">\((1-\varepsilon)\)</span> de la atención, calculado en forma cerrada a partir de γ. <em>En el transformer:</em> un presupuesto de KV <strong>predictivo y sin parámetros</strong>, derivado de un γ medido una vez.</li>
 <li><strong>Tolerancia ε.</strong> <em>Definición:</em> la pequeña fracción de masa de atención que aceptamos <em>perder</em> al recortar. <em>En el transformer:</em> es el mando que fija el tamaño de D_f —menor ε, ventana mayor—.</li>
 <li><strong>Fase A / Fase B (γ&lt;1 / γ&gt;1).</strong> <em>Definición:</em> los dos regímenes que separa γ=1; con γ&gt;1 la suma <span class="math inline">\(\sum d^{-\gamma}\)</span> converge (cola ligera), con γ&lt;1 diverge (cola pesada). <em>En el transformer:</em> marcan si un modelo es <strong>comprimible</strong> (ventana finita basta) o no (la masa está repartida por todo el contexto).</li>
-<li><strong>Métodos heurísticos vs.&nbsp;principiados.</strong> <em>Definición:</em> los primeros eligen el presupuesto por posición o masa observada (StreamingLLM, H2O, SnapKV); los segundos por una cota de pérdida (Ada-KV, LAVa). <em>En el transformer:</em> es el campo con el que se compara D_f; ninguno deriva el presupuesto de un <strong>exponente de decaimiento</strong>.</li>
+<li><strong>Métodos heurísticos vs.&nbsp;principiados.</strong> <em>Definición:</em> los primeros eligen el presupuesto por posición o masa observada (StreamingLLM, H2O, SnapKV); los segundos por una cota de pérdida (Ada-KV, LAVa). <em>En el transformer:</em> es el campo con el que se compara D_f; a fecha de Part I (abril de 2026) ninguno derivaba el presupuesto de un <strong>exponente de decaimiento</strong> (ver §21.5 para el trabajo concurrente).</li>
 <li><strong>Masa ≠ fidelidad.</strong> <em>Definición:</em> capturar la masa de atención no garantiza preservar la salida, porque un token de poca masa puede pesar por la norma de su valor. <em>En el transformer:</em> es el límite honesto de D_f —razona sobre masa, <em>necesaria pero no suficiente</em>—.</li>
 </ul>
 <p>Con el vocabulario fijado, vamos al problema y a la matemática de D_f.</p>
@@ -1320,7 +1320,7 @@ Tabla&nbsp;21.1: Métodos de compresión de KV-cache
 </div>
 </figure>
 </div>
-<p>Fíjate en la columna “Base”: todos eligen el presupuesto a partir de la <strong>posición</strong>, de la <strong>masa de atención observada</strong>, o de una <strong>cota de pérdida</strong> —ninguno lo deriva de un <em>exponente de decaimiento</em>—.</p>
+<p>Fíjate en la columna “Base”: todos eligen el presupuesto a partir de la <strong>posición</strong>, de la <strong>masa de atención observada</strong>, o de una <strong>cota de pérdida</strong> —ninguno lo derivaba de un <em>exponente de decaimiento</em> en el momento de Part I—.</p>
 </section>
 <section id="nuestro-d_f-la-ventana-derivada-de-γ" class="level2" data-number="21.5">
 <h2 data-number="21.5" class="anchored" data-anchor-id="nuestro-d_f-la-ventana-derivada-de-γ"><span class="header-section-number">21.5</span> Nuestro D_f: la ventana derivada de γ</h2>
@@ -1347,7 +1347,8 @@ Figura&nbsp;21.1: Fracción de la masa de atención capturada al conservar los D
 <div class="fg-kvc"></div>
 <p>Por eso <strong>γ=1 separa dos regímenes de compresibilidad</strong> (es el resultado Q3 del Paper I <span class="citation" data-cites="marin2026attend">(<a href="#ref-marin2026attend" role="doc-biblioref">Marín 2026</a>)</span>), y la ventana <strong>D_f</strong> sale <strong>en forma cerrada del propio γ</strong> —medido una vez, sin parámetros que tunear—. Esa es la diferencia con el campo:</p>
 <blockquote class="blockquote">
-<p><strong>El hueco que llenamos:</strong> ningún método deriva el presupuesto de KV de un <strong>exponente de decaimiento</strong>. Todos usan masa observada, heurísticas o cotas. Nuestra novedad no es “comprimir el KV” (eso ya se hace mucho), sino el <strong>mecanismo</strong>: un presupuesto <strong>predictivo y sin parámetros</strong> a partir de un γ medido.</p>
+<p><strong>El hueco que llenamos:</strong> en el momento de Part I (abril de 2026), ningún método derivaba el presupuesto de KV de un <strong>exponente de decaimiento</strong> — todos usaban masa observada, heurísticas o cotas. Nuestra novedad no es “comprimir el KV” (eso ya se hace mucho), sino el <strong>mecanismo</strong>: un presupuesto <strong>predictivo y sin parámetros</strong> a partir de un γ medido.</p>
+<p><em>Trabajo concurrente independiente.</em> Las cotas de Wyner–Ziv para compresión de KV (arXiv:2605.25085, 24 de mayo de 2026 — 27 días después de Part I v1) llegan a la misma forma funcional por vía rate-distortion: una ventana <code>w = Θ(ε^(−1/α))</code>, que es nuestro <code>D_f ∼ ε^(−1/(γ−1))</code> con otro nombre para el exponente. Eso corrobora, no adelanta — y las dos mitades son complementarias: su α se <em>asume</em> como premisa de modelado (Def. 3.3), y declaran de forma explícita que “no intentan una explicación mecanicista de α”. Predecir el exponente desde la arquitectura es justo la parte que sigue siendo nuestra.</p>
 </blockquote>
 </section>
 <section id="honestidad-lo-que-falta-validar" class="level2" data-number="21.6">
@@ -1390,7 +1391,7 @@ Figura&nbsp;21.1: Fracción de la masa de atención capturada al conservar los D
 <h2 data-number="21.7" class="anchored" data-anchor-id="resumen"><span class="header-section-number">21.7</span> Resumen</h2>
 <ul>
 <li>El <strong>KV-cache</strong> crece O(n) → cuello de botella; comprimir = qué K/V conservar.</li>
-<li>El campo elige el presupuesto por <strong>posición/masa observada/cotas</strong> (StreamingLLM, H2O, SnapKV, Ada-KV, LAVa…); <strong>ninguno lo deriva de un exponente de decaimiento</strong>.</li>
+<li>El campo elige el presupuesto por <strong>posición/masa observada/cotas</strong> (StreamingLLM, H2O, SnapKV, Ada-KV, LAVa…); <strong>ninguno lo derivaba de un exponente de decaimiento en el momento de Part I</strong> (concurrente: arXiv:2605.25085).</li>
 <li><strong>Nuestro D_f:</strong> como <code>A(d)∝d^−γ</code>, una ventana finita captura <span class="math inline">\((1-\varepsilon)\)</span> de la masa <strong>si γ&gt;1</strong> (comprimible), no si γ&lt;1; <strong>γ=1 es la frontera</strong> y <strong>D_f sale en forma cerrada</strong> de γ (sin parámetros).</li>
 <li><strong>Honesto:</strong> el cara a cara con Ada-KV/LAVa está <strong>pendiente</strong>; masa ≠ fidelidad; D_f va <em>encima</em> de sumidero+recencia; mide tarea, no perplejidad.</li>
 </ul>

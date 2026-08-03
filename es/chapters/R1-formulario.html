@@ -1415,7 +1415,7 @@ window.Quarto = {
 <td><span class="math inline">\(d_\text{horizon}=\dfrac{\theta(1-\gamma)\sqrt2}{1+\gamma}\)</span></td>
 <td><strong>Horizonte</strong> de atención: distancia máxima con señal posicional</td>
 <td>15, 19</td>
-<td>✓ Derivado (inversa de Padé) · 📊 (n=8, familia Pythia)</td>
+<td>✓ Derivado (inversa de Padé) · 📊 (n=8, familia Pythia) · ⚠ <strong>Sólo con γ medida.</strong> Si se le da la γ predicha γ = γ_Padé(θ,T), esta expresión es idénticamente T_eval — es la función inversa, así que devuelve su propia entrada y no predice nada</td>
 </tr>
 <tr class="odd">
 <td><span class="math inline">\(\Delta\gamma=\gamma_\text{texto}-\gamma_\text{aleatorio}\)</span></td>
@@ -1502,7 +1502,7 @@ window.Quarto = {
 <td>Imprint: pendiente <span class="math inline">\(\nu\approx-1/(2\pi)\)</span></td>
 <td>“Huella” de los datos de entrenamiento en γ</td>
 <td>15, 38</td>
-<td><strong>✗ Refutado en datos</strong> (Lean sí; no reproduce)</td>
+<td><strong>🟡 No identificada</strong> (Lean sí; el control AbsPE pasa; pero el CI [−0.260, −0.008] no fija el valor — consistente, no establecida)</td>
 </tr>
 </tbody>
 </table>

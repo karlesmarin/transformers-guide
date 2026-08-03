@@ -1415,7 +1415,7 @@ window.Quarto = {
 <td><span class="math inline">\(d_\text{horizon}=\dfrac{\theta(1-\gamma)\sqrt2}{1+\gamma}\)</span></td>
 <td>Attention <strong>horizon</strong>: maximum distance with positional signal</td>
 <td>15, 19</td>
-<td>✓ Derived (inverse of Padé) · 📊 (n=8, Pythia family)</td>
+<td>✓ Derived (inverse of Padé) · 📊 (n=8, Pythia family) · ⚠ <strong>Only with a measured γ.</strong> Fed the predicted γ = γ_Padé(θ,T), this expression is identically T_eval — it is the inverse function, so it returns its own input and predicts nothing</td>
 </tr>
 <tr class="odd">
 <td><span class="math inline">\(\Delta\gamma=\gamma_\text{text}-\gamma_\text{random}\)</span></td>
@@ -1502,7 +1502,7 @@ window.Quarto = {
 <td>Imprint: slope <span class="math inline">\(\nu\approx-1/(2\pi)\)</span></td>
 <td>“Footprint” of the training data on γ</td>
 <td>15, 38</td>
-<td><strong>✗ Refuted on data</strong> (Lean holds; does not reproduce)</td>
+<td><strong>🟡 Not identified</strong> (Lean holds; AbsPE control passes; but CI [−0.260, −0.008] does not pin the value — consistent, not established)</td>
 </tr>
 </tbody>
 </table>

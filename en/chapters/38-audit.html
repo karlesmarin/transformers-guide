@@ -1270,8 +1270,8 @@ Table&nbsp;39.1: Audit of our own formulas and results
 </tr>
 <tr class="even">
 <td>Imprint ν ≈ −1/(2π)</td>
-<td>❌ <strong>Refuted on data</strong></td>
-<td>Proved in Lean, <strong>does not reproduce</strong>; wide CI</td>
+<td>🟡 <strong>Not identified</strong></td>
+<td>Lean holds; the AbsPE control passes (ν≈0 with no 2π period). But Part II says upfront that ν <strong>remains unconstrained by the current data</strong>: bootstrap 95% CI [−0.260, −0.008], only 11.1% of resamples within 1% of −1/(2π), pythia-31m driving much of the slope. Consistent, <em>not</em> refuted — and too weak to build on</td>
 </tr>
 <tr class="odd">
 <td>Forcing CKA→1 prevents grokking</td>
@@ -1286,7 +1286,7 @@ Table&nbsp;39.1: Audit of our own formulas and results
 <p>Three honest readings of this table:</p>
 <ul>
 <li><strong>The C_V erratum.</strong> In Paper I we claimed the heat capacity at γ=1 was (logN)²/<strong>4</strong>. It was a <strong>factor-of-3 error</strong>: the correct value is (logN)²/<strong>12</strong>, which two independent derivations arrive at and which we <strong>re-proved in Lean</strong> (Ch. 22). We recount it <strong>because</strong> it’s ours: a book that teaches where it went wrong is more reliable, not less.</li>
-<li><strong>The imprint ν, refuted by the data.</strong> We had an identity for the “sixth axis” (how much the data imprints its mark on γ), with slope ν≈−1/(2π). It’s <strong>proved in Lean</strong>… but <strong>does not reproduce on the data</strong> (wide confidence interval, doesn’t converge in Pythia-70M). We mark it as <strong>provisional/refuted on data</strong>: the algebra can be correct and the empirical claim <strong>false</strong> at the same time.</li>
+<li><strong>The imprint ν, not identified by the data.</strong> We had an identity for the “sixth axis” (how much the data imprints its mark on γ), with slope ν≈−1/(2π). It’s <strong>proved in Lean</strong>, and the AbsPE control behaves exactly as the mechanism predicts (GPT-2, no 2π period → ν≈0)… but the panel <strong>does not pin the value down</strong>: Part II says upfront that ν “remains unconstrained by the current data” — bootstrap 95% CI [−0.260, −0.008], only 11.1% of resamples within 1% of −1/(2π), and pythia-31m driving much of the slope. We mark it as <strong>not identified</strong>, which is <em>weaker</em> than refuted: the data are consistent with the value, they simply do not establish it. The distinction matters — a wide interval containing your number is not evidence against it, it is an absence of evidence for it.</li>
 <li><strong>Forcing CKA does not cause grokking.</strong> We thought the inter-layer CKA re-rise (Ch. 24) might be a <strong>causal lever</strong>. The experiment <strong>knocked it down</strong>: 2 of 3 models with forced CKA <strong>grok just the same</strong>. We teach it as a <strong>worked refutation</strong> —a predictive signal, not a causal one.</li>
 </ul>
 <div class="callout callout-style-default callout-warning callout-titled" title="⚠ The distinction that matters most: Lean proves algebra, not reality">
@@ -1299,7 +1299,7 @@ Table&nbsp;39.1: Audit of our own formulas and results
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>A <strong>Lean</strong> receipt proves that <strong>the formulas add up</strong> (algebraic consistency), <strong>not</strong> that they describe a transformer causally. That’s why the imprint ν can be “proved in Lean” and <strong>fail on the data</strong>: they’re two different things. One thing is “the algebra is correct”; another, “this is what the model does”. Each claim needs <strong>its own kind of receipt</strong>: identities → Lean; empirical claims → reproducible data; lenses (thermodynamic, fractional) → they’re labeled as <strong>analogy</strong>, not as theorem.</p>
+<p>A <strong>Lean</strong> receipt proves that <strong>the formulas add up</strong> (algebraic consistency), <strong>not</strong> that they describe a transformer causally. That’s why the imprint ν can be “proved in Lean” and still <strong>not be established by the data</strong>: they’re two different things. One thing is “the algebra is correct”; another, “this is what the model does”. Each claim needs <strong>its own kind of receipt</strong>: identities → Lean; empirical claims → reproducible data; lenses (thermodynamic, fractional) → they’re labeled as <strong>analogy</strong>, not as theorem.</p>
 </div>
 </div>
 <div class="analogia">
@@ -1340,7 +1340,7 @@ Table&nbsp;39.1: Audit of our own formulas and results
 <ol type="1">
 <li><strong>The three buckets.</strong> Define verified, folklore and numerology, and give an example of each (it can be the field’s or ours).</li>
 <li><strong>The receipt.</strong> What kind of receipt does a mathematical <strong>identity</strong> need versus an <strong>empirical claim</strong>? Why doesn’t the same one work for both?</li>
-<li><strong>Lean ≠ reality.</strong> Use the imprint ν case to explain how something can be “proved in Lean” and <strong>false on the data</strong>.</li>
+<li><strong>Lean ≠ reality.</strong> Use the imprint ν case to explain how something can be “proved in Lean” and still <strong>not established by the data</strong> — and why that is not the same as being false.</li>
 <li><strong>Erratum.</strong> Why does recounting the C_V error (factor of 3) make the book <strong>more</strong> reliable?</li>
 <li><strong>Myth.</strong> Take “attention explains the model’s decision” and argue, with Ch. 37’s material, why it’s folklore.</li>
 <li><strong>Apply it.</strong> You come across a new formula in a paper with a number that fits very well. What three questions do you ask before believing it?</li>
