@@ -8,6 +8,17 @@
 
 ---
 
+## Selector de modelos / Model picker — 2026-10-24
+
+**ES:** El campo opcional de R5 busca modelos en Hugging Face: populares al pulsar,
+filtrado al escribir, selección con ratón o teclado y entrada manual si falla la red.
+Orden por descargas, caché de cinco minutos, sin inferencia ni descarga de pesos.
+
+**EN:** R5's optional model field searches Hugging Face: popular models on focus,
+filtering while typing, mouse/keyboard selection and manual entry if the network fails.
+Sorted by downloads, cached for five minutes, without inference or weight downloads.
+
+
 ## Estudios y demos / Studies and demos — 2026-10-24
 
 **ES:** Ocho estudios nuevos se incorporan a los capítulos existentes: precisión
