@@ -730,6 +730,26 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
 .references a {overflow-wrap:anywhere;word-break:break-word;}
 </style>
 
+
+<style>
+
+.taf-guide-context {border:1px solid #64748b;border-radius:.6rem;padding:1rem;margin:1rem 0;background:var(--bs-body-bg,#fff);line-height:1.6;}
+
+.taf-guide-context label {display:block;margin:.7rem 0 .2rem;font-weight:600;}
+
+.taf-guide-context input,.taf-guide-context select {display:block;width:100%;max-width:100%;padding:.5rem;font:inherit;box-sizing:border-box;}
+
+.taf-guide-context a {overflow-wrap:anywhere;}
+
+.taf-guide-context li {margin:.4rem 0;}
+
+.taf-guide-context button {font:inherit;border:1px solid #64748b;border-radius:.3rem;padding:.3rem .6rem;}
+
+.taf-guide-context :focus-visible {outline:3px solid #2563eb;outline-offset:3px;}
+
+</style>
+
+
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
@@ -4475,6 +4495,20 @@ document.querySelectorAll('figure.quarto-float-tbl > div[aria-describedby]').for
   region.setAttribute('aria-labelledby', region.getAttribute('aria-describedby'));
 });
 </script>
+
+
+<!-- TAF bridge: shared local module, no model execution or network inference. -->
+
+<script type="module">
+
+const offset = document.querySelector('meta[name="quarto:offset"]')?.content || './';
+
+import(new URL(offset + 'assets/guide_bridge.js', location.href).href)
+
+  .then(module => module.initGuidePage()).catch(error => console.warn('TAF reading route unavailable', error));
+
+</script>
+
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

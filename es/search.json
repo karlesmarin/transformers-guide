@@ -5819,7 +5819,18 @@
     "href": "chapters/R5-tafagent.html#qué-es-y-qué-no-es",
     "title": "48  R5 · Manual de tafagent",
     "section": "",
-    "text": "Es: una herramienta en el navegador (cero instalación, cero GPU, sin telemetría) que predice la viabilidad práctica de un LLM antes de gastar GPU/€: contexto largo real, degradación por cuantización, plantilla de chat, errores de config.\nNo es: un visor de mapas de atención, ni un servicio que ejecute el modelo. Lo que ves son predicciones deterministas (calculadas con Pyodide) más una capa de lenguaje natural.\nEntrada: un HF model id o un config.json (lee θ, T_train, cabezas…); tú fijas T_eval (la longitud objetivo) y si el modelo usa ventana deslizante (SWA).",
+    "text": "Es: una herramienta en el navegador (cero instalación, cero GPU, sin telemetría) que estima aspectos de viabilidad de un LLM antes de gastar GPU/€: límites de contexto propuestos, degradación por cuantización, plantilla de chat, errores de config.\nNo es: un visor de mapas de atención, ni un servicio que ejecute el modelo. Lo que ves son predicciones deterministas (calculadas con Pyodide) más una capa de lenguaje natural.\nEntrada: un HF model id o un config.json (lee θ, T_train, cabezas…); tú fijas T_eval (la longitud objetivo) y si el modelo usa ventana deslizante (SWA).",
+    "crumbs": [
+      "Parte VIII — Referencia",
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · Manual de tafagent</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/R5-tafagent.html#taf-routes",
+    "href": "chapters/R5-tafagent.html#taf-routes",
+    "title": "48  R5 · Manual de tafagent",
+    "section": "48.2 De la pregunta a la herramienta",
+    "text": "48.2 De la pregunta a la herramienta\nEl selector prepara una ruta: concepto → herramienta → explicación. Los enlaces de Entender este resultado en TAF traen a la guía la métrica seleccionada, su valor y si es una estimación o una medición importada. Ese valor es una instantánea; la guía no ejecuta el modelo ni verifica el resultado. Abre la explicación en otra pestaña para conservar tu diagnóstico, o usa Volver a TAF para preparar el mismo modo.\n\nSin JavaScript: perfil, medir atención, comparar con mediciones.\nDemo opcional: el botón «Probar un ejemplo» prepara una sonda de atención con Pythia-70m; no descarga pesos ni ejecuta inferencia. En TAF también puedes abrir la demo de lectura acompañada.\nMedición de entropía: Diagnose CLI permite generar --entropy-only o --measure-entropy. La inferencia se ejecuta con Python/PyTorch en tu equipo; no dentro de este selector. La entropía no determina γ y no se aplica una corrección automática por entropía. El diagrama de fases consulta el atlas, no realiza una nueva medición.",
     "crumbs": [
       "Parte VIII — Referencia",
       "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · Manual de tafagent</span>"
@@ -5829,8 +5840,8 @@
     "objectID": "chapters/R5-tafagent.html#las-métricas-que-calcula",
     "href": "chapters/R5-tafagent.html#las-métricas-que-calcula",
     "title": "48  R5 · Manual de tafagent",
-    "section": "48.2 Las métricas que calcula",
-    "text": "48.2 Las métricas que calcula\n\n\n\n\n\n\n\n\nMétrica\nQué dice\nCap.\n\n\n\n\nγ_Padé\nγ predicho desde la geometría (θ, T)\n15\n\n\nγ_observado\nγ medido de pesos reales\n15\n\n\nd_horizon\nhorizonte de atención efectivo (hasta dónde atiende de verdad)\n15, 19\n\n\nη (θ_eff_obs/θ_eff_Padé)\nrégimen: Normal / Fraude / Comprimido / Over-Padé / SWA\nR1\n\n\nKV memory\nmemoria de caché a la longitud L\n20, 36\n\n\nL_NIAH\ntecho estimado needle-in-haystack\n19\n\n\nΔγ\nsonda de fase de cabezas de inducción\n24, 30\n\n\nΔPPL\nshift de perplejidad por cuantización\n35\n\n\nFase A / Fase B\nγ&lt;1 (global) vs γ&gt;1 (colapso local)\n21",
+    "section": "48.3 Las métricas que calcula",
+    "text": "48.3 Las métricas que calcula\n\n\n\n\n\n\n\n\nMétrica\nQué dice\nCap.\n\n\n\n\nγ_Padé\nγ predicho desde la geometría (θ, T)\n15\n\n\nγ_observado\nγ importado de una medición con pesos reales; depende del protocolo\n15\n\n\nd_horizon\nhorizonte derivado del modelo teórico; no prueba el contexto útil real\n15, 19\n\n\nη (θ_eff_obs/θ_eff_Padé)\nrégimen: Normal / Fraude / Comprimido / Over-Padé / SWA\nR1\n\n\nKV memory\nmemoria de caché a la longitud L\n20, 36\n\n\nL_NIAH\ntecho estimado needle-in-haystack\n19\n\n\nΔγ\nsonda de fase de cabezas de inducción\n24, 30\n\n\nΔPPL\nshift de perplejidad por cuantización\n35\n\n\nFase A / Fase B\nγ&lt;1 (global) vs γ&gt;1 (colapso local)\n21",
     "crumbs": [
       "Parte VIII — Referencia",
       "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · Manual de tafagent</span>"
@@ -5840,8 +5851,8 @@
     "objectID": "chapters/R5-tafagent.html#cómo-se-organiza-cinco-preguntas-no-una-lista-de-modos",
     "href": "chapters/R5-tafagent.html#cómo-se-organiza-cinco-preguntas-no-una-lista-de-modos",
     "title": "48  R5 · Manual de tafagent",
-    "section": "48.3 Cómo se organiza: cinco preguntas, no una lista de modos",
-    "text": "48.3 Cómo se organiza: cinco preguntas, no una lista de modos\nLa portada agrupa las herramientas por lo que quieres hacer (los modos crecen con cada versión; la lista siempre actual está en el manual 📘 de la propia app):\n\n🔬 “¿Me sirve este modelo?” — Profile (pega un id → la TAF Card completa, el modo de partida), Fit Check, Unmask, Memory Reality, NIAH→Reason, LongScore, Quant, YaRN Planner, GGUF Bridge, Launch Flags, Inspect config…\n✓ “¿Me creo este número?” — Contamination, Drift, Arena CI, Saturation.\n⚙️ “Montar bien una eval” — Chat-template Sniffer, Diagnose CLI, JSON CoT, PEFT Lint, Cache Diff, Spec-Decode, Token Tax.\n🆚 “Comparar modelos” — Compare (2-3 modelos, misma receta) y el diagrama de fases interactivo (el atlas en vivo).\n📋 “Manual / a mi aire” — Pick recipe (una X-* concreta) y Ask (pregunta en lenguaje natural; la resuelve un LLM pequeño in-browser).\n\nDestacado reciente — 💾 Fit Check (“¿me cabe?”): modelo + precisión + GPU + contexto → el presupuesto completo de VRAM (pesos + caché KV + scratch), por qué no cabe si no cabe (¿pesos o KV?), el contexto máximo que sí cabe, y el rescate más barato. Responde la pregunta más repetida de los foros antes de descargar nada — y enseña de paso la lección del Cap. 21: a contexto largo, la caché KV puede pesar tanto como el modelo.",
+    "section": "48.4 Cómo se organiza: cinco preguntas, no una lista de modos",
+    "text": "48.4 Cómo se organiza: cinco preguntas, no una lista de modos\nLa portada agrupa las herramientas por lo que quieres hacer (los modos crecen con cada versión; la lista siempre actual está en el manual 📘 de la propia app):\n\n🔬 “¿Me sirve este modelo?” — Profile (pega un id → la TAF Card completa, el modo de partida), Fit Check, Unmask, Memory Reality, NIAH→Reason, LongScore, Quant, YaRN Planner, GGUF Bridge, Launch Flags, Inspect config…\n✓ “¿Me creo este número?” — Contamination, Drift, Arena CI, Saturation.\n⚙️ “Montar bien una eval” — Chat-template Sniffer, Diagnose CLI, JSON CoT, PEFT Lint, Cache Diff, Spec-Decode, Token Tax.\n🆚 “Comparar modelos” — Compare (2-3 modelos, misma receta) y el diagrama de fases interactivo (el atlas en vivo).\n📋 “Manual / a mi aire” — Pick recipe (una X-* concreta) y Ask (pregunta en lenguaje natural; la resuelve un LLM pequeño in-browser).\n\nDestacado reciente — 💾 Fit Check (“¿me cabe?”): modelo + precisión + GPU + contexto → el presupuesto completo de VRAM (pesos + caché KV + scratch), por qué no cabe si no cabe (¿pesos o KV?), el contexto máximo que sí cabe, y el rescate más barato. Responde la pregunta más repetida de los foros antes de descargar nada — y enseña de paso la lección del Cap. 21: a contexto largo, la caché KV puede pesar tanto como el modelo.",
     "crumbs": [
       "Parte VIII — Referencia",
       "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · Manual de tafagent</span>"
@@ -5851,8 +5862,8 @@
     "objectID": "chapters/R5-tafagent.html#demos-guiadas-y-tu-idioma",
     "href": "chapters/R5-tafagent.html#demos-guiadas-y-tu-idioma",
     "title": "48  R5 · Manual de tafagent",
-    "section": "48.4 Demos guiadas y tu idioma",
-    "text": "48.4 Demos guiadas y tu idioma\n\nCada modo lleva un botón 🎬 Demo: una simulación guiada que teclea, pulsa y narra paso a paso, y termina con una tarjeta de “qué acabas de aprender”. Enlazables: ?demo=fitcheck, ?demo=profile, ?demo=yarn… — útiles para compartir o enseñar.\nCuatro idiomas de punta a punta (EN/ES/FR/ZH): desde la v0.12 no solo los menús — también las demos, los veredictos de las recetas y sus explicaciones siguen el idioma del navegador.",
+    "section": "48.5 Demos guiadas y tu idioma",
+    "text": "48.5 Demos guiadas y tu idioma\n\nCada modo lleva un botón 🎬 Demo: una simulación guiada que teclea, pulsa y narra paso a paso, y termina con una tarjeta de “qué acabas de aprender”. Enlazables: ?demo=fitcheck, ?demo=profile, ?demo=yarn… — útiles para compartir o enseñar.\nCuatro idiomas de punta a punta (EN/ES/FR/ZH): desde la v0.12 no solo los menús — también las demos, los veredictos de las recetas y sus explicaciones siguen el idioma del navegador.",
     "crumbs": [
       "Parte VIII — Referencia",
       "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · Manual de tafagent</span>"
@@ -5862,8 +5873,8 @@
     "objectID": "chapters/R5-tafagent.html#el-anti-bullshit-pack",
     "href": "chapters/R5-tafagent.html#el-anti-bullshit-pack",
     "title": "48  R5 · Manual de tafagent",
-    "section": "48.5 El Anti-Bullshit Pack",
-    "text": "48.5 El Anti-Bullshit Pack\nDiagnósticos que atacan el “humo” de las fichas de modelo: Context Unmasker (contexto largo real vs anunciado), Chat-template Sniffer, Quant-regime Classifier, Multilingual Tokenizer Tax (tokeniza texto real en 6 tokenizadores → cuánto “cuesta” tu idioma), Contamination Prior, LongScore (RULER+HELMET), PEFT Anti-Pattern, Spec-Decode, y extensión: planificador YaRN/RoPE, GGUF Bridge, Launch-Flag Generator.",
+    "section": "48.6 El Anti-Bullshit Pack",
+    "text": "48.6 El Anti-Bullshit Pack\nDiagnósticos que atacan el “humo” de las fichas de modelo: Context Unmasker (contexto largo real vs anunciado), Chat-template Sniffer, Quant-regime Classifier, Multilingual Tokenizer Tax (tokeniza texto real en 6 tokenizadores → cuánto “cuesta” tu idioma), Contamination Prior, LongScore (RULER+HELMET), PEFT Anti-Pattern, Spec-Decode, y extensión: planificador YaRN/RoPE, GGUF Bridge, Launch-Flag Generator.",
     "crumbs": [
       "Parte VIII — Referencia",
       "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · Manual de tafagent</span>"
@@ -5873,8 +5884,8 @@
     "objectID": "chapters/R5-tafagent.html#las-recetas-8-core",
     "href": "chapters/R5-tafagent.html#las-recetas-8-core",
     "title": "48  R5 · Manual de tafagent",
-    "section": "48.6 Las recetas (8 core)",
-    "text": "48.6 Las recetas (8 core)\n\n\n\n\n\n\n\n\nReceta\nPara qué\nCap.\n\n\n\n\nX-1\ncustom vs API\n25, 36\n\n\nX-2\nviabilidad de contexto largo\n19\n\n\nX-3\npre-flight de presupuesto\n25\n\n\nX-5\nhardware\n36\n\n\nX-19\ncompresión de KV (soft-decay/cutoff)\n20\n\n\nX-21\nhuella de entrenamiento en γ (γ_train) — retirada como predictor: ν no está identificada con los datos actuales (Capítulo 39)\n15\n\n\nX-22\ninvariante cómputo-contexto\n34\n\n\nX-23\ndetector de fase de cabezas de inducción\n24, 30",
+    "section": "48.7 Las recetas (8 core)",
+    "text": "48.7 Las recetas (8 core)\n\n\n\n\n\n\n\n\nReceta\nPara qué\nCap.\n\n\n\n\nX-1\ncustom vs API\n25, 36\n\n\nX-2\nviabilidad de contexto largo\n19\n\n\nX-3\npre-flight de presupuesto\n25\n\n\nX-5\nhardware\n36\n\n\nX-19\ncompresión de KV (soft-decay/cutoff)\n20\n\n\nX-21\nhuella de entrenamiento en γ (γ_train) — retirada como predictor: ν no está identificada con los datos actuales (Capítulo 39)\n15\n\n\nX-22\ninvariante cómputo-contexto\n34\n\n\nX-23\ndetector de fase de cabezas de inducción\n24, 30",
     "crumbs": [
       "Parte VIII — Referencia",
       "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · Manual de tafagent</span>"
@@ -5884,8 +5895,8 @@
     "objectID": "chapters/R5-tafagent.html#cómo-leer-la-salida-la-taf-card",
     "href": "chapters/R5-tafagent.html#cómo-leer-la-salida-la-taf-card",
     "title": "48  R5 · Manual de tafagent",
-    "section": "48.7 Cómo leer la salida: la TAF Card",
-    "text": "48.7 Cómo leer la salida: la TAF Card\nEl resultado se resume en una TAF Card con veredictos ✅ / ⚠ / ❌ por dimensión (contexto, cuantización, plantilla, régimen). Y hay un dashboard de falsación (F1-F23): no solo te da números, sino que somete las afirmaciones a prueba —la misma filosofía del Cap. 38—.\nUn flujo típico: Profile (pega el id) → lee el veredicto de la TAF Card → si algo sale ⚠/❌, abre el diagnóstico concreto (p. ej. Context Unmasker o Quant-regime) → usa la receta correspondiente (X-2 contexto, X-19 KV) para decidir.",
+    "section": "48.8 Cómo leer la salida: la TAF Card",
+    "text": "48.8 Cómo leer la salida: la TAF Card\nEl resultado se resume en una TAF Card con veredictos ✅ / ⚠ / ❌ por dimensión (contexto, cuantización, plantilla, régimen). Y hay un dashboard de falsación (F1-F23): no solo te da números, sino que somete las afirmaciones a prueba —la misma filosofía del Cap. 38—.\nUn flujo típico: Profile (pega el id) → lee el veredicto de la TAF Card → si algo sale ⚠/❌, abre el diagnóstico concreto (p. ej. Context Unmasker o Quant-regime) → usa la receta correspondiente (X-2 contexto, X-19 KV) para decidir.",
     "crumbs": [
       "Parte VIII — Referencia",
       "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · Manual de tafagent</span>"
@@ -5895,8 +5906,8 @@
     "objectID": "chapters/R5-tafagent.html#verificación-los-recibos",
     "href": "chapters/R5-tafagent.html#verificación-los-recibos",
     "title": "48  R5 · Manual de tafagent",
-    "section": "48.8 Verificación (los recibos)",
-    "text": "48.8 Verificación (los recibos)\n\nPyodide para las matemáticas (deterministas), WebLLM para el lenguaje natural, transformers.js para el tokenizador.\nVerificación Lean+Mathlib: 15 identidades probadas formalmente (github.com/karlesmarin/lean-taf).\nPanel de 23 modelos abierto (github.com/karlesmarin/tafagent-registry). Es el registro de la herramienta (config + predicciones contrastadas), no el atlas γ del Cap. 16 —ese son 42 modelos y 79 medidas de atención real—.\n\n\n\n\n\n\n\nAdvertencia⚠ Honesto — qué es predicción y qué es medida\n\n\n\nMuchas salidas (γ_Padé, horizonte estimado, KV a longitud L) son predicciones desde la config —rápidas y útiles para decidir antes de gastar GPU—, no medidas sobre la atención real. Cuando tengas el modelo, contrasta con γ_observado (medido) y con tu propia medición (R4). Y recuerda los límites del libro: D_f y el headroom de contexto son 🟡 reglas no validadas del todo (R1).\n\n\nSiguiente referencia (R6): las soluciones orientativas de los ejercicios de cada capítulo.",
+    "section": "48.9 Verificación (los recibos)",
+    "text": "48.9 Verificación (los recibos)\n\nPyodide para las matemáticas (deterministas), WebLLM para el lenguaje natural, transformers.js para el tokenizador.\nVerificación Lean+Mathlib: 15 identidades probadas formalmente (github.com/karlesmarin/lean-taf).\nPanel de 23 modelos abierto (github.com/karlesmarin/tafagent-registry). Es el registro de la herramienta (config + predicciones contrastadas), no el atlas γ del Cap. 16 —ese son 42 modelos y 79 medidas de atención real—.\n\n\n\n\n\n\n\nAdvertencia⚠ Honesto — qué es predicción y qué es medida\n\n\n\nMuchas salidas (γ_Padé, horizonte estimado, KV a longitud L) son predicciones desde la config —rápidas y útiles para decidir antes de gastar GPU—, no medidas sobre la atención real. Cuando tengas el modelo, contrasta con γ_observado (medido) y con tu propia medición (R4). Y recuerda los límites del libro: D_f y el headroom de contexto son 🟡 reglas no validadas del todo (R1).\n\n\nSiguiente referencia (R6): las soluciones orientativas de los ejercicios de cada capítulo.",
     "crumbs": [
       "Parte VIII — Referencia",
       "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · Manual de tafagent</span>"

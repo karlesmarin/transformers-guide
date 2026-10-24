@@ -8,6 +8,20 @@
 
 ---
 
+## TAF ↔ guía / guide — 2026-10-24
+
+**ES:** El [selector de tareas](https://karlesmarin.github.io/transformers-guide/es/chapters/R5-tafagent.html#taf-routes)
+prepara el modo y el modelo en TAF sin iniciar análisis. Desde los resultados de TAF,
+la guía recibe la métrica elegida, su valor y procedencia; la explica y ofrece volver
+a la herramienta. Incluye demo opcional, enlaces desde orientación/evaluación/glosario
+y siguientes pasos en los capítulos. Las predicciones siguen separadas de las mediciones.
+
+**EN:** The [task selector](https://karlesmarin.github.io/transformers-guide/en/chapters/R5-tafagent.html#taf-routes)
+prepares the TAF mode and model without starting analysis. TAF result links bring the
+selected metric, value and provenance into the guide, with explanations and a return
+to the tool. Includes an optional demo, orientation/evaluation/glossary entry points
+and next steps in chapters. Predictions remain separate from measurements.
+
 ## Español
 
 Guía de campo y **referencia completa** sobre transformers: de los tokens al contexto largo,

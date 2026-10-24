@@ -5819,7 +5819,18 @@
     "href": "chapters/R5-tafagent.html#what-it-is-and-what-it-isnt",
     "title": "48  R5 · tafagent manual",
     "section": "",
-    "text": "It is: a tool in the browser (zero install, zero GPU, no telemetry) that predicts the practical viability of an LLM before you spend GPU/€: real long context, quantization degradation, chat template, config errors.\nIt isn’t: an attention-map viewer, nor a service that runs the model. What you see are deterministic predictions (computed with Pyodide) plus a natural-language layer.\nInput: an HF model id or a config.json (it reads θ, T_train, heads…); you set T_eval (the target length) and whether the model uses a sliding window (SWA).",
+    "text": "It is: a tool in the browser (zero install, zero GPU, no telemetry) that estimates aspects of viability of an LLM before you spend GPU/€: proposed context limits, quantization degradation, chat template, config errors.\nIt isn’t: an attention-map viewer, nor a service that runs the model. What you see are deterministic predictions (computed with Pyodide) plus a natural-language layer.\nInput: an HF model id or a config.json (it reads θ, T_train, heads…); you set T_eval (the target length) and whether the model uses a sliding window (SWA).",
+    "crumbs": [
+      "Part VIII — Reference",
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · tafagent manual</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/R5-tafagent.html#taf-routes",
+    "href": "chapters/R5-tafagent.html#taf-routes",
+    "title": "48  R5 · tafagent manual",
+    "section": "48.2 From a question to the right tool",
+    "text": "48.2 From a question to the right tool\nThe selector prepares a route: concept → tool → explanation. TAF’s Understand this result links bring the selected metric, value and its origin (estimate or imported measurement) into the guide. This is a snapshot; the guide does not run the model or verify the result. Open explanations in a new tab to keep your diagnosis, or use Return to TAF to prepare the same mode.\n\nWithout JavaScript: profile, measure attention, compare measurements.\nOptional demo: “Try an example” prepares an attention probe using Pythia-70m; it downloads no weights and runs no inference. TAF also offers a guided reading demo.\nEntropy measurement: Diagnose CLI can generate --entropy-only or --measure-entropy. Inference runs with Python/PyTorch on your computer, not in this selector. Entropy does not determine γ and no automatic entropy correction is applied. The phase diagram reads the atlas; it does not perform a new measurement.",
     "crumbs": [
       "Part VIII — Reference",
       "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · tafagent manual</span>"
@@ -5829,8 +5840,8 @@
     "objectID": "chapters/R5-tafagent.html#the-metrics-it-computes",
     "href": "chapters/R5-tafagent.html#the-metrics-it-computes",
     "title": "48  R5 · tafagent manual",
-    "section": "48.2 The metrics it computes",
-    "text": "48.2 The metrics it computes\n\n\n\n\n\n\n\n\nMetric\nWhat it tells you\nCh.\n\n\n\n\nγ_Padé\nγ predicted from geometry (θ, T)\n15\n\n\nγ_observed\nγ measured from real weights\n15\n\n\nd_horizon\neffective attention horizon (how far it really attends)\n15, 19\n\n\nη (θ_eff_obs/θ_eff_Padé)\nregime: Normal / Fraud / Compressed / Over-Padé / SWA\nR1\n\n\nKV memory\ncache memory at length L\n20, 36\n\n\nL_NIAH\nestimated needle-in-haystack ceiling\n19\n\n\nΔγ\nphase probe for induction heads\n24, 30\n\n\nΔPPL\nperplexity shift from quantization\n35\n\n\nPhase A / Phase B\nγ&lt;1 (global) vs γ&gt;1 (local collapse)\n21",
+    "section": "48.3 The metrics it computes",
+    "text": "48.3 The metrics it computes\n\n\n\n\n\n\n\n\nMetric\nWhat it tells you\nCh.\n\n\n\n\nγ_Padé\nγ predicted from geometry (θ, T)\n15\n\n\nγ_observed\nγ imported from a measurement on real weights; protocol-dependent\n15\n\n\nd_horizon\nhorizon derived from the theoretical model; not a tested useful-context limit\n15, 19\n\n\nη (θ_eff_obs/θ_eff_Padé)\nregime: Normal / Fraud / Compressed / Over-Padé / SWA\nR1\n\n\nKV memory\ncache memory at length L\n20, 36\n\n\nL_NIAH\nestimated needle-in-haystack ceiling\n19\n\n\nΔγ\nphase probe for induction heads\n24, 30\n\n\nΔPPL\nperplexity shift from quantization\n35\n\n\nPhase A / Phase B\nγ&lt;1 (global) vs γ&gt;1 (local collapse)\n21",
     "crumbs": [
       "Part VIII — Reference",
       "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · tafagent manual</span>"
@@ -5840,8 +5851,8 @@
     "objectID": "chapters/R5-tafagent.html#how-it-is-organized-five-questions-not-a-list-of-modes",
     "href": "chapters/R5-tafagent.html#how-it-is-organized-five-questions-not-a-list-of-modes",
     "title": "48  R5 · tafagent manual",
-    "section": "48.3 How it is organized: five questions, not a list of modes",
-    "text": "48.3 How it is organized: five questions, not a list of modes\nThe landing page groups the tools by what you want to do (modes grow with every release; the always-current list lives in the app’s own 📘 manual):\n\n🔬 “Will this model work for me?” — Profile (paste an id → the full TAF Card, the starting mode), Fit Check, Unmask, Memory Reality, NIAH→Reason, LongScore, Quant, YaRN Planner, GGUF Bridge, Launch Flags, Inspect config…\n✓ “Should I believe this number?” — Contamination, Drift, Arena CI, Saturation.\n⚙️ “Set up an eval correctly” — Chat-template Sniffer, Diagnose CLI, JSON CoT, PEFT Lint, Cache Diff, Spec-Decode, Token Tax.\n🆚 “Compare models” — Compare (2-3 models, same recipe) and the interactive phase diagram (the atlas, live).\n📋 “Manual / free-form” — Pick recipe (a specific X-) and Ask* (natural-language question, handled by a small in-browser LLM).\n\nRecent highlight — 💾 Fit Check (“will it fit?”): model + precision + GPU + context → the full VRAM budget (weights + KV cache + scratch), why it doesn’t fit when it doesn’t (weights or KV?), the max context that does fit, and the cheapest rescue. It answers the most repeated forum question before downloading anything — and teaches the Ch. 21 lesson along the way: at long context, the KV cache can weigh as much as the model.",
+    "section": "48.4 How it is organized: five questions, not a list of modes",
+    "text": "48.4 How it is organized: five questions, not a list of modes\nThe landing page groups the tools by what you want to do (modes grow with every release; the always-current list lives in the app’s own 📘 manual):\n\n🔬 “Will this model work for me?” — Profile (paste an id → the full TAF Card, the starting mode), Fit Check, Unmask, Memory Reality, NIAH→Reason, LongScore, Quant, YaRN Planner, GGUF Bridge, Launch Flags, Inspect config…\n✓ “Should I believe this number?” — Contamination, Drift, Arena CI, Saturation.\n⚙️ “Set up an eval correctly” — Chat-template Sniffer, Diagnose CLI, JSON CoT, PEFT Lint, Cache Diff, Spec-Decode, Token Tax.\n🆚 “Compare models” — Compare (2-3 models, same recipe) and the interactive phase diagram (the atlas, live).\n📋 “Manual / free-form” — Pick recipe (a specific X-) and Ask* (natural-language question, handled by a small in-browser LLM).\n\nRecent highlight — 💾 Fit Check (“will it fit?”): model + precision + GPU + context → the full VRAM budget (weights + KV cache + scratch), why it doesn’t fit when it doesn’t (weights or KV?), the max context that does fit, and the cheapest rescue. It answers the most repeated forum question before downloading anything — and teaches the Ch. 21 lesson along the way: at long context, the KV cache can weigh as much as the model.",
     "crumbs": [
       "Part VIII — Reference",
       "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · tafagent manual</span>"
@@ -5851,8 +5862,8 @@
     "objectID": "chapters/R5-tafagent.html#guided-demos-and-your-language",
     "href": "chapters/R5-tafagent.html#guided-demos-and-your-language",
     "title": "48  R5 · tafagent manual",
-    "section": "48.4 Guided demos and your language",
-    "text": "48.4 Guided demos and your language\n\nEvery mode has a 🎬 Demo button: a guided simulation that types, clicks and narrates step by step, ending with a “what you just learned” card. Linkable: ?demo=fitcheck, ?demo=profile, ?demo=yarn… — handy for sharing or teaching.\nFour languages end-to-end (EN/ES/FR/ZH): since v0.12 not just the menus — the demos, the recipe verdicts and their explanations follow the browser language too.",
+    "section": "48.5 Guided demos and your language",
+    "text": "48.5 Guided demos and your language\n\nEvery mode has a 🎬 Demo button: a guided simulation that types, clicks and narrates step by step, ending with a “what you just learned” card. Linkable: ?demo=fitcheck, ?demo=profile, ?demo=yarn… — handy for sharing or teaching.\nFour languages end-to-end (EN/ES/FR/ZH): since v0.12 not just the menus — the demos, the recipe verdicts and their explanations follow the browser language too.",
     "crumbs": [
       "Part VIII — Reference",
       "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · tafagent manual</span>"
@@ -5862,8 +5873,8 @@
     "objectID": "chapters/R5-tafagent.html#the-anti-bullshit-pack",
     "href": "chapters/R5-tafagent.html#the-anti-bullshit-pack",
     "title": "48  R5 · tafagent manual",
-    "section": "48.5 The Anti-Bullshit Pack",
-    "text": "48.5 The Anti-Bullshit Pack\nDiagnostics that attack the “smoke” of model cards: Context Unmasker (real long context vs advertised), Chat-template Sniffer, Quant-regime Classifier, Multilingual Tokenizer Tax (tokenizes real text in 6 tokenizers → how much your language “costs”), Contamination Prior, LongScore (RULER+HELMET), PEFT Anti-Pattern, Spec-Decode, plus extension: YaRN/RoPE planner, GGUF Bridge, Launch-Flag Generator.",
+    "section": "48.6 The Anti-Bullshit Pack",
+    "text": "48.6 The Anti-Bullshit Pack\nDiagnostics that attack the “smoke” of model cards: Context Unmasker (real long context vs advertised), Chat-template Sniffer, Quant-regime Classifier, Multilingual Tokenizer Tax (tokenizes real text in 6 tokenizers → how much your language “costs”), Contamination Prior, LongScore (RULER+HELMET), PEFT Anti-Pattern, Spec-Decode, plus extension: YaRN/RoPE planner, GGUF Bridge, Launch-Flag Generator.",
     "crumbs": [
       "Part VIII — Reference",
       "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · tafagent manual</span>"
@@ -5873,8 +5884,8 @@
     "objectID": "chapters/R5-tafagent.html#the-recipes-8-core",
     "href": "chapters/R5-tafagent.html#the-recipes-8-core",
     "title": "48  R5 · tafagent manual",
-    "section": "48.6 The recipes (8 core)",
-    "text": "48.6 The recipes (8 core)\n\n\n\n\n\n\n\n\nRecipe\nFor\nCh.\n\n\n\n\nX-1\ncustom vs API\n25, 36\n\n\nX-2\nlong-context viability\n19\n\n\nX-3\nbudget pre-flight\n25\n\n\nX-5\nhardware\n36\n\n\nX-19\nKV compression (soft-decay/cutoff)\n20\n\n\nX-21\ntraining imprint on γ (γ_train) — retired as a predictor: ν is not identified by current data (Chapter 39)\n15\n\n\nX-22\ncompute-context invariant\n34\n\n\nX-23\ninduction-head phase detector\n24, 30",
+    "section": "48.7 The recipes (8 core)",
+    "text": "48.7 The recipes (8 core)\n\n\n\n\n\n\n\n\nRecipe\nFor\nCh.\n\n\n\n\nX-1\ncustom vs API\n25, 36\n\n\nX-2\nlong-context viability\n19\n\n\nX-3\nbudget pre-flight\n25\n\n\nX-5\nhardware\n36\n\n\nX-19\nKV compression (soft-decay/cutoff)\n20\n\n\nX-21\ntraining imprint on γ (γ_train) — retired as a predictor: ν is not identified by current data (Chapter 39)\n15\n\n\nX-22\ncompute-context invariant\n34\n\n\nX-23\ninduction-head phase detector\n24, 30",
     "crumbs": [
       "Part VIII — Reference",
       "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · tafagent manual</span>"
@@ -5884,8 +5895,8 @@
     "objectID": "chapters/R5-tafagent.html#how-to-read-the-output-the-taf-card",
     "href": "chapters/R5-tafagent.html#how-to-read-the-output-the-taf-card",
     "title": "48  R5 · tafagent manual",
-    "section": "48.7 How to read the output: the TAF Card",
-    "text": "48.7 How to read the output: the TAF Card\nThe result is summarized in a TAF Card with ✅ / ⚠ / ❌ verdicts per dimension (context, quantization, template, regime). And there is a falsification dashboard (F1-F23): it doesn’t just hand you numbers, it puts the claims to the test —the same philosophy as Ch. 38—.\nA typical flow: Profile (paste the id) → read the verdict on the TAF Card → if something comes back ⚠/❌, open the specific diagnostic (e.g. Context Unmasker or Quant-regime) → use the matching recipe (X-2 context, X-19 KV) to decide.",
+    "section": "48.8 How to read the output: the TAF Card",
+    "text": "48.8 How to read the output: the TAF Card\nThe result is summarized in a TAF Card with ✅ / ⚠ / ❌ verdicts per dimension (context, quantization, template, regime). And there is a falsification dashboard (F1-F23): it doesn’t just hand you numbers, it puts the claims to the test —the same philosophy as Ch. 38—.\nA typical flow: Profile (paste the id) → read the verdict on the TAF Card → if something comes back ⚠/❌, open the specific diagnostic (e.g. Context Unmasker or Quant-regime) → use the matching recipe (X-2 context, X-19 KV) to decide.",
     "crumbs": [
       "Part VIII — Reference",
       "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · tafagent manual</span>"
@@ -5895,8 +5906,8 @@
     "objectID": "chapters/R5-tafagent.html#verification-the-receipts",
     "href": "chapters/R5-tafagent.html#verification-the-receipts",
     "title": "48  R5 · tafagent manual",
-    "section": "48.8 Verification (the receipts)",
-    "text": "48.8 Verification (the receipts)\n\nPyodide for the math (deterministic), WebLLM for the natural language, transformers.js for the tokenizer.\nLean+Mathlib verification: 15 identities formally proved (github.com/karlesmarin/lean-taf).\nPanel of 23 models open (github.com/karlesmarin/tafagent-registry). It is the tool’s registry (config + tested predictions), not the γ atlas of Ch. 16 —that one is 42 models and 79 measurements of real attention—.\n\n\n\n\n\n\n\nWarning⚠ Honest — what is prediction and what is measurement\n\n\n\nMany outputs (γ_Padé, estimated horizon, KV at length L) are predictions from the config —fast and useful for deciding before spending GPU—, not measurements of real attention. Once you have the model, contrast them with γ_observed (measured) and with your own measurement (R4). And remember the book’s limits: D_f and the context headroom are 🟡 rules not fully validated (R1).\n\n\nNext reference (R6): the suggested solutions to each chapter’s exercises.",
+    "section": "48.9 Verification (the receipts)",
+    "text": "48.9 Verification (the receipts)\n\nPyodide for the math (deterministic), WebLLM for the natural language, transformers.js for the tokenizer.\nLean+Mathlib verification: 15 identities formally proved (github.com/karlesmarin/lean-taf).\nPanel of 23 models open (github.com/karlesmarin/tafagent-registry). It is the tool’s registry (config + tested predictions), not the γ atlas of Ch. 16 —that one is 42 models and 79 measurements of real attention—.\n\n\n\n\n\n\n\nWarning⚠ Honest — what is prediction and what is measurement\n\n\n\nMany outputs (γ_Padé, estimated horizon, KV at length L) are predictions from the config —fast and useful for deciding before spending GPU—, not measurements of real attention. Once you have the model, contrast them with γ_observed (measured) and with your own measurement (R4). And remember the book’s limits: D_f and the context headroom are 🟡 rules not fully validated (R1).\n\n\nNext reference (R6): the suggested solutions to each chapter’s exercises.",
     "crumbs": [
       "Part VIII — Reference",
       "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · tafagent manual</span>"
