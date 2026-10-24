@@ -8,6 +8,19 @@
 
 ---
 
+## 2026-10-24 · Model examples and architecture boundaries / Modelos y límites
+
+**ES:** R5 explica el catálogo revisado de TAF (8 configuraciones públicas y 2
+restringidas sin verificar), los dos nuevos perfiles Qwen3, los límites de las
+importaciones densas y la diferencia entre contexto configurado y de referencia.
+Incluye tres ejemplos opcionales con enlaces directos al explorador de modelos.
+
+**EN:** R5 explains TAF's reviewed catalog (8 public configurations and 2
+restricted, unverified ones), two new Qwen3 presets, dense-import boundaries and
+configured versus reference context. Three optional examples link to the explorer.
+No new atlas measurements or benchmark refresh is claimed.
+
+
 ## Selector de modelos / Model picker — 2026-10-24
 
 **ES:** El campo opcional de R5 busca modelos en Hugging Face: populares al pulsar,
