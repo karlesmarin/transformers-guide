@@ -1193,8 +1193,9 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
   <li><a href="#con-qué-se-sirve-el-zoo-de-motores" id="toc-con-qué-se-sirve-el-zoo-de-motores" class="nav-link" data-scroll-target="#con-qué-se-sirve-el-zoo-de-motores"><span class="header-section-number">37.10</span> ¿Con qué se sirve? El zoo de motores</a></li>
   <li><a href="#el-marco-de-decisión-honesto" id="toc-el-marco-de-decisión-honesto" class="nav-link" data-scroll-target="#el-marco-de-decisión-honesto"><span class="header-section-number">37.11</span> El marco de decisión (honesto)</a></li>
   <li><a href="#puente-con-nuestro-tema-breve-y-honesto" id="toc-puente-con-nuestro-tema-breve-y-honesto" class="nav-link" data-scroll-target="#puente-con-nuestro-tema-breve-y-honesto"><span class="header-section-number">37.12</span> Puente con nuestro tema (breve y honesto)</a></li>
-  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">37.13</span> Resumen</a></li>
-  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">37.14</span> Ejercicios</a></li>
+  <li><a href="#sec-spin" id="toc-sec-spin" class="nav-link" data-scroll-target="#sec-spin"><span class="header-section-number">37.13</span> SPIN: Shadow Predictive Indexer for Sparse Attention</a></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">37.14</span> Resumen</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">37.15</span> Ejercicios</a></li>
   <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias">Referencias</a></li>
   </ul>
 </nav>
@@ -1472,8 +1473,24 @@ Tabla&nbsp;37.1: Motores de inferencia habituales (2024-2026)
 </div>
 </div>
 </section>
-<section id="resumen" class="level2" data-number="37.13">
-<h2 data-number="37.13" class="anchored" data-anchor-id="resumen"><span class="header-section-number">37.13</span> Resumen</h2>
+<section id="sec-spin" class="level2" data-number="37.13">
+<h2 data-number="37.13" class="anchored" data-anchor-id="sec-spin"><span class="header-section-number">37.13</span> SPIN: Shadow Predictive Indexer for Sparse Attention</h2>
+<p><strong>Preprint · arXiv v2 · 2026-10-08</strong>. SPIN predice qué bloques debe inspeccionar el indexador de atención dispersa a partir de puntuaciones históricas. <span class="citation" data-cites="research-spin">(<a href="#ref-research-spin" role="doc-biblioref"><em><span>SPIN: Shadow Predictive Indexer for Sparse Attention</span></em> 2026</a>)</span></p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Alcance de la evidencia.</strong> Recortar entradas del indexador no equivale a expulsar KV. Los cambios bruscos y la información parcial pueden causar omisiones.</p>
+</div>
+</div>
+</div>
+<p><strong>Qué probar.</strong> Medir calidad y latencia de cola juntas, con cambios bruscos de tema y una ablación de la exploración.</p>
+<p><a href="https://karlesmarin.github.io/tafagent/?mode=research&amp;study=spin&amp;lang=es#research-section">🧪 Continuar en TAF: fuente, límites y experimento propuesto</a>.</p>
+</section>
+<section id="resumen" class="level2" data-number="37.14">
+<h2 data-number="37.14" class="anchored" data-anchor-id="resumen"><span class="header-section-number">37.14</span> Resumen</h2>
 <ul>
 <li><strong>Dos fases:</strong> <strong>prefill</strong> (compute-bound, marca <strong>TTFT</strong>) y <strong>decode</strong> (bandwidth-bound, marca <strong>TPOT</strong>) → el <strong>decode</strong> es el cuello de botella, y es donde se relee la <strong>caché KV</strong>.</li>
 <li><strong>Métricas:</strong> <em>throughput</em> vs <strong>goodput</strong> (cumpliendo SLO); latencia ≈ TTFT + TPOT × tokens. Chat optimiza latencia; batch, throughput.</li>
@@ -1486,8 +1503,8 @@ Tabla&nbsp;37.1: Motores de inferencia habituales (2024-2026)
 </ul>
 <p><strong>Siguiente (Parte VII):</strong> dejamos la ingeniería y volvemos a la pregunta de fondo del libro —<strong>¿qué está pasando <em>de verdad</em> dentro?</strong>—: interpretabilidad mecanicista, nuestro audit de fórmulas (verificado/folclore/numerología), el mapa del paisaje 2026 y la ética.</p>
 </section>
-<section id="ejercicios" class="level2" data-number="37.14">
-<h2 data-number="37.14" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">37.14</span> Ejercicios</h2>
+<section id="ejercicios" class="level2" data-number="37.15">
+<h2 data-number="37.15" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">37.15</span> Ejercicios</h2>
 <ol type="1">
 <li><strong>Dos fases.</strong> ¿Por qué el prefill es <em>compute-bound</em> y el decode <em>bandwidth-bound</em>? ¿Cuál es el cuello de botella del serving y por qué?</li>
 <li><strong>Métricas.</strong> Define TTFT y TPOT y di qué fase domina cada uno. ¿Por qué el <em>goodput</em> es más honesto que el <em>throughput</em>?</li>
@@ -1511,6 +1528,9 @@ Tabla&nbsp;37.1: Motores de inferencia habituales (2024-2026)
 </div>
 <div id="ref-sheng2023slora" class="csl-entry" role="listitem">
 <span class="nocase">Sheng, Ying, Shiyi Cao, Dacheng Li, et&nbsp;al.</span> 2023. <em>S-LoRA: Serving Thousands of Concurrent LoRA Adapters</em>. <a href="https://arxiv.org/abs/2311.03285">https://arxiv.org/abs/2311.03285</a>.
+</div>
+<div id="ref-research-spin" class="csl-entry" role="listitem">
+<em><span>SPIN: Shadow Predictive Indexer for Sparse Attention</span></em>. 2026. arXiv v2. <a href="https://arxiv.org/abs/2610.09025v2">https://arxiv.org/abs/2610.09025v2</a>.
 </div>
 <div id="ref-yu2022orca" class="csl-entry" role="listitem">
 Yu, Gyeong-In, Joo Seong Jeong, Geon-Woo Kim, Soojeong Kim, y Byung-Gon Chun. 2022. <span>«Orca: A Distributed Serving System for Transformer-Based Generative Models»</span>. <em>OSDI</em>. <a href="https://www.usenix.org/conference/osdi22/presentation/yu">https://www.usenix.org/conference/osdi22/presentation/yu</a>.
@@ -2634,14 +2654,14 @@ Yu, Gyeong-In, Joo Seong Jeong, Geon-Woo Kim, Soojeong Kim, y Byung-Gon Chun. 20
         '<span>γ</span><input class="fg-arch-range" type="range" min="0.50" max="1.60" step="0.05" value="1.20" aria-label="' + L('exponente γ', 'exponent γ') + '">';
       var read = document.createElement('div'); read.className = 'fg-pz-read';
       var cap = document.createElement('div'); cap.className = 'fg-sch-cap';
-      cap.innerHTML = L('Cada bloque es el K/V de un token generado: la caché crece <b>O(n)</b> (barra <span style="color:#8a8f98"><b>gris</b></span>). Con <b>compresión</b>, solo sobreviven el <span style="color:#0072b2"><b>sumidero</b></span> (primeros tokens) y la <span style="color:#1f9d6b"><b>ventana D<sub>f</sub></b></span> reciente (derivada de γ); el medio se <b>tira</b>. Baja γ (cola pesada) → D<sub>f</sub> engorda y casi no se puede comprimir; súbelo → ventana diminuta. Arrastra para girar.',
-        'Each block is one generated token\'s K/V: the cache grows <b>O(n)</b> (<span style="color:#8a8f98"><b>grey</b></span> bar). With <b>compression</b>, only the <span style="color:#0072b2"><b>sink</b></span> (first tokens) and the recent <span style="color:#1f9d6b"><b>D<sub>f</sub> window</b></span> (from γ) survive; the middle is <b>dropped</b>. Lower γ (heavy tail) → D<sub>f</sub> grows and almost nothing compresses; raise it → tiny window. Drag to rotate.');
+      cap.innerHTML = L('Cada bloque es el K/V de un token generado: la caché crece <b>O(n)</b> (barra <span style="color:#8a8f98"><b>gris</b></span>). Con <b>compresión</b>, solo sobreviven el <span style="color:#0072b2"><b>sumidero</b></span> (primeros tokens) y la <span style="color:#1f9d6b"><b>ventana D<sub>f</sub></b></span> reciente (derivada de γ); el medio se <b>tira</b>. La ventana cambia con γ por diseño de esta demo; no es una receta validada de compresión ni una garantía de calidad. Arrastra para girar.',
+        'Each block is one generated token\'s K/V: the cache grows <b>O(n)</b> (<span style="color:#8a8f98"><b>grey</b></span> bar). With <b>compression</b>, only the <span style="color:#0072b2"><b>sink</b></span> (first tokens) and the recent <span style="color:#1f9d6b"><b>D<sub>f</sub> window</b></span> (from γ) survive; the middle is <b>dropped</b>. The window changes with γ by design in this demo; it is not a validated compression recipe or a quality guarantee. Drag to rotate.');
       var canvas = document.createElement('canvas'); canvas.className = 'fg-g3d-canvas';
       var ctx = null; try { ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl'); } catch (e) {}
       if (!ok || !ctx) {
         var fb = document.createElement('div'); fb.className = 'fg-rope3d-fallback';
-        fb.innerHTML = L('🗄️ <b>El KV-cache crece O(n)</b> (un bloque por token): el cuello de botella del contexto largo. La compresión guarda el <b>sumidero</b> (primeros tokens) + una <b>ventana reciente D<sub>f</sub></b> derivada de γ, y tira el medio. Con γ&gt;1 (cola ligera) basta una ventana pequeña; con γ&lt;1 (cola pesada) la masa está repartida y no hay ventana finita que valga. (Tu navegador no tiene WebGL para la versión 3D.)',
-          '🗄️ <b>The KV-cache grows O(n)</b> (one block per token): the long-context bottleneck. Compression keeps the <b>sink</b> (first tokens) + a recent <b>D<sub>f</sub> window</b> from γ, dropping the middle. With γ&gt;1 (light tail) a small window suffices; with γ&lt;1 (heavy tail) the mass is spread and no finite window works. (Your browser has no WebGL for the 3D version.)');
+        fb.innerHTML = L('🗄️ <b>El KV-cache crece O(n)</b> (un bloque por token): el cuello de botella del contexto largo. La compresión guarda el <b>sumidero</b> (primeros tokens) + una <b>ventana reciente D<sub>f</sub></b> derivada de γ, y tira el medio. Este dibujo usa una ventana ilustrativa: γ por sí sola no determina qué tokens se pueden descartar sin perder calidad. En un contexto finito siempre hay una ventana finita que contiene todos los tokens. (Tu navegador no tiene WebGL para la versión 3D.)',
+          '🗄️ <b>The KV-cache grows O(n)</b> (one block per token): the long-context bottleneck. Compression keeps the <b>sink</b> (first tokens) + a recent <b>D<sub>f</sub> window</b> from γ, dropping the middle. This drawing uses an illustrative window: γ alone does not determine which tokens can be discarded without losing quality. A finite context always fits within a finite window. (Your browser has no WebGL for the 3D version.)');
         box.appendChild(fb); box.appendChild(cap); return;
       }
       box.appendChild(canvas); box.appendChild(ctrl); box.appendChild(read); box.appendChild(cap);
@@ -2704,7 +2724,7 @@ Yu, Gyeong-In, Joo Seong Jeong, Geon-Woo Kim, Soojeong Kim, y Byung-Gon Chun. 20
         requestAnimationFrame(loop);
         var rb = box.getBoundingClientRect(); if (rb.bottom < 0 || rb.top > (window.innerHeight || 9999)) return;
         fr++;
-        if (!dragging) az += 0.0014;
+        if (!dragging && !reduce) az += 0.0014;
         if (playing && fr % 14 === 0) { n = n < NMAX ? n + 1 : 1; refresh(); }
         placeCam(); renderer.render(scene, camera);
       }
@@ -2846,14 +2866,14 @@ Yu, Gyeong-In, Joo Seong Jeong, Geon-Woo Kim, Soojeong Kim, y Byung-Gon Chun. 20
         '<span>weight decay</span><input class="fg-arch-range" type="range" min="0" max="1" step="0.02" value="0.70" aria-label="' + L('weight decay', 'weight decay') + '">';
       var read = document.createElement('div'); read.className = 'fg-pz-read';
       var cap = document.createElement('div'); cap.className = 'fg-sch-cap';
-      cap.innerHTML = L('Dos capas de nodos. Los <span style="color:#1f9d6b"><b>enlaces verdes</b></span> son la coordinación entre capas (el <b>CKA</b>, nuestra señal); los <span style="color:#c0392b"><b>halos rojos</b></span>, la memorización pura de cada capa por su cuenta. Dale al play: primero <b>memoriza</b> (verde se disuelve, rojo crece), larga <b>meseta</b>, y el circuito verde <b>se re-teje</b> —el CKA re-asciende— justo <b>antes</b> del <b>grok</b> (el test salta). Baja el <b>weight decay</b> y verás que se <b>atasca</b> y nunca generaliza. Arrastra para girar.',
-        'Two node-layers. The <span style="color:#1f9d6b"><b>green links</b></span> are the inter-layer coordination (the <b>CKA</b>, our signal); the <span style="color:#c0392b"><b>red halos</b></span>, each layer memorizing on its own. Hit play: it first <b>memorizes</b> (green dissolves, red grows), a long <b>plateau</b>, then the green circuit <b>re-weaves</b> —CKA re-rises— just <b>before</b> the <b>grok</b> (test jumps). Lower the <b>weight decay</b> and it <b>stalls</b>, never generalizing. Drag to rotate.');
+      cap.innerHTML = L('Dos capas de nodos. Los <span style="color:#1f9d6b"><b>enlaces verdes</b></span> son la coordinación entre capas (el <b>CKA</b>, nuestra señal); los <span style="color:#c0392b"><b>halos rojos</b></span>, la memorización pura de cada capa por su cuenta. Dale al play: primero <b>memoriza</b> (verde se disuelve, rojo crece), larga <b>meseta</b>, y el circuito verde <b>se re-teje</b> —el CKA re-asciende— justo <b>antes</b> del <b>grok</b> (el test salta). En esta animación sintética, bajar el <b>weight decay</b> atasca la curva por diseño. No es una ley universal: también importan la tarea, el optimizador y la precisión numérica. Arrastra para girar.',
+        'Two node-layers. The <span style="color:#1f9d6b"><b>green links</b></span> are the inter-layer coordination (the <b>CKA</b>, our signal); the <span style="color:#c0392b"><b>red halos</b></span>, each layer memorizing on its own. Hit play: it first <b>memorizes</b> (green dissolves, red grows), a long <b>plateau</b>, then the green circuit <b>re-weaves</b> —CKA re-rises— just <b>before</b> the <b>grok</b> (test jumps). In this synthetic animation, lowering <b>weight decay</b> stalls the curve by design. This is not universal: task, optimizer and numerical precision also matter. Drag to rotate.');
       var canvas = document.createElement('canvas'); canvas.className = 'fg-g3d-canvas';
       var ctx = null; try { ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl'); } catch (e) {}
       if (!ok || !ctx) {
         var fb = document.createElement('div'); fb.className = 'fg-rope3d-fallback';
-        fb.innerHTML = L('🧩 <b>El grokking no es súbito por dentro.</b> Bajo la meseta, el circuito que generaliza (coordinación entre capas, el CKA) se teje poco a poco: el CKA <b>cae</b> al memorizar y <b>re-asciende ~3000 pasos antes</b> del salto de test. El weight decay arrastra los pesos de la solución memorizadora (norma alta) a la generalizadora (norma baja); sin suficiente, nunca grokea. (Tu navegador no tiene WebGL para la versión 3D.)',
-          '🧩 <b>Grokking is not sudden inside.</b> Under the plateau, the generalizing circuit (inter-layer coordination, the CKA) weaves gradually: CKA <b>dips</b> while memorizing and <b>re-rises ~3000 steps before</b> the test jump. Weight decay drags the weights from the memorizing solution (high norm) to the generalizing one (low norm); without enough, it never groks. (Your browser has no WebGL for the 3D version.)');
+        fb.innerHTML = L('🧩 <b>Esquema ilustrativo del grokking.</b> Las curvas de CKA y precisión se generan sintéticamente para mostrar una posible reorganización antes de mejorar el test. La dependencia de weight decay está programada en esta demo: no establece una condición necesaria ni un plazo universal. La tarea, el optimizador y la precisión también importan. (Tu navegador no tiene WebGL para la versión 3D.)',
+          '🧩 <b>Illustrative grokking schematic.</b> CKA and accuracy curves are generated synthetically to show a possible reorganization before test improvement. The dependence on weight decay is programmed into this demo: it establishes neither a necessary condition nor a universal timescale. Task, optimizer and precision also matter. (Your browser has no WebGL for the 3D version.)');
         box.appendChild(fb); box.appendChild(cap); return;
       }
       box.appendChild(canvas); box.appendChild(ctrl); box.appendChild(read); box.appendChild(cap);
@@ -2915,7 +2935,7 @@ Yu, Gyeong-In, Joo Seong Jeong, Geon-Woo Kim, Soojeong Kim, y Byung-Gon Chun. 20
         requestAnimationFrame(loop);
         var rb = box.getBoundingClientRect(); if (rb.bottom < 0 || rb.top > (window.innerHeight || 9999)) return;
         fr++;
-        if (!dragging) az += 0.0016;
+        if (!dragging && !reduce) az += 0.0016;
         if (playing) { var pm = pMax(); if (p < pm) { p = Math.min(pm, p + 0.0016); refresh(); } }
         placeCam(); renderer.render(scene, camera);
       }
@@ -4484,19 +4504,20 @@ document.querySelectorAll('figure.quarto-float-tbl > div[aria-describedby]').for
 });
 </script>
 
-
 <!-- TAF bridge: shared local module, no model execution or network inference. -->
-
 <script type="module">
-
 const offset = document.querySelector('meta[name="quarto:offset"]')?.content || './';
-
 import(new URL(offset + 'assets/guide_bridge.js', location.href).href)
-
   .then(module => module.initGuidePage()).catch(error => console.warn('TAF reading route unavailable', error));
-
 </script>
 
+<script type="module">
+if (document.querySelector('[data-research-lab]')) {
+  const offset = document.querySelector('meta[name="quarto:offset"]')?.content || './';
+  const css = document.createElement('link'); css.rel='stylesheet'; css.href=offset+'assets/research_labs.css'; document.head.append(css);
+  import(new URL(offset+'assets/research_labs.js',location.href).href).then(m=>m.initGuideResearchLabs()).catch(e=>console.warn('Research demo unavailable',e));
+}
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

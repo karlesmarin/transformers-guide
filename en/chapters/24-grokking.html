@@ -1218,8 +1218,9 @@ window.Quarto = {
   <li><a href="#how-the-frontier-is-looking-at-it-2024-2026-everyone-with-their-own-thermometer" id="toc-how-the-frontier-is-looking-at-it-2024-2026-everyone-with-their-own-thermometer" class="nav-link" data-scroll-target="#how-the-frontier-is-looking-at-it-2024-2026-everyone-with-their-own-thermometer"><span class="header-section-number">25.6</span> How the frontier is looking at it (2024-2026): everyone with their own “thermometer”</a></li>
   <li><a href="#our-pilot-result-the-re-rise-of-the-inter-layer-cka" id="toc-our-pilot-result-the-re-rise-of-the-inter-layer-cka" class="nav-link" data-scroll-target="#our-pilot-result-the-re-rise-of-the-inter-layer-cka"><span class="header-section-number">25.7</span> Our pilot result: the re-rise of the inter-layer CKA</a></li>
   <li><a href="#the-result-where-we-refute-ourselves" id="toc-the-result-where-we-refute-ourselves" class="nav-link" data-scroll-target="#the-result-where-we-refute-ourselves"><span class="header-section-number">25.8</span> The result where we refute ourselves</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">25.9</span> Summary</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">25.10</span> Exercises</a></li>
+  <li><a href="#sec-softmax-numerics" id="toc-sec-softmax-numerics" class="nav-link" data-scroll-target="#sec-softmax-numerics"><span class="header-section-number">25.9</span> Grokking and numerical precision</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">25.10</span> Summary</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">25.11</span> Exercises</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
@@ -1401,8 +1402,27 @@ Figure&nbsp;25.1: Schematic of grokking with our signal overlaid. <em>Train</em>
 </div>
 </div>
 </section>
-<section id="summary" class="level2" data-number="25.9">
-<h2 data-number="25.9" class="anchored" data-anchor-id="summary"><span class="header-section-number">25.9</span> Summary</h2>
+<section id="sec-softmax-numerics" class="level2" data-number="25.9">
+<h2 data-number="25.9" class="anchored" data-anchor-id="sec-softmax-numerics"><span class="header-section-number">25.9</span> Grokking and numerical precision</h2>
+<p><strong>Preprint · arXiv v1 · 2026-10-22</strong>. Finite precision can erase the target gradient while other gradients remain nonzero; algebraically equivalent implementations behave differently. <span class="citation" data-cites="research-softmax-fix">(<a href="#ref-research-softmax-fix" role="doc-biblioref"><em><span class="nocase">A Fix for Softmax and Cross-Entropy</span></em> 2026</a>)</span></p>
+<p>A scale can round two different weights to the same number. Something similar happens here: if the target probability rounds to one, computing <span class="math inline">\(q_t-1\)</span> returns zero although other components remain positive.</p>
+<p>For illustrative logits <span class="math inline">\([m,0,0]\)</span> and target 0, the exact gradient is <span class="math inline">\(-2e^{-m}/(1+2e^{-m})\)</span>. The demo compares Float32-rounded operations with a Float64 reference. It neither reproduces a fused kernel nor establishes that all grokking is an artifact. Before interpreting an accuracy jump as a phase transition, also control the loss implementation, numerical type and optimizer.</p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Evidence scope.</strong> Small arithmetic and distillation experiments do not establish gains for frontier LLMs or explain all grokking.</p>
+</div>
+</div>
+</div>
+<p><strong>What to test.</strong> Compare loss and gradients across precisions, then repeat training with fixed data, seeds and optimizer.</p>
+<details class="fg-sch"><summary>Optional demo · illustrative calculation</summary><div data-research-lab="softmax-fix"><p>Without JavaScript: the equations above explain the mechanism; no model is executed.</p></div></details>
+<p><a href="https://karlesmarin.github.io/tafagent/?mode=research&amp;study=softmax-fix&amp;lang=en#research-section">🧪 Continue in TAF: source, limits and proposed experiment</a>.</p>
+</section>
+<section id="summary" class="level2" data-number="25.10">
+<h2 data-number="25.10" class="anchored" data-anchor-id="summary"><span class="header-section-number">25.10</span> Summary</h2>
 <ul>
 <li><strong>Grokking</strong> <span class="citation" data-cites="power2022grokking">(<a href="#ref-power2022grokking" role="doc-biblioref">Power et al. 2022</a>)</span>: on algorithmic tasks, the network <strong>memorizes</strong> early (train→100%, test at chance), goes through a <strong>long plateau</strong>, and <strong>generalizes all at once</strong> much later.</li>
 <li><strong>It isn’t sudden on the inside</strong> <span class="citation" data-cites="nanda2023progress">(<a href="#ref-nanda2023progress" role="doc-biblioref">Nanda et al. 2023</a>)</span>: it learns a <strong>Fourier algorithm</strong> that forms <strong>gradually</strong> (memorization → circuit formation → cleanup); the abruptness is an artifact of <em>when</em> the good circuit wins.</li>
@@ -1413,8 +1433,8 @@ Figure&nbsp;25.1: Schematic of grokking with our signal overlaid. <em>Train</em>
 </ul>
 <p><strong>Next:</strong> with this we close <strong>Part III</strong> —the physical lens on attention. Part IV opens the practical side: <strong>training and tuning</strong> models (pre-training, <em>fine-tuning</em>, LoRA/PEFT, alignment), where all this dynamics stops being a curiosity and becomes an engineering decision.</p>
 </section>
-<section id="exercises" class="level2" data-number="25.10">
-<h2 data-number="25.10" class="anchored" data-anchor-id="exercises"><span class="header-section-number">25.10</span> Exercises</h2>
+<section id="exercises" class="level2" data-number="25.11">
+<h2 data-number="25.11" class="anchored" data-anchor-id="exercises"><span class="header-section-number">25.11</span> Exercises</h2>
 <ol type="1">
 <li><strong>The curve.</strong> Describe the three phases of grokking in terms of train and test accuracy. Why would the classical logic of overfitting tell you to stop before the jump arrives?</li>
 <li><strong>Not so sudden.</strong> According to Nanda, what is forming during the plateau, and why does the test jump <em>look</em> sudden even though the mechanism isn’t?</li>
@@ -1441,6 +1461,9 @@ Figure&nbsp;25.1: Schematic of grokking with our signal overlaid. <em>Train</em>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-research-softmax-fix" class="csl-entry" role="listitem">
+<em><span class="nocase">A Fix for Softmax and Cross-Entropy</span></em>. 2026. arXiv v1. <a href="https://arxiv.org/abs/2610.31642v1">https://arxiv.org/abs/2610.31642v1</a>.
+</div>
 <div id="ref-truong2026spectral" class="csl-entry" role="listitem">
 Khanh, Hoa, Trung, and Duc. 2026. <em>Spectral Entropy Collapse as a Phase Transition in Delayed Generalisation</em>. <a href="https://arxiv.org/abs/2604.13123">https://arxiv.org/abs/2604.13123</a>.
 </div>
@@ -2578,14 +2601,14 @@ Xu, Yongzhong. 2026. <em>Early-Warning Signals of Grokking via Loss-Landscape Ge
         '<span>γ</span><input class="fg-arch-range" type="range" min="0.50" max="1.60" step="0.05" value="1.20" aria-label="' + L('exponente γ', 'exponent γ') + '">';
       var read = document.createElement('div'); read.className = 'fg-pz-read';
       var cap = document.createElement('div'); cap.className = 'fg-sch-cap';
-      cap.innerHTML = L('Cada bloque es el K/V de un token generado: la caché crece <b>O(n)</b> (barra <span style="color:#8a8f98"><b>gris</b></span>). Con <b>compresión</b>, solo sobreviven el <span style="color:#0072b2"><b>sumidero</b></span> (primeros tokens) y la <span style="color:#1f9d6b"><b>ventana D<sub>f</sub></b></span> reciente (derivada de γ); el medio se <b>tira</b>. Baja γ (cola pesada) → D<sub>f</sub> engorda y casi no se puede comprimir; súbelo → ventana diminuta. Arrastra para girar.',
-        'Each block is one generated token\'s K/V: the cache grows <b>O(n)</b> (<span style="color:#8a8f98"><b>grey</b></span> bar). With <b>compression</b>, only the <span style="color:#0072b2"><b>sink</b></span> (first tokens) and the recent <span style="color:#1f9d6b"><b>D<sub>f</sub> window</b></span> (from γ) survive; the middle is <b>dropped</b>. Lower γ (heavy tail) → D<sub>f</sub> grows and almost nothing compresses; raise it → tiny window. Drag to rotate.');
+      cap.innerHTML = L('Cada bloque es el K/V de un token generado: la caché crece <b>O(n)</b> (barra <span style="color:#8a8f98"><b>gris</b></span>). Con <b>compresión</b>, solo sobreviven el <span style="color:#0072b2"><b>sumidero</b></span> (primeros tokens) y la <span style="color:#1f9d6b"><b>ventana D<sub>f</sub></b></span> reciente (derivada de γ); el medio se <b>tira</b>. La ventana cambia con γ por diseño de esta demo; no es una receta validada de compresión ni una garantía de calidad. Arrastra para girar.',
+        'Each block is one generated token\'s K/V: the cache grows <b>O(n)</b> (<span style="color:#8a8f98"><b>grey</b></span> bar). With <b>compression</b>, only the <span style="color:#0072b2"><b>sink</b></span> (first tokens) and the recent <span style="color:#1f9d6b"><b>D<sub>f</sub> window</b></span> (from γ) survive; the middle is <b>dropped</b>. The window changes with γ by design in this demo; it is not a validated compression recipe or a quality guarantee. Drag to rotate.');
       var canvas = document.createElement('canvas'); canvas.className = 'fg-g3d-canvas';
       var ctx = null; try { ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl'); } catch (e) {}
       if (!ok || !ctx) {
         var fb = document.createElement('div'); fb.className = 'fg-rope3d-fallback';
-        fb.innerHTML = L('🗄️ <b>El KV-cache crece O(n)</b> (un bloque por token): el cuello de botella del contexto largo. La compresión guarda el <b>sumidero</b> (primeros tokens) + una <b>ventana reciente D<sub>f</sub></b> derivada de γ, y tira el medio. Con γ&gt;1 (cola ligera) basta una ventana pequeña; con γ&lt;1 (cola pesada) la masa está repartida y no hay ventana finita que valga. (Tu navegador no tiene WebGL para la versión 3D.)',
-          '🗄️ <b>The KV-cache grows O(n)</b> (one block per token): the long-context bottleneck. Compression keeps the <b>sink</b> (first tokens) + a recent <b>D<sub>f</sub> window</b> from γ, dropping the middle. With γ&gt;1 (light tail) a small window suffices; with γ&lt;1 (heavy tail) the mass is spread and no finite window works. (Your browser has no WebGL for the 3D version.)');
+        fb.innerHTML = L('🗄️ <b>El KV-cache crece O(n)</b> (un bloque por token): el cuello de botella del contexto largo. La compresión guarda el <b>sumidero</b> (primeros tokens) + una <b>ventana reciente D<sub>f</sub></b> derivada de γ, y tira el medio. Este dibujo usa una ventana ilustrativa: γ por sí sola no determina qué tokens se pueden descartar sin perder calidad. En un contexto finito siempre hay una ventana finita que contiene todos los tokens. (Tu navegador no tiene WebGL para la versión 3D.)',
+          '🗄️ <b>The KV-cache grows O(n)</b> (one block per token): the long-context bottleneck. Compression keeps the <b>sink</b> (first tokens) + a recent <b>D<sub>f</sub> window</b> from γ, dropping the middle. This drawing uses an illustrative window: γ alone does not determine which tokens can be discarded without losing quality. A finite context always fits within a finite window. (Your browser has no WebGL for the 3D version.)');
         box.appendChild(fb); box.appendChild(cap); return;
       }
       box.appendChild(canvas); box.appendChild(ctrl); box.appendChild(read); box.appendChild(cap);
@@ -2648,7 +2671,7 @@ Xu, Yongzhong. 2026. <em>Early-Warning Signals of Grokking via Loss-Landscape Ge
         requestAnimationFrame(loop);
         var rb = box.getBoundingClientRect(); if (rb.bottom < 0 || rb.top > (window.innerHeight || 9999)) return;
         fr++;
-        if (!dragging) az += 0.0014;
+        if (!dragging && !reduce) az += 0.0014;
         if (playing && fr % 14 === 0) { n = n < NMAX ? n + 1 : 1; refresh(); }
         placeCam(); renderer.render(scene, camera);
       }
@@ -2790,14 +2813,14 @@ Xu, Yongzhong. 2026. <em>Early-Warning Signals of Grokking via Loss-Landscape Ge
         '<span>weight decay</span><input class="fg-arch-range" type="range" min="0" max="1" step="0.02" value="0.70" aria-label="' + L('weight decay', 'weight decay') + '">';
       var read = document.createElement('div'); read.className = 'fg-pz-read';
       var cap = document.createElement('div'); cap.className = 'fg-sch-cap';
-      cap.innerHTML = L('Dos capas de nodos. Los <span style="color:#1f9d6b"><b>enlaces verdes</b></span> son la coordinación entre capas (el <b>CKA</b>, nuestra señal); los <span style="color:#c0392b"><b>halos rojos</b></span>, la memorización pura de cada capa por su cuenta. Dale al play: primero <b>memoriza</b> (verde se disuelve, rojo crece), larga <b>meseta</b>, y el circuito verde <b>se re-teje</b> —el CKA re-asciende— justo <b>antes</b> del <b>grok</b> (el test salta). Baja el <b>weight decay</b> y verás que se <b>atasca</b> y nunca generaliza. Arrastra para girar.',
-        'Two node-layers. The <span style="color:#1f9d6b"><b>green links</b></span> are the inter-layer coordination (the <b>CKA</b>, our signal); the <span style="color:#c0392b"><b>red halos</b></span>, each layer memorizing on its own. Hit play: it first <b>memorizes</b> (green dissolves, red grows), a long <b>plateau</b>, then the green circuit <b>re-weaves</b> —CKA re-rises— just <b>before</b> the <b>grok</b> (test jumps). Lower the <b>weight decay</b> and it <b>stalls</b>, never generalizing. Drag to rotate.');
+      cap.innerHTML = L('Dos capas de nodos. Los <span style="color:#1f9d6b"><b>enlaces verdes</b></span> son la coordinación entre capas (el <b>CKA</b>, nuestra señal); los <span style="color:#c0392b"><b>halos rojos</b></span>, la memorización pura de cada capa por su cuenta. Dale al play: primero <b>memoriza</b> (verde se disuelve, rojo crece), larga <b>meseta</b>, y el circuito verde <b>se re-teje</b> —el CKA re-asciende— justo <b>antes</b> del <b>grok</b> (el test salta). En esta animación sintética, bajar el <b>weight decay</b> atasca la curva por diseño. No es una ley universal: también importan la tarea, el optimizador y la precisión numérica. Arrastra para girar.',
+        'Two node-layers. The <span style="color:#1f9d6b"><b>green links</b></span> are the inter-layer coordination (the <b>CKA</b>, our signal); the <span style="color:#c0392b"><b>red halos</b></span>, each layer memorizing on its own. Hit play: it first <b>memorizes</b> (green dissolves, red grows), a long <b>plateau</b>, then the green circuit <b>re-weaves</b> —CKA re-rises— just <b>before</b> the <b>grok</b> (test jumps). In this synthetic animation, lowering <b>weight decay</b> stalls the curve by design. This is not universal: task, optimizer and numerical precision also matter. Drag to rotate.');
       var canvas = document.createElement('canvas'); canvas.className = 'fg-g3d-canvas';
       var ctx = null; try { ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl'); } catch (e) {}
       if (!ok || !ctx) {
         var fb = document.createElement('div'); fb.className = 'fg-rope3d-fallback';
-        fb.innerHTML = L('🧩 <b>El grokking no es súbito por dentro.</b> Bajo la meseta, el circuito que generaliza (coordinación entre capas, el CKA) se teje poco a poco: el CKA <b>cae</b> al memorizar y <b>re-asciende ~3000 pasos antes</b> del salto de test. El weight decay arrastra los pesos de la solución memorizadora (norma alta) a la generalizadora (norma baja); sin suficiente, nunca grokea. (Tu navegador no tiene WebGL para la versión 3D.)',
-          '🧩 <b>Grokking is not sudden inside.</b> Under the plateau, the generalizing circuit (inter-layer coordination, the CKA) weaves gradually: CKA <b>dips</b> while memorizing and <b>re-rises ~3000 steps before</b> the test jump. Weight decay drags the weights from the memorizing solution (high norm) to the generalizing one (low norm); without enough, it never groks. (Your browser has no WebGL for the 3D version.)');
+        fb.innerHTML = L('🧩 <b>Esquema ilustrativo del grokking.</b> Las curvas de CKA y precisión se generan sintéticamente para mostrar una posible reorganización antes de mejorar el test. La dependencia de weight decay está programada en esta demo: no establece una condición necesaria ni un plazo universal. La tarea, el optimizador y la precisión también importan. (Tu navegador no tiene WebGL para la versión 3D.)',
+          '🧩 <b>Illustrative grokking schematic.</b> CKA and accuracy curves are generated synthetically to show a possible reorganization before test improvement. The dependence on weight decay is programmed into this demo: it establishes neither a necessary condition nor a universal timescale. Task, optimizer and precision also matter. (Your browser has no WebGL for the 3D version.)');
         box.appendChild(fb); box.appendChild(cap); return;
       }
       box.appendChild(canvas); box.appendChild(ctrl); box.appendChild(read); box.appendChild(cap);
@@ -2859,7 +2882,7 @@ Xu, Yongzhong. 2026. <em>Early-Warning Signals of Grokking via Loss-Landscape Ge
         requestAnimationFrame(loop);
         var rb = box.getBoundingClientRect(); if (rb.bottom < 0 || rb.top > (window.innerHeight || 9999)) return;
         fr++;
-        if (!dragging) az += 0.0016;
+        if (!dragging && !reduce) az += 0.0016;
         if (playing) { var pm = pMax(); if (p < pm) { p = Math.min(pm, p + 0.0016); refresh(); } }
         placeCam(); renderer.render(scene, camera);
       }
@@ -4428,19 +4451,20 @@ document.querySelectorAll('figure.quarto-float-tbl > div[aria-describedby]').for
 });
 </script>
 
-
 <!-- TAF bridge: shared local module, no model execution or network inference. -->
-
 <script type="module">
-
 const offset = document.querySelector('meta[name="quarto:offset"]')?.content || './';
-
 import(new URL(offset + 'assets/guide_bridge.js', location.href).href)
-
   .then(module => module.initGuidePage()).catch(error => console.warn('TAF reading route unavailable', error));
-
 </script>
 
+<script type="module">
+if (document.querySelector('[data-research-lab]')) {
+  const offset = document.querySelector('meta[name="quarto:offset"]')?.content || './';
+  const css = document.createElement('link'); css.rel='stylesheet'; css.href=offset+'assets/research_labs.css'; document.head.append(css);
+  import(new URL(offset+'assets/research_labs.js',location.href).href).then(m=>m.initGuideResearchLabs()).catch(e=>console.warn('Research demo unavailable',e));
+}
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

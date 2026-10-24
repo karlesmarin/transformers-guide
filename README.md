@@ -8,6 +8,20 @@
 
 ---
 
+## Estudios y demos / Studies and demos — 2026-10-24
+
+**ES:** Ocho estudios nuevos se incorporan a los capítulos existentes: precisión
+numérica, aprendizaje híbrido, KronLSTM, SPIN, Octopus, Engram, mHC y SympFormer
+(exploratorio). Fuentes primarias y límites explícitos; 15 lecturas en TAF.
+Demos opcionales de gradientes Float32 y mezcla residual con proyección 3D giratoria.
+Son cálculos didácticos, no reproducciones de entrenamiento ni validaciones de TAF.
+
+**EN:** Eight studies extend existing chapters: numerical precision, hybrid learning,
+KronLSTM, SPIN, Octopus, Engram, mHC and exploratory SympFormer. Primary sources and
+explicit limits; 15 readings in TAF. Optional Float32-gradient and residual-mixing
+demos include a rotatable 3D projection. These illustrate mechanisms; they do not
+replicate training or validate TAF.
+
 ## TAF ↔ guía / guide — 2026-10-24
 
 **ES:** El [selector de tareas](https://karlesmarin.github.io/transformers-guide/es/chapters/R5-tafagent.html#taf-routes)
@@ -25,7 +39,7 @@ and next steps in chapters. Predictions remain separate from measurements.
 ## Español
 
 Guía de campo y **referencia completa** sobre transformers: de los tokens al contexto largo,
-en **8 partes / 41 capítulos + apéndices**. Doble público por capas: la **superficie** la
+en **8 partes / 43 capítulos + apéndices**. Doble público por capas: la **superficie** la
 entiende cualquiera (prosa llana + analogía + ejemplo); la **profundidad** es una joya para el
 técnico (fórmulas término a término, datos reales, pruebas formales en Lean, el atlas de
 modelos y la app interactiva).
@@ -40,7 +54,7 @@ lente termodinámica, y el *audit* honesto "verificado vs folclore vs numerolog�
 ## English
 
 A field guide and **complete reference** on transformers: from tokens to long context, across
-**8 parts / 41 chapters + appendices**. Dual audience by layers: the **surface** is readable by
+**8 parts / 43 chapters + appendices**. Dual audience by layers: the **surface** is readable by
 anyone (plain prose + analogy + example); the **depth** is a gem for the practitioner
 (term-by-term formulas, real data, formal Lean proofs, the model atlas, and the interactive app).
 

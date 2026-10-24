@@ -1140,11 +1140,22 @@
     ]
   },
   {
+    "objectID": "chapters/07-residual-norm.html#sec-mhc",
+    "href": "chapters/07-residual-norm.html#sec-mhc",
+    "title": "8  Conexiones residuales y normalización",
+    "section": "8.8 Mezclar flujos sin confundirlo con escribir",
+    "text": "8.8 Mezclar flujos sin confundirlo con escribir\nPublicado · ICML 2026 · PMLR 306 · 2026-07. mHC restringe la mezcla entre flujos residuales ampliados mediante matrices doblemente estocásticas. (mHC: Manifold-Constrained Hyper-Connections 2026)\nPiensa en tres cuadernos que intercambian parte de sus apuntes. Una mezcla convexa redistribuye lo que ya existe; la subcapa puede escribir información nueva. Conviene separar ambas operaciones.\nEn la demo usamos \\(P=(1-\\alpha)I+\\alpha C\\), con \\(0\\leq\\alpha\\leq1\\) y \\(C\\) una permutación cíclica. Las filas y columnas suman uno. Para una matriz de flujos \\(X\\), \\(\\|PX\\|_F\\leq\\|X\\|_F\\); esto no implica \\(\\|PX+F(X)\\|_F\\leq\\|X\\|_F\\). La ganancia 1,1 de la comparación es un control ilustrativo elegido aquí, no una medición del paper.\n\n\n\n\n\n\nAlcance de la evidencia. Una mezcla no expansiva no conserva la norma del bloque no lineal completo. Sinkhorn con iteraciones finitas aproxima la restricción.\n\n\n\nQué probar. Separar transporte y actualizaciones de subcapa; medir residuos de filas/columnas, normas y calidad final.\nDemo opcional · cálculo ilustrativoSin JavaScript: las ecuaciones anteriores explican el mecanismo; no se ejecuta ningún modelo.\n🧪 Continuar en TAF: fuente, límites y experimento propuesto.",
+    "crumbs": [
+      "Parte I — Fundamentos",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Conexiones residuales y normalización</span>"
+    ]
+  },
+  {
     "objectID": "chapters/07-residual-norm.html#resumen",
     "href": "chapters/07-residual-norm.html#resumen",
     "title": "8  Conexiones residuales y normalización",
-    "section": "8.8 Resumen",
-    "text": "8.8 Resumen\n\nLa conexión residual (x ← x + Subcapa(x)) hace que cada capa añada una corrección en vez de reemplazar; mantiene un camino para el gradiente y crea el flujo residual. Sin ella (+ FFN), la atención pura colapsa a rango 1.\nLa normalización mantiene la señal a escala estable: LayerNorm (media 0, var 1, + γ, β) y la más simple RMSNorm (solo RMS, sin re-centrado).\nPre-LN (normalizar antes de la subcapa) es hoy el estándar: entrena estable sin warmup, frente al Post-LN original.\nJuntos son el andamiaje que hace entrenable apilar decenas de bloques.\n\nSiguiente (Capítulo 8): tenemos atención, FFN y el andamiaje. Falta un sentido que la atención, por sí sola, no tiene: el orden. Toca la información de posición y RoPE.",
+    "section": "8.9 Resumen",
+    "text": "8.9 Resumen\n\nLa conexión residual (x ← x + Subcapa(x)) hace que cada capa añada una corrección en vez de reemplazar; mantiene un camino para el gradiente y crea el flujo residual. Sin ella (+ FFN), la atención pura colapsa a rango 1.\nLa normalización mantiene la señal a escala estable: LayerNorm (media 0, var 1, + γ, β) y la más simple RMSNorm (solo RMS, sin re-centrado).\nPre-LN (normalizar antes de la subcapa) es hoy el estándar: entrena estable sin warmup, frente al Post-LN original.\nJuntos son el andamiaje que hace entrenable apilar decenas de bloques.\n\nSiguiente (Capítulo 8): tenemos atención, FFN y el andamiaje. Falta un sentido que la atención, por sí sola, no tiene: el orden. Toca la información de posición y RoPE.",
     "crumbs": [
       "Parte I — Fundamentos",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Conexiones residuales y normalización</span>"
@@ -1154,8 +1165,8 @@
     "objectID": "chapters/07-residual-norm.html#ejercicios",
     "href": "chapters/07-residual-norm.html#ejercicios",
     "title": "8  Conexiones residuales y normalización",
-    "section": "8.9 Ejercicios",
-    "text": "8.9 Ejercicios\n\nSumar vs reemplazar. Explica con tus palabras dos razones por las que la capa suma su salida en vez de sustituir el vector.\nLayerNorm vs RMSNorm. ¿Cuál es la única diferencia esencial entre las dos?\nPre vs Post. Escribe las dos fórmulas (Pre-LN y Post-LN) para una subcapa. ¿Cuál necesita warmup y cuál no?\nColapso. Si quitas las conexiones residuales y dejas solo atención, ¿qué les pasa a las representaciones de los tokens al aumentar la profundidad?",
+    "section": "8.10 Ejercicios",
+    "text": "8.10 Ejercicios\n\nSumar vs reemplazar. Explica con tus palabras dos razones por las que la capa suma su salida en vez de sustituir el vector.\nLayerNorm vs RMSNorm. ¿Cuál es la única diferencia esencial entre las dos?\nPre vs Post. Escribe las dos fórmulas (Pre-LN y Post-LN) para una subcapa. ¿Cuál necesita warmup y cuál no?\nColapso. Si quitas las conexiones residuales y dejas solo atención, ¿qué les pasa a las representaciones de los tokens al aumentar la profundidad?",
     "crumbs": [
       "Parte I — Fundamentos",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Conexiones residuales y normalización</span>"
@@ -1166,7 +1177,7 @@
     "href": "chapters/07-residual-norm.html#referencias",
     "title": "8  Conexiones residuales y normalización",
     "section": "Referencias",
-    "text": "Referencias\n\n\n\n\nBa, Jimmy Lei, Jamie Ryan Kiros, y Geoffrey E. Hinton. 2016. Layer Normalization. https://arxiv.org/abs/1607.06450.\n\n\nDong, Yihe, Jean-Baptiste Cordonnier, y Andreas Loukas. 2021. «Attention is Not All You Need: Pure Attention Loses Rank Doubly Exponentially with Depth». ICML. https://arxiv.org/abs/2103.03404.\n\n\nHe, Kaiming, Xiangyu Zhang, Shaoqing Ren, y Jian Sun. 2016. «Deep Residual Learning for Image Recognition». CVPR. https://arxiv.org/abs/1512.03385.\n\n\nXiong, Ruibin et al. 2020. «On Layer Normalization in the Transformer Architecture». ICML. https://arxiv.org/abs/2002.04745.\n\n\nZhang, Biao, y Rico Sennrich. 2019. «Root Mean Square Layer Normalization». NeurIPS. https://arxiv.org/abs/1910.07467.",
+    "text": "Referencias\n\n\n\n\nBa, Jimmy Lei, Jamie Ryan Kiros, y Geoffrey E. Hinton. 2016. Layer Normalization. https://arxiv.org/abs/1607.06450.\n\n\nDong, Yihe, Jean-Baptiste Cordonnier, y Andreas Loukas. 2021. «Attention is Not All You Need: Pure Attention Loses Rank Doubly Exponentially with Depth». ICML. https://arxiv.org/abs/2103.03404.\n\n\nHe, Kaiming, Xiangyu Zhang, Shaoqing Ren, y Jian Sun. 2016. «Deep Residual Learning for Image Recognition». CVPR. https://arxiv.org/abs/1512.03385.\n\n\nmHC: Manifold-Constrained Hyper-Connections. 2026. ICML 2026 · PMLR 306. https://proceedings.mlr.press/v306/xie26aa.html.\n\n\nXiong, Ruibin et al. 2020. «On Layer Normalization in the Transformer Architecture». ICML. https://arxiv.org/abs/2002.04745.\n\n\nZhang, Biao, y Rico Sennrich. 2019. «Root Mean Square Layer Normalization». NeurIPS. https://arxiv.org/abs/1910.07467.",
     "crumbs": [
       "Parte I — Fundamentos",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Conexiones residuales y normalización</span>"
@@ -1459,11 +1470,33 @@
     ]
   },
   {
+    "objectID": "chapters/10-arquitecturas.html#sec-hybrid-learning",
+    "href": "chapters/10-arquitecturas.html#sec-hybrid-learning",
+    "title": "11  Encoder, decoder y encoder-decoder",
+    "section": "11.7 Competing Learning in Hybrid Architectures",
+    "text": "11.7 Competing Learning in Hybrid Architectures\nPreprint · arXiv v1 · 2026-10-19. Los bloques recurrentes y de atención pueden competir al entrenar; congelarlos por etapas cambia el reparto de trabajo. (Competing Learning in Hybrid Architectures 2026)\n\n\n\n\n\n\nAlcance de la evidencia. Las pruebas llegan a 1B de parámetros; los híbridos KDA principales desactivan RoPE. La configuración no diagnostica esa competencia.\n\n\n\nQué probar. Comparar intervenciones por capa y recuperación con igual presupuesto de entrenamiento y varias distribuciones de datos.\n🧪 Continuar en TAF: fuente, límites y experimento propuesto.",
+    "crumbs": [
+      "Parte I — Fundamentos",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Encoder, decoder y encoder-decoder</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/10-arquitecturas.html#sec-engram",
+    "href": "chapters/10-arquitecturas.html#sec-engram",
+    "title": "11  Encoder, decoder y encoder-decoder",
+    "section": "11.8 Conditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models",
+    "text": "11.8 Conditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models\nPreprint · arXiv v2 · 2026-07-12. Engram complementa el cómputo condicional con memoria aprendida de consulta de n-gramas mediante hash. (Conditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models 2026)\n\n\n\n\n\n\nAlcance de la evidencia. Es memoria paramétrica, no una base RAG externa ni el diario de un agente. Consultar sigue teniendo costes de almacenamiento y transferencia.\n\n\n\nQué probar. Comparar calidad, cómputo activo, almacenamiento total de tablas y ancho de banda con recursos equivalentes.\n🧪 Continuar en TAF: fuente, límites y experimento propuesto.",
+    "crumbs": [
+      "Parte I — Fundamentos",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Encoder, decoder y encoder-decoder</span>"
+    ]
+  },
+  {
     "objectID": "chapters/10-arquitecturas.html#resumen",
     "href": "chapters/10-arquitecturas.html#resumen",
     "title": "11  Encoder, decoder y encoder-decoder",
-    "section": "11.7 Resumen",
-    "text": "11.7 Resumen\n\nLas tres familias comparten piezas; las distingue la máscara (bidireccional vs causal) y la presencia de atención cruzada.\nSolo encoder (BERT): bidireccional, rellena huecos, comprende (no genera).\nSolo decoder (GPT/LLaMA): causal, siguiente token, genera — dominante hoy.\nEncoder-decoder (T5/BART): codificador + decodificador + cruzada, seq2seq.\nDecoder-only ganó para LLMs por escala + generalidad; encoder-only aún gana en embeddings/clasificación baratos.\n\nSiguiente (Capítulo 11): ya conocemos las arquitecturas. ¿Cómo se entrena de verdad uno de estos modelos? Objetivo, optimización, datos y leyes de escala.",
+    "section": "11.9 Resumen",
+    "text": "11.9 Resumen\n\nLas tres familias comparten piezas; las distingue la máscara (bidireccional vs causal) y la presencia de atención cruzada.\nSolo encoder (BERT): bidireccional, rellena huecos, comprende (no genera).\nSolo decoder (GPT/LLaMA): causal, siguiente token, genera — dominante hoy.\nEncoder-decoder (T5/BART): codificador + decodificador + cruzada, seq2seq.\nDecoder-only ganó para LLMs por escala + generalidad; encoder-only aún gana en embeddings/clasificación baratos.\n\nSiguiente (Capítulo 11): ya conocemos las arquitecturas. ¿Cómo se entrena de verdad uno de estos modelos? Objetivo, optimización, datos y leyes de escala.",
     "crumbs": [
       "Parte I — Fundamentos",
       "<span class='chapter-number'>11</span>  <span class='chapter-title'>Encoder, decoder y encoder-decoder</span>"
@@ -1473,8 +1506,8 @@
     "objectID": "chapters/10-arquitecturas.html#ejercicios",
     "href": "chapters/10-arquitecturas.html#ejercicios",
     "title": "11  Encoder, decoder y encoder-decoder",
-    "section": "11.8 Ejercicios",
-    "text": "11.8 Ejercicios\n\nEl interruptor. ¿Cuál es el único cambio principal que convierte un modelo de “comprensión” en uno de “generación”?\n¿Por qué BERT no escribe un ensayo? Explícalo en términos de su máscara y su objetivo de entrenamiento.\nAtención cruzada. En un traductor (T5), ¿quién mira a quién, y para qué?\nElegir herramienta. ¿Qué familia usarías para: (a) clasificar reseñas como positivas/negativas; (b) un chatbot; (c) traducir del inglés al español? Justifica.",
+    "section": "11.10 Ejercicios",
+    "text": "11.10 Ejercicios\n\nEl interruptor. ¿Cuál es el único cambio principal que convierte un modelo de “comprensión” en uno de “generación”?\n¿Por qué BERT no escribe un ensayo? Explícalo en términos de su máscara y su objetivo de entrenamiento.\nAtención cruzada. En un traductor (T5), ¿quién mira a quién, y para qué?\nElegir herramienta. ¿Qué familia usarías para: (a) clasificar reseñas como positivas/negativas; (b) un chatbot; (c) traducir del inglés al español? Justifica.",
     "crumbs": [
       "Parte I — Fundamentos",
       "<span class='chapter-number'>11</span>  <span class='chapter-title'>Encoder, decoder y encoder-decoder</span>"
@@ -1485,7 +1518,7 @@
     "href": "chapters/10-arquitecturas.html#referencias",
     "title": "11  Encoder, decoder y encoder-decoder",
     "section": "Referencias",
-    "text": "Referencias\n\n\n\n\nTay, Yi et al. 2022. UL2: Unifying Language Learning Paradigms. https://arxiv.org/abs/2205.05131.\n\n\nWang, Thomas et al. 2022. What Language Model Architecture and Pretraining Objective Work Best for Zero-Shot Generalization? https://arxiv.org/abs/2204.05832.",
+    "text": "Referencias\n\n\n\n\nCompeting Learning in Hybrid Architectures. 2026. arXiv v1. https://arxiv.org/abs/2610.26830v1.\n\n\nConditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models. 2026. arXiv v2. https://arxiv.org/abs/2601.07372v2.\n\n\nTay, Yi et al. 2022. UL2: Unifying Language Learning Paradigms. https://arxiv.org/abs/2205.05131.\n\n\nWang, Thomas et al. 2022. What Language Model Architecture and Pretraining Objective Work Best for Zero-Shot Generalization? https://arxiv.org/abs/2204.05832.",
     "crumbs": [
       "Parte I — Fundamentos",
       "<span class='chapter-number'>11</span>  <span class='chapter-title'>Encoder, decoder y encoder-decoder</span>"
@@ -2570,11 +2603,22 @@
     ]
   },
   {
+    "objectID": "chapters/20-kv-cache.html#sec-octopus",
+    "href": "chapters/20-kv-cache.html#sec-octopus",
+    "title": "21  Compresión de KV-cache en práctica",
+    "section": "21.8 Octopus: Gated Selective Attention for Memory-Bounded Long-Context Inference in Large Language Models",
+    "text": "21.8 Octopus: Gated Selective Attention for Memory-Bounded Long-Context Inference in Large Language Models\nPublicado · ACL 2026 · 2026-07. Compuertas aprendidas retienen estados KV seleccionados con un presupuesto de memoria acotado. (Octopus: Gated Selective Attention for Memory-Bounded Long-Context Inference in Large Language Models 2026)\n\n\n\n\n\n\nAlcance de la evidencia. Requiere destilación y ajuste; no es un interruptor sin entrenamiento. Mejorar un benchmark no garantiza conservar cualquier dato.\n\n\n\nQué probar. Comparar razonamiento y recuperación con el profesor de caché completa y alternativas de igual presupuesto, incluyendo el coste de adaptación.\n🧪 Continuar en TAF: fuente, límites y experimento propuesto.",
+    "crumbs": [
+      "Parte II — Cómo atienden a lo largo de la distancia",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Compresión de KV-cache en práctica</span>"
+    ]
+  },
+  {
     "objectID": "chapters/20-kv-cache.html#resumen",
     "href": "chapters/20-kv-cache.html#resumen",
     "title": "21  Compresión de KV-cache en práctica",
-    "section": "21.8 Resumen",
-    "text": "21.8 Resumen\n\nEvaluación ampliada: compara también razonamiento y selección por valores; iguala bytes reales y conserva la caché completa como referencia.\nEl KV-cache crece O(n) → cuello de botella; comprimir = qué K/V conservar.\nEl campo elige el presupuesto por posición/masa observada/cotas (StreamingLLM, H2O, SnapKV, Ada-KV, LAVa…); ninguno lo derivaba de un exponente de decaimiento en el momento de Part I (concurrente: arXiv:2605.25085).\nNuestro D_f: como A(d)∝d^−γ, una ventana finita captura \\((1-\\varepsilon)\\) de la masa si γ&gt;1 (comprimible), no si γ&lt;1; γ=1 es la frontera y D_f sale en forma cerrada de γ (sin parámetros).\nHonesto: el cara a cara con Ada-KV/LAVa está pendiente; masa ≠ fidelidad; D_f va encima de sumidero+recencia; mide tarea, no perplejidad.\n\nFin de la Parte II. Has visto nuestro territorio completo: leer mapas → aliasing → la ley γ → el atlas → sumideros → taxonomía → contexto largo → KV. Siguiente (Parte III): una lente más especulativa pero reveladora — la física de la atención (fases, termodinámica, transporte fraccionario, grokking).",
+    "section": "21.9 Resumen",
+    "text": "21.9 Resumen\n\nEvaluación ampliada: compara también razonamiento y selección por valores; iguala bytes reales y conserva la caché completa como referencia.\nEl KV-cache crece O(n) → cuello de botella; comprimir = qué K/V conservar.\nEl campo elige el presupuesto por posición/masa observada/cotas (StreamingLLM, H2O, SnapKV, Ada-KV, LAVa…); ninguno lo derivaba de un exponente de decaimiento en el momento de Part I (concurrente: arXiv:2605.25085).\nNuestro D_f: como A(d)∝d^−γ, una ventana finita captura \\((1-\\varepsilon)\\) de la masa si γ&gt;1 (comprimible), no si γ&lt;1; γ=1 es la frontera y D_f sale en forma cerrada de γ (sin parámetros).\nHonesto: el cara a cara con Ada-KV/LAVa está pendiente; masa ≠ fidelidad; D_f va encima de sumidero+recencia; mide tarea, no perplejidad.\n\nFin de la Parte II. Has visto nuestro territorio completo: leer mapas → aliasing → la ley γ → el atlas → sumideros → taxonomía → contexto largo → KV. Siguiente (Parte III): una lente más especulativa pero reveladora — la física de la atención (fases, termodinámica, transporte fraccionario, grokking).",
     "crumbs": [
       "Parte II — Cómo atienden a lo largo de la distancia",
       "<span class='chapter-number'>21</span>  <span class='chapter-title'>Compresión de KV-cache en práctica</span>"
@@ -2584,8 +2628,8 @@
     "objectID": "chapters/20-kv-cache.html#ejercicios",
     "href": "chapters/20-kv-cache.html#ejercicios",
     "title": "21  Compresión de KV-cache en práctica",
-    "section": "21.9 Ejercicios",
-    "text": "21.9 Ejercicios\n\nCompresibilidad. Mirando la figura: ¿qué modelo comprimes mejor su KV, uno con γ=1,3 o uno con γ=0,7? ¿Por qué?\nLa frontera. ¿Por qué γ=1 separa “comprimible” de “difícil”? (Piensa en si \\(\\sum d^{-\\gamma}\\) converge.)\nHonestidad. ¿Por qué no afirmamos que D_f sea mejor que Ada-KV? ¿Qué experimento faltaría?\nMasa ≠ fidelidad. Da un caso en el que un token con poca atención aún sea importante para la salida.\nLa página decisiva. En el ejemplo \\(a=(0{,}99,0{,}01)\\), cambia el segundo valor de 100 a 1. ¿Qué cambia en la masa retenida y en el error de salida? ¿Qué demuestra?",
+    "section": "21.10 Ejercicios",
+    "text": "21.10 Ejercicios\n\nCompresibilidad. Mirando la figura: ¿qué modelo comprimes mejor su KV, uno con γ=1,3 o uno con γ=0,7? ¿Por qué?\nLa frontera. ¿Por qué γ=1 separa “comprimible” de “difícil”? (Piensa en si \\(\\sum d^{-\\gamma}\\) converge.)\nHonestidad. ¿Por qué no afirmamos que D_f sea mejor que Ada-KV? ¿Qué experimento faltaría?\nMasa ≠ fidelidad. Da un caso en el que un token con poca atención aún sea importante para la salida.\nLa página decisiva. En el ejemplo \\(a=(0{,}99,0{,}01)\\), cambia el segundo valor de 100 a 1. ¿Qué cambia en la masa retenida y en el error de salida? ¿Qué demuestra?",
     "crumbs": [
       "Parte II — Cómo atienden a lo largo de la distancia",
       "<span class='chapter-number'>21</span>  <span class='chapter-title'>Compresión de KV-cache en práctica</span>"
@@ -2596,7 +2640,7 @@
     "href": "chapters/20-kv-cache.html#referencias",
     "title": "21  Compresión de KV-cache en práctica",
     "section": "Referencias",
-    "text": "Referencias\n\n\n\n\nCai, Zefan et al. 2024. PyramidKV: Dynamic KV Cache Compression based on Pyramidal Information Funneling. https://arxiv.org/abs/2406.02069.\n\n\nFeng, Yuan, Junlin Lv, Yukun Cao, Xike Xie, y Sean Zhou. 2025. «Ada-KV: Optimizing KV Cache Eviction by Adaptive Budget Allocation for Efficient LLM Inference». NeurIPS. https://arxiv.org/abs/2407.11550.\n\n\nGe, Suyu et al. 2023. Model Tells You What to Discard: Adaptive KV Cache Compression for LLMs (FastGen). https://arxiv.org/abs/2310.01801.\n\n\nLi, Yuhong et al. 2024. SnapKV: LLM Knows What You are Looking for Before Generation. https://arxiv.org/abs/2404.14469.\n\n\nLiu, Xiang, Zhenheng Tang, Hong Chen, et al. 2026. «Semantic Integrity Matters: Benchmarking and Preserving High-Density Reasoning in KV Cache Compression». Proceedings of the 43rd International Conference on Machine Learning 306: 78537-65. https://proceedings.mlr.press/v306/liu26dz.html.\n\n\nLiu, Zichang et al. 2023. Scissorhands: Exploiting the Persistence of Importance Hypothesis for LLM KV Cache Compression. https://arxiv.org/abs/2305.17118.\n\n\nLiu, Zirui et al. 2024. KIVI: A Tuning-Free Asymmetric 2bit Quantization for KV Cache. https://arxiv.org/abs/2402.02750.\n\n\nMarín, Carles. 2026. Predicting How Transformers Attend: Analytic Power-Law Theory, Phase Transitions, and Practical Compression Tools. https://zenodo.org/records/20314038.\n\n\nPark, Junyoung, Jungwook Choi, y Mingu Lee. 2026. ValueDiff: Value-Geometric KV Cache Eviction for Sink-Suppressed LLMs. https://arxiv.org/abs/2609.23314v2.\n\n\nShen et al. 2025. LAVa: Layer-wise and Adaptive KV Cache Compression via Residual Information Loss. https://arxiv.org/abs/2509.09754.\n\n\nXiao, Guangxuan, Yuandong Tian, Beidi Chen, Song Han, y Mike Lewis. 2024. «Efficient Streaming Language Models with Attention Sinks». ICLR. https://arxiv.org/abs/2309.17453.\n\n\nZhang, Zhenyu et al. 2023. «H2O: Heavy-Hitter Oracle for Efficient Generative Inference of Large Language Models». NeurIPS. https://arxiv.org/abs/2306.14048.",
+    "text": "Referencias\n\n\n\n\nCai, Zefan et al. 2024. PyramidKV: Dynamic KV Cache Compression based on Pyramidal Information Funneling. https://arxiv.org/abs/2406.02069.\n\n\nFeng, Yuan, Junlin Lv, Yukun Cao, Xike Xie, y Sean Zhou. 2025. «Ada-KV: Optimizing KV Cache Eviction by Adaptive Budget Allocation for Efficient LLM Inference». NeurIPS. https://arxiv.org/abs/2407.11550.\n\n\nGe, Suyu et al. 2023. Model Tells You What to Discard: Adaptive KV Cache Compression for LLMs (FastGen). https://arxiv.org/abs/2310.01801.\n\n\nLi, Yuhong et al. 2024. SnapKV: LLM Knows What You are Looking for Before Generation. https://arxiv.org/abs/2404.14469.\n\n\nLiu, Xiang, Zhenheng Tang, Hong Chen, et al. 2026. «Semantic Integrity Matters: Benchmarking and Preserving High-Density Reasoning in KV Cache Compression». Proceedings of the 43rd International Conference on Machine Learning 306: 78537-65. https://proceedings.mlr.press/v306/liu26dz.html.\n\n\nLiu, Zichang et al. 2023. Scissorhands: Exploiting the Persistence of Importance Hypothesis for LLM KV Cache Compression. https://arxiv.org/abs/2305.17118.\n\n\nLiu, Zirui et al. 2024. KIVI: A Tuning-Free Asymmetric 2bit Quantization for KV Cache. https://arxiv.org/abs/2402.02750.\n\n\nMarín, Carles. 2026. Predicting How Transformers Attend: Analytic Power-Law Theory, Phase Transitions, and Practical Compression Tools. https://zenodo.org/records/20314038.\n\n\nOctopus: Gated Selective Attention for Memory-Bounded Long-Context Inference in Large Language Models. 2026. ACL 2026. https://aclanthology.org/2026.acl-long.1631/.\n\n\nPark, Junyoung, Jungwook Choi, y Mingu Lee. 2026. ValueDiff: Value-Geometric KV Cache Eviction for Sink-Suppressed LLMs. https://arxiv.org/abs/2609.23314v2.\n\n\nShen et al. 2025. LAVa: Layer-wise and Adaptive KV Cache Compression via Residual Information Loss. https://arxiv.org/abs/2509.09754.\n\n\nXiao, Guangxuan, Yuandong Tian, Beidi Chen, Song Han, y Mike Lewis. 2024. «Efficient Streaming Language Models with Attention Sinks». ICLR. https://arxiv.org/abs/2309.17453.\n\n\nZhang, Zhenyu et al. 2023. «H2O: Heavy-Hitter Oracle for Efficient Generative Inference of Large Language Models». NeurIPS. https://arxiv.org/abs/2306.14048.",
     "crumbs": [
       "Parte II — Cómo atienden a lo largo de la distancia",
       "<span class='chapter-number'>21</span>  <span class='chapter-title'>Compresión de KV-cache en práctica</span>"
@@ -2768,11 +2812,22 @@
     ]
   },
   {
+    "objectID": "chapters/22-termodinamica.html#sec-sympformer",
+    "href": "chapters/22-termodinamica.html#sec-sympformer",
+    "title": "23  El diccionario termodinámico",
+    "section": "23.7 SympFormer: Inertial Attention Blocks from Damped Hamiltonian Dynamics on Spaces of Probability Measures",
+    "text": "23.7 SympFormer: Inertial Attention Blocks from Damped Hamiltonian Dynamics on Spaces of Probability Measures\nPreprint · exploratorio · arXiv v1 · exploratory · 2026-10-22. Explora atención con inercia mediante dinámica hamiltoniana amortiguada y experimentos de modelado del lenguaje. (SympFormer: Inertial Attention Blocks from Damped Hamiltonian Dynamics on Spaces of Probability Measures 2026)\n\n\n\n\n\n\nAlcance de la evidencia. El planteamiento geométrico supone interacciones simétricas y omite máscara causal y otros componentes habituales. No valida la termodinámica TAF.\n\n\n\nQué probar. Comparar bloques inerciales con controles de momentum a igual cómputo, separando supuestos teóricos y modelos implementados.\n🧪 Continuar en TAF: fuente, límites y experimento propuesto.",
+    "crumbs": [
+      "Parte III — Una lente física sobre la atención",
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>El diccionario termodinámico</span>"
+    ]
+  },
+  {
     "objectID": "chapters/22-termodinamica.html#resumen",
     "href": "chapters/22-termodinamica.html#resumen",
     "title": "23  El diccionario termodinámico",
-    "section": "23.7 Resumen",
-    "text": "23.7 Resumen\n\nLa atención tiene un diccionario termodinámico (T=1/γ, Z, C_V, S) —una lente, no física literal—.\nFisher = C_V/γ² está probada en Lean (📐): sensibilidad estadística = fluctuación térmica. (Lean prueba el álgebra, no la causalidad sobre transformers.)\nÁrea-ley: la entropía crece como log N (derivada de γ&lt;1; γ medido en los 42 modelos del atlas).\nErratum propio (honesto): C_V(γ=1) era (logN)²/4 → es (logN)²/12 (factor 3), corregido y verificado en Lean. Lo contamos porque la honestidad se demuestra.\n\nSiguiente (Capítulo 23): otra lente sobre el mismo fenómeno —la atención como transporte fraccionario (difusión de Lévy), con el orden de integración (γ−1)/2—.",
+    "section": "23.8 Resumen",
+    "text": "23.8 Resumen\n\nLa atención tiene un diccionario termodinámico (T=1/γ, Z, C_V, S) —una lente, no física literal—.\nFisher = C_V/γ² está probada en Lean (📐): sensibilidad estadística = fluctuación térmica. (Lean prueba el álgebra, no la causalidad sobre transformers.)\nÁrea-ley: la entropía crece como log N (derivada de γ&lt;1; γ medido en los 42 modelos del atlas).\nErratum propio (honesto): C_V(γ=1) era (logN)²/4 → es (logN)²/12 (factor 3), corregido y verificado en Lean. Lo contamos porque la honestidad se demuestra.\n\nSiguiente (Capítulo 23): otra lente sobre el mismo fenómeno —la atención como transporte fraccionario (difusión de Lévy), con el orden de integración (γ−1)/2—.",
     "crumbs": [
       "Parte III — Una lente física sobre la atención",
       "<span class='chapter-number'>23</span>  <span class='chapter-title'>El diccionario termodinámico</span>"
@@ -2782,8 +2837,8 @@
     "objectID": "chapters/22-termodinamica.html#ejercicios",
     "href": "chapters/22-termodinamica.html#ejercicios",
     "title": "23  El diccionario termodinámico",
-    "section": "23.8 Ejercicios",
-    "text": "23.8 Ejercicios\n\nFisher y C_V. Explica en una frase qué mide cada uno y por qué tiene sentido que sean “la misma cosa”.\nEl recibo Lean. ¿Qué demuestra exactamente una prueba en Lean de Fisher=C_V, y qué no demuestra?\nEl erratum. El valor pasó de (logN)²/4 a (logN)²/12. ¿De qué factor era el error?\nHonestidad. ¿Por qué contar un error propio hace al manual más fiable, no menos?\n\n\n\n\n\n\n\nTip📄 Nuestro paper — datos y detalles\n\n\n\nLa identidad Fisher = C_V, el erratum de la corrección y los enlaces a las pruebas Lean están en abierto: Predicting How Transformers Attend (Zenodo).",
+    "section": "23.9 Ejercicios",
+    "text": "23.9 Ejercicios\n\nFisher y C_V. Explica en una frase qué mide cada uno y por qué tiene sentido que sean “la misma cosa”.\nEl recibo Lean. ¿Qué demuestra exactamente una prueba en Lean de Fisher=C_V, y qué no demuestra?\nEl erratum. El valor pasó de (logN)²/4 a (logN)²/12. ¿De qué factor era el error?\nHonestidad. ¿Por qué contar un error propio hace al manual más fiable, no menos?\n\n\n\n\n\n\n\nTip📄 Nuestro paper — datos y detalles\n\n\n\nLa identidad Fisher = C_V, el erratum de la corrección y los enlaces a las pruebas Lean están en abierto: Predicting How Transformers Attend (Zenodo).",
     "crumbs": [
       "Parte III — Una lente física sobre la atención",
       "<span class='chapter-number'>23</span>  <span class='chapter-title'>El diccionario termodinámico</span>"
@@ -2794,7 +2849,7 @@
     "href": "chapters/22-termodinamica.html#referencias",
     "title": "23  El diccionario termodinámico",
     "section": "Referencias",
-    "text": "Referencias\n\n\n\n\nMarín, Carles. 2026. Predicting How Transformers Attend: Analytic Power-Law Theory, Phase Transitions, and Practical Compression Tools. https://zenodo.org/records/20314038.",
+    "text": "Referencias\n\n\n\n\nMarín, Carles. 2026. Predicting How Transformers Attend: Analytic Power-Law Theory, Phase Transitions, and Practical Compression Tools. https://zenodo.org/records/20314038.\n\n\nSympFormer: Inertial Attention Blocks from Damped Hamiltonian Dynamics on Spaces of Probability Measures. 2026. arXiv v1 · exploratory. https://arxiv.org/abs/2610.31600v1.",
     "crumbs": [
       "Parte III — Una lente física sobre la atención",
       "<span class='chapter-number'>23</span>  <span class='chapter-title'>El diccionario termodinámico</span>"
@@ -2988,11 +3043,22 @@
     ]
   },
   {
+    "objectID": "chapters/24-grokking.html#sec-softmax-numerics",
+    "href": "chapters/24-grokking.html#sec-softmax-numerics",
+    "title": "25  Dinámica de entrenamiento y grokking",
+    "section": "25.9 Grokking y precisión numérica",
+    "text": "25.9 Grokking y precisión numérica\nPreprint · arXiv v1 · 2026-10-22. La precisión finita puede anular el gradiente objetivo mientras otros siguen activos; implementaciones algebraicamente equivalentes difieren. (A Fix for Softmax and Cross-Entropy 2026)\nUna báscula puede redondear dos pesos distintos al mismo número. Aquí sucede algo parecido: si la probabilidad objetivo se redondea a uno, calcular \\(q_t-1\\) devuelve cero aunque las otras componentes aún sean positivas.\nPara los logits ilustrativos \\([m,0,0]\\) y objetivo 0, el gradiente exacto es \\(-2e^{-m}/(1+2e^{-m})\\). La demo compara operaciones redondeadas a Float32 con una referencia Float64. No reproduce un kernel fusionado ni demuestra que todo grokking sea un artefacto. Antes de interpretar un salto de precisión como transición de fase, controla también la pérdida implementada, el tipo numérico y el optimizador.\n\n\n\n\n\n\nAlcance de la evidencia. Las pruebas pequeñas de aritmética y destilación no demuestran mejoras en LLM de frontera ni explican todo el grokking.\n\n\n\nQué probar. Comparar pérdida y gradientes entre precisiones y repetir el entrenamiento con datos, semillas y optimizador fijos.\nDemo opcional · cálculo ilustrativoSin JavaScript: las ecuaciones anteriores explican el mecanismo; no se ejecuta ningún modelo.\n🧪 Continuar en TAF: fuente, límites y experimento propuesto.",
+    "crumbs": [
+      "Parte III — Una lente física sobre la atención",
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Dinámica de entrenamiento y *grokking*</span>"
+    ]
+  },
+  {
     "objectID": "chapters/24-grokking.html#resumen",
     "href": "chapters/24-grokking.html#resumen",
     "title": "25  Dinámica de entrenamiento y grokking",
-    "section": "25.9 Resumen",
-    "text": "25.9 Resumen\n\nGrokking (Power et al. 2022): en tareas algorítmicas, la red memoriza pronto (train→100 %, test al azar), pasa una meseta larga y generaliza de golpe mucho después.\nNo es súbito por dentro (Nanda et al. 2023): aprende un algoritmo de Fourier que se forma gradualmente (memorización → formación del circuito → limpieza); la brusquedad es un artefacto de cuándo el circuito bueno gana.\nPor qué (Liu et al. 2022): el paisaje de pérdida frente a la norma de pesos (mecanismo “LU”) + weight decay arrastran de la solución memorizadora (norma alta) a la generalizadora (norma baja).\nFrontera 2024-2026: transiciones de fase con distintos parámetros de orden —entropía espectral, dimensión efectiva, defecto de conmutador—; dos de ellos ya predicen el salto.\nNuestro piloto (Marín 2026): el CKA inter-capa \\(\\hat{O}_{01}\\) cae y re-asciende ~3000 pasos antes del salto (16/16 vs 0/5; alcance = tareas tipo Fourier). Honesto: predecir no es novedad; lo nuestro es una señal simple, interna y barata, y es un piloto por validar.\nNos refutamos: forzar el CKA→1 no impide el grokking (2/3 a 20 k pasos) → señal predictiva, no causal.\n\nSiguiente: con esto cerramos la Parte III —la lente física sobre la atención—. La Parte IV abre el lado práctico: entrenar y ajustar modelos (pre-entrenamiento, fine-tuning, LoRA/PEFT, alineamiento), donde toda esta dinámica deja de ser curiosidad y se vuelve decisión de ingeniería.",
+    "section": "25.10 Resumen",
+    "text": "25.10 Resumen\n\nGrokking (Power et al. 2022): en tareas algorítmicas, la red memoriza pronto (train→100 %, test al azar), pasa una meseta larga y generaliza de golpe mucho después.\nNo es súbito por dentro (Nanda et al. 2023): aprende un algoritmo de Fourier que se forma gradualmente (memorización → formación del circuito → limpieza); la brusquedad es un artefacto de cuándo el circuito bueno gana.\nPor qué (Liu et al. 2022): el paisaje de pérdida frente a la norma de pesos (mecanismo “LU”) + weight decay arrastran de la solución memorizadora (norma alta) a la generalizadora (norma baja).\nFrontera 2024-2026: transiciones de fase con distintos parámetros de orden —entropía espectral, dimensión efectiva, defecto de conmutador—; dos de ellos ya predicen el salto.\nNuestro piloto (Marín 2026): el CKA inter-capa \\(\\hat{O}_{01}\\) cae y re-asciende ~3000 pasos antes del salto (16/16 vs 0/5; alcance = tareas tipo Fourier). Honesto: predecir no es novedad; lo nuestro es una señal simple, interna y barata, y es un piloto por validar.\nNos refutamos: forzar el CKA→1 no impide el grokking (2/3 a 20 k pasos) → señal predictiva, no causal.\n\nSiguiente: con esto cerramos la Parte III —la lente física sobre la atención—. La Parte IV abre el lado práctico: entrenar y ajustar modelos (pre-entrenamiento, fine-tuning, LoRA/PEFT, alineamiento), donde toda esta dinámica deja de ser curiosidad y se vuelve decisión de ingeniería.",
     "crumbs": [
       "Parte III — Una lente física sobre la atención",
       "<span class='chapter-number'>25</span>  <span class='chapter-title'>Dinámica de entrenamiento y *grokking*</span>"
@@ -3002,8 +3068,8 @@
     "objectID": "chapters/24-grokking.html#ejercicios",
     "href": "chapters/24-grokking.html#ejercicios",
     "title": "25  Dinámica de entrenamiento y grokking",
-    "section": "25.10 Ejercicios",
-    "text": "25.10 Ejercicios\n\nLa curva. Describe las tres fases del grokking en términos de las precisiones de train y test. ¿Por qué la lógica clásica del sobreajuste te diría que pares antes de que llegue el salto?\nNo tan súbito. Según Nanda, ¿qué se está formando durante la meseta, y por qué el salto de test parece repentino aunque el mecanismo no lo sea?\nEl motor. Explica el mecanismo “LU” de Omnigrok y el papel del weight decay. ¿Qué pasa si el weight decay es insuficiente?\nHonestidad I. ¿Por qué no afirmamos haber sido los primeros en predecir el grokking? ¿En qué consiste entonces nuestra aportación?\nHonestidad II. Teníamos la hipótesis de que el CKA era una palanca causal. ¿Qué experimento la puso a prueba, qué salió, y cómo cambió nuestra afirmación?\n\n\n\n\n\n\n\nTip📄 Nuestro paper — datos y detalles\n\n\n\nEl estudio piloto completo —con los datos, las semillas, las tareas (suma/multiplicación modular, paridad \\(k\\)-dispersa) y el experimento de refutación del forzado del CKA— está depositado en abierto: Inter-Layer Alignment Re-Rise Predicts Grokking in Transformers: A Pilot Study (Zenodo).",
+    "section": "25.11 Ejercicios",
+    "text": "25.11 Ejercicios\n\nLa curva. Describe las tres fases del grokking en términos de las precisiones de train y test. ¿Por qué la lógica clásica del sobreajuste te diría que pares antes de que llegue el salto?\nNo tan súbito. Según Nanda, ¿qué se está formando durante la meseta, y por qué el salto de test parece repentino aunque el mecanismo no lo sea?\nEl motor. Explica el mecanismo “LU” de Omnigrok y el papel del weight decay. ¿Qué pasa si el weight decay es insuficiente?\nHonestidad I. ¿Por qué no afirmamos haber sido los primeros en predecir el grokking? ¿En qué consiste entonces nuestra aportación?\nHonestidad II. Teníamos la hipótesis de que el CKA era una palanca causal. ¿Qué experimento la puso a prueba, qué salió, y cómo cambió nuestra afirmación?\n\n\n\n\n\n\n\nTip📄 Nuestro paper — datos y detalles\n\n\n\nEl estudio piloto completo —con los datos, las semillas, las tareas (suma/multiplicación modular, paridad \\(k\\)-dispersa) y el experimento de refutación del forzado del CKA— está depositado en abierto: Inter-Layer Alignment Re-Rise Predicts Grokking in Transformers: A Pilot Study (Zenodo).",
     "crumbs": [
       "Parte III — Una lente física sobre la atención",
       "<span class='chapter-number'>25</span>  <span class='chapter-title'>Dinámica de entrenamiento y *grokking*</span>"
@@ -3014,7 +3080,7 @@
     "href": "chapters/24-grokking.html#referencias",
     "title": "25  Dinámica de entrenamiento y grokking",
     "section": "Referencias",
-    "text": "Referencias\n\n\n\n\nKhanh, Hoa, Trung, y Duc. 2026. Spectral Entropy Collapse as a Phase Transition in Delayed Generalisation. https://arxiv.org/abs/2604.13123.\n\n\nLiu, Ziming, Eric J. Michaud, y Max Tegmark. 2022. Omnigrok: Grokking Beyond Algorithmic Data. https://arxiv.org/abs/2210.01117.\n\n\nMarín, Carles. 2026. Inter-Layer Alignment Re-Rise Predicts Grokking in Transformers: A Pilot Study. https://zenodo.org/records/19194911.\n\n\nNanda, Neel, Lawrence Chan, Tom Lieberum, Jess Smith, y Jacob Steinhardt. 2023. Progress Measures for Grokking via Mechanistic Interpretability. https://arxiv.org/abs/2301.05217.\n\n\nPower, Alethea, Yuri Burda, Harri Edwards, Igor Babuschkin, y Vedant Misra. 2022. Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets. https://arxiv.org/abs/2201.02177.\n\n\nWang, P. 2026. Grokking as a Dimensional Phase Transition in Neural Networks. https://arxiv.org/abs/2604.04655.\n\n\nXu, Yongzhong. 2026. Early-Warning Signals of Grokking via Loss-Landscape Geometry. https://arxiv.org/abs/2602.16967.",
+    "text": "Referencias\n\n\n\n\nA Fix for Softmax and Cross-Entropy. 2026. arXiv v1. https://arxiv.org/abs/2610.31642v1.\n\n\nKhanh, Hoa, Trung, y Duc. 2026. Spectral Entropy Collapse as a Phase Transition in Delayed Generalisation. https://arxiv.org/abs/2604.13123.\n\n\nLiu, Ziming, Eric J. Michaud, y Max Tegmark. 2022. Omnigrok: Grokking Beyond Algorithmic Data. https://arxiv.org/abs/2210.01117.\n\n\nMarín, Carles. 2026. Inter-Layer Alignment Re-Rise Predicts Grokking in Transformers: A Pilot Study. https://zenodo.org/records/19194911.\n\n\nNanda, Neel, Lawrence Chan, Tom Lieberum, Jess Smith, y Jacob Steinhardt. 2023. Progress Measures for Grokking via Mechanistic Interpretability. https://arxiv.org/abs/2301.05217.\n\n\nPower, Alethea, Yuri Burda, Harri Edwards, Igor Babuschkin, y Vedant Misra. 2022. Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets. https://arxiv.org/abs/2201.02177.\n\n\nWang, P. 2026. Grokking as a Dimensional Phase Transition in Neural Networks. https://arxiv.org/abs/2604.04655.\n\n\nXu, Yongzhong. 2026. Early-Warning Signals of Grokking via Loss-Landscape Geometry. https://arxiv.org/abs/2602.16967.",
     "crumbs": [
       "Parte III — Una lente física sobre la atención",
       "<span class='chapter-number'>25</span>  <span class='chapter-title'>Dinámica de entrenamiento y *grokking*</span>"
@@ -4286,11 +4352,22 @@
     ]
   },
   {
+    "objectID": "chapters/34-atencion-eficiente.html#sec-kronlstm",
+    "href": "chapters/34-atencion-eficiente.html#sec-kronlstm",
+    "title": "35  Atención eficiente",
+    "section": "35.10 Kronecker Delta Rule for Long Context Linear Attention",
+    "text": "35.10 Kronecker Delta Rule for Long Context Linear Attention\nPreprint · arXiv v1 · 2026-10-19. KronLSTM actualiza una memoria matricial mediante una restricción escalar de asociación, limitando la interferencia de cada escritura. (Kronecker Delta Rule for Long Context Linear Attention 2026)\n\n\n\n\n\n\nAlcance de la evidencia. Reconocer y recuperar un vector imponen restricciones distintas. Las pruebas de convergencia requieren supuestos de muestreo y paso.\n\n\n\nQué probar. Medir recuperación, tamaño del estado e interferencia a igual presupuesto, indicando la regla de actualización y los contextos.\n🧪 Continuar en TAF: fuente, límites y experimento propuesto.",
+    "crumbs": [
+      "Parte VI — Eficiencia, sistemas y despliegue",
+      "<span class='chapter-number'>35</span>  <span class='chapter-title'>Atención eficiente</span>"
+    ]
+  },
+  {
     "objectID": "chapters/34-atencion-eficiente.html#resumen",
     "href": "chapters/34-atencion-eficiente.html#resumen",
     "title": "35  Atención eficiente",
-    "section": "35.10 Resumen",
-    "text": "35.10 Resumen\n\nCoste: la atención es O(n²·d) en cómputo y O(n²) en memoria (la matriz n×n); el resto del modelo es lineal en n → la atención solo manda en contexto largo.\nMemory-bound: el límite real es mover la matriz n×n entre HBM (grande, lenta) y SRAM (mini, ~10× rápida) —baja intensidad aritmética—, no los FLOPs.\nFlashAttention (Dao et al. 2022): tiling + online softmax (máximo/suma móviles + reescalado) + recomputación → atención exacta, O(n) memoria, más rápida (FA2/FA3).\nAtención lineal: quitar el softmax + reasociar \\(\\varphi(Q)(\\varphi(K)^\\top V)\\) → O(n); forma RNN de estado fijo. Honesto: brecha de calidad en recuerdo (Cap. 18).\nOtros: memoria O(1) (precursor), PagedAttention (caché KV paginada → Cap. 36), GQA/MLA (ancho de banda).\nRoofline: FA ataca la constante; la lineal, el exponente; KV, la caché.\nPuente: FA es agnóstica al contenido; nuestra D_f (γ) es el complemento basado en distancia, pendiente de validar en tareas.\n\nSiguiente (Capítulo 35): otra vía de eficiencia —hacer el modelo más pequeño sin perder (mucha) calidad: cuantización, destilación y poda.",
+    "section": "35.11 Resumen",
+    "text": "35.11 Resumen\n\nCoste: la atención es O(n²·d) en cómputo y O(n²) en memoria (la matriz n×n); el resto del modelo es lineal en n → la atención solo manda en contexto largo.\nMemory-bound: el límite real es mover la matriz n×n entre HBM (grande, lenta) y SRAM (mini, ~10× rápida) —baja intensidad aritmética—, no los FLOPs.\nFlashAttention (Dao et al. 2022): tiling + online softmax (máximo/suma móviles + reescalado) + recomputación → atención exacta, O(n) memoria, más rápida (FA2/FA3).\nAtención lineal: quitar el softmax + reasociar \\(\\varphi(Q)(\\varphi(K)^\\top V)\\) → O(n); forma RNN de estado fijo. Honesto: brecha de calidad en recuerdo (Cap. 18).\nOtros: memoria O(1) (precursor), PagedAttention (caché KV paginada → Cap. 36), GQA/MLA (ancho de banda).\nRoofline: FA ataca la constante; la lineal, el exponente; KV, la caché.\nPuente: FA es agnóstica al contenido; nuestra D_f (γ) es el complemento basado en distancia, pendiente de validar en tareas.\n\nSiguiente (Capítulo 35): otra vía de eficiencia —hacer el modelo más pequeño sin perder (mucha) calidad: cuantización, destilación y poda.",
     "crumbs": [
       "Parte VI — Eficiencia, sistemas y despliegue",
       "<span class='chapter-number'>35</span>  <span class='chapter-title'>Atención eficiente</span>"
@@ -4300,8 +4377,8 @@
     "objectID": "chapters/34-atencion-eficiente.html#ejercicios",
     "href": "chapters/34-atencion-eficiente.html#ejercicios",
     "title": "35  Atención eficiente",
-    "section": "35.11 Ejercicios",
-    "text": "35.11 Ejercicios\n\nDos costes. Distingue el coste en cómputo y en memoria de la atención. ¿Cuál es el que “explota” y por qué no depende de d?\nMemory-bound. Define “limitado por memoria” frente a “limitado por cómputo”. ¿Por qué la atención cae en el primer caso? ¿Qué papel juegan HBM y SRAM?\nOnline softmax. ¿Por qué el softmax normal necesita la fila entera, y cómo lo evita el cálculo por bloques con máximo y suma móviles?\nExacta vs aproximada. ¿Por qué FlashAttention no es una aproximación, a diferencia de la atención lineal?\nReasociación. En \\(\\varphi(Q)(\\varphi(K)^\\top V)\\), ¿qué se calcula primero y por qué eso vuelve el coste lineal en n?\nRoofline. Asocia cada método (FlashAttention / lineal / GQA) con qué ataca: constante de IO, exponente, o caché de inferencia.",
+    "section": "35.12 Ejercicios",
+    "text": "35.12 Ejercicios\n\nDos costes. Distingue el coste en cómputo y en memoria de la atención. ¿Cuál es el que “explota” y por qué no depende de d?\nMemory-bound. Define “limitado por memoria” frente a “limitado por cómputo”. ¿Por qué la atención cae en el primer caso? ¿Qué papel juegan HBM y SRAM?\nOnline softmax. ¿Por qué el softmax normal necesita la fila entera, y cómo lo evita el cálculo por bloques con máximo y suma móviles?\nExacta vs aproximada. ¿Por qué FlashAttention no es una aproximación, a diferencia de la atención lineal?\nReasociación. En \\(\\varphi(Q)(\\varphi(K)^\\top V)\\), ¿qué se calcula primero y por qué eso vuelve el coste lineal en n?\nRoofline. Asocia cada método (FlashAttention / lineal / GQA) con qué ataca: constante de IO, exponente, o caché de inferencia.",
     "crumbs": [
       "Parte VI — Eficiencia, sistemas y despliegue",
       "<span class='chapter-number'>35</span>  <span class='chapter-title'>Atención eficiente</span>"
@@ -4312,7 +4389,7 @@
     "href": "chapters/34-atencion-eficiente.html#referencias",
     "title": "35  Atención eficiente",
     "section": "Referencias",
-    "text": "Referencias\n\n\n\n\nChoromanski, Krzysztof et al. 2021. «Rethinking Attention with Performers». ICLR. https://arxiv.org/abs/2009.14794.\n\n\nDao, Tri. 2023. FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning. https://arxiv.org/abs/2307.08691.\n\n\nDao, Tri, Daniel Y. Fu, Stefano Ermon, Atri Rudra, y Christopher Ré. 2022. «FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness». NeurIPS. https://arxiv.org/abs/2205.14135.\n\n\nKatharopoulos, Angelos, Apoorv Vyas, Nikolaos Pappas, y François Fleuret. 2020. «Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention». ICML. https://arxiv.org/abs/2006.16236.\n\n\nKimi Team. 2025. Kimi Linear: An Expressive, Efficient Attention Architecture. https://arxiv.org/abs/2510.26692.\n\n\nKwon, Woosuk, Zhuohan Li, Siyuan Zhuang, et al. 2023. «Efficient Memory Management for Large Language Model Serving with PagedAttention». SOSP. https://arxiv.org/abs/2309.06180.\n\n\nMilakov, Maxim, y Natalia Gimelshein. 2018. Online Normalizer Calculation for Softmax. https://arxiv.org/abs/1805.02867.\n\n\nRabe, Markus N., y Charles Staats. 2021. Self-attention Does Not Need O(n^2) Memory. https://arxiv.org/abs/2112.05682.\n\n\nShah, Jay et al. 2024. FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-precision. https://arxiv.org/abs/2407.08608.",
+    "text": "Referencias\n\n\n\n\nChoromanski, Krzysztof et al. 2021. «Rethinking Attention with Performers». ICLR. https://arxiv.org/abs/2009.14794.\n\n\nDao, Tri. 2023. FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning. https://arxiv.org/abs/2307.08691.\n\n\nDao, Tri, Daniel Y. Fu, Stefano Ermon, Atri Rudra, y Christopher Ré. 2022. «FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness». NeurIPS. https://arxiv.org/abs/2205.14135.\n\n\nKatharopoulos, Angelos, Apoorv Vyas, Nikolaos Pappas, y François Fleuret. 2020. «Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention». ICML. https://arxiv.org/abs/2006.16236.\n\n\nKimi Team. 2025. Kimi Linear: An Expressive, Efficient Attention Architecture. https://arxiv.org/abs/2510.26692.\n\n\nKronecker Delta Rule for Long Context Linear Attention. 2026. arXiv v1. https://arxiv.org/abs/2610.26834v1.\n\n\nKwon, Woosuk, Zhuohan Li, Siyuan Zhuang, et al. 2023. «Efficient Memory Management for Large Language Model Serving with PagedAttention». SOSP. https://arxiv.org/abs/2309.06180.\n\n\nMilakov, Maxim, y Natalia Gimelshein. 2018. Online Normalizer Calculation for Softmax. https://arxiv.org/abs/1805.02867.\n\n\nRabe, Markus N., y Charles Staats. 2021. Self-attention Does Not Need O(n^2) Memory. https://arxiv.org/abs/2112.05682.\n\n\nShah, Jay et al. 2024. FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-precision. https://arxiv.org/abs/2407.08608.",
     "crumbs": [
       "Parte VI — Eficiencia, sistemas y despliegue",
       "<span class='chapter-number'>35</span>  <span class='chapter-title'>Atención eficiente</span>"
@@ -4583,11 +4660,22 @@
     ]
   },
   {
+    "objectID": "chapters/36-serving.html#sec-spin",
+    "href": "chapters/36-serving.html#sec-spin",
+    "title": "37  Servir y desplegar",
+    "section": "37.13 SPIN: Shadow Predictive Indexer for Sparse Attention",
+    "text": "37.13 SPIN: Shadow Predictive Indexer for Sparse Attention\nPreprint · arXiv v2 · 2026-10-08. SPIN predice qué bloques debe inspeccionar el indexador de atención dispersa a partir de puntuaciones históricas. (SPIN: Shadow Predictive Indexer for Sparse Attention 2026)\n\n\n\n\n\n\nAlcance de la evidencia. Recortar entradas del indexador no equivale a expulsar KV. Los cambios bruscos y la información parcial pueden causar omisiones.\n\n\n\nQué probar. Medir calidad y latencia de cola juntas, con cambios bruscos de tema y una ablación de la exploración.\n🧪 Continuar en TAF: fuente, límites y experimento propuesto.",
+    "crumbs": [
+      "Parte VI — Eficiencia, sistemas y despliegue",
+      "<span class='chapter-number'>37</span>  <span class='chapter-title'>Servir y desplegar</span>"
+    ]
+  },
+  {
     "objectID": "chapters/36-serving.html#resumen",
     "href": "chapters/36-serving.html#resumen",
     "title": "37  Servir y desplegar",
-    "section": "37.13 Resumen",
-    "text": "37.13 Resumen\n\nDos fases: prefill (compute-bound, marca TTFT) y decode (bandwidth-bound, marca TPOT) → el decode es el cuello de botella, y es donde se relee la caché KV.\nMétricas: throughput vs goodput (cumpliendo SLO); latencia ≈ TTFT + TPOT × tokens. Chat optimiza latencia; batch, throughput.\nBatching continuo (Yu et al. 2022): programar por iteración (meter/sacar peticiones cada paso) mantiene la GPU llena → gran salto de throughput.\nCaché KV: la restricción vinculante; PagedAttention (Kwon et al. 2023) casi cero desperdicio + compartir prefijos → más lote, más throughput.\nPrefill desagregado (DistServe) o troceado (Sarathi-Serve): evitan que un prefill largo estanque los decodes → cumplen TTFT y TPOT a la vez.\nCompone: especulativa (latencia), cuantización (capacidad), paralelismo (tamaño), multi-LoRA (S-LoRA); compilación/fusión de kernels.\nEl motor lo eliges, no lo programas: servidor (vLLM / TensorRT-LLM / SGLang) para muchos usuarios; local (llama.cpp / Ollama + GGUF) para tu propia máquina.\nHonesto: los “X×” son específicos de la carga —mide en la tuya—.\n\nSiguiente (Parte VII): dejamos la ingeniería y volvemos a la pregunta de fondo del libro —¿qué está pasando de verdad dentro?—: interpretabilidad mecanicista, nuestro audit de fórmulas (verificado/folclore/numerología), el mapa del paisaje 2026 y la ética.",
+    "section": "37.14 Resumen",
+    "text": "37.14 Resumen\n\nDos fases: prefill (compute-bound, marca TTFT) y decode (bandwidth-bound, marca TPOT) → el decode es el cuello de botella, y es donde se relee la caché KV.\nMétricas: throughput vs goodput (cumpliendo SLO); latencia ≈ TTFT + TPOT × tokens. Chat optimiza latencia; batch, throughput.\nBatching continuo (Yu et al. 2022): programar por iteración (meter/sacar peticiones cada paso) mantiene la GPU llena → gran salto de throughput.\nCaché KV: la restricción vinculante; PagedAttention (Kwon et al. 2023) casi cero desperdicio + compartir prefijos → más lote, más throughput.\nPrefill desagregado (DistServe) o troceado (Sarathi-Serve): evitan que un prefill largo estanque los decodes → cumplen TTFT y TPOT a la vez.\nCompone: especulativa (latencia), cuantización (capacidad), paralelismo (tamaño), multi-LoRA (S-LoRA); compilación/fusión de kernels.\nEl motor lo eliges, no lo programas: servidor (vLLM / TensorRT-LLM / SGLang) para muchos usuarios; local (llama.cpp / Ollama + GGUF) para tu propia máquina.\nHonesto: los “X×” son específicos de la carga —mide en la tuya—.\n\nSiguiente (Parte VII): dejamos la ingeniería y volvemos a la pregunta de fondo del libro —¿qué está pasando de verdad dentro?—: interpretabilidad mecanicista, nuestro audit de fórmulas (verificado/folclore/numerología), el mapa del paisaje 2026 y la ética.",
     "crumbs": [
       "Parte VI — Eficiencia, sistemas y despliegue",
       "<span class='chapter-number'>37</span>  <span class='chapter-title'>Servir y desplegar</span>"
@@ -4597,8 +4685,8 @@
     "objectID": "chapters/36-serving.html#ejercicios",
     "href": "chapters/36-serving.html#ejercicios",
     "title": "37  Servir y desplegar",
-    "section": "37.14 Ejercicios",
-    "text": "37.14 Ejercicios\n\nDos fases. ¿Por qué el prefill es compute-bound y el decode bandwidth-bound? ¿Cuál es el cuello de botella del serving y por qué?\nMétricas. Define TTFT y TPOT y di qué fase domina cada uno. ¿Por qué el goodput es más honesto que el throughput?\nBatching continuo. ¿Qué desperdicia el lote estático y cómo lo evita el continuo? ¿Por qué el “23×” no es una garantía?\nCaché KV. ¿Por qué la caché KV limita cuántas peticiones caben en el lote? ¿Qué dos cosas aporta PagedAttention al servir?\nInterferencia. ¿Cómo estanca un prefill largo a los decodes en curso, y cómo lo resuelven DistServe y Sarathi-Serve?\nHonestidad. ¿Por qué un “5× más rápido” de un paper de serving puede no cumplirse en tu despliegue?\nDos mundos. ¿Qué motor elegirías para (a) servir un chatbot a 10.000 usuarios a la vez y (b) correr un modelo en tu portátil sin GPU dedicada? ¿Qué formato de modelo usarías en el caso (b)?",
+    "section": "37.15 Ejercicios",
+    "text": "37.15 Ejercicios\n\nDos fases. ¿Por qué el prefill es compute-bound y el decode bandwidth-bound? ¿Cuál es el cuello de botella del serving y por qué?\nMétricas. Define TTFT y TPOT y di qué fase domina cada uno. ¿Por qué el goodput es más honesto que el throughput?\nBatching continuo. ¿Qué desperdicia el lote estático y cómo lo evita el continuo? ¿Por qué el “23×” no es una garantía?\nCaché KV. ¿Por qué la caché KV limita cuántas peticiones caben en el lote? ¿Qué dos cosas aporta PagedAttention al servir?\nInterferencia. ¿Cómo estanca un prefill largo a los decodes en curso, y cómo lo resuelven DistServe y Sarathi-Serve?\nHonestidad. ¿Por qué un “5× más rápido” de un paper de serving puede no cumplirse en tu despliegue?\nDos mundos. ¿Qué motor elegirías para (a) servir un chatbot a 10.000 usuarios a la vez y (b) correr un modelo en tu portátil sin GPU dedicada? ¿Qué formato de modelo usarías en el caso (b)?",
     "crumbs": [
       "Parte VI — Eficiencia, sistemas y despliegue",
       "<span class='chapter-number'>37</span>  <span class='chapter-title'>Servir y desplegar</span>"
@@ -4609,7 +4697,7 @@
     "href": "chapters/36-serving.html#referencias",
     "title": "37  Servir y desplegar",
     "section": "Referencias",
-    "text": "Referencias\n\n\n\n\nAgrawal, Amey, Nitin Kedia, Ashish Panwar, et al. 2024. «Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve». OSDI. https://arxiv.org/abs/2403.02310.\n\n\nKwon, Woosuk, Zhuohan Li, Siyuan Zhuang, et al. 2023. «Efficient Memory Management for Large Language Model Serving with PagedAttention». SOSP. https://arxiv.org/abs/2309.06180.\n\n\nSheng, Ying, Shiyi Cao, Dacheng Li, et al. 2023. S-LoRA: Serving Thousands of Concurrent LoRA Adapters. https://arxiv.org/abs/2311.03285.\n\n\nYu, Gyeong-In, Joo Seong Jeong, Geon-Woo Kim, Soojeong Kim, y Byung-Gon Chun. 2022. «Orca: A Distributed Serving System for Transformer-Based Generative Models». OSDI. https://www.usenix.org/conference/osdi22/presentation/yu.\n\n\nZhong, Yinmin, Shengyu Liu, Junda Chen, et al. 2024. «DistServe: Disaggregating Prefill and Decoding for Goodput-optimized Large Language Model Serving». OSDI. https://arxiv.org/abs/2401.09670.",
+    "text": "Referencias\n\n\n\n\nAgrawal, Amey, Nitin Kedia, Ashish Panwar, et al. 2024. «Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve». OSDI. https://arxiv.org/abs/2403.02310.\n\n\nKwon, Woosuk, Zhuohan Li, Siyuan Zhuang, et al. 2023. «Efficient Memory Management for Large Language Model Serving with PagedAttention». SOSP. https://arxiv.org/abs/2309.06180.\n\n\nSheng, Ying, Shiyi Cao, Dacheng Li, et al. 2023. S-LoRA: Serving Thousands of Concurrent LoRA Adapters. https://arxiv.org/abs/2311.03285.\n\n\nSPIN: Shadow Predictive Indexer for Sparse Attention. 2026. arXiv v2. https://arxiv.org/abs/2610.09025v2.\n\n\nYu, Gyeong-In, Joo Seong Jeong, Geon-Woo Kim, Soojeong Kim, y Byung-Gon Chun. 2022. «Orca: A Distributed Serving System for Transformer-Based Generative Models». OSDI. https://www.usenix.org/conference/osdi22/presentation/yu.\n\n\nZhong, Yinmin, Shengyu Liu, Junda Chen, et al. 2024. «DistServe: Disaggregating Prefill and Decoding for Goodput-optimized Large Language Model Serving». OSDI. https://arxiv.org/abs/2401.09670.",
     "crumbs": [
       "Parte VI — Eficiencia, sistemas y despliegue",
       "<span class='chapter-number'>37</span>  <span class='chapter-title'>Servir y desplegar</span>"
@@ -4891,11 +4979,22 @@
     ]
   },
   {
+    "objectID": "chapters/39-mapa2026.html#sec-research-october",
+    "href": "chapters/39-mapa2026.html#sec-research-october",
+    "title": "40  El mapa del paisaje de colapso 2026",
+    "section": "40.6 Lecturas incorporadas el 24 de octubre de 2026",
+    "text": "40.6 Lecturas incorporadas el 24 de octubre de 2026\nSelección revisada manualmente; no es un inventario exhaustivo ni una validación de TAF. Cada enlace conduce a la explicación y a su experimento pendiente.\n\n\n\nEstudio\nEstado\n\n\n\n\nA Fix for Softmax and Cross-Entropy\narXiv v1\n\n\nCompeting Learning in Hybrid Architectures\narXiv v1\n\n\nKronecker Delta Rule for Long Context Linear Attention\narXiv v1\n\n\nSPIN: Shadow Predictive Indexer for Sparse Attention\narXiv v2\n\n\nOctopus: Gated Selective Attention for Memory-Bounded Long-Context Inference in Large Language Models\nACL 2026\n\n\nConditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models\narXiv v2\n\n\nmHC: Manifold-Constrained Hyper-Connections\nICML 2026 · PMLR 306\n\n\nSympFormer: Inertial Attention Blocks from Damped Hamiltonian Dynamics on Spaces of Probability Measures\narXiv v1 · exploratory",
+    "crumbs": [
+      "Parte VII — Interpretabilidad y qué es real",
+      "<span class='chapter-number'>40</span>  <span class='chapter-title'>El mapa del paisaje de colapso 2026</span>"
+    ]
+  },
+  {
     "objectID": "chapters/39-mapa2026.html#resumen",
     "href": "chapters/39-mapa2026.html#resumen",
     "title": "40  El mapa del paisaje de colapso 2026",
-    "section": "40.6 Resumen",
-    "text": "40.6 Resumen\n\nCuatro marcos, cuatro parámetros de orden distintos: sumideros (concentración en tokens), temperatura (energía libre/softmax), covarianza (geometría → grokking), fraccionario (kernel diseñado). No son cuatro vistas de un mismo fenómeno probado.\nSolapamientos reales del campo: sumidero = massive activation = valle de compresión (Queipo-de-Llano et al. 2025); temperatura↔︎grokking apuntan al mismo evento.\nNuestro γ, honestamente: conector fuerte con el fraccionario (orden (γ−1)/2); analogía nuestra con Hagedorn (γ=1); separador de los sumideros (γ⊥sumidero, un hallazgo); correlación débil con el grokking. Llamarlo “la coordenada unificadora” es sobreafirmar; “un exponente que te sitúa frente a tres lentes y separa la cuarta” es lo defendible.\nAbierto: sin teoría de primeros principios; origen causal de sumideros; parámetro de grokking sin consenso; reproducibilidad cross-modelo; descriptor-medido ≠ operador-diseñado.\n\nSiguiente (Capítulo 40): antes del cierre, la pregunta que decide todo lo demás —¿cómo sabemos que un modelo es bueno?—: evaluación, benchmarks y las trampas de medir (contaminación, el juez-LLM, la ley de Goodhart).",
+    "section": "40.7 Resumen",
+    "text": "40.7 Resumen\n\nCuatro marcos, cuatro parámetros de orden distintos: sumideros (concentración en tokens), temperatura (energía libre/softmax), covarianza (geometría → grokking), fraccionario (kernel diseñado). No son cuatro vistas de un mismo fenómeno probado.\nSolapamientos reales del campo: sumidero = massive activation = valle de compresión (Queipo-de-Llano et al. 2025); temperatura↔︎grokking apuntan al mismo evento.\nNuestro γ, honestamente: conector fuerte con el fraccionario (orden (γ−1)/2); analogía nuestra con Hagedorn (γ=1); separador de los sumideros (γ⊥sumidero, un hallazgo); correlación débil con el grokking. Llamarlo “la coordenada unificadora” es sobreafirmar; “un exponente que te sitúa frente a tres lentes y separa la cuarta” es lo defendible.\nAbierto: sin teoría de primeros principios; origen causal de sumideros; parámetro de grokking sin consenso; reproducibilidad cross-modelo; descriptor-medido ≠ operador-diseñado.\n\nSiguiente (Capítulo 40): antes del cierre, la pregunta que decide todo lo demás —¿cómo sabemos que un modelo es bueno?—: evaluación, benchmarks y las trampas de medir (contaminación, el juez-LLM, la ley de Goodhart).",
     "crumbs": [
       "Parte VII — Interpretabilidad y qué es real",
       "<span class='chapter-number'>40</span>  <span class='chapter-title'>El mapa del paisaje de colapso 2026</span>"
@@ -4905,8 +5004,8 @@
     "objectID": "chapters/39-mapa2026.html#ejercicios",
     "href": "chapters/39-mapa2026.html#ejercicios",
     "title": "40  El mapa del paisaje de colapso 2026",
-    "section": "40.7 Ejercicios",
-    "text": "40.7 Ejercicios\n\nCuatro objetos. Di qué objeto mide cada marco (sumideros, temperatura, covarianza, fraccionario). ¿Por qué eso implica que no son “lo mismo”?\nSolapamiento real. ¿Qué dos cosas demostró el campo que sí son el mismo fenómeno?\nγ honesto. Clasifica los cuatro puentes de γ (fraccionario, Hagedorn, sumideros, grokking) en “conector fuerte”, “analogía nuestra”, “separador” y “correlación débil”.\nSobreafirmación. Reescribe “γ unifica los cuatro marcos” en la versión defendible.\nLo abierto. Cita dos cosas que el paisaje 2026 deja sin resolver y por qué importan.\nDescriptor vs diseño. Explica la diferencia entre el α diseñado de FNA y el γ medido; ¿por qué importa para afirmar mecanismo?",
+    "section": "40.8 Ejercicios",
+    "text": "40.8 Ejercicios\n\nCuatro objetos. Di qué objeto mide cada marco (sumideros, temperatura, covarianza, fraccionario). ¿Por qué eso implica que no son “lo mismo”?\nSolapamiento real. ¿Qué dos cosas demostró el campo que sí son el mismo fenómeno?\nγ honesto. Clasifica los cuatro puentes de γ (fraccionario, Hagedorn, sumideros, grokking) en “conector fuerte”, “analogía nuestra”, “separador” y “correlación débil”.\nSobreafirmación. Reescribe “γ unifica los cuatro marcos” en la versión defendible.\nLo abierto. Cita dos cosas que el paisaje 2026 deja sin resolver y por qué importan.\nDescriptor vs diseño. Explica la diferencia entre el α diseñado de FNA y el γ medido; ¿por qué importa para afirmar mecanismo?",
     "crumbs": [
       "Parte VII — Interpretabilidad y qué es real",
       "<span class='chapter-number'>40</span>  <span class='chapter-title'>El mapa del paisaje de colapso 2026</span>"
@@ -5907,7 +6006,7 @@
     "href": "chapters/R5-tafagent.html#verificación-los-recibos",
     "title": "48  R5 · Manual de tafagent",
     "section": "48.9 Verificación (los recibos)",
-    "text": "48.9 Verificación (los recibos)\n\nPyodide para las matemáticas (deterministas), WebLLM para el lenguaje natural, transformers.js para el tokenizador.\nVerificación Lean+Mathlib: 15 identidades probadas formalmente (github.com/karlesmarin/lean-taf).\nPanel de 23 modelos abierto (github.com/karlesmarin/tafagent-registry). Es el registro de la herramienta (config + predicciones contrastadas), no el atlas γ del Cap. 16 —ese son 42 modelos y 79 medidas de atención real—.\n\n\n\n\n\n\n\nAdvertencia⚠ Honesto — qué es predicción y qué es medida\n\n\n\nMuchas salidas (γ_Padé, horizonte estimado, KV a longitud L) son predicciones desde la config —rápidas y útiles para decidir antes de gastar GPU—, no medidas sobre la atención real. Cuando tengas el modelo, contrasta con γ_observado (medido) y con tu propia medición (R4). Y recuerda los límites del libro: D_f y el headroom de contexto son 🟡 reglas no validadas del todo (R1).\n\n\nSiguiente referencia (R6): las soluciones orientativas de los ejercicios de cada capítulo.",
+    "text": "48.9 Verificación (los recibos)\n\nPyodide para las matemáticas (deterministas), WebLLM para el lenguaje natural, transformers.js para el tokenizador.\nVerificación Lean+Mathlib: 15 identidades probadas formalmente (github.com/karlesmarin/lean-taf).\nPanel de 23 modelos abierto (github.com/karlesmarin/tafagent-registry). Es el registro de la herramienta (config + predicciones contrastadas), no el atlas γ del Cap. 16 —ese son 42 modelos y 79 medidas de atención real—.\n\n\n\n\n\n\n\nAdvertencia⚠ Honesto — qué es predicción y qué es medida\n\n\n\nMuchas salidas (γ_Padé, horizonte estimado, KV a longitud L) son predicciones desde la config —rápidas y útiles para decidir antes de gastar GPU—, no medidas sobre la atención real. Cuando tengas el modelo, contrasta con γ_observado (medido) y con tu propia medición (R4). Y recuerda los límites del libro: D_f y el headroom de contexto son 🟡 reglas no validadas del todo (R1).\n\n\nSiguiente referencia (R6): las soluciones orientativas de los ejercicios de cada capítulo.\nEstudios y demos: Float32 · mHC. Cálculos ilustrativos opcionales, sin inferencia ni descarga de pesos.",
     "crumbs": [
       "Parte VIII — Referencia",
       "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · Manual de tafagent</span>"
