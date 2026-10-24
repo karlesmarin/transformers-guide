@@ -8,6 +8,16 @@
 
 ---
 
+## 2026-10-25 · Evidence review / Revisión de evidencia
+
+**ES:** R5 explica «Revisar este resultado»: evidencia, supuestos pendientes,
+siguiente comprobación y enlace contextual a la guía en las nueve rutas directas.
+Incluido en la demo y el informe descargable; no implica nueva inferencia.
+
+**EN:** R5 explains “Review this result”: evidence, unverified assumptions,
+next check and contextual guide reading for all nine direct routes. Included
+in the demo and downloaded report; no additional inference is implied.
+
 ## 2026-10-24 · Symptom-led resolver / Resolutor por síntomas
 
 **ES:** R5 explica siete familias de síntomas y veinte situaciones, nueve
