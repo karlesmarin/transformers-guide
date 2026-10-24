@@ -1164,14 +1164,15 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
   <ul>
   <li><a href="#what-it-is-and-what-it-isnt" id="toc-what-it-is-and-what-it-isnt" class="nav-link active" data-scroll-target="#what-it-is-and-what-it-isnt"><span class="header-section-number">48.1</span> What it is and what it isn’t</a></li>
   <li><a href="#taf-routes" id="toc-taf-routes" class="nav-link" data-scroll-target="#taf-routes"><span class="header-section-number">48.2</span> From a question to the right tool</a></li>
-  <li><a href="#reviewed-models" id="toc-reviewed-models" class="nav-link" data-scroll-target="#reviewed-models"><span class="header-section-number">48.3</span> Choosing a model: recognition is not validation</a></li>
-  <li><a href="#the-metrics-it-computes" id="toc-the-metrics-it-computes" class="nav-link" data-scroll-target="#the-metrics-it-computes"><span class="header-section-number">48.4</span> The metrics it computes</a></li>
-  <li><a href="#how-it-is-organized-five-questions-not-a-list-of-modes" id="toc-how-it-is-organized-five-questions-not-a-list-of-modes" class="nav-link" data-scroll-target="#how-it-is-organized-five-questions-not-a-list-of-modes"><span class="header-section-number">48.5</span> How it is organized: five questions, not a list of modes</a></li>
-  <li><a href="#guided-demos-and-your-language" id="toc-guided-demos-and-your-language" class="nav-link" data-scroll-target="#guided-demos-and-your-language"><span class="header-section-number">48.6</span> Guided demos and your language</a></li>
-  <li><a href="#the-anti-bullshit-pack" id="toc-the-anti-bullshit-pack" class="nav-link" data-scroll-target="#the-anti-bullshit-pack"><span class="header-section-number">48.7</span> The <em>Anti-Bullshit Pack</em></a></li>
-  <li><a href="#the-recipes-8-core" id="toc-the-recipes-8-core" class="nav-link" data-scroll-target="#the-recipes-8-core"><span class="header-section-number">48.8</span> The recipes (8 core)</a></li>
-  <li><a href="#how-to-read-the-output-the-taf-card" id="toc-how-to-read-the-output-the-taf-card" class="nav-link" data-scroll-target="#how-to-read-the-output-the-taf-card"><span class="header-section-number">48.9</span> How to read the output: the <em>TAF Card</em></a></li>
-  <li><a href="#verification-the-receipts" id="toc-verification-the-receipts" class="nav-link" data-scroll-target="#verification-the-receipts"><span class="header-section-number">48.10</span> Verification (the receipts)</a></li>
+  <li><a href="#problem-resolver" id="toc-problem-resolver" class="nav-link" data-scroll-target="#problem-resolver"><span class="header-section-number">48.3</span> Solve my problem: from uncertainty to a check</a></li>
+  <li><a href="#reviewed-models" id="toc-reviewed-models" class="nav-link" data-scroll-target="#reviewed-models"><span class="header-section-number">48.4</span> Choosing a model: recognition is not validation</a></li>
+  <li><a href="#the-metrics-it-computes" id="toc-the-metrics-it-computes" class="nav-link" data-scroll-target="#the-metrics-it-computes"><span class="header-section-number">48.5</span> The metrics it computes</a></li>
+  <li><a href="#how-it-is-organized-five-questions-not-a-list-of-modes" id="toc-how-it-is-organized-five-questions-not-a-list-of-modes" class="nav-link" data-scroll-target="#how-it-is-organized-five-questions-not-a-list-of-modes"><span class="header-section-number">48.6</span> How it is organized: five questions, not a list of modes</a></li>
+  <li><a href="#guided-demos-and-your-language" id="toc-guided-demos-and-your-language" class="nav-link" data-scroll-target="#guided-demos-and-your-language"><span class="header-section-number">48.7</span> Guided demos and your language</a></li>
+  <li><a href="#the-anti-bullshit-pack" id="toc-the-anti-bullshit-pack" class="nav-link" data-scroll-target="#the-anti-bullshit-pack"><span class="header-section-number">48.8</span> The <em>Anti-Bullshit Pack</em></a></li>
+  <li><a href="#the-recipes-8-core" id="toc-the-recipes-8-core" class="nav-link" data-scroll-target="#the-recipes-8-core"><span class="header-section-number">48.9</span> The recipes (8 core)</a></li>
+  <li><a href="#how-to-read-the-output-the-taf-card" id="toc-how-to-read-the-output-the-taf-card" class="nav-link" data-scroll-target="#how-to-read-the-output-the-taf-card"><span class="header-section-number">48.10</span> How to read the output: the <em>TAF Card</em></a></li>
+  <li><a href="#verification-the-receipts" id="toc-verification-the-receipts" class="nav-link" data-scroll-target="#verification-the-receipts"><span class="header-section-number">48.11</span> Verification (the receipts)</a></li>
   </ul>
 </nav>
     </div>
@@ -1224,8 +1225,22 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
 <p><strong>Optional demo:</strong> “Try an example” prepares an attention probe using Pythia-70m; it downloads no weights and runs no inference. TAF also offers a <a href="https://karlesmarin.github.io/tafagent/?mode=profile&amp;demo=guide&amp;lang=en">guided reading demo</a>.</p>
 <p><strong>Entropy measurement:</strong> Diagnose CLI can generate <code>--entropy-only</code> or <code>--measure-entropy</code>. Inference runs with Python/PyTorch on your computer, not in this selector. Entropy does not determine γ and no automatic entropy correction is applied. The phase diagram reads the atlas; it does not perform a new measurement.</p>
 </section>
-<section id="reviewed-models" class="level2" data-number="48.3">
-<h2 data-number="48.3" class="anchored" data-anchor-id="reviewed-models"><span class="header-section-number">48.3</span> Choosing a model: recognition is not validation</h2>
+<section id="problem-resolver" class="level2" data-number="48.3">
+<h2 data-number="48.3" class="anchored" data-anchor-id="problem-resolver"><span class="header-section-number">48.3</span> Solve my problem: from uncertainty to a check</h2>
+<p>Think of a diagnostic desk: you arrive with “it does not work” and receive the questions needed to narrow down the problem. You do not need to know each module’s name beforehand. <strong>Solve my problem</strong> provides this journey automatically in the browser, without an operator or a chat service.</p>
+<p>Choose one of the three initial routes:</p>
+<ul>
+<li><a href="https://karlesmarin.github.io/tafagent/?resolve=memory&amp;lang=en">Memory: the model does not fit or fails while generating</a>.</li>
+<li><a href="https://karlesmarin.github.io/tafagent/?resolve=template&amp;lang=en">Chat template: inspect the conversation format</a>.</li>
+<li><a href="https://karlesmarin.github.io/tafagent/?resolve=compatibility&amp;lang=en">Compatibility: understand the architecture and its limits</a>.</li>
+</ul>
+<p>Links only open the form. Every route has <strong>Try an offline example</strong>, so you can explore the responses before entering your model. The memory example recalculates with fewer tokens or compares a weight format; it changes the estimate without running or modifying the model.</p>
+<p><strong>A concrete case:</strong> weights can fit on a GPU while generation exceeds its memory after adding the KV cache. The route asks for available memory, total tokens, weight format and whether failure occurs during loading or generation. It reuses Fit Check to separate those components. This is an estimate for one GPU and one sequence, not a measurement of your hardware or a guaranteed diagnosis.</p>
+<p>In the other routes, finding a template does not prove that the runtime applies it correctly, and recognizing an architecture does not certify quality or support in every engine. TAF shows the inspected files and revision, explains limitations and proposes the next check.</p>
+<p>You can select <strong>I tried it and it worked</strong> or <strong>It still fails</strong>, open the detailed tool, read the relevant chapter and download the report. Pasted questions and errors stay in this tab; model queries go to HF. A shareable link carries only the route, model ID and language, with no error, hardware or result data. Responses are not posted automatically to HF. The <a href="https://github.com/karlesmarin/tafagent/blob/main/docs/resolver.md">technical note</a> describes the scope and how to add routes using other TAF modules.</p>
+</section>
+<section id="reviewed-models" class="level2" data-number="48.4">
+<h2 data-number="48.4" class="anchored" data-anchor-id="reviewed-models"><span class="header-section-number">48.4</span> Choosing a model: recognition is not validation</h2>
 <p>A technical specification is like a blueprint: it describes parts, but does not prove how the machine behaves. Hugging Face search finds names; the importer also needs a compatible architecture; measuring attention requires running the weights under a documented protocol. These are three separate steps.</p>
 <p><strong>Review dated 2026-10-24:</strong> TAF includes eight public configurations pinned to revisions and two restricted Gemma 3 configurations left unverified. It retains the eleven historical examples and adds two dense Qwen3 presets. Explore these saved examples without downloading weights:</p>
 <ul>
@@ -1237,8 +1252,8 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
 <p><strong>A careful-reading example:</strong> the <a href="https://huggingface.co/Qwen/Qwen3-8B">official Qwen3-8B card</a> lists 32,768 tokens of native context, while its configuration declares 40,960. Both new saved presets use 32,768 as their reference. Live config imports label configured context as a provisional reference: <code>max_position_embeddings</code> does not establish training length. Verify <code>T_train</code> before interpreting the formulas. Imported parameter counts are also estimates, not measurements from weights.</p>
 <p>Editing Profile geometry detaches the model and creates a manual scenario. If a new import fails, TAF will not run the previous inputs under the new name. <a href="../chapters/10-arquitecturas.html">Understanding architectures</a> helps you choose the next step; the <a href="https://github.com/karlesmarin/tafagent/blob/main/docs/model-review.md">technical review note</a> details sources and checks. This update adds no atlas measurements and does not refresh benchmark tables.</p>
 </section>
-<section id="the-metrics-it-computes" class="level2" data-number="48.4">
-<h2 data-number="48.4" class="anchored" data-anchor-id="the-metrics-it-computes"><span class="header-section-number">48.4</span> The metrics it computes</h2>
+<section id="the-metrics-it-computes" class="level2" data-number="48.5">
+<h2 data-number="48.5" class="anchored" data-anchor-id="the-metrics-it-computes"><span class="header-section-number">48.5</span> The metrics it computes</h2>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 33%">
@@ -1301,8 +1316,8 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
 </tbody>
 </table>
 </section>
-<section id="how-it-is-organized-five-questions-not-a-list-of-modes" class="level2" data-number="48.5">
-<h2 data-number="48.5" class="anchored" data-anchor-id="how-it-is-organized-five-questions-not-a-list-of-modes"><span class="header-section-number">48.5</span> How it is organized: five questions, not a list of modes</h2>
+<section id="how-it-is-organized-five-questions-not-a-list-of-modes" class="level2" data-number="48.6">
+<h2 data-number="48.6" class="anchored" data-anchor-id="how-it-is-organized-five-questions-not-a-list-of-modes"><span class="header-section-number">48.6</span> How it is organized: five questions, not a list of modes</h2>
 <p>The landing page groups the tools by <strong>what you want to do</strong> (modes grow with every release; the always-current list lives in the app’s own 📘 manual):</p>
 <ol type="1">
 <li><strong>🔬 “Will this model work for me?”</strong> — <em>Profile</em> (paste an id → the full TAF Card, <strong>the starting mode</strong>), <em>Fit Check</em>, <em>Unmask</em>, <em>Memory Reality</em>, <em>NIAH→Reason</em>, <em>LongScore</em>, <em>Quant</em>, <em>YaRN Planner</em>, <em>GGUF Bridge</em>, <em>Launch Flags</em>, <em>Inspect config</em>…</li>
@@ -1313,19 +1328,19 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
 </ol>
 <p>Recent highlight — <strong>💾 Fit Check (“will it fit?”)</strong>: model + precision + GPU + context → the full VRAM budget (weights + <strong>KV cache</strong> + scratch), <em>why</em> it doesn’t fit when it doesn’t (weights or KV?), the max context that does fit, and the cheapest rescue. It answers the most repeated forum question <em>before</em> downloading anything — and teaches the Ch. 21 lesson along the way: at long context, the KV cache can weigh as much as the model.</p>
 </section>
-<section id="guided-demos-and-your-language" class="level2" data-number="48.6">
-<h2 data-number="48.6" class="anchored" data-anchor-id="guided-demos-and-your-language"><span class="header-section-number">48.6</span> Guided demos and your language</h2>
+<section id="guided-demos-and-your-language" class="level2" data-number="48.7">
+<h2 data-number="48.7" class="anchored" data-anchor-id="guided-demos-and-your-language"><span class="header-section-number">48.7</span> Guided demos and your language</h2>
 <ul>
 <li>Every mode has a <strong>🎬 Demo</strong> button: a guided simulation that types, clicks and narrates step by step, ending with a “what you just learned” card. Linkable: <code>?demo=fitcheck</code>, <code>?demo=profile</code>, <code>?demo=yarn</code>… — handy for sharing or teaching.</li>
 <li><strong>Four languages end-to-end</strong> (EN/ES/FR/ZH): since v0.12 not just the menus — the demos, the recipe verdicts and their explanations follow the browser language too.</li>
 </ul>
 </section>
-<section id="the-anti-bullshit-pack" class="level2" data-number="48.7">
-<h2 data-number="48.7" class="anchored" data-anchor-id="the-anti-bullshit-pack"><span class="header-section-number">48.7</span> The <em>Anti-Bullshit Pack</em></h2>
+<section id="the-anti-bullshit-pack" class="level2" data-number="48.8">
+<h2 data-number="48.8" class="anchored" data-anchor-id="the-anti-bullshit-pack"><span class="header-section-number">48.8</span> The <em>Anti-Bullshit Pack</em></h2>
 <p>Diagnostics that attack the “smoke” of model cards: <strong>Context Unmasker</strong> (real long context vs advertised), <strong>Chat-template Sniffer</strong>, <strong>Quant-regime Classifier</strong>, <strong>Multilingual Tokenizer Tax</strong> (tokenizes real text in 6 tokenizers → how much your language “costs”), <strong>Contamination Prior</strong>, <strong>LongScore</strong> (RULER+HELMET), <strong>PEFT Anti-Pattern</strong>, <strong>Spec-Decode</strong>, plus extension: <strong>YaRN/RoPE planner</strong>, <strong>GGUF Bridge</strong>, <strong>Launch-Flag Generator</strong>.</p>
 </section>
-<section id="the-recipes-8-core" class="level2" data-number="48.8">
-<h2 data-number="48.8" class="anchored" data-anchor-id="the-recipes-8-core"><span class="header-section-number">48.8</span> The recipes (8 core)</h2>
+<section id="the-recipes-8-core" class="level2" data-number="48.9">
+<h2 data-number="48.9" class="anchored" data-anchor-id="the-recipes-8-core"><span class="header-section-number">48.9</span> The recipes (8 core)</h2>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 33%">
@@ -1383,13 +1398,13 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
 </tbody>
 </table>
 </section>
-<section id="how-to-read-the-output-the-taf-card" class="level2" data-number="48.9">
-<h2 data-number="48.9" class="anchored" data-anchor-id="how-to-read-the-output-the-taf-card"><span class="header-section-number">48.9</span> How to read the output: the <em>TAF Card</em></h2>
+<section id="how-to-read-the-output-the-taf-card" class="level2" data-number="48.10">
+<h2 data-number="48.10" class="anchored" data-anchor-id="how-to-read-the-output-the-taf-card"><span class="header-section-number">48.10</span> How to read the output: the <em>TAF Card</em></h2>
 <p>The result is summarized in a <strong>TAF Card</strong> with <strong>✅ / ⚠ / ❌</strong> verdicts per dimension (context, quantization, template, regime). And there is a <strong>falsification dashboard (F1-F23)</strong>: it doesn’t just hand you numbers, it <strong>puts the claims to the test</strong> —the same philosophy as Ch. 38—.</p>
 <p><strong>A typical flow:</strong> <em>Profile</em> (paste the id) → read the <strong>verdict</strong> on the TAF Card → if something comes back ⚠/❌, open the specific <strong>diagnostic</strong> (e.g.&nbsp;<em>Context Unmasker</em> or <em>Quant-regime</em>) → use the matching <strong>recipe</strong> (X-2 context, X-19 KV) to decide.</p>
 </section>
-<section id="verification-the-receipts" class="level2" data-number="48.10">
-<h2 data-number="48.10" class="anchored" data-anchor-id="verification-the-receipts"><span class="header-section-number">48.10</span> Verification (the receipts)</h2>
+<section id="verification-the-receipts" class="level2" data-number="48.11">
+<h2 data-number="48.11" class="anchored" data-anchor-id="verification-the-receipts"><span class="header-section-number">48.11</span> Verification (the receipts)</h2>
 <ul>
 <li><strong>Pyodide</strong> for the math (deterministic), <strong>WebLLM</strong> for the natural language, <strong>transformers.js</strong> for the tokenizer.</li>
 <li><strong>Lean+Mathlib verification:</strong> 15 identities formally proved (<code>github.com/karlesmarin/lean-taf</code>).</li>

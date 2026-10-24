@@ -8,6 +8,17 @@
 
 ---
 
+## 2026-10-24 · Automatic problem resolver / Resolutorio automático
+
+**ES:** R5 acompaña las tres rutas de «Resolver mi problema» en TAF: memoria,
+plantillas de chat y compatibilidad. Incluye enlaces directos, demos opcionales,
+seguimiento, límites de evidencia y explicación de los informes y enlaces.
+
+**EN:** R5 explains TAF's three automatic problem routes: memory, chat templates
+and compatibility. Includes direct links, optional demos, follow-up, evidence
+limits, reports and shareable links. No discussion monitoring or bot posting.
+
+
 ## 2026-10-24 · Model examples and architecture boundaries / Modelos y límites
 
 **ES:** R5 explica el catálogo revisado de TAF (8 configuraciones públicas y 2
