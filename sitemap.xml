@@ -1,106 +1,521 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://karlesmarin.github.io/transformers-guide/</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/00-orientacion.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/01-panorama.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/02-tokens.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/03-embeddings.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/04-atencion.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/05-multicabeza.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/06-ffn.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/07-residual-norm.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/08-posicion-rope.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/09-bloque.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/10-arquitecturas.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/11-entrenamiento.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/12-inferencia.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/13-leer-mapas.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/14-aliasing.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/15-ley-gamma.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/16-atlas.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/17-sumideros.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/18-taxonomia.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/19-contexto-largo.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/20-kv-cache.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/21-fases.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/22-termodinamica.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/23-fraccionario.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/24-grokking.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/25-preentrenamiento.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/26-finetuning-clasificacion.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/27-alineamiento.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/28-peft.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/29-generacion.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/30-prompting.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/31-rag.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/32-agentes.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/33-multimodal.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/34-atencion-eficiente.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/35-compresion.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/36-serving.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/37-interpretabilidad.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/38-audit.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/39-mapa2026.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/40-evaluacion.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/41-etica.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/42-workspace.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/R1-formulario.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/R2-cookbook.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/R3-glosario.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/R4-medir-gamma.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/R5-tafagent.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/R6-soluciones.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/en/chapters/creditos.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/00-orientacion.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/01-panorama.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/02-tokens.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/03-embeddings.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/04-atencion.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/05-multicabeza.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/06-ffn.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/07-residual-norm.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/08-posicion-rope.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/09-bloque.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/10-arquitecturas.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/11-entrenamiento.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/12-inferencia.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/13-leer-mapas.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/14-aliasing.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/15-ley-gamma.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/16-atlas.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/17-sumideros.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/18-taxonomia.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/19-contexto-largo.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/20-kv-cache.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/21-fases.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/22-termodinamica.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/23-fraccionario.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/24-grokking.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/25-preentrenamiento.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/26-finetuning-clasificacion.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/27-alineamiento.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/28-peft.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/29-generacion.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/30-prompting.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/31-rag.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/32-agentes.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/33-multimodal.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/34-atencion-eficiente.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/35-compresion.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/36-serving.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/37-interpretabilidad.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/38-audit.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/39-mapa2026.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/40-evaluacion.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/41-etica.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/42-workspace.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/R1-formulario.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/R2-cookbook.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/R3-glosario.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/R4-medir-gamma.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/R5-tafagent.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/R6-soluciones.html</loc><lastmod>2026-10-05</lastmod></url>
-  <url><loc>https://karlesmarin.github.io/transformers-guide/es/chapters/creditos.html</loc><lastmod>2026-10-05</lastmod></url>
+<?xml version='1.0' encoding='utf-8'?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/index.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/index.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://karlesmarin.github.io/transformers-guide/" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/00-orientacion.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/00-orientacion.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/00-orientacion.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/01-panorama.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/01-panorama.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/01-panorama.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/02-tokens.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/02-tokens.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/02-tokens.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/03-embeddings.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/03-embeddings.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/03-embeddings.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/04-atencion.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/04-atencion.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/04-atencion.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/05-multicabeza.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/05-multicabeza.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/05-multicabeza.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/06-ffn.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/06-ffn.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/06-ffn.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/07-residual-norm.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/07-residual-norm.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/07-residual-norm.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/08-posicion-rope.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/08-posicion-rope.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/08-posicion-rope.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/09-bloque.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/09-bloque.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/09-bloque.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/10-arquitecturas.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/10-arquitecturas.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/10-arquitecturas.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/11-entrenamiento.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/11-entrenamiento.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/11-entrenamiento.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/12-inferencia.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/12-inferencia.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/12-inferencia.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/13-leer-mapas.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/13-leer-mapas.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/13-leer-mapas.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/14-aliasing.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/14-aliasing.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/14-aliasing.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/15-ley-gamma.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/15-ley-gamma.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/15-ley-gamma.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/16-atlas.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/16-atlas.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/16-atlas.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/17-sumideros.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/17-sumideros.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/17-sumideros.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/18-taxonomia.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/18-taxonomia.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/18-taxonomia.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/19-contexto-largo.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/19-contexto-largo.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/19-contexto-largo.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/20-kv-cache.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/20-kv-cache.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/20-kv-cache.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/21-fases.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/21-fases.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/21-fases.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/22-termodinamica.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/22-termodinamica.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/22-termodinamica.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/23-fraccionario.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/23-fraccionario.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/23-fraccionario.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/24-grokking.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/24-grokking.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/24-grokking.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/25-preentrenamiento.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/25-preentrenamiento.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/25-preentrenamiento.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/26-finetuning-clasificacion.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/26-finetuning-clasificacion.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/26-finetuning-clasificacion.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/27-alineamiento.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/27-alineamiento.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/27-alineamiento.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/28-peft.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/28-peft.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/28-peft.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/29-generacion.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/29-generacion.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/29-generacion.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/30-prompting.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/30-prompting.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/30-prompting.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/31-rag.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/31-rag.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/31-rag.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/32-agentes.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/32-agentes.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/32-agentes.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/33-multimodal.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/33-multimodal.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/33-multimodal.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/34-atencion-eficiente.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/34-atencion-eficiente.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/34-atencion-eficiente.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/35-compresion.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/35-compresion.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/35-compresion.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/36-serving.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/36-serving.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/36-serving.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/37-interpretabilidad.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/37-interpretabilidad.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/37-interpretabilidad.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/38-audit.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/38-audit.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/38-audit.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/39-mapa2026.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/39-mapa2026.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/39-mapa2026.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/40-evaluacion.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/40-evaluacion.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/40-evaluacion.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/41-etica.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/41-etica.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/41-etica.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/42-workspace.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/42-workspace.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/42-workspace.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/R1-formulario.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/R1-formulario.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/R1-formulario.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/R2-cookbook.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/R2-cookbook.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/R2-cookbook.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/R3-glosario.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/R3-glosario.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/R3-glosario.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/R4-medir-gamma.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/R4-medir-gamma.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/R4-medir-gamma.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/R5-tafagent.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/R5-tafagent.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/R5-tafagent.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/R6-soluciones.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/R6-soluciones.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/R6-soluciones.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/chapters/creditos.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/creditos.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/creditos.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/en/index.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/index.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/index.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://karlesmarin.github.io/transformers-guide/" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/00-orientacion.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/00-orientacion.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/00-orientacion.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/01-panorama.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/01-panorama.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/01-panorama.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/02-tokens.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/02-tokens.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/02-tokens.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/03-embeddings.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/03-embeddings.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/03-embeddings.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/04-atencion.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/04-atencion.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/04-atencion.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/05-multicabeza.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/05-multicabeza.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/05-multicabeza.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/06-ffn.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/06-ffn.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/06-ffn.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/07-residual-norm.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/07-residual-norm.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/07-residual-norm.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/08-posicion-rope.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/08-posicion-rope.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/08-posicion-rope.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/09-bloque.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/09-bloque.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/09-bloque.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/10-arquitecturas.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/10-arquitecturas.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/10-arquitecturas.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/11-entrenamiento.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/11-entrenamiento.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/11-entrenamiento.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/12-inferencia.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/12-inferencia.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/12-inferencia.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/13-leer-mapas.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/13-leer-mapas.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/13-leer-mapas.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/14-aliasing.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/14-aliasing.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/14-aliasing.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/15-ley-gamma.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/15-ley-gamma.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/15-ley-gamma.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/16-atlas.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/16-atlas.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/16-atlas.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/17-sumideros.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/17-sumideros.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/17-sumideros.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/18-taxonomia.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/18-taxonomia.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/18-taxonomia.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/19-contexto-largo.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/19-contexto-largo.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/19-contexto-largo.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/20-kv-cache.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/20-kv-cache.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/20-kv-cache.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/21-fases.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/21-fases.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/21-fases.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/22-termodinamica.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/22-termodinamica.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/22-termodinamica.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/23-fraccionario.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/23-fraccionario.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/23-fraccionario.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/24-grokking.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/24-grokking.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/24-grokking.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/25-preentrenamiento.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/25-preentrenamiento.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/25-preentrenamiento.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/26-finetuning-clasificacion.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/26-finetuning-clasificacion.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/26-finetuning-clasificacion.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/27-alineamiento.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/27-alineamiento.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/27-alineamiento.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/28-peft.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/28-peft.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/28-peft.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/29-generacion.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/29-generacion.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/29-generacion.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/30-prompting.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/30-prompting.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/30-prompting.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/31-rag.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/31-rag.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/31-rag.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/32-agentes.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/32-agentes.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/32-agentes.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/33-multimodal.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/33-multimodal.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/33-multimodal.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/34-atencion-eficiente.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/34-atencion-eficiente.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/34-atencion-eficiente.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/35-compresion.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/35-compresion.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/35-compresion.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/36-serving.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/36-serving.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/36-serving.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/37-interpretabilidad.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/37-interpretabilidad.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/37-interpretabilidad.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/38-audit.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/38-audit.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/38-audit.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/39-mapa2026.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/39-mapa2026.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/39-mapa2026.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/40-evaluacion.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/40-evaluacion.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/40-evaluacion.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/41-etica.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/41-etica.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/41-etica.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/42-workspace.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/42-workspace.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/42-workspace.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/R1-formulario.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/R1-formulario.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/R1-formulario.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/R2-cookbook.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/R2-cookbook.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/R2-cookbook.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/R3-glosario.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/R3-glosario.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/R3-glosario.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/R4-medir-gamma.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/R4-medir-gamma.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/R4-medir-gamma.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/R5-tafagent.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/R5-tafagent.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/R5-tafagent.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/R6-soluciones.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/R6-soluciones.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/R6-soluciones.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/chapters/creditos.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/chapters/creditos.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/chapters/creditos.html" />
+  </url>
+  <url>
+    <loc>https://karlesmarin.github.io/transformers-guide/es/index.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://karlesmarin.github.io/transformers-guide/es/index.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://karlesmarin.github.io/transformers-guide/en/index.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://karlesmarin.github.io/transformers-guide/" />
+  </url>
 </urlset>

@@ -8,6 +8,26 @@
 
 ---
 
+## 2026-10-25 · Public sitemap / Sitemap público
+
+**ES:** [Sitemap de la guía](https://karlesmarin.github.io/transformers-guide/sitemap.xml):
+103 páginas públicas, con alternativas ES/EN recíprocas. No incluye demos,
+fragmentos ni páginas de pruebas. Se omiten fechas de modificación no verificadas.
+
+**EN:** [Guide sitemap](https://karlesmarin.github.io/transformers-guide/sitemap.xml):
+103 public pages with reciprocal ES/EN alternatives. Demos, fragments and test
+pages are excluded. Unverified modification dates are omitted.
+
+## 2026-10-25 · Declared follow-up / Seguimiento declarado
+
+**ES:** R5 explica el seguimiento opcional de las nueve rutas: discrepancias,
+bloqueos y pendientes, con demo ilustrativa. Las marcas son declaraciones sin
+verificar, solo en la pestaña original; el informe no restaura una sesión.
+
+**EN:** R5 explains optional tracking on nine routes: discrepancies, blocked and
+pending steps, with an illustrative demo. Marks are unverified declarations held
+only in the original tab; the report cannot restore a session.
+
 ## 2026-10-25 · Architecture, JSON and PEFT follow-up / Seguimiento de arquitectura, JSON y PEFT
 
 **ES:** Capítulos 10, 28, 30 y R5: límites de arquitectura, orden frente a validez
