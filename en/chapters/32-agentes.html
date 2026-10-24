@@ -670,6 +670,31 @@ div.csl-indent {
 .fg-serie-read .hot{ color:rgb(213,94,0); font-weight:700; }
 </style>
 
+
+<style>
+/* Two-token counterexample: same field-guide palette, no motion required. */
+.fg-mass-value {border:1px solid #ccdce8;border-radius:12px;padding:1.1rem;margin:1.4rem 0;background:#f5f9fc;color:#16334a;}
+.fg-mass-value h3 {font-size:1.05rem;margin:0 0 .8rem;}
+.fg-mass-value .mv-controls {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;}
+.fg-mass-value label {display:block;font-size:.9rem;}
+.fg-mass-value input {display:block;width:100%;accent-color:#0072b2;margin-top:.45rem;}
+.fg-mass-value .mv-results {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.65rem;margin:1rem 0;}
+.fg-mass-value .mv-result {background:white;border:1px solid #d8e3eb;border-radius:7px;padding:.65rem;}
+.fg-mass-value .mv-result span {display:block;font-size:.8rem;}
+.fg-mass-value .mv-result b {display:block;font-size:1.15rem;color:#0072b2;}
+.fg-mass-value .mv-result:last-child b {color:#a34800;}
+.fg-mass-value .mv-caption {font-size:.86rem;margin-bottom:0;}
+.fg-mass-value .mv-equation {font-family:ui-monospace,monospace;font-size:.88rem;overflow-wrap:anywhere;}
+@media(max-width:540px){.fg-mass-value .mv-controls,.fg-mass-value .mv-results{grid-template-columns:1fr;}}
+</style>
+
+<style>
+/* Preserve the book's wide tables while containing them on narrow screens. */
+figure.quarto-float-tbl > div[aria-describedby] {max-width:100%;overflow-x:auto;}
+figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid #0072b2;outline-offset:3px;}
+.references a {overflow-wrap:anywhere;word-break:break-word;}
+</style>
+
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
@@ -1171,7 +1196,10 @@ window.Quarto = {
   <li><a href="#the-reasoning-action-loop" id="toc-the-reasoning-action-loop" class="nav-link" data-scroll-target="#the-reasoning-action-loop"><span class="header-section-number">33.4</span> The reasoning-action loop</a></li>
   <li><a href="#using-tools" id="toc-using-tools" class="nav-link" data-scroll-target="#using-tools"><span class="header-section-number">33.5</span> Using tools</a></li>
   <li><a href="#planning" id="toc-planning" class="nav-link" data-scroll-target="#planning"><span class="header-section-number">33.6</span> Planning</a></li>
-  <li><a href="#memory" id="toc-memory" class="nav-link" data-scroll-target="#memory"><span class="header-section-number">33.7</span> Memory</a></li>
+  <li><a href="#memory" id="toc-memory" class="nav-link" data-scroll-target="#memory"><span class="header-section-number">33.7</span> Memory</a>
+  <ul class="collapse">
+  <li><a href="#sec-memoria-accion" id="toc-sec-memoria-accion" class="nav-link" data-scroll-target="#sec-memoria-accion"><span class="header-section-number">33.7.1</span> Remembering to act, not just to answer</a></li>
+  </ul></li>
   <li><a href="#multi-agent-brief" id="toc-multi-agent-brief" class="nav-link" data-scroll-target="#multi-agent-brief"><span class="header-section-number">33.8</span> Multi-agent (brief)</a></li>
   <li><a href="#limits-and-failure-modes-the-honest-heart" id="toc-limits-and-failure-modes-the-honest-heart" class="nav-link" data-scroll-target="#limits-and-failure-modes-the-honest-heart"><span class="header-section-number">33.9</span> Limits and failure modes (the honest heart)</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">33.10</span> Summary</a></li>
@@ -1324,6 +1352,73 @@ p^{n}\)</span>. <em>In the transformer:</em> it explains why long tasks <strong>
 <div class="analogia">
 <p><strong>🧩 Analogy — the notebook.</strong> External memory is a <strong>notebook</strong> where the agent <strong>writes and rereads</strong>, because it cannot fit everything “in its head” (the context). MemGPT is the notebook with a filing system; Generative Agents, the notebook with a relevance index and summaries.</p>
 </div>
+<section id="sec-memoria-accion" class="level3" data-number="33.7.1">
+<h3 data-number="33.7.1" class="anchored" data-anchor-id="sec-memoria-accion"><span class="header-section-number">33.7.1</span> Remembering to act, not just to answer</h3>
+<p>A notebook does little good if an agent recalls a preference but fills in the tool call incorrectly. <strong>Mem2ActBench</strong> (ACL 2026) evaluates long-term memory use for choosing tools and grounding their parameters <span class="citation" data-cites="shen2026mem2act">(<a href="#ref-shen2026mem2act" role="doc-biblioref">Shen et al. 2026</a>)</span>. It changes the exam from “what do you remember?” to “what do you do with what you remember?”.</p>
+<p><strong>Teaching example.</strong> One session establishes <code>project/reports</code> as the report destination; a later session changes it to <code>project/review</code>. Repeating both paths demonstrates retrieval. Using the current destination demonstrates something more. The record needs provenance, date and an explicit supersession relation: recency alone does not settle every conflict.</p>
+<div id="tbl-memoria-accion" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-memoria-accion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;33.1: Design distinctions for this example, not Mem2ActBench scoring categories.
+</figcaption>
+<div aria-describedby="tbl-memoria-accion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Memory</th>
+<th>What it stores</th>
+<th>How to check its use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Episodic</td>
+<td>What happened in an interaction</td>
+<td>Retrieve the relevant episode</td>
+</tr>
+<tr class="even">
+<td>Semantic</td>
+<td>Current facts and preferences</td>
+<td>Fill parameters with the right fact</td>
+</tr>
+<tr class="odd">
+<td>Procedural</td>
+<td>How to complete a task</td>
+<td>Select and execute the appropriate steps</td>
+</tr>
+<tr class="even">
+<td>Working state</td>
+<td>Completed, pending or superseded items</td>
+<td>Continue without duplication or obsolete facts</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="🔍 An experiment separating retrieval from use">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>🔍 An experiment separating retrieval from use
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Compare <strong>no memory</strong>, <strong>retrieved memory</strong> and <strong>relevant memory supplied directly</strong>. The third is an idealized control: if action fails even with the right fact available, the retriever cannot explain every error. Evaluate tool choice, parameters and final state in a test environment. Add an outdated memory to check supersession and repeat across tasks.</p>
+</div>
+</div>
+</div>
+<p><strong>Bridge to the whiteboard.</strong> External memory stores information across interactions; the residual stream and KV cache participate in computation within a run. <a href="42-workspace.html" class="quarto-xref"><span>Chapter 43</span></a> studies internal observables: it does not by itself establish persistent memory or correct tool execution. These levels are connected by a system, but are different objects.</p>
+</section>
 </section>
 <section id="multi-agent-brief" class="level2" data-number="33.8">
 <h2 data-number="33.8" class="anchored" data-anchor-id="multi-agent-brief"><span class="header-section-number">33.8</span> Multi-agent (brief)</h2>
@@ -1342,7 +1437,7 @@ p^{n}\)</span>. <em>In the transformer:</em> it explains why long tasks <strong>
 <div id="tbl-agentes" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-agentes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;33.1: The gap between demo and production
+Table&nbsp;33.2: The gap between demo and production
 </figcaption>
 <div aria-describedby="tbl-agentes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -1407,24 +1502,26 @@ Table&nbsp;33.1: The gap between demo and production
 <section id="summary" class="level2" data-number="33.10">
 <h2 data-number="33.10" class="anchored" data-anchor-id="summary"><span class="header-section-number">33.10</span> Summary</h2>
 <ul>
-<li><strong>Agent</strong> = LLM in a <strong>loop</strong> perceive→reason→<strong>act</strong>→observe; it goes beyond generating (RAG retrieves, the agent <strong>acts</strong>).</li>
-<li><strong>Loop:</strong> <strong>ReAct</strong> <span class="citation" data-cites="yao2022react">(<a href="#ref-yao2022react" role="doc-biblioref">Yao et al. 2023</a>)</span> (Thought/Action/Observation, less hallucination); <strong>Reflexion</strong> <span class="citation" data-cites="shinn2023reflexion">(<a href="#ref-shinn2023reflexion" role="doc-biblioref">Shinn et al. 2023</a>)</span> (learns from failures through language).</li>
-<li><strong>Tools:</strong> <strong>Toolformer</strong> (learns to call APIs), <strong>function calling</strong> (valid JSON, Ch. 29), <strong>code as action</strong> (PAL, CodeAct) — precise and composable.</li>
-<li><strong>Planning:</strong> Plan-and-Solve, ReWOO, <strong>LLM+P</strong> (delegates to a classical planner). <strong>Honest:</strong> autonomous planning is brittle (~12 % GPT-4 <span class="citation" data-cites="valmeekam2023planning">(<a href="#ref-valmeekam2023planning" role="doc-biblioref">Valmeekam et al. 2023</a>)</span>).</li>
-<li><strong>Memory:</strong> context ≠ memory; external store (RAG over the agent’s own history); <strong>Generative Agents</strong>, <strong>MemGPT</strong>.</li>
-<li><strong>Limits (honest):</strong> <strong>error compounding</strong> (<span class="math inline">\(p^n\)</span> collapses); the <strong>demo↔︎production</strong> gap (GAIA 15 % vs 92 %; τ-bench pass^8 ~25 %); cost; <strong>prompt injection amplified</strong> by the power to act. The 2023-24 hype <strong>outran the reliability</strong>.</li>
+<li><p><strong>Memory in use:</strong> evaluate tool choice, parameters and final state; retrieving a memory does not guarantee applying it correctly.</p></li>
+<li><p><strong>Agent</strong> = LLM in a <strong>loop</strong> perceive→reason→<strong>act</strong>→observe; it goes beyond generating (RAG retrieves, the agent <strong>acts</strong>).</p></li>
+<li><p><strong>Loop:</strong> <strong>ReAct</strong> <span class="citation" data-cites="yao2022react">(<a href="#ref-yao2022react" role="doc-biblioref">Yao et al. 2023</a>)</span> (Thought/Action/Observation, less hallucination); <strong>Reflexion</strong> <span class="citation" data-cites="shinn2023reflexion">(<a href="#ref-shinn2023reflexion" role="doc-biblioref">Shinn et al. 2023</a>)</span> (learns from failures through language).</p></li>
+<li><p><strong>Tools:</strong> <strong>Toolformer</strong> (learns to call APIs), <strong>function calling</strong> (valid JSON, Ch. 29), <strong>code as action</strong> (PAL, CodeAct) — precise and composable.</p></li>
+<li><p><strong>Planning:</strong> Plan-and-Solve, ReWOO, <strong>LLM+P</strong> (delegates to a classical planner). <strong>Honest:</strong> autonomous planning is brittle (~12 % GPT-4 <span class="citation" data-cites="valmeekam2023planning">(<a href="#ref-valmeekam2023planning" role="doc-biblioref">Valmeekam et al. 2023</a>)</span>).</p></li>
+<li><p><strong>Memory:</strong> context ≠ memory; external store (RAG over the agent’s own history); <strong>Generative Agents</strong>, <strong>MemGPT</strong>.</p></li>
+<li><p><strong>Limits (honest):</strong> <strong>error compounding</strong> (<span class="math inline">\(p^n\)</span> collapses); the <strong>demo↔︎production</strong> gap (GAIA 15 % vs 92 %; τ-bench pass^8 ~25 %); cost; <strong>prompt injection amplified</strong> by the power to act. The 2023-24 hype <strong>outran the reliability</strong>.</p></li>
 </ul>
 <p><strong>Next (Chapter 33):</strong> we close Part V by stepping out of text: <strong>multimodal transformers</strong> —seeing images (ViT), uniting vision and language (CLIP), audio—.</p>
 </section>
 <section id="exercises" class="level2" data-number="33.11">
 <h2 data-number="33.11" class="anchored" data-anchor-id="exercises"><span class="header-section-number">33.11</span> Exercises</h2>
 <ol type="1">
-<li><strong>Agent vs RAG.</strong> How does “acting” differ from “retrieving”? Why is RAG a special case within an agent?</li>
-<li><strong>ReAct.</strong> Describe the Thought/Action/Observation cycle. Why does it reduce hallucination compared to reasoning alone?</li>
-<li><strong>Code as action.</strong> Give two reasons code is a good “action space” for an agent.</li>
-<li><strong>Error compounding.</strong> With steps at 90 % success, what reliability do you expect on a 10-step task? What does that say about long-horizon agents?</li>
-<li><strong>Demo vs production.</strong> Cite a figure for the agent-vs-human gap and explain what <em>pass^k</em> measures.</li>
-<li><strong>Security.</strong> Why is prompt injection more dangerous in an agent than in a chatbot?</li>
+<li><p><strong>Agent vs RAG.</strong> How does “acting” differ from “retrieving”? Why is RAG a special case within an agent?</p></li>
+<li><p><strong>ReAct.</strong> Describe the Thought/Action/Observation cycle. Why does it reduce hallucination compared to reasoning alone?</p></li>
+<li><p><strong>Code as action.</strong> Give two reasons code is a good “action space” for an agent.</p></li>
+<li><p><strong>Error compounding.</strong> With steps at 90 % success, what reliability do you expect on a 10-step task? What does that say about long-horizon agents?</p></li>
+<li><p><strong>Demo vs production.</strong> Cite a figure for the agent-vs-human gap and explain what <em>pass^k</em> measures.</p></li>
+<li><p><strong>Security.</strong> Why is prompt injection more dangerous in an agent than in a chatbot?</p></li>
+<li><p><strong>An old path.</strong> The agent retrieves both the old and new destination but saves to the old one. Is this necessarily retrieval failure? Design a control.</p></li>
 </ol>
 </section>
 <section id="references" class="level2 unnumbered">
@@ -1476,6 +1573,9 @@ Park, Joon Sung, Joseph C. O’Brien, Carrie J. Cai, Meredith Ringel Morris, Per
 </div>
 <div id="ref-schick2023toolformer" class="csl-entry" role="listitem">
 <span class="nocase">Schick, Timo, Jane Dwivedi-Yu, Roberto Dessì, et al.</span> 2023. <em>Toolformer: Language Models Can Teach Themselves to Use Tools</em>. <a href="https://arxiv.org/abs/2302.04761">https://arxiv.org/abs/2302.04761</a>.
+</div>
+<div id="ref-shen2026mem2act" class="csl-entry" role="listitem">
+Shen, Yiting, Kun Li, Wei Zhou, and Songlin Hu. 2026. <span>“<span>Mem2ActBench</span>: A Benchmark for Evaluating Long-Term Memory Utilization in Task-Oriented Autonomous Agents.”</span> <em>Proceedings of the 64th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)</em>. <a href="https://aclanthology.org/2026.acl-long.370/">https://aclanthology.org/2026.acl-long.370/</a>.
 </div>
 <div id="ref-shinn2023reflexion" class="csl-entry" role="listitem">
 Shinn, Noah, Federico Cassano, Ashwin Gopinath, Karthik Narasimhan, and Shunyu Yao. 2023. <span>“Reflexion: Language Agents with Verbal Reinforcement Learning.”</span> <em>NeurIPS</em>. <a href="https://arxiv.org/abs/2303.11366">https://arxiv.org/abs/2303.11366</a>.
@@ -4415,6 +4515,62 @@ Yao, Shunyu, Jeffrey Zhao, Dian Yu, et al. 2023. <span>“ReAct: Synergizing Rea
     });
   } catch (e) {}
 })();
+</script>
+
+
+<script>
+(function () {
+  'use strict';
+  const es = (document.documentElement.lang || 'es').startsWith('es');
+  const words = es ? {
+    title: 'Misma masa, distinto efecto', mass: 'Masa del token descartado (%)',
+    value: 'Valor del token descartado', kept: 'Masa original conservada',
+    full: 'Salida completa', error: 'Error absoluto al recortar',
+    caption: 'Ejemplo calculado, no datos de un modelo. El token conservado tiene valor 0; al renormalizar, su salida es 0.'
+  } : {
+    title: 'Same mass, different effect', mass: 'Discarded token mass (%)',
+    value: 'Discarded token value', kept: 'Original mass retained',
+    full: 'Full output', error: 'Absolute truncation error',
+    caption: 'Calculated example, not model data. The retained token has value 0; after renormalization its output is 0.'
+  };
+  document.querySelectorAll('.fg-mass-value').forEach(function (box, index) {
+    const prefix = 'fg-mv-' + index;
+    box.innerHTML = '<h3>' + words.title + '</h3><div class="mv-controls">' +
+      '<label for="' + prefix + '-mass">' + words.mass + ' <output class="mv-mass-label">1</output>' +
+      '<input id="' + prefix + '-mass" class="mv-mass" type="range" min="0" max="20" step="0.1" value="1"></label>' +
+      '<label for="' + prefix + '-value">' + words.value + ' <output class="mv-value-label">100</output>' +
+      '<input id="' + prefix + '-value" class="mv-value" type="range" min="-100" max="100" step="1" value="100"></label></div>' +
+      '<div class="mv-results" aria-live="polite" aria-atomic="true">' +
+      '<div class="mv-result"><span>' + words.kept + '</span><b class="mv-kept"></b></div>' +
+      '<div class="mv-result"><span>' + words.full + '</span><b class="mv-full"></b></div>' +
+      '<div class="mv-result"><span>' + words.error + '</span><b class="mv-error"></b></div></div>' +
+      '<p class="mv-equation"></p><p class="mv-caption">' + words.caption + '</p>';
+    const mass = box.querySelector('.mv-mass');
+    const value = box.querySelector('.mv-value');
+    const fmt = new Intl.NumberFormat(es ? 'es' : 'en', {maximumFractionDigits: 3});
+    function update() {
+      const a = Number(mass.value) / 100, v = Number(value.value), full = a * v;
+      box.querySelector('.mv-mass-label').textContent = fmt.format(100 * a);
+      box.querySelector('.mv-value-label').textContent = fmt.format(v);
+      box.querySelector('.mv-kept').textContent = fmt.format(100 * (1 - a)) + '%';
+      box.querySelector('.mv-full').textContent = fmt.format(full);
+      box.querySelector('.mv-error').textContent = fmt.format(Math.abs(full));
+      box.querySelector('.mv-equation').textContent =
+        'o = ' + fmt.format(1 - a) + ' × 0 + ' + fmt.format(a) + ' × ' + fmt.format(v) + ' = ' + fmt.format(full);
+    }
+    mass.addEventListener('input', update);
+    value.addEventListener('input', update);
+    update();
+  });
+})();
+</script>
+
+<script>
+document.querySelectorAll('figure.quarto-float-tbl > div[aria-describedby]').forEach(function (region) {
+  region.tabIndex = 0;
+  region.setAttribute('role', 'region');
+  region.setAttribute('aria-labelledby', region.getAttribute('aria-describedby'));
+});
 </script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {

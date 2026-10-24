@@ -670,6 +670,31 @@ div.csl-indent {
 .fg-serie-read .hot{ color:rgb(213,94,0); font-weight:700; }
 </style>
 
+
+<style>
+/* Two-token counterexample: same field-guide palette, no motion required. */
+.fg-mass-value {border:1px solid #ccdce8;border-radius:12px;padding:1.1rem;margin:1.4rem 0;background:#f5f9fc;color:#16334a;}
+.fg-mass-value h3 {font-size:1.05rem;margin:0 0 .8rem;}
+.fg-mass-value .mv-controls {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;}
+.fg-mass-value label {display:block;font-size:.9rem;}
+.fg-mass-value input {display:block;width:100%;accent-color:#0072b2;margin-top:.45rem;}
+.fg-mass-value .mv-results {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.65rem;margin:1rem 0;}
+.fg-mass-value .mv-result {background:white;border:1px solid #d8e3eb;border-radius:7px;padding:.65rem;}
+.fg-mass-value .mv-result span {display:block;font-size:.8rem;}
+.fg-mass-value .mv-result b {display:block;font-size:1.15rem;color:#0072b2;}
+.fg-mass-value .mv-result:last-child b {color:#a34800;}
+.fg-mass-value .mv-caption {font-size:.86rem;margin-bottom:0;}
+.fg-mass-value .mv-equation {font-family:ui-monospace,monospace;font-size:.88rem;overflow-wrap:anywhere;}
+@media(max-width:540px){.fg-mass-value .mv-controls,.fg-mass-value .mv-results{grid-template-columns:1fr;}}
+</style>
+
+<style>
+/* Preserve the book's wide tables while containing them on narrow screens. */
+figure.quarto-float-tbl > div[aria-describedby] {max-width:100%;overflow-x:auto;}
+figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid #0072b2;outline-offset:3px;}
+.references a {overflow-wrap:anywhere;word-break:break-word;}
+</style>
+
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
@@ -1171,7 +1196,10 @@ window.Quarto = {
   <li><a href="#el-bucle-razonamiento-acción" id="toc-el-bucle-razonamiento-acción" class="nav-link" data-scroll-target="#el-bucle-razonamiento-acción"><span class="header-section-number">33.4</span> El bucle razonamiento-acción</a></li>
   <li><a href="#usar-herramientas" id="toc-usar-herramientas" class="nav-link" data-scroll-target="#usar-herramientas"><span class="header-section-number">33.5</span> Usar herramientas</a></li>
   <li><a href="#planificar" id="toc-planificar" class="nav-link" data-scroll-target="#planificar"><span class="header-section-number">33.6</span> Planificar</a></li>
-  <li><a href="#memoria" id="toc-memoria" class="nav-link" data-scroll-target="#memoria"><span class="header-section-number">33.7</span> Memoria</a></li>
+  <li><a href="#memoria" id="toc-memoria" class="nav-link" data-scroll-target="#memoria"><span class="header-section-number">33.7</span> Memoria</a>
+  <ul class="collapse">
+  <li><a href="#sec-memoria-accion" id="toc-sec-memoria-accion" class="nav-link" data-scroll-target="#sec-memoria-accion"><span class="header-section-number">33.7.1</span> Recordar para actuar, no solo para contestar</a></li>
+  </ul></li>
   <li><a href="#multi-agente-breve" id="toc-multi-agente-breve" class="nav-link" data-scroll-target="#multi-agente-breve"><span class="header-section-number">33.8</span> Multi-agente (breve)</a></li>
   <li><a href="#límites-y-modos-de-fallo-el-corazón-honesto" id="toc-límites-y-modos-de-fallo-el-corazón-honesto" class="nav-link" data-scroll-target="#límites-y-modos-de-fallo-el-corazón-honesto"><span class="header-section-number">33.9</span> Límites y modos de fallo (el corazón honesto)</a></li>
   <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">33.10</span> Resumen</a></li>
@@ -1323,6 +1351,73 @@ window.Quarto = {
 <div class="analogia">
 <p><strong>🧩 Analogía — el cuaderno.</strong> La memoria externa es un <strong>cuaderno</strong> donde el agente <strong>escribe y relee</strong>, porque no le cabe todo “en la cabeza” (el contexto). MemGPT es el cuaderno con un sistema de archivado; Generative Agents, el cuaderno con índice de relevancia y resúmenes.</p>
 </div>
+<section id="sec-memoria-accion" class="level3" data-number="33.7.1">
+<h3 data-number="33.7.1" class="anchored" data-anchor-id="sec-memoria-accion"><span class="header-section-number">33.7.1</span> Recordar para actuar, no solo para contestar</h3>
+<p>El cuaderno sirve de poco si el agente recuerda una preferencia y luego rellena mal la herramienta. <strong>Mem2ActBench</strong> (ACL 2026) evalúa precisamente el uso de memoria a largo plazo para elegir herramientas y concretar sus parámetros <span class="citation" data-cites="shen2026mem2act">(<a href="#ref-shen2026mem2act" role="doc-biblioref">Shen et&nbsp;al. 2026</a>)</span>. Cambia la pregunta del examen: de «¿qué recuerdas?» a «¿qué haces con lo que recuerdas?».</p>
+<p><strong>Ejemplo didáctico.</strong> En una sesión se acuerda guardar informes en <code>proyecto/informes</code>; en otra se cambia el destino a <code>proyecto/revision</code>. Al pedir el siguiente informe, repetir ambas rutas demuestra recuperación. Usar el destino vigente demuestra algo adicional. El registro necesita procedencia, fecha y una relación explícita de sustitución: recencia por sí sola no resuelve todos los conflictos.</p>
+<div id="tbl-memoria-accion" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-memoria-accion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;33.1: Distinciones de diseño para el ejemplo; no son categorías de puntuación de Mem2ActBench.
+</figcaption>
+<div aria-describedby="tbl-memoria-accion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Memoria</th>
+<th>Qué conserva</th>
+<th>Cómo comprobar que se utiliza</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Episódica</td>
+<td>Lo que ocurrió en una interacción</td>
+<td>Recuperar el episodio pertinente</td>
+</tr>
+<tr class="even">
+<td>Semántica</td>
+<td>Hechos y preferencias vigentes</td>
+<td>Usar el dato correcto al rellenar parámetros</td>
+</tr>
+<tr class="odd">
+<td>Procedimental</td>
+<td>Cómo completar una tarea</td>
+<td>Elegir y ejecutar los pasos adecuados</td>
+</tr>
+<tr class="even">
+<td>Estado de trabajo</td>
+<td>Lo terminado, pendiente o sustituido</td>
+<td>Continuar sin duplicar ni revivir un dato obsoleto</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="🔍 Un experimento que separa recuperar de utilizar">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>🔍 Un experimento que separa recuperar de utilizar
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Compara <strong>sin memoria</strong>, <strong>memoria recuperada</strong> y <strong>memoria pertinente entregada directamente</strong>. La tercera condición es un control idealizado: si incluso con el dato correcto falla la acción, no puedes atribuirlo todo al buscador. Evalúa la herramienta elegida, sus parámetros y el estado final en un entorno de prueba. Añade una memoria desactualizada para comprobar si el sistema sabe sustituirla, y repite sobre distintas tareas.</p>
+</div>
+</div>
+</div>
+<p><strong>Puente con la pizarra.</strong> La memoria externa guarda información entre interacciones; el residual y la caché KV participan en el cálculo de una ejecución. <a href="42-workspace.html" class="quarto-xref"><span>Capítulo 43</span></a> estudia observables internos: no demuestra por sí solo memoria persistente ni ejecución correcta de herramientas. Son niveles conectados por un sistema, no el mismo objeto.</p>
+</section>
 </section>
 <section id="multi-agente-breve" class="level2" data-number="33.8">
 <h2 data-number="33.8" class="anchored" data-anchor-id="multi-agente-breve"><span class="header-section-number">33.8</span> Multi-agente (breve)</h2>
@@ -1341,7 +1436,7 @@ window.Quarto = {
 <div id="tbl-agentes" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-agentes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;33.1: La brecha entre la demo y la producción
+Tabla&nbsp;33.2: La brecha entre la demo y la producción
 </figcaption>
 <div aria-describedby="tbl-agentes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -1406,24 +1501,26 @@ Tabla&nbsp;33.1: La brecha entre la demo y la producción
 <section id="resumen" class="level2" data-number="33.10">
 <h2 data-number="33.10" class="anchored" data-anchor-id="resumen"><span class="header-section-number">33.10</span> Resumen</h2>
 <ul>
-<li><strong>Agente</strong> = LLM en un <strong>bucle</strong> percibir→razonar→<strong>actuar</strong>→observar; va más allá de generar (RAG recupera, el agente <strong>actúa</strong>).</li>
-<li><strong>Bucle:</strong> <strong>ReAct</strong> <span class="citation" data-cites="yao2022react">(<a href="#ref-yao2022react" role="doc-biblioref">Yao et&nbsp;al. 2023</a>)</span> (Pensamiento/Acción/Observación, menos alucinación); <strong>Reflexion</strong> <span class="citation" data-cites="shinn2023reflexion">(<a href="#ref-shinn2023reflexion" role="doc-biblioref">Shinn et&nbsp;al. 2023</a>)</span> (aprende de fallos por lenguaje).</li>
-<li><strong>Herramientas:</strong> <strong>Toolformer</strong> (aprende a llamar APIs), <strong>function calling</strong> (JSON válido, Cap. 29), <strong>código como acción</strong> (PAL, CodeAct) — preciso y componible.</li>
-<li><strong>Planificar:</strong> Plan-and-Solve, ReWOO, <strong>LLM+P</strong> (delega en planificador clásico). <strong>Honesto:</strong> planificación autónoma frágil (~12 % GPT-4 <span class="citation" data-cites="valmeekam2023planning">(<a href="#ref-valmeekam2023planning" role="doc-biblioref">Valmeekam et&nbsp;al. 2023</a>)</span>).</li>
-<li><strong>Memoria:</strong> contexto ≠ memoria; almacén externo (RAG sobre la propia historia); <strong>Generative Agents</strong>, <strong>MemGPT</strong>.</li>
-<li><strong>Límites (honesto):</strong> <strong>composición de errores</strong> (<span class="math inline">\(p^n\)</span> colapsa); brecha <strong>demo↔︎producción</strong> (GAIA 15 % vs 92 %; τ-bench pass^8 ~25 %); coste; <strong>inyección de prompts amplificada</strong> por poder actuar. El hype 2023-24 <strong>superó la fiabilidad</strong>.</li>
+<li><p><strong>Memoria que se usa:</strong> evalúa elección de herramientas, parámetros y estado final; recuperar un recuerdo no garantiza aplicarlo correctamente.</p></li>
+<li><p><strong>Agente</strong> = LLM en un <strong>bucle</strong> percibir→razonar→<strong>actuar</strong>→observar; va más allá de generar (RAG recupera, el agente <strong>actúa</strong>).</p></li>
+<li><p><strong>Bucle:</strong> <strong>ReAct</strong> <span class="citation" data-cites="yao2022react">(<a href="#ref-yao2022react" role="doc-biblioref">Yao et&nbsp;al. 2023</a>)</span> (Pensamiento/Acción/Observación, menos alucinación); <strong>Reflexion</strong> <span class="citation" data-cites="shinn2023reflexion">(<a href="#ref-shinn2023reflexion" role="doc-biblioref">Shinn et&nbsp;al. 2023</a>)</span> (aprende de fallos por lenguaje).</p></li>
+<li><p><strong>Herramientas:</strong> <strong>Toolformer</strong> (aprende a llamar APIs), <strong>function calling</strong> (JSON válido, Cap. 29), <strong>código como acción</strong> (PAL, CodeAct) — preciso y componible.</p></li>
+<li><p><strong>Planificar:</strong> Plan-and-Solve, ReWOO, <strong>LLM+P</strong> (delega en planificador clásico). <strong>Honesto:</strong> planificación autónoma frágil (~12 % GPT-4 <span class="citation" data-cites="valmeekam2023planning">(<a href="#ref-valmeekam2023planning" role="doc-biblioref">Valmeekam et&nbsp;al. 2023</a>)</span>).</p></li>
+<li><p><strong>Memoria:</strong> contexto ≠ memoria; almacén externo (RAG sobre la propia historia); <strong>Generative Agents</strong>, <strong>MemGPT</strong>.</p></li>
+<li><p><strong>Límites (honesto):</strong> <strong>composición de errores</strong> (<span class="math inline">\(p^n\)</span> colapsa); brecha <strong>demo↔︎producción</strong> (GAIA 15 % vs 92 %; τ-bench pass^8 ~25 %); coste; <strong>inyección de prompts amplificada</strong> por poder actuar. El hype 2023-24 <strong>superó la fiabilidad</strong>.</p></li>
 </ul>
 <p><strong>Siguiente (Capítulo 33):</strong> cerramos la Parte V saliendo del texto: <strong>transformers multimodales</strong> —ver imágenes (ViT), unir visión y lenguaje (CLIP), audio—.</p>
 </section>
 <section id="ejercicios" class="level2" data-number="33.11">
 <h2 data-number="33.11" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">33.11</span> Ejercicios</h2>
 <ol type="1">
-<li><strong>Agente vs RAG.</strong> ¿En qué se diferencia “actuar” de “recuperar”? ¿Por qué RAG es un caso particular dentro de un agente?</li>
-<li><strong>ReAct.</strong> Describe el ciclo Pensamiento/Acción/Observación. ¿Por qué reduce la alucinación frente a razonar a solas?</li>
-<li><strong>Código como acción.</strong> Da dos razones por las que el código es un buen “espacio de acciones” para un agente.</li>
-<li><strong>Composición de errores.</strong> Con pasos al 90 % de éxito, ¿qué fiabilidad esperas en una tarea de 10 pasos? ¿Qué dice eso de los agentes de horizonte largo?</li>
-<li><strong>Demo vs producción.</strong> Cita una cifra de la brecha agente-vs-humano y explica qué mide <em>pass^k</em>.</li>
-<li><strong>Seguridad.</strong> ¿Por qué la inyección de prompts es más peligrosa en un agente que en un chatbot?</li>
+<li><p><strong>Agente vs RAG.</strong> ¿En qué se diferencia “actuar” de “recuperar”? ¿Por qué RAG es un caso particular dentro de un agente?</p></li>
+<li><p><strong>ReAct.</strong> Describe el ciclo Pensamiento/Acción/Observación. ¿Por qué reduce la alucinación frente a razonar a solas?</p></li>
+<li><p><strong>Código como acción.</strong> Da dos razones por las que el código es un buen “espacio de acciones” para un agente.</p></li>
+<li><p><strong>Composición de errores.</strong> Con pasos al 90 % de éxito, ¿qué fiabilidad esperas en una tarea de 10 pasos? ¿Qué dice eso de los agentes de horizonte largo?</p></li>
+<li><p><strong>Demo vs producción.</strong> Cita una cifra de la brecha agente-vs-humano y explica qué mide <em>pass^k</em>.</p></li>
+<li><p><strong>Seguridad.</strong> ¿Por qué la inyección de prompts es más peligrosa en un agente que en un chatbot?</p></li>
+<li><p><strong>Una ruta antigua.</strong> El agente recupera el destino antiguo y el nuevo, pero guarda en el antiguo. ¿Es necesariamente un fallo de recuperación? Diseña un control.</p></li>
 </ol>
 </section>
 <section id="referencias" class="level2 unnumbered">
@@ -1475,6 +1572,9 @@ Park, Joon Sung, Joseph C. O’Brien, Carrie J. Cai, Meredith Ringel Morris, Per
 </div>
 <div id="ref-schick2023toolformer" class="csl-entry" role="listitem">
 <span class="nocase">Schick, Timo, Jane Dwivedi-Yu, Roberto Dessì, et&nbsp;al.</span> 2023. <em>Toolformer: Language Models Can Teach Themselves to Use Tools</em>. <a href="https://arxiv.org/abs/2302.04761">https://arxiv.org/abs/2302.04761</a>.
+</div>
+<div id="ref-shen2026mem2act" class="csl-entry" role="listitem">
+Shen, Yiting, Kun Li, Wei Zhou, y Songlin Hu. 2026. <span>«<span>Mem2ActBench</span>: A Benchmark for Evaluating Long-Term Memory Utilization in Task-Oriented Autonomous Agents»</span>. <em>Proceedings of the 64th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)</em>. <a href="https://aclanthology.org/2026.acl-long.370/">https://aclanthology.org/2026.acl-long.370/</a>.
 </div>
 <div id="ref-shinn2023reflexion" class="csl-entry" role="listitem">
 Shinn, Noah, Federico Cassano, Ashwin Gopinath, Karthik Narasimhan, y Shunyu Yao. 2023. <span>«Reflexion: Language Agents with Verbal Reinforcement Learning»</span>. <em>NeurIPS</em>. <a href="https://arxiv.org/abs/2303.11366">https://arxiv.org/abs/2303.11366</a>.
@@ -4414,6 +4514,62 @@ Yao, Shunyu, Jeffrey Zhao, Dian Yu, et&nbsp;al. 2023. <span>«ReAct: Synergizing
     });
   } catch (e) {}
 })();
+</script>
+
+
+<script>
+(function () {
+  'use strict';
+  const es = (document.documentElement.lang || 'es').startsWith('es');
+  const words = es ? {
+    title: 'Misma masa, distinto efecto', mass: 'Masa del token descartado (%)',
+    value: 'Valor del token descartado', kept: 'Masa original conservada',
+    full: 'Salida completa', error: 'Error absoluto al recortar',
+    caption: 'Ejemplo calculado, no datos de un modelo. El token conservado tiene valor 0; al renormalizar, su salida es 0.'
+  } : {
+    title: 'Same mass, different effect', mass: 'Discarded token mass (%)',
+    value: 'Discarded token value', kept: 'Original mass retained',
+    full: 'Full output', error: 'Absolute truncation error',
+    caption: 'Calculated example, not model data. The retained token has value 0; after renormalization its output is 0.'
+  };
+  document.querySelectorAll('.fg-mass-value').forEach(function (box, index) {
+    const prefix = 'fg-mv-' + index;
+    box.innerHTML = '<h3>' + words.title + '</h3><div class="mv-controls">' +
+      '<label for="' + prefix + '-mass">' + words.mass + ' <output class="mv-mass-label">1</output>' +
+      '<input id="' + prefix + '-mass" class="mv-mass" type="range" min="0" max="20" step="0.1" value="1"></label>' +
+      '<label for="' + prefix + '-value">' + words.value + ' <output class="mv-value-label">100</output>' +
+      '<input id="' + prefix + '-value" class="mv-value" type="range" min="-100" max="100" step="1" value="100"></label></div>' +
+      '<div class="mv-results" aria-live="polite" aria-atomic="true">' +
+      '<div class="mv-result"><span>' + words.kept + '</span><b class="mv-kept"></b></div>' +
+      '<div class="mv-result"><span>' + words.full + '</span><b class="mv-full"></b></div>' +
+      '<div class="mv-result"><span>' + words.error + '</span><b class="mv-error"></b></div></div>' +
+      '<p class="mv-equation"></p><p class="mv-caption">' + words.caption + '</p>';
+    const mass = box.querySelector('.mv-mass');
+    const value = box.querySelector('.mv-value');
+    const fmt = new Intl.NumberFormat(es ? 'es' : 'en', {maximumFractionDigits: 3});
+    function update() {
+      const a = Number(mass.value) / 100, v = Number(value.value), full = a * v;
+      box.querySelector('.mv-mass-label').textContent = fmt.format(100 * a);
+      box.querySelector('.mv-value-label').textContent = fmt.format(v);
+      box.querySelector('.mv-kept').textContent = fmt.format(100 * (1 - a)) + '%';
+      box.querySelector('.mv-full').textContent = fmt.format(full);
+      box.querySelector('.mv-error').textContent = fmt.format(Math.abs(full));
+      box.querySelector('.mv-equation').textContent =
+        'o = ' + fmt.format(1 - a) + ' × 0 + ' + fmt.format(a) + ' × ' + fmt.format(v) + ' = ' + fmt.format(full);
+    }
+    mass.addEventListener('input', update);
+    value.addEventListener('input', update);
+    update();
+  });
+})();
+</script>
+
+<script>
+document.querySelectorAll('figure.quarto-float-tbl > div[aria-describedby]').forEach(function (region) {
+  region.tabIndex = 0;
+  region.setAttribute('role', 'region');
+  region.setAttribute('aria-labelledby', region.getAttribute('aria-describedby'));
+});
 </script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {

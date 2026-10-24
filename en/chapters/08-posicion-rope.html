@@ -705,6 +705,31 @@ div.csl-indent {
 .fg-serie-read .hot{ color:rgb(213,94,0); font-weight:700; }
 </style>
 
+
+<style>
+/* Two-token counterexample: same field-guide palette, no motion required. */
+.fg-mass-value {border:1px solid #ccdce8;border-radius:12px;padding:1.1rem;margin:1.4rem 0;background:#f5f9fc;color:#16334a;}
+.fg-mass-value h3 {font-size:1.05rem;margin:0 0 .8rem;}
+.fg-mass-value .mv-controls {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;}
+.fg-mass-value label {display:block;font-size:.9rem;}
+.fg-mass-value input {display:block;width:100%;accent-color:#0072b2;margin-top:.45rem;}
+.fg-mass-value .mv-results {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.65rem;margin:1rem 0;}
+.fg-mass-value .mv-result {background:white;border:1px solid #d8e3eb;border-radius:7px;padding:.65rem;}
+.fg-mass-value .mv-result span {display:block;font-size:.8rem;}
+.fg-mass-value .mv-result b {display:block;font-size:1.15rem;color:#0072b2;}
+.fg-mass-value .mv-result:last-child b {color:#a34800;}
+.fg-mass-value .mv-caption {font-size:.86rem;margin-bottom:0;}
+.fg-mass-value .mv-equation {font-family:ui-monospace,monospace;font-size:.88rem;overflow-wrap:anywhere;}
+@media(max-width:540px){.fg-mass-value .mv-controls,.fg-mass-value .mv-results{grid-template-columns:1fr;}}
+</style>
+
+<style>
+/* Preserve the book's wide tables while containing them on narrow screens. */
+figure.quarto-float-tbl > div[aria-describedby] {max-width:100%;overflow-x:auto;}
+figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid #0072b2;outline-offset:3px;}
+.references a {overflow-wrap:anywhere;word-break:break-word;}
+</style>
+
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
@@ -4307,6 +4332,62 @@ Su, Jianlin, Yu Lu, Shengfeng Pan, Ahmed Murtadha, Bo Wen, and Yunfeng Liu. 2021
     });
   } catch (e) {}
 })();
+</script>
+
+
+<script>
+(function () {
+  'use strict';
+  const es = (document.documentElement.lang || 'es').startsWith('es');
+  const words = es ? {
+    title: 'Misma masa, distinto efecto', mass: 'Masa del token descartado (%)',
+    value: 'Valor del token descartado', kept: 'Masa original conservada',
+    full: 'Salida completa', error: 'Error absoluto al recortar',
+    caption: 'Ejemplo calculado, no datos de un modelo. El token conservado tiene valor 0; al renormalizar, su salida es 0.'
+  } : {
+    title: 'Same mass, different effect', mass: 'Discarded token mass (%)',
+    value: 'Discarded token value', kept: 'Original mass retained',
+    full: 'Full output', error: 'Absolute truncation error',
+    caption: 'Calculated example, not model data. The retained token has value 0; after renormalization its output is 0.'
+  };
+  document.querySelectorAll('.fg-mass-value').forEach(function (box, index) {
+    const prefix = 'fg-mv-' + index;
+    box.innerHTML = '<h3>' + words.title + '</h3><div class="mv-controls">' +
+      '<label for="' + prefix + '-mass">' + words.mass + ' <output class="mv-mass-label">1</output>' +
+      '<input id="' + prefix + '-mass" class="mv-mass" type="range" min="0" max="20" step="0.1" value="1"></label>' +
+      '<label for="' + prefix + '-value">' + words.value + ' <output class="mv-value-label">100</output>' +
+      '<input id="' + prefix + '-value" class="mv-value" type="range" min="-100" max="100" step="1" value="100"></label></div>' +
+      '<div class="mv-results" aria-live="polite" aria-atomic="true">' +
+      '<div class="mv-result"><span>' + words.kept + '</span><b class="mv-kept"></b></div>' +
+      '<div class="mv-result"><span>' + words.full + '</span><b class="mv-full"></b></div>' +
+      '<div class="mv-result"><span>' + words.error + '</span><b class="mv-error"></b></div></div>' +
+      '<p class="mv-equation"></p><p class="mv-caption">' + words.caption + '</p>';
+    const mass = box.querySelector('.mv-mass');
+    const value = box.querySelector('.mv-value');
+    const fmt = new Intl.NumberFormat(es ? 'es' : 'en', {maximumFractionDigits: 3});
+    function update() {
+      const a = Number(mass.value) / 100, v = Number(value.value), full = a * v;
+      box.querySelector('.mv-mass-label').textContent = fmt.format(100 * a);
+      box.querySelector('.mv-value-label').textContent = fmt.format(v);
+      box.querySelector('.mv-kept').textContent = fmt.format(100 * (1 - a)) + '%';
+      box.querySelector('.mv-full').textContent = fmt.format(full);
+      box.querySelector('.mv-error').textContent = fmt.format(Math.abs(full));
+      box.querySelector('.mv-equation').textContent =
+        'o = ' + fmt.format(1 - a) + ' × 0 + ' + fmt.format(a) + ' × ' + fmt.format(v) + ' = ' + fmt.format(full);
+    }
+    mass.addEventListener('input', update);
+    value.addEventListener('input', update);
+    update();
+  });
+})();
+</script>
+
+<script>
+document.querySelectorAll('figure.quarto-float-tbl > div[aria-describedby]').forEach(function (region) {
+  region.tabIndex = 0;
+  region.setAttribute('role', 'region');
+  region.setAttribute('aria-labelledby', region.getAttribute('aria-describedby'));
+});
 </script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {

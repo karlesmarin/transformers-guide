@@ -671,6 +671,31 @@ div.csl-indent {
 </style>
 
 
+<style>
+/* Two-token counterexample: same field-guide palette, no motion required. */
+.fg-mass-value {border:1px solid #ccdce8;border-radius:12px;padding:1.1rem;margin:1.4rem 0;background:#f5f9fc;color:#16334a;}
+.fg-mass-value h3 {font-size:1.05rem;margin:0 0 .8rem;}
+.fg-mass-value .mv-controls {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;}
+.fg-mass-value label {display:block;font-size:.9rem;}
+.fg-mass-value input {display:block;width:100%;accent-color:#0072b2;margin-top:.45rem;}
+.fg-mass-value .mv-results {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.65rem;margin:1rem 0;}
+.fg-mass-value .mv-result {background:white;border:1px solid #d8e3eb;border-radius:7px;padding:.65rem;}
+.fg-mass-value .mv-result span {display:block;font-size:.8rem;}
+.fg-mass-value .mv-result b {display:block;font-size:1.15rem;color:#0072b2;}
+.fg-mass-value .mv-result:last-child b {color:#a34800;}
+.fg-mass-value .mv-caption {font-size:.86rem;margin-bottom:0;}
+.fg-mass-value .mv-equation {font-family:ui-monospace,monospace;font-size:.88rem;overflow-wrap:anywhere;}
+@media(max-width:540px){.fg-mass-value .mv-controls,.fg-mass-value .mv-results{grid-template-columns:1fr;}}
+</style>
+
+<style>
+/* Preserve the book's wide tables while containing them on narrow screens. */
+figure.quarto-float-tbl > div[aria-describedby] {max-width:100%;overflow-x:auto;}
+figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid #0072b2;outline-offset:3px;}
+.references a {overflow-wrap:anywhere;word-break:break-word;}
+</style>
+
+
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light">
@@ -1141,7 +1166,10 @@ div.csl-indent {
   <li><a href="#why-a-chapter-like-this" id="toc-why-a-chapter-like-this" class="nav-link" data-scroll-target="#why-a-chapter-like-this"><span class="header-section-number">39.3</span> Why a chapter like this</a></li>
   <li><a href="#three-myths-of-the-field" id="toc-three-myths-of-the-field" class="nav-link" data-scroll-target="#three-myths-of-the-field"><span class="header-section-number">39.4</span> Three myths of the field</a></li>
   <li><a href="#our-own-audit-the-same-yardstick-for-ourselves" id="toc-our-own-audit-the-same-yardstick-for-ourselves" class="nav-link" data-scroll-target="#our-own-audit-the-same-yardstick-for-ourselves"><span class="header-section-number">39.5</span> Our own audit: the same yardstick for ourselves</a></li>
-  <li><a href="#how-to-use-the-books-labeling-system" id="toc-how-to-use-the-books-labeling-system" class="nav-link" data-scroll-target="#how-to-use-the-books-labeling-system"><span class="header-section-number">39.6</span> How to use the book’s labeling system</a></li>
+  <li><a href="#how-to-use-the-books-labeling-system" id="toc-how-to-use-the-books-labeling-system" class="nav-link" data-scroll-target="#how-to-use-the-books-labeling-system"><span class="header-section-number">39.6</span> How to use the book’s labeling system</a>
+  <ul class="collapse">
+  <li><a href="#sec-audit-octubre2026" id="toc-sec-audit-octubre2026" class="nav-link" data-scroll-target="#sec-audit-octubre2026"><span class="header-section-number">39.6.1</span> Reading the October 2026 additions</a></li>
+  </ul></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">39.7</span> Summary</a></li>
   <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">39.8</span> Exercises</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
@@ -1206,8 +1234,8 @@ div.csl-indent {
 </section>
 <section id="three-myths-of-the-field" class="level2" data-number="39.4">
 <h2 data-number="39.4" class="anchored" data-anchor-id="three-myths-of-the-field"><span class="header-section-number">39.4</span> Three myths of the field</h2>
-<p><strong>1. “Softmax gives a probability.”</strong> <em>(Folklore.)</em> The softmax produces numbers that <strong>sum to 1</strong>, but that doesn’t make them calibrated probabilities of anything. In fact, there’s work that attributes the softmax’s success to an <strong>implicit regularization</strong> (of the Frobenius norm), not to its probabilistic reading <span class="citation" data-cites="softmax2024frobenius">(<a href="#ref-softmax2024frobenius" role="doc-biblioref"><em>On the (Implicit) Regularization Behind Softmax Attention</em> 2024</a>)</span>. Treating attention weights as “probability of relevance” is reading too much into them.</p>
-<p><strong>2. “Attention explains the model’s decision.”</strong> <em>(Folklore, and dangerous.)</em> It’s the myth we already fought (Chs. 4, 13): a bright attention map over a token <strong>doesn’t</strong> prove that that token <em>caused</em> the output —information can flow through the residual stream, the values and the MLPs without passing through where attention “looks”. Attention is <strong>correlation</strong>, not causal explanation <span class="citation" data-cites="jain2019attention attnnotexplain2023">(<a href="#ref-jain2019attention" role="doc-biblioref">Jain and Wallace 2019</a>; <a href="#ref-attnnotexplain2023" role="doc-biblioref"><em>Attention Weights Are Not Explanations</em> 2023</a>)</span>. (That’s why Ch. 37 insisted on causal <strong>intervention</strong>.)</p>
+<p><strong>1. “Softmax gives a probability.”</strong> <em>(Folklore.)</em> The softmax produces numbers that <strong>sum to 1</strong>, but that doesn’t make them calibrated probabilities of anything. In fact, there’s work that attributes the softmax’s success to an <strong>implicit regularization</strong> (of the Frobenius norm), not to its probabilistic reading <span class="citation" data-cites="softmax2024frobenius">(<a href="#ref-softmax2024frobenius" role="doc-biblioref">Saratchandran et al. 2024</a>)</span>. Treating attention weights as “probability of relevance” is reading too much into them.</p>
+<p><strong>2. “Attention explains the model’s decision.”</strong> <em>(Folklore, and dangerous.)</em> It’s the myth we already fought (Chs. 4, 13): a bright attention map over a token <strong>doesn’t</strong> prove that that token <em>caused</em> the output —information can flow through the residual stream, the values and the MLPs without passing through where attention “looks”. Attention is <strong>correlation</strong>, not causal explanation <span class="citation" data-cites="jain2019attention attnnotexplain2023">(<a href="#ref-jain2019attention" role="doc-biblioref">Jain and Wallace 2019</a>; <a href="#ref-attnnotexplain2023" role="doc-biblioref">Wen et al. 2023</a>)</span>. (That’s why Ch. 37 insisted on causal <strong>intervention</strong>.)</p>
 <p><strong>3. “RoPE forces attention to decay with distance.”</strong> <em>(Disputed.)</em> It’s tempting —and we ourselves had to be careful not to fall for it (Ch. 14). <em>Round and Round We Go</em> <span class="citation" data-cites="barbero2024round">(<a href="#ref-barbero2024round" role="doc-biblioref">Barbero et al. 2024</a>)</span> showed that, with real queries/keys, <strong>there’s no guaranteed decay</strong>: models use the low frequencies to match content almost regardless of position. What we do honestly hold: the geometry <strong>bounds the achievable resolution</strong>; γ is a <strong>measured descriptor</strong>, not a decree.</p>
 </section>
 <section id="our-own-audit-the-same-yardstick-for-ourselves" class="level2" data-number="39.5">
@@ -1323,13 +1351,18 @@ Table&nbsp;39.1: Audit of our own formulas and results
 <p><a href="https://karlesmarin.github.io/tafagent/?demo=pvr" class="fg-cta" target="_blank" rel="noopener">▶ See the demo in tafagent</a></p>
 </div>
 </div>
+<section id="sec-audit-octubre2026" class="level3" data-number="39.6.1">
+<h3 data-number="39.6.1" class="anchored" data-anchor-id="sec-audit-octubre2026"><span class="header-section-number">39.6.1</span> Reading the October 2026 additions</h3>
+<p>This review is dated <strong>24 October 2026</strong>. Each new source has a purpose: LURCH and CRE refine context evaluation; KVFundaBench/ShotKV and ValueDiff broaden compression tests; Block-GTQ studies bit allocation; Kiya et al.&nbsp;add sink controls; Mem2ActBench connects memory to actions.</p>
+<p>We distinguish <strong>published</strong> (ICML: ShotKV; ACL: Mem2ActBench), <strong>accepted</strong> (EMNLP: Kiya et al.) and <strong>preprint</strong> (LURCH, CRE, ValueDiff, Block-GTQ). None is presented as an independent TAF replication. Citations pin consulted versions; worked examples and proposed experiments are labelled accordingly.</p>
+</section>
 </section>
 <section id="summary" class="level2" data-number="39.7">
 <h2 data-number="39.7" class="anchored" data-anchor-id="summary"><span class="header-section-number">39.7</span> Summary</h2>
 <ul>
 <li><strong>Three buckets:</strong> <strong>verified/derived</strong> (with receipt), <strong>folklore</strong> (popular without justification) and <strong>numerology</strong> (fits with no mechanism) —plus the <strong>erratum</strong> (our own error, corrected).</li>
-<li><strong>Field myths:</strong> “softmax = probability” (folklore <span class="citation" data-cites="softmax2024frobenius">(<a href="#ref-softmax2024frobenius" role="doc-biblioref"><em>On the (Implicit) Regularization Behind Softmax Attention</em> 2024</a>)</span>), “attention = explanation” (dangerous folklore <span class="citation" data-cites="jain2019attention">(<a href="#ref-jain2019attention" role="doc-biblioref">Jain and Wallace 2019</a>)</span>), “RoPE forces decay” (disputed <span class="citation" data-cites="barbero2024round">(<a href="#ref-barbero2024round" role="doc-biblioref">Barbero et al. 2024</a>)</span>).</li>
-<li><strong>Our audit (the same yardstick):</strong> ✅ Fisher=C_V and γ_Padé (Lean), A(d)∝d^−γ and γ⊥sink (data); ✗→✅ <strong>erratum</strong> C_V /4→/12; 🟡 D_f and <em>headroom</em> (not validated); ❌ <strong>imprint ν</strong> (Lean yes, data no) and <strong>forcing CKA</strong> (refuted).</li>
+<li><strong>Field myths:</strong> “softmax = probability” (folklore <span class="citation" data-cites="softmax2024frobenius">(<a href="#ref-softmax2024frobenius" role="doc-biblioref">Saratchandran et al. 2024</a>)</span>), “attention = explanation” (dangerous folklore <span class="citation" data-cites="jain2019attention">(<a href="#ref-jain2019attention" role="doc-biblioref">Jain and Wallace 2019</a>)</span>), “RoPE forces decay” (disputed <span class="citation" data-cites="barbero2024round">(<a href="#ref-barbero2024round" role="doc-biblioref">Barbero et al. 2024</a>)</span>).</li>
+<li><strong>Our audit (the same yardstick):</strong> ✅ Fisher=C_V and γ_Padé (Lean), A(d)∝d^−γ and γ⊥sink (data); ✗→✅ <strong>erratum</strong> C_V /4→/12; 🟡 D_f and <em>headroom</em> (not validated); 🟡 <strong>imprint ν</strong> (Lean identity; empirical value not identified); ❌ <strong>forcing CKA</strong> (refuted).</li>
 <li><strong>The key distinction:</strong> <strong>Lean proves algebra, not reality</strong>; each claim needs its receipt (proof / datum / “it’s an analogy”).</li>
 <li><strong>The reader’s rule:</strong> <strong>ask for the receipt</strong>; with no proof, datum or mechanism → folklore.</li>
 </ul>
@@ -1351,9 +1384,6 @@ Table&nbsp;39.1: Audit of our own formulas and results
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-attnnotexplain2023" class="csl-entry" role="listitem">
-<em>Attention Weights Are Not Explanations: Residual, MLP and Value Bypasses</em>. 2023. <a href="https://arxiv.org/abs/2312.01429">https://arxiv.org/abs/2312.01429</a>.
-</div>
 <div id="ref-barbero2024round" class="csl-entry" role="listitem">
 Barbero, Federico, Alex Vitvitskyi, Christos Perivolaropoulos, Razvan Pascanu, and Petar Veličković. 2024. <em>Round and Round We Go! What Makes Rotary Positional Encodings Useful?</em> <a href="https://arxiv.org/abs/2410.06205">https://arxiv.org/abs/2410.06205</a>.
 </div>
@@ -1361,7 +1391,10 @@ Barbero, Federico, Alex Vitvitskyi, Christos Perivolaropoulos, Razvan Pascanu, a
 Jain, Sarthak, and Byron C. Wallace. 2019. <span>“Attention Is Not Explanation.”</span> <em>arXiv Preprint arXiv:1902.10186</em>.
 </div>
 <div id="ref-softmax2024frobenius" class="csl-entry" role="listitem">
-<em>On the (Implicit) Regularization Behind Softmax Attention</em>. 2024. <a href="https://arxiv.org/abs/2410.18613">https://arxiv.org/abs/2410.18613</a>.
+Saratchandran, Hemanth, Jianqiao Zheng, Yiping Ji, Wenbo Zhang, and Simon Lucey. 2024. <em>Rethinking Attention: Polynomial Alternatives to Softmax in Transformers</em>. <a href="https://arxiv.org/abs/2410.18613v3">https://arxiv.org/abs/2410.18613v3</a>.
+</div>
+<div id="ref-attnnotexplain2023" class="csl-entry" role="listitem">
+Wen, Kaiyue, Yuchen Li, Bingbin Liu, and Andrej Risteski. 2023. <em>Transformers Are Uninterpretable with Myopic Methods: A Case Study with Bounded Dyck Grammars</em>. <a href="https://arxiv.org/abs/2312.01429v1">https://arxiv.org/abs/2312.01429v1</a>.
 </div>
 </div>
 </section>
@@ -4271,6 +4304,62 @@ Jain, Sarthak, and Byron C. Wallace. 2019. <span>“Attention Is Not Explanation
     });
   } catch (e) {}
 })();
+</script>
+
+
+<script>
+(function () {
+  'use strict';
+  const es = (document.documentElement.lang || 'es').startsWith('es');
+  const words = es ? {
+    title: 'Misma masa, distinto efecto', mass: 'Masa del token descartado (%)',
+    value: 'Valor del token descartado', kept: 'Masa original conservada',
+    full: 'Salida completa', error: 'Error absoluto al recortar',
+    caption: 'Ejemplo calculado, no datos de un modelo. El token conservado tiene valor 0; al renormalizar, su salida es 0.'
+  } : {
+    title: 'Same mass, different effect', mass: 'Discarded token mass (%)',
+    value: 'Discarded token value', kept: 'Original mass retained',
+    full: 'Full output', error: 'Absolute truncation error',
+    caption: 'Calculated example, not model data. The retained token has value 0; after renormalization its output is 0.'
+  };
+  document.querySelectorAll('.fg-mass-value').forEach(function (box, index) {
+    const prefix = 'fg-mv-' + index;
+    box.innerHTML = '<h3>' + words.title + '</h3><div class="mv-controls">' +
+      '<label for="' + prefix + '-mass">' + words.mass + ' <output class="mv-mass-label">1</output>' +
+      '<input id="' + prefix + '-mass" class="mv-mass" type="range" min="0" max="20" step="0.1" value="1"></label>' +
+      '<label for="' + prefix + '-value">' + words.value + ' <output class="mv-value-label">100</output>' +
+      '<input id="' + prefix + '-value" class="mv-value" type="range" min="-100" max="100" step="1" value="100"></label></div>' +
+      '<div class="mv-results" aria-live="polite" aria-atomic="true">' +
+      '<div class="mv-result"><span>' + words.kept + '</span><b class="mv-kept"></b></div>' +
+      '<div class="mv-result"><span>' + words.full + '</span><b class="mv-full"></b></div>' +
+      '<div class="mv-result"><span>' + words.error + '</span><b class="mv-error"></b></div></div>' +
+      '<p class="mv-equation"></p><p class="mv-caption">' + words.caption + '</p>';
+    const mass = box.querySelector('.mv-mass');
+    const value = box.querySelector('.mv-value');
+    const fmt = new Intl.NumberFormat(es ? 'es' : 'en', {maximumFractionDigits: 3});
+    function update() {
+      const a = Number(mass.value) / 100, v = Number(value.value), full = a * v;
+      box.querySelector('.mv-mass-label').textContent = fmt.format(100 * a);
+      box.querySelector('.mv-value-label').textContent = fmt.format(v);
+      box.querySelector('.mv-kept').textContent = fmt.format(100 * (1 - a)) + '%';
+      box.querySelector('.mv-full').textContent = fmt.format(full);
+      box.querySelector('.mv-error').textContent = fmt.format(Math.abs(full));
+      box.querySelector('.mv-equation').textContent =
+        'o = ' + fmt.format(1 - a) + ' × 0 + ' + fmt.format(a) + ' × ' + fmt.format(v) + ' = ' + fmt.format(full);
+    }
+    mass.addEventListener('input', update);
+    value.addEventListener('input', update);
+    update();
+  });
+})();
+</script>
+
+<script>
+document.querySelectorAll('figure.quarto-float-tbl > div[aria-describedby]').forEach(function (region) {
+  region.tabIndex = 0;
+  region.setAttribute('role', 'region');
+  region.setAttribute('aria-labelledby', region.getAttribute('aria-describedby'));
+});
 </script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {

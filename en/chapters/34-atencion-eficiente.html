@@ -670,6 +670,31 @@ div.csl-indent {
 .fg-serie-read .hot{ color:rgb(213,94,0); font-weight:700; }
 </style>
 
+
+<style>
+/* Two-token counterexample: same field-guide palette, no motion required. */
+.fg-mass-value {border:1px solid #ccdce8;border-radius:12px;padding:1.1rem;margin:1.4rem 0;background:#f5f9fc;color:#16334a;}
+.fg-mass-value h3 {font-size:1.05rem;margin:0 0 .8rem;}
+.fg-mass-value .mv-controls {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;}
+.fg-mass-value label {display:block;font-size:.9rem;}
+.fg-mass-value input {display:block;width:100%;accent-color:#0072b2;margin-top:.45rem;}
+.fg-mass-value .mv-results {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.65rem;margin:1rem 0;}
+.fg-mass-value .mv-result {background:white;border:1px solid #d8e3eb;border-radius:7px;padding:.65rem;}
+.fg-mass-value .mv-result span {display:block;font-size:.8rem;}
+.fg-mass-value .mv-result b {display:block;font-size:1.15rem;color:#0072b2;}
+.fg-mass-value .mv-result:last-child b {color:#a34800;}
+.fg-mass-value .mv-caption {font-size:.86rem;margin-bottom:0;}
+.fg-mass-value .mv-equation {font-family:ui-monospace,monospace;font-size:.88rem;overflow-wrap:anywhere;}
+@media(max-width:540px){.fg-mass-value .mv-controls,.fg-mass-value .mv-results{grid-template-columns:1fr;}}
+</style>
+
+<style>
+/* Preserve the book's wide tables while containing them on narrow screens. */
+figure.quarto-float-tbl > div[aria-describedby] {max-width:100%;overflow-x:auto;}
+figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid #0072b2;outline-offset:3px;}
+.references a {overflow-wrap:anywhere;word-break:break-word;}
+</style>
+
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
@@ -1309,7 +1334,7 @@ Table&nbsp;35.1: The GPU memory hierarchy
 </section>
 <section id="flashattention-computing-the-same-thing-while-moving-far-less" class="level2" data-number="35.5">
 <h2 data-number="35.5" class="anchored" data-anchor-id="flashattention-computing-the-same-thing-while-moving-far-less"><span class="header-section-number">35.5</span> FlashAttention: computing the same thing while moving far less</h2>
-<p>FlashAttention <span class="citation" data-cites="dao2022flash">(<a href="#ref-dao2022flash" role="doc-biblioref">Dao et al. 2022</a>)</span> computes <strong>exact</strong> attention (bit-for-bit identical to the normal one) but <strong>without ever writing the full n×n matrix to slow memory</strong>: it doesn’t change <em>what</em> is computed, only <em>how the data moves</em>. It rests on three ideas worth understanding one at a time.</p>
+<p>FlashAttention <span class="citation" data-cites="dao2022flash">(<a href="#ref-dao2022flash" role="doc-biblioref">Dao et al. 2022</a>)</span> computes <strong>exact</strong> attention (the same mathematical operation, with rounding differences) but <strong>without ever writing the full n×n matrix to slow memory</strong>: it doesn’t change <em>what</em> is computed, only <em>how the data moves</em>. It rests on three ideas worth understanding one at a time.</p>
 <p><strong>1. Tiling (breaking into blocks).</strong> Instead of operating on whole matrices, it splits Q, K and V into <strong>small blocks that fit in SRAM</strong>. It loads a block of Q, streams the blocks of K and V through SRAM, computes that chunk’s attention <strong>on-chip</strong>, and accumulates the output. The payoff? The full n×n matrix <strong>is never formed in HBM</strong>: all that lives there are the inputs/outputs (of size O(n·d)) and a few statistics. The expensive “fetching” disappears.</p>
 <p><strong>2. <em>Online softmax</em> (the crucial trick).</strong> Here a problem arises: the softmax of a row needs, in principle, <strong>the whole row</strong> —its maximum value (to avoid overflow when exponentiating) and the sum of all the exponentials (to normalize). But if we tile, we never have the whole row at once. The solution <span class="citation" data-cites="milakov2018softmax">(<a href="#ref-milakov2018softmax" role="doc-biblioref">Milakov and Gimelshein 2018</a>)</span> is to compute it <strong>in a single pass over blocks</strong>, keeping two numbers that update on the fly:</p>
 <ul>
@@ -1364,6 +1389,22 @@ Table&nbsp;35.1: The GPU memory hierarchy
 </div>
 <div class="callout-body-container callout-body">
 <p>FlashAttention gives <strong>exact</strong> attention (not approximate), with <strong>O(n) memory</strong> instead of O(n²), and is <strong>faster</strong> by making fewer trips to HBM: <strong>+15% on BERT-large</strong>, <strong>3× on GPT-2 (1K tokens)</strong>, <strong>2.4× on Long-Range Arena</strong> —and it made it possible to train contexts that were previously out of reach. <strong>FlashAttention-2</strong> <span class="citation" data-cites="dao2023flash2">(<a href="#ref-dao2023flash2" role="doc-biblioref">Dao 2023</a>)</span> adds ~<strong>2×</strong> (better work partitioning and fewer non-matmul operations); <strong>FlashAttention-3</strong> <span class="citation" data-cites="shah2024flash3">(<a href="#ref-shah2024flash3" role="doc-biblioref"><span class="nocase">Shah et al.</span> 2024</a>)</span> squeezes out the <strong>asynchrony</strong> and <strong>FP8</strong> precision of Hopper GPUs (~1.5-2× over FA2).</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="🔍 Exact does not mean bit-for-bit identical">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>🔍 Exact does not mean bit-for-bit identical
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Reordering floating-point sums changes rounding. “Exact” means FlashAttention does not replace attention with a sparse or low-rank approximation; its <a href="https://github.com/Dao-AILab/flash-attention#tests">official tests</a> compare outputs and gradients <strong>within numerical tolerance</strong>, rather than requiring every bit to match.</p>
+</div>
 </div>
 </div>
 </section>
@@ -1431,7 +1472,7 @@ Table&nbsp;35.1: The GPU memory hierarchy
 </section>
 <section id="bridge-to-our-theme-attention-across-distance" class="level2" data-number="35.9">
 <h2 data-number="35.9" class="anchored" data-anchor-id="bridge-to-our-theme-attention-across-distance"><span class="header-section-number">35.9</span> Bridge to our theme (attention across distance)</h2>
-<p>Efficient attention is the <strong>engineering answer</strong> to the <strong>same cost we studied in physics</strong> —that of attending across distance. And there’s an honest distinction worth making: FlashAttention is <strong>content-agnostic</strong>, i.e.&nbsp;it computes <em>all</em> the interactions equally, just moving the bytes optimally. Our <strong>D_f window derived from γ</strong> (Ch. 20) is the <strong>content-aware complement</strong>: it says <em>which</em> distant KV entries have negligible attention mass and <strong>can be dropped</strong> —it changes <em>what</em> you compute, not just <em>how</em> you move it. They are <strong>orthogonal and composable</strong>: FlashAttention makes the window you keep cheaper; D_f decides <strong>how wide</strong> that window should be. <em>(Honest: it’s a conceptual bridge, not a claim that D_f is a published efficient-attention method.)</em></p>
+<p>Efficient attention is the <strong>engineering answer</strong> to the <strong>same cost we studied in physics</strong> —that of attending across distance. And there’s an honest distinction worth making: FlashAttention is <strong>content-agnostic</strong>, i.e.&nbsp;it computes <em>all</em> the interactions equally, just moving the bytes optimally. Our <strong>D_f window derived from γ</strong> (Ch. 20) is the <strong>distance-based budget</strong>: it estimates the width required to retain mass under the fitted tail. It neither identifies decisive token content nor guarantees fidelity. FlashAttention can make attention within the retained window cheaper; the effect of truncation still needs measurement. <em>(Honest: it’s a conceptual bridge, not a claim that D_f is a published efficient-attention method.)</em></p>
 <div class="callout callout-style-default callout-note callout-titled" title="🧪 Try it — tafagent">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1456,7 +1497,7 @@ Table&nbsp;35.1: The GPU memory hierarchy
 <li><strong>Linear attention:</strong> drop the softmax + <strong>reassociate</strong> <span class="math inline">\(\varphi(Q)(\varphi(K)^\top V)\)</span> → <strong>O(n)</strong>; forms a <strong>fixed-state RNN</strong>. <strong>Honest:</strong> quality gap on recall (Ch. 18).</li>
 <li><strong>Others:</strong> O(1) memory (precursor), <strong>PagedAttention</strong> (paged KV cache → Ch. 36), GQA/MLA (bandwidth).</li>
 <li><strong>Roofline:</strong> FA attacks the <strong>constant</strong>; linear, the <strong>exponent</strong>; KV, the <strong>cache</strong>.</li>
-<li><strong>Bridge:</strong> FA is <strong>content-agnostic</strong>; our <strong>D_f (γ)</strong> is the <strong>content-aware</strong> complement.</li>
+<li><strong>Bridge:</strong> FA is <strong>content-agnostic</strong>; our <strong>D_f (γ)</strong> is the <strong>distance-based</strong> complement, pending task validation.</li>
 </ul>
 <p><strong>Next (Chapter 35):</strong> another route to efficiency —making the <strong>model smaller</strong> without losing (much) quality: <strong>quantization, distillation and pruning</strong>.</p>
 </section>
@@ -4411,6 +4452,62 @@ Rabe, Markus N., and Charles Staats. 2021. <em>Self-Attention Does Not Need o(n^
     });
   } catch (e) {}
 })();
+</script>
+
+
+<script>
+(function () {
+  'use strict';
+  const es = (document.documentElement.lang || 'es').startsWith('es');
+  const words = es ? {
+    title: 'Misma masa, distinto efecto', mass: 'Masa del token descartado (%)',
+    value: 'Valor del token descartado', kept: 'Masa original conservada',
+    full: 'Salida completa', error: 'Error absoluto al recortar',
+    caption: 'Ejemplo calculado, no datos de un modelo. El token conservado tiene valor 0; al renormalizar, su salida es 0.'
+  } : {
+    title: 'Same mass, different effect', mass: 'Discarded token mass (%)',
+    value: 'Discarded token value', kept: 'Original mass retained',
+    full: 'Full output', error: 'Absolute truncation error',
+    caption: 'Calculated example, not model data. The retained token has value 0; after renormalization its output is 0.'
+  };
+  document.querySelectorAll('.fg-mass-value').forEach(function (box, index) {
+    const prefix = 'fg-mv-' + index;
+    box.innerHTML = '<h3>' + words.title + '</h3><div class="mv-controls">' +
+      '<label for="' + prefix + '-mass">' + words.mass + ' <output class="mv-mass-label">1</output>' +
+      '<input id="' + prefix + '-mass" class="mv-mass" type="range" min="0" max="20" step="0.1" value="1"></label>' +
+      '<label for="' + prefix + '-value">' + words.value + ' <output class="mv-value-label">100</output>' +
+      '<input id="' + prefix + '-value" class="mv-value" type="range" min="-100" max="100" step="1" value="100"></label></div>' +
+      '<div class="mv-results" aria-live="polite" aria-atomic="true">' +
+      '<div class="mv-result"><span>' + words.kept + '</span><b class="mv-kept"></b></div>' +
+      '<div class="mv-result"><span>' + words.full + '</span><b class="mv-full"></b></div>' +
+      '<div class="mv-result"><span>' + words.error + '</span><b class="mv-error"></b></div></div>' +
+      '<p class="mv-equation"></p><p class="mv-caption">' + words.caption + '</p>';
+    const mass = box.querySelector('.mv-mass');
+    const value = box.querySelector('.mv-value');
+    const fmt = new Intl.NumberFormat(es ? 'es' : 'en', {maximumFractionDigits: 3});
+    function update() {
+      const a = Number(mass.value) / 100, v = Number(value.value), full = a * v;
+      box.querySelector('.mv-mass-label').textContent = fmt.format(100 * a);
+      box.querySelector('.mv-value-label').textContent = fmt.format(v);
+      box.querySelector('.mv-kept').textContent = fmt.format(100 * (1 - a)) + '%';
+      box.querySelector('.mv-full').textContent = fmt.format(full);
+      box.querySelector('.mv-error').textContent = fmt.format(Math.abs(full));
+      box.querySelector('.mv-equation').textContent =
+        'o = ' + fmt.format(1 - a) + ' × 0 + ' + fmt.format(a) + ' × ' + fmt.format(v) + ' = ' + fmt.format(full);
+    }
+    mass.addEventListener('input', update);
+    value.addEventListener('input', update);
+    update();
+  });
+})();
+</script>
+
+<script>
+document.querySelectorAll('figure.quarto-float-tbl > div[aria-describedby]').forEach(function (region) {
+  region.tabIndex = 0;
+  region.setAttribute('role', 'region');
+  region.setAttribute('aria-labelledby', region.getAttribute('aria-describedby'));
+});
 </script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {

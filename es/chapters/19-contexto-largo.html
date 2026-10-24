@@ -671,6 +671,31 @@ div.csl-indent {
 </style>
 
 
+<style>
+/* Two-token counterexample: same field-guide palette, no motion required. */
+.fg-mass-value {border:1px solid #ccdce8;border-radius:12px;padding:1.1rem;margin:1.4rem 0;background:#f5f9fc;color:#16334a;}
+.fg-mass-value h3 {font-size:1.05rem;margin:0 0 .8rem;}
+.fg-mass-value .mv-controls {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;}
+.fg-mass-value label {display:block;font-size:.9rem;}
+.fg-mass-value input {display:block;width:100%;accent-color:#0072b2;margin-top:.45rem;}
+.fg-mass-value .mv-results {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.65rem;margin:1rem 0;}
+.fg-mass-value .mv-result {background:white;border:1px solid #d8e3eb;border-radius:7px;padding:.65rem;}
+.fg-mass-value .mv-result span {display:block;font-size:.8rem;}
+.fg-mass-value .mv-result b {display:block;font-size:1.15rem;color:#0072b2;}
+.fg-mass-value .mv-result:last-child b {color:#a34800;}
+.fg-mass-value .mv-caption {font-size:.86rem;margin-bottom:0;}
+.fg-mass-value .mv-equation {font-family:ui-monospace,monospace;font-size:.88rem;overflow-wrap:anywhere;}
+@media(max-width:540px){.fg-mass-value .mv-controls,.fg-mass-value .mv-results{grid-template-columns:1fr;}}
+</style>
+
+<style>
+/* Preserve the book's wide tables while containing them on narrow screens. */
+figure.quarto-float-tbl > div[aria-describedby] {max-width:100%;overflow-x:auto;}
+figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid #0072b2;outline-offset:3px;}
+.references a {overflow-wrap:anywhere;word-break:break-word;}
+</style>
+
+
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light">
@@ -1141,9 +1166,10 @@ div.csl-indent {
   <li><a href="#el-problema" id="toc-el-problema" class="nav-link" data-scroll-target="#el-problema"><span class="header-section-number">20.3</span> El problema</a></li>
   <li><a href="#los-métodos" id="toc-los-métodos" class="nav-link" data-scroll-target="#los-métodos"><span class="header-section-number">20.4</span> Los métodos</a></li>
   <li><a href="#la-realidad-honesta" id="toc-la-realidad-honesta" class="nav-link" data-scroll-target="#la-realidad-honesta"><span class="header-section-number">20.5</span> La realidad honesta</a></li>
-  <li><a href="#nuestro-ángulo-extender-en-términos-de-γ" id="toc-nuestro-ángulo-extender-en-términos-de-γ" class="nav-link" data-scroll-target="#nuestro-ángulo-extender-en-términos-de-γ"><span class="header-section-number">20.6</span> Nuestro ángulo: extender en términos de γ</a></li>
-  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">20.7</span> Resumen</a></li>
-  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">20.8</span> Ejercicios</a></li>
+  <li><a href="#sec-contexto-evidencia" id="toc-sec-contexto-evidencia" class="nav-link" data-scroll-target="#sec-contexto-evidencia"><span class="header-section-number">20.6</span> De encontrar una aguja a reunir las pistas</a></li>
+  <li><a href="#nuestro-ángulo-extender-en-términos-de-γ" id="toc-nuestro-ángulo-extender-en-términos-de-γ" class="nav-link" data-scroll-target="#nuestro-ángulo-extender-en-términos-de-γ"><span class="header-section-number">20.7</span> Nuestro ángulo: extender en términos de γ</a></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">20.8</span> Resumen</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">20.9</span> Ejercicios</a></li>
   <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias">Referencias</a></li>
   </ul>
 </nav>
@@ -1293,8 +1319,75 @@ Tabla&nbsp;20.1: Métodos de extensión de contexto
 </div>
 </div>
 </section>
-<section id="nuestro-ángulo-extender-en-términos-de-γ" class="level2" data-number="20.6">
-<h2 data-number="20.6" class="anchored" data-anchor-id="nuestro-ángulo-extender-en-términos-de-γ"><span class="header-section-number">20.6</span> Nuestro ángulo: extender en términos de γ</h2>
+<section id="sec-contexto-evidencia" class="level2" data-number="20.6">
+<h2 data-number="20.6" class="anchored" data-anchor-id="sec-contexto-evidencia"><span class="header-section-number">20.6</span> De encontrar una aguja a reunir las pistas</h2>
+<p>Encontrar una fecha en un libro y reconstruir una historia repartida entre sus capítulos son trabajos distintos. <strong>La longitud dice cuánto cabe; la tarea dice qué hay que unir.</strong> Por eso pasar una prueba de recuperación es un primer control, no el examen completo.</p>
+<div class="analogia">
+<p><strong>🧩 Analogía — la mesa del detective.</strong> Una mesa grande permite extender más papeles. Pero resolver el caso depende de cuántas pistas necesitas, de lo separadas que están y de cuántas deducciones encadenas. Agrandar la mesa no hace esas deducciones por ti.</p>
+</div>
+<p>LURCH propone separar <strong>cantidad de evidencia necesaria</strong>, <strong>dispersión</strong> y <strong>profundidad del razonamiento</strong> <span class="citation" data-cites="qin2026lurch">(<a href="#ref-qin2026lurch" role="doc-biblioref">Qin et&nbsp;al. 2026</a>)</span>. CRE añade un control complementario: mover la tarea dentro del contexto y variar el relleno, manteniendo comparables las condiciones <span class="citation" data-cites="zhang2026cre">(<a href="#ref-zhang2026cre" role="doc-biblioref">Zhang et&nbsp;al. 2026</a>)</span>. Ambos son <strong>preprints</strong>; orientan cómo evaluar, no validan nuestra γ.</p>
+<div id="tbl-contexto-controles" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-contexto-controles-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;20.2: Controles para diseñar una evaluación; no son resultados medidos.
+</figcaption>
+<div aria-describedby="tbl-contexto-controles-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Control</th>
+<th>Ejemplo didáctico a longitud fija</th>
+<th>Qué permite distinguir</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Cantidad de evidencia</td>
+<td>Una cláusula frente a varias cláusulas necesarias</td>
+<td>Encontrar una pieza frente a reunir varias</td>
+</tr>
+<tr class="even">
+<td>Dispersión</td>
+<td>Cláusulas juntas frente a separadas</td>
+<td>Integración local frente a distante</td>
+</tr>
+<tr class="odd">
+<td>Pasos dependientes</td>
+<td>Leer una fecha frente a deducir un plazo y una excepción</td>
+<td>Recuperación frente a razonamiento</td>
+</tr>
+<tr class="even">
+<td>Posición y relleno</td>
+<td>La misma tarea al principio, centro y final</td>
+<td>Sensibilidad posicional e interferencia</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p><strong>Ejemplo.</strong> Para saber cuándo vence un contrato puedes necesitar la fecha de firma, la duración y una prórroga. Conserva las mismas cláusulas y la misma respuesta; compara tenerlas juntas con repartirlas por el documento. Después cambia su posición. Si cambias todo a la vez, una caída de acierto no te dirá qué dificultad la causó.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="⚠ Del mapa de atención a la respuesta hay un paso experimental">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>⚠ Del mapa de atención a la respuesta hay un paso experimental
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>γ describe un patrón agregado de atención sobre distancia. No cuenta las pistas necesarias ni certifica que el modelo las combine. En TAF, usa la geometría para formular hipótesis; para decidir una longitud útil, mide <strong>la tarea y sus condiciones</strong>. El protocolo de <a href="40-evaluacion.html#sec-evaluacion-contexto" class="quarto-xref"><span>Sección 41.9</span></a> concreta esta comparación.</p>
+</div>
+</div>
+</section>
+<section id="nuestro-ángulo-extender-en-términos-de-γ" class="level2" data-number="20.7">
+<h2 data-number="20.7" class="anchored" data-anchor-id="nuestro-ángulo-extender-en-términos-de-γ"><span class="header-section-number">20.7</span> Nuestro ángulo: extender en términos de γ</h2>
 <p>Hay un hilo que une todo esto con la Parte II. <strong>Todos</strong> los métodos actúan sobre el mismo grado de libertad —la base θ— y, como nuestra γ depende de θ (γ_Padé, Cap. 15), <strong>reescalar θ desplaza γ de forma predecible</strong>. Eso permite plantear la extensión al revés: en vez de elegir un factor a ojo, <strong>elegir el θ que deja al modelo extendido en un γ objetivo</strong> (nuestra “regla α=0”: fijar θ_design para un γ deseado a la longitud nueva).</p>
 <div class="callout callout-style-default callout-caution callout-titled" title="✗ Honesto — nuestra validación está incompleta">
 <div class="callout-header d-flex align-content-center">
@@ -1324,23 +1417,25 @@ Tabla&nbsp;20.1: Métodos de extensión de contexto
 </div>
 </div>
 </section>
-<section id="resumen" class="level2" data-number="20.7">
-<h2 data-number="20.7" class="anchored" data-anchor-id="resumen"><span class="header-section-number">20.7</span> Resumen</h2>
+<section id="resumen" class="level2" data-number="20.8">
+<h2 data-number="20.8" class="anchored" data-anchor-id="resumen"><span class="header-section-number">20.8</span> Resumen</h2>
 <ul>
-<li>Más allá de T, RoPE da ángulos OOD → colapso. La cura: <strong>remapear</strong> posiciones (reescalar θ), no extrapolar.</li>
-<li><strong>PI</strong> (comprime, necesita finetuning), <strong>NTK-aware</strong> (no uniforme, a veces sin finetuning), <strong>YaRN</strong> (rampa + temperatura, estándar), <strong>LongRoPE</strong> (~2M, evolutiva), <strong>Self-Extend</strong> (sin entrenar), <strong>LongRoPE2</strong> (2025, casi sin pérdida).</li>
-<li><strong>Honesto:</strong> nominal ≠ usable (“lost in the middle”); las grandes extensiones piden finetuning; audita con passkey, no con perplejidad.</li>
-<li><strong>Nuestro:</strong> como γ depende de θ, la extensión se puede fijar por <strong>γ objetivo</strong> (regla α=0). Geometría sólida; <strong>validación propia incompleta</strong> (OOM) → hipótesis, no hecho.</li>
+<li><p><strong>Recuperar no basta:</strong> separa longitud, posición, cantidad y dispersión de evidencia, y pasos de razonamiento; γ no sustituye esa evaluación.</p></li>
+<li><p>Más allá de T, RoPE da ángulos OOD → colapso. La cura: <strong>remapear</strong> posiciones (reescalar θ), no extrapolar.</p></li>
+<li><p><strong>PI</strong> (comprime, necesita finetuning), <strong>NTK-aware</strong> (no uniforme, a veces sin finetuning), <strong>YaRN</strong> (rampa + temperatura, estándar), <strong>LongRoPE</strong> (~2M, evolutiva), <strong>Self-Extend</strong> (sin entrenar), <strong>LongRoPE2</strong> (2025, casi sin pérdida).</p></li>
+<li><p><strong>Honesto:</strong> nominal ≠ usable (“lost in the middle”); las grandes extensiones piden finetuning; audita con passkey, no con perplejidad.</p></li>
+<li><p><strong>Nuestro:</strong> como γ depende de θ, la extensión se puede fijar por <strong>γ objetivo</strong> (regla α=0). Geometría sólida; <strong>validación propia incompleta</strong> (OOM) → hipótesis, no hecho.</p></li>
 </ul>
 <p><strong>Siguiente (Capítulo 20):</strong> el otro uso práctico de γ, y el que cierra la Parte II — comprimir el <strong>KV-cache</strong> con una ventana derivada de γ, sin parámetros que ajustar—.</p>
 </section>
-<section id="ejercicios" class="level2" data-number="20.8">
-<h2 data-number="20.8" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">20.8</span> Ejercicios</h2>
+<section id="ejercicios" class="level2" data-number="20.9">
+<h2 data-number="20.9" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">20.9</span> Ejercicios</h2>
 <ol type="1">
-<li><strong>Por qué falla.</strong> ¿Por qué un modelo entrenado a 4k produce galimatías a 16k si no haces nada? (Piensa en ángulos de RoPE no vistos.)</li>
-<li><strong>NTK vs PI.</strong> ¿Qué hace NTK-aware con las altas frecuencias que PI no respeta?</li>
-<li><strong>Auditar.</strong> Un modelo dice “contexto 1M”. ¿Qué evaluación pides para creértelo, y por qué no basta la perplejidad?</li>
-<li><strong>Honestidad.</strong> ¿Por qué presentamos nuestra regla γ como “no validada” en vez de afirmar que funciona?</li>
+<li><p><strong>Por qué falla.</strong> ¿Por qué un modelo entrenado a 4k produce galimatías a 16k si no haces nada? (Piensa en ángulos de RoPE no vistos.)</p></li>
+<li><p><strong>NTK vs PI.</strong> ¿Qué hace NTK-aware con las altas frecuencias que PI no respeta?</p></li>
+<li><p><strong>Auditar.</strong> Un modelo dice “contexto 1M”. ¿Qué evaluación pides para creértelo, y por qué no basta la perplejidad?</p></li>
+<li><p><strong>Honestidad.</strong> ¿Por qué presentamos nuestra regla γ como “no validada” en vez de afirmar que funciona?</p></li>
+<li><p><strong>Tres cláusulas.</strong> Diseña dos versiones de un contrato de igual longitud y respuesta que cambien solo la dispersión de las pistas. ¿Qué controles impiden confundir dispersión con dificultad del contenido?</p></li>
 </ol>
 </section>
 <section id="referencias" class="level2 unnumbered">
@@ -1363,8 +1458,14 @@ Chen, Shouyuan, Sherman Wong, Liangjian Chen, y Yuandong Tian. 2023. <em>Extendi
 <div id="ref-peng2023yarn" class="csl-entry" role="listitem">
 Peng, Bowen, Jeffrey Quesnelle, Honglu Fan, y Enrico Shippole. 2023. <em>YaRN: Efficient Context Window Extension of Large Language Models</em>. <a href="https://arxiv.org/abs/2309.00071">https://arxiv.org/abs/2309.00071</a>.
 </div>
+<div id="ref-qin2026lurch" class="csl-entry" role="listitem">
+Qin, Shiwen, Cameron Barker, Henry Gouk, et&nbsp;al. 2026. <em>Beyond Context Length: Characterising the Difficulty of Long-Context Reasoning</em>. <a href="https://arxiv.org/abs/2610.22067v1">https://arxiv.org/abs/2610.22067v1</a>.
+</div>
 <div id="ref-shang2025longrope2" class="csl-entry" role="listitem">
 <span class="nocase">Shang, Ning et&nbsp;al.</span> 2025. <em>LongRoPE2: Near-Lossless LLM Context Window Scaling</em>. <a href="https://arxiv.org/abs/2502.20082">https://arxiv.org/abs/2502.20082</a>.
+</div>
+<div id="ref-zhang2026cre" class="csl-entry" role="listitem">
+Zhang, Chuyifei, Hongyu Cui, Xiaowen Huang, y Jitao Sang. 2026. <em>Positional Failures in Long-Context <span>LLMs</span>: A Blind Spot in Reasoning Benchmarks</em>. <a href="https://arxiv.org/abs/2605.23170v1">https://arxiv.org/abs/2605.23170v1</a>.
 </div>
 </div>
 </section>
@@ -4274,6 +4375,62 @@ Peng, Bowen, Jeffrey Quesnelle, Honglu Fan, y Enrico Shippole. 2023. <em>YaRN: E
     });
   } catch (e) {}
 })();
+</script>
+
+
+<script>
+(function () {
+  'use strict';
+  const es = (document.documentElement.lang || 'es').startsWith('es');
+  const words = es ? {
+    title: 'Misma masa, distinto efecto', mass: 'Masa del token descartado (%)',
+    value: 'Valor del token descartado', kept: 'Masa original conservada',
+    full: 'Salida completa', error: 'Error absoluto al recortar',
+    caption: 'Ejemplo calculado, no datos de un modelo. El token conservado tiene valor 0; al renormalizar, su salida es 0.'
+  } : {
+    title: 'Same mass, different effect', mass: 'Discarded token mass (%)',
+    value: 'Discarded token value', kept: 'Original mass retained',
+    full: 'Full output', error: 'Absolute truncation error',
+    caption: 'Calculated example, not model data. The retained token has value 0; after renormalization its output is 0.'
+  };
+  document.querySelectorAll('.fg-mass-value').forEach(function (box, index) {
+    const prefix = 'fg-mv-' + index;
+    box.innerHTML = '<h3>' + words.title + '</h3><div class="mv-controls">' +
+      '<label for="' + prefix + '-mass">' + words.mass + ' <output class="mv-mass-label">1</output>' +
+      '<input id="' + prefix + '-mass" class="mv-mass" type="range" min="0" max="20" step="0.1" value="1"></label>' +
+      '<label for="' + prefix + '-value">' + words.value + ' <output class="mv-value-label">100</output>' +
+      '<input id="' + prefix + '-value" class="mv-value" type="range" min="-100" max="100" step="1" value="100"></label></div>' +
+      '<div class="mv-results" aria-live="polite" aria-atomic="true">' +
+      '<div class="mv-result"><span>' + words.kept + '</span><b class="mv-kept"></b></div>' +
+      '<div class="mv-result"><span>' + words.full + '</span><b class="mv-full"></b></div>' +
+      '<div class="mv-result"><span>' + words.error + '</span><b class="mv-error"></b></div></div>' +
+      '<p class="mv-equation"></p><p class="mv-caption">' + words.caption + '</p>';
+    const mass = box.querySelector('.mv-mass');
+    const value = box.querySelector('.mv-value');
+    const fmt = new Intl.NumberFormat(es ? 'es' : 'en', {maximumFractionDigits: 3});
+    function update() {
+      const a = Number(mass.value) / 100, v = Number(value.value), full = a * v;
+      box.querySelector('.mv-mass-label').textContent = fmt.format(100 * a);
+      box.querySelector('.mv-value-label').textContent = fmt.format(v);
+      box.querySelector('.mv-kept').textContent = fmt.format(100 * (1 - a)) + '%';
+      box.querySelector('.mv-full').textContent = fmt.format(full);
+      box.querySelector('.mv-error').textContent = fmt.format(Math.abs(full));
+      box.querySelector('.mv-equation').textContent =
+        'o = ' + fmt.format(1 - a) + ' × 0 + ' + fmt.format(a) + ' × ' + fmt.format(v) + ' = ' + fmt.format(full);
+    }
+    mass.addEventListener('input', update);
+    value.addEventListener('input', update);
+    update();
+  });
+})();
+</script>
+
+<script>
+document.querySelectorAll('figure.quarto-float-tbl > div[aria-describedby]').forEach(function (region) {
+  region.tabIndex = 0;
+  region.setAttribute('role', 'region');
+  region.setAttribute('aria-labelledby', region.getAttribute('aria-describedby'));
+});
 </script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {

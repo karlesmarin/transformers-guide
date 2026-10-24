@@ -669,6 +669,31 @@ div.csl-indent {
 .fg-serie-read .hot{ color:rgb(213,94,0); font-weight:700; }
 </style>
 
+
+<style>
+/* Two-token counterexample: same field-guide palette, no motion required. */
+.fg-mass-value {border:1px solid #ccdce8;border-radius:12px;padding:1.1rem;margin:1.4rem 0;background:#f5f9fc;color:#16334a;}
+.fg-mass-value h3 {font-size:1.05rem;margin:0 0 .8rem;}
+.fg-mass-value .mv-controls {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;}
+.fg-mass-value label {display:block;font-size:.9rem;}
+.fg-mass-value input {display:block;width:100%;accent-color:#0072b2;margin-top:.45rem;}
+.fg-mass-value .mv-results {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.65rem;margin:1rem 0;}
+.fg-mass-value .mv-result {background:white;border:1px solid #d8e3eb;border-radius:7px;padding:.65rem;}
+.fg-mass-value .mv-result span {display:block;font-size:.8rem;}
+.fg-mass-value .mv-result b {display:block;font-size:1.15rem;color:#0072b2;}
+.fg-mass-value .mv-result:last-child b {color:#a34800;}
+.fg-mass-value .mv-caption {font-size:.86rem;margin-bottom:0;}
+.fg-mass-value .mv-equation {font-family:ui-monospace,monospace;font-size:.88rem;overflow-wrap:anywhere;}
+@media(max-width:540px){.fg-mass-value .mv-controls,.fg-mass-value .mv-results{grid-template-columns:1fr;}}
+</style>
+
+<style>
+/* Preserve the book's wide tables while containing them on narrow screens. */
+figure.quarto-float-tbl > div[aria-describedby] {max-width:100%;overflow-x:auto;}
+figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid #0072b2;outline-offset:3px;}
+.references a {overflow-wrap:anywhere;word-break:break-word;}
+</style>
+
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
@@ -1206,6 +1231,7 @@ window.Quarto = {
   <li><a href="#cap.-40-evaluación-medir-sin-engañarte" id="toc-cap.-40-evaluación-medir-sin-engañarte" class="nav-link" data-scroll-target="#cap.-40-evaluación-medir-sin-engañarte"><span class="header-section-number">49.40</span> Cap. 40 · Evaluación: medir sin engañarte</a></li>
   <li><a href="#cap.-41-ética-seguridad-y-limitaciones" id="toc-cap.-41-ética-seguridad-y-limitaciones" class="nav-link" data-scroll-target="#cap.-41-ética-seguridad-y-limitaciones"><span class="header-section-number">49.41</span> Cap. 41 · Ética, seguridad y limitaciones</a></li>
   <li><a href="#cap.-42-el-espacio-de-trabajo-global" id="toc-cap.-42-el-espacio-de-trabajo-global" class="nav-link" data-scroll-target="#cap.-42-el-espacio-de-trabajo-global"><span class="header-section-number">49.42</span> Cap. 42 · El espacio de trabajo global</a></li>
+  <li><a href="#sec-soluciones-r4" id="toc-sec-soluciones-r4" class="nav-link" data-scroll-target="#sec-soluciones-r4"><span class="header-section-number">49.43</span> R4 · Laboratorio de γ</a></li>
   </ul>
 </nav>
     </div>
@@ -1397,7 +1423,7 @@ window.Quarto = {
 <section id="cap.-18-taxonomía-de-mecanismos-de-atención" class="level2" data-number="49.18">
 <h2 data-number="49.18" class="anchored" data-anchor-id="cap.-18-taxonomía-de-mecanismos-de-atención"><span class="header-section-number">49.18</span> Cap. 18 · Taxonomía de mecanismos de atención</h2>
 <ol type="1">
-<li><p><strong>Exacta vs aproximada.</strong> FlashAttention no es aproximada porque calcula la <strong>atención exacta</strong>, idéntica bit a bit a la densa; no sacrifica ninguna calidad. Lo que reorganiza es <em>dónde</em> y <em>cómo</em> se hace el cómputo en la jerarquía de memoria de la GPU: trocea la operación (<em>tiling</em>) y la recomputa para <strong>nunca materializar la matriz <span class="math inline">\(n\times n\)</span></strong>. Es “eficiente” en memoria (<span class="math inline">\(O(n)\)</span>) sin ser aproximada en el resultado.</p></li>
+<li><p><strong>Exacta vs aproximada.</strong> FlashAttention no es aproximada porque calcula la <strong>atención exacta</strong>, la misma operación matemática que la densa, dentro de tolerancias numéricas. Lo que reorganiza es <em>dónde</em> y <em>cómo</em> se hace el cómputo en la jerarquía de memoria de la GPU: trocea la operación (<em>tiling</em>) y la recomputa para <strong>nunca materializar la matriz <span class="math inline">\(n\times n\)</span></strong>. Es “eficiente” en memoria (<span class="math inline">\(O(n)\)</span>) sin ser aproximada en el resultado.</p></li>
 <li><p><strong>KV vs cómputo.</strong> GQA no baja el coste de cómputo <span class="math inline">\(O(n^2)\)</span>: sigue siendo atención completa y exacta sobre todos los tokens. Lo que reduce es la <strong>memoria del KV-cache</strong>, haciendo que grupos de cabezas compartan las mismas claves y valores, de modo que se almacenan menos K/V distintos. Es un ahorro de memoria en inferencia, no de FLOPs de atención.</p></li>
 <li><p><strong>Qué ganó.</strong> Las atenciones lineales son más baratas en teoría (<span class="math inline">\(O(n)\)</span>), pero cambian exactitud por velocidad, y a escala esa <strong>pérdida de calidad no compensa</strong>. La atención completa, bien calculada con FlashAttention, conserva toda la fidelidad sin pagar el sobrecoste de memoria que se temía. Por eso, pese a años de intentos, Performer, Linformer y similares no destronaron a la atención densa en la frontera.</p></li>
 <li><p><strong>Otra familia.</strong> Mamba no es una atención más barata: es un <strong>modelo de espacio de estados (SSM)</strong> con recurrencia en tiempo lineal y <strong>no tiene matriz de atención</strong> en absoluto. En vez de comparar cada token con los demás, propaga la información a través de un estado recurrente. Por eso se considera otra familia de arquitectura, y suele ganar terreno como híbrido (Jamba) más que como reemplazo puro.</p></li>
@@ -1410,6 +1436,7 @@ window.Quarto = {
 <li><p><strong>NTK vs PI.</strong> PI comprime <strong>todas</strong> las posiciones por igual (divide por <span class="math inline">\(L/T\)</span>), lo que estruja también las altas frecuencias y pierde resolución local fina. NTK-aware aplica un reescalado <strong>no uniforme</strong> de <span class="math inline">\(\theta\)</span>: <strong>preserva las altas frecuencias</strong> (lo local) y estira solo las bajas (lo lejano). Así respeta la información local que PI sacrifica, y a menudo funciona sin finetuning para factores pequeños (2–4×).</p></li>
 <li><p><strong>Auditar.</strong> Pediría una evaluación de <strong>recuperación a longitud completa</strong>, tipo passkey o needle-in-a-haystack, que compruebe si el modelo realmente localiza información concreta a lo largo de todo el contexto nominal. La perplejidad no basta porque la dominan los tokens locales y puede seguir baja mientras la recuperación ya ha colapsado. Además vigilaría el “lost in the middle”: la longitud usable suele ser menor que la nominal, así que un “1M” rara vez es 1M efectivos.</p></li>
 <li><p><strong>Honestidad.</strong> Presentamos la regla <span class="math inline">\(\gamma\)</span> como no validada porque, aunque la <strong>geometría es sólida</strong> (reescalar <span class="math inline">\(\theta\)</span> mueve <span class="math inline">\(\gamma\)</span> de forma monótona y predecible), nuestra <strong>validación empírica con passkey quedó incompleta</strong>: el experimento crasheó por falta de memoria (CUDA-OOM) antes de cubrir las longitudes que discriminaban entre condiciones. Solo confirmamos lo esperado (el modelo nativo recupera dentro de su longitud de entrenamiento), no que la regla supere a YaRN. Este libro se niega a vender como hecho lo que aún es una hipótesis pendiente de reproducir.</p></li>
+<li><p><strong>Tres cláusulas.</strong> Reutiliza literalmente fecha, duración y prórroga; mantén pregunta, respuesta, tokenizador y presupuesto de salida. Cambia las posiciones de las cláusulas mediante intercambios con relleno de igual longitud. Repite con varios contratos y órdenes de relleno. Una sola pareja ilustra el control, no demuestra un efecto general.</p></li>
 </ol>
 </section>
 <section id="cap.-20-compresión-de-kv-cache-en-práctica" class="level2" data-number="49.20">
@@ -1419,6 +1446,7 @@ window.Quarto = {
 <li><p><strong>La frontera.</strong> <span class="math inline">\(\gamma=1\)</span> separa los dos regímenes porque es donde cambia el comportamiento de la suma <span class="math inline">\(\sum d^{-\gamma}\)</span>. Con <span class="math inline">\(\gamma&gt;1\)</span> la serie <strong>converge</strong>: la cola más allá de <span class="math inline">\(D\)</span> se encoge como <span class="math inline">\(D^{1-\gamma}\)</span>, así que basta una ventana finita (comprimible). Con <span class="math inline">\(\gamma&lt;1\)</span> la serie <strong>diverge</strong> como <span class="math inline">\(D^{1-\gamma}\)</span>: la masa se acumula sin límite con la distancia y no hay ventana finita que la capture (difícil). En <span class="math inline">\(\gamma=1\)</span> diverge marginalmente, como <span class="math inline">\(\log D\)</span>, que es el caso frontera.</p></li>
 <li><p><strong>Honestidad.</strong> No afirmamos que <span class="math inline">\(D_f\)</span> sea mejor que Ada-KV porque falta el <strong>cara a cara</strong>: hay que compararlos a memoria igualada en benchmarks de tarea (RULER, LongBench, NIAH), no solo contra heurísticas. Presentamos <span class="math inline">\(D_f\)</span> como un presupuesto derivado y predictivo, sin parámetros, pero <strong>no demostrado superior</strong>. El experimento que faltaría es justo ese benchmark head-to-head contra los métodos principiados (Ada-KV, LAVa).</p></li>
 <li><p><strong>Masa ≠ fidelidad.</strong> Un token puede recibir <strong>poca masa de atención</strong> y aun así influir mucho en la salida si la <strong>norma de su vector de valor (V) es grande</strong>, porque la salida es una suma ponderada de los V. Así, descartarlo por baja masa —como haría <span class="math inline">\(D_f\)</span>— degradaría la salida pese a “perder poca atención”. Es la crítica de Ada-KV: la masa es necesaria pero no suficiente para garantizar fidelidad.</p></li>
+<li><p><strong>La página decisiva.</strong> La masa retenida sigue siendo 99 %. La salida original pasa de 1 a 0,01 y la recortada sigue en 0; el error absoluto pasa de 1 a 0,01. La misma pérdida de masa puede causar errores muy diferentes según los valores. No basta conocer γ.</p></li>
 </ol>
 </section>
 <section id="cap.-21-estructura-de-fases-y-la-función-de-partición-polilog" class="level2" data-number="49.21">
@@ -1541,6 +1569,7 @@ window.Quarto = {
 <li><p><strong>Composición de errores.</strong> Con pasos independientes al 90 %, la fiabilidad de 10 pasos es <span class="math inline">\(0.9^{10}\approx 0.35\)</span>, apenas un 35 %. Esto muestra que los agentes de horizonte largo colapsan por la multiplicación de probabilidades: hace falta una fiabilidad por paso altísima, recuperación de errores o verificación para que las tareas largas sean viables.</p></li>
 <li><p><strong>Demo vs producción.</strong> Una cifra reveladora es τ-bench, donde GPT-4o ronda el 61 % a la primera pero cae a ~25 % en <em>pass^8</em>; en GAIA la brecha es 15 % de los agentes frente a ~92 % humano. <em>pass^k</em> mide la consistencia: si el agente logra la tarea en las <span class="math inline">\(k\)</span> veces seguidas, no solo una; un <em>pass^8</em> bajo delata inconsistencia brutal aunque el acierto puntual sea alto.</p></li>
 <li><p><strong>Seguridad.</strong> En un chatbot, una inyección de prompts a lo sumo manipula el texto de salida. En un agente, ese texto malicioso puede secuestrar acciones reales (borrar archivos, enviar dinero, filtrar datos) porque el agente tiene poder para actuar sobre el mundo; el daño se amplifica al cruzar de las palabras a los efectos.</p></li>
+<li><p><strong>Una ruta antigua.</strong> No: ambos hechos llegaron al contexto. Puede fallar la resolución de vigencia o la construcción de parámetros. Entrega directamente el destino vigente y su sustitución explícita como control; inspecciona la llamada y el estado final. Si aun así falla, mejorar solo el buscador no resuelve ese caso.</p></li>
 </ol>
 </section>
 <section id="cap.-33-multimodal" class="level2" data-number="49.33">
@@ -1574,6 +1603,7 @@ window.Quarto = {
 <li><p><strong>Objetivos suaves.</strong> La distribución completa del maestro revela su “conocimiento oscuro”: las probabilidades relativas entre clases erróneas (qué se parece a qué), información que la etiqueta dura de una sola clase oculta. La temperatura <span class="math inline">\(T\)</span> suaviza esa distribución (logits divididos por <span class="math inline">\(T\)</span>) para amplificar esas señales pequeñas y que el alumno aprenda mejor las relaciones entre clases.</p></li>
 <li><p><strong>Poda.</strong> La poda estructurada elimina unidades enteras (neuronas, cabezas, canales), dejando matrices más pequeñas y densas que la GPU ejecuta directamente más rápido. La no estructurada pone ceros dispersos por todas partes: ahorra parámetros pero la GPU sigue procesando la matriz densa salvo con soporte especial de <em>sparsity</em>, así que rara vez acelera de verdad en hardware normal.</p></li>
 <li><p><strong>Honestidad.</strong> La perplejidad es una media agregada que puede apenas moverse mientras la compresión destruye capacidades concretas (razonamiento, seguimiento de instrucciones, conocimiento factual raro) que no domina ese promedio. Hace falta evaluar con <em>benchmarks</em> de tareas posteriores y pruebas específicas, porque una perplejidad casi intacta no garantiza que el modelo comprimido siga sirviendo.</p></li>
+<li><p><strong>Dos palancas.</strong> Evalúa el mismo modelo y tareas con caché completa en alta precisión, recorte solo, cuantización sola y ambas. Mantén la decodificación y registra bytes reales y latencia. Así observas cada efecto y si su combinación lo agrava; solo probar ambas no permite atribuir el fallo. Para comparar políticas rivales, iguala además su presupuesto efectivo de bytes.</p></li>
 </ol>
 </section>
 <section id="cap.-36-servir-y-desplegar" class="level2" data-number="49.36">
@@ -1603,7 +1633,7 @@ window.Quarto = {
 <ol type="1">
 <li><p><strong>Los tres cubos.</strong> <em>Verificado/derivado</em> es una afirmación con recibo —prueba formal en Lean o datos reproducibles—, p.&nbsp;ej. nuestra identidad Fisher = <span class="math inline">\(C_V/\gamma^2\)</span> probada en Lean. <em>Folclore</em> es creencia popular sin justificación o ya contradicha, como “la atención explica la decisión del modelo”. <em>Numerología</em> es un número o fórmula que encaja con los datos sin un mecanismo que lo explique: ajustar una curva con buen R² no es entenderla.</p></li>
 <li><p><strong>El recibo.</strong> Una identidad matemática necesita una demostración formal (Lean) que verifique que el álgebra cuadra y es consistente; una afirmación empírica necesita datos reproducibles que muestren que el fenómeno ocurre en modelos reales. No sirve el mismo porque son cosas distintas: Lean prueba que las fórmulas son coherentes, no que describan causalmente a un transformer, y unos datos que ajustan no garantizan que el álgebra subyacente sea correcta.</p></li>
-<li><p><strong>Lean ≠ realidad.</strong> El imprint ν ≈ <span class="math inline">\(-1/(2\pi)\)</span> tiene una identidad algebraica probada en Lean, así que el álgebra es internamente correcta. Pero al medirlo en datos no reproduce: el intervalo de confianza sale ancho y no converge en Pythia-70M. Esto muestra que “probado en Lean” solo certifica consistencia algebraica (el plano está bien dibujado), no que el edificio construido —el modelo real— se le parezca; una afirmación empírica puede ser falsa aunque su álgebra sea válida.</p></li>
+<li><p><strong>Lean ≠ realidad.</strong> El imprint ν ≈ <span class="math inline">\(-1/(2\pi)\)</span> tiene una identidad algebraica probada en Lean, así que el álgebra es internamente correcta. Pero los datos actuales no identifican ese valor: el intervalo es amplio y compatible con alternativas. No identificar no equivale a refutar. Esto muestra que “probado en Lean” solo certifica consistencia algebraica (el plano está bien dibujado), no que el edificio construido —el modelo real— se le parezca; una afirmación empírica puede ser falsa aunque su álgebra sea válida.</p></li>
 <li><p><strong>Erratum.</strong> En el Paper I afirmamos <span class="math inline">\(C_V(\gamma=1) = (\log N)^2/4\)</span>, un error de un factor 3; el valor correcto es <span class="math inline">\((\log N)^2/12\)</span>, al que llegan dos derivaciones independientes y que re-probamos en Lean. Contarlo aumenta la fiabilidad porque demuestra que aplicamos la misma vara a nuestro propio trabajo y que el proceso detecta y corrige errores: un libro que enseña dónde se equivocó es más creíble que uno que solo exhibe aciertos.</p></li>
 <li><p><strong>Mito.</strong> “La atención explica la decisión del modelo” es folclore porque, como argumenta el Cap. 37, un mapa de atención es correlacional, no causal: la información puede fluir por el flujo residual, los valores y las MLP sin pasar por donde la atención pone su peso. Que una cabeza “mire” mucho a un token no prueba que ese token causara la salida; demostrarlo exige intervención causal (<em>activation patching</em>), no leer el mapa.</p></li>
 <li><p><strong>Aplícalo.</strong> Primero, ¿qué tipo de recibo trae —prueba formal, dato reproducible, o solo un ajuste a ojo? Segundo, ¿hay un mecanismo que explique <em>por qué</em> ese número aparece, o es coincidencia (numerología)? Tercero, ¿reproduce fuera de su caso —en otras tareas, modelos o semillas, con intervalo de confianza estrecho—, o es de una sola tarea/familia? Sin recibo, mecanismo ni reproducibilidad, trátalo como folclore.</p></li>
@@ -1651,6 +1681,15 @@ window.Quarto = {
 <li><p><strong>Externalización.</strong> Con los pasos escritos, cada resultado intermedio vive en el texto y vuelve a entrar por atención en el paso siguiente: el papel sostiene lo que la pizarra ya no tiene que sostener. Por eso borrar la pizarra apenas afecta a GSM8K <em>con</em> chain-of-thought. Receta práctica: cuanto más pequeña la memoria de trabajo del modelo, más gana con CoT y andamiaje externo — a un modelo modesto no le pidas que piense en silencio.</p></li>
 <li><p><strong>El test que falló.</strong> Los datos señalan al factor <span class="math inline">\((d_{head}/64)^{1/\sqrt{12}}\)</span>: es el que empujaba la predicción de pythia-1b hasta la capa 15 (fracción 0.94), mientras el codo medido salió en la capa 11 (0.69); sin ese factor, la predicción (capa ~10) queda a ≤2 capas de lo observado. Y la escalera Pythia no puede distinguir “constante universal” de <span class="math inline">\(\log_\theta(T/2\pi)\)</span> porque toda la escalera comparte <span class="math inline">\(\theta=10^4\)</span> y <span class="math inline">\(T=2048\)</span>: la fracción RoPE da el mismo número (0.628) para todos los peldaños, así que ambas hipótesis predicen lo mismo dentro de la familia. Separarlas exige un modelo con <span class="math inline">\(\theta\)</span> o <span class="math inline">\(T\)</span> distintos.</p></li>
 <li><p><strong>Escepticismo.</strong> Dos razones: (a) el <strong>sesgo de frecuencia del corpus</strong> — el Jacobiano promedio acumula “disposición a decir lo que el corpus dice siempre”, y los tokens frecuentes (espacios, palabras función) dominan el readout aunque no signifiquen nada para el caso concreto; (b) <strong>presencia ≠ uso</strong> — la lente puede leer una dirección que correlaciona con el comportamiento sin causarlo. El experimento que lo descarta es la intervención causal con controles: ablacionar o intercambiar esa dirección concreta (y, como control, direcciones aleatorias de la misma norma) y comprobar que el comportamiento cambia como predice — comparando siempre contra el logit lens para verificar que la señal no es simple alineación con la salida.</p></li>
+</ol>
+</section>
+<section id="sec-soluciones-r4" class="level2" data-number="49.43">
+<h2 data-number="49.43" class="anchored" data-anchor-id="sec-soluciones-r4"><span class="header-section-number">49.43</span> R4 · Laboratorio de γ</h2>
+<ol type="1">
+<li><strong>Dos medias.</strong> La media aritmética es 0,10; la geométrica, 0,08. Ajustar pares individuales cambia tanto la transformación de los datos como el peso de distancias con distinto número de pares. Las pendientes solo coinciden bajo condiciones particulares.</li>
+<li><strong>Dos consultas.</strong> Cambian las posiciones de consulta, los normalizadores de atención y los pares disponibles por distancia. No cambió el modelo, pero sí la distribución medida.</li>
+<li><strong>Unidad experimental.</strong> Remuestrea los diez documentos, conservando juntos sus fragmentos; publica que solo hay diez unidades independientes y limita tus conclusiones.</li>
+<li><strong>R² perfecto.</strong> Recuperar γ=0,8 verifica la implementación en una entrada de forma conocida. No prueba que la atención real siga esa forma ni que γ prediga calidad.</li>
 </ol>
 
 
@@ -4590,6 +4629,62 @@ Xu, Yongzhong. 2026. <em>Early-Warning Signals of Grokking via Loss-Landscape Ge
     });
   } catch (e) {}
 })();
+</script>
+
+
+<script>
+(function () {
+  'use strict';
+  const es = (document.documentElement.lang || 'es').startsWith('es');
+  const words = es ? {
+    title: 'Misma masa, distinto efecto', mass: 'Masa del token descartado (%)',
+    value: 'Valor del token descartado', kept: 'Masa original conservada',
+    full: 'Salida completa', error: 'Error absoluto al recortar',
+    caption: 'Ejemplo calculado, no datos de un modelo. El token conservado tiene valor 0; al renormalizar, su salida es 0.'
+  } : {
+    title: 'Same mass, different effect', mass: 'Discarded token mass (%)',
+    value: 'Discarded token value', kept: 'Original mass retained',
+    full: 'Full output', error: 'Absolute truncation error',
+    caption: 'Calculated example, not model data. The retained token has value 0; after renormalization its output is 0.'
+  };
+  document.querySelectorAll('.fg-mass-value').forEach(function (box, index) {
+    const prefix = 'fg-mv-' + index;
+    box.innerHTML = '<h3>' + words.title + '</h3><div class="mv-controls">' +
+      '<label for="' + prefix + '-mass">' + words.mass + ' <output class="mv-mass-label">1</output>' +
+      '<input id="' + prefix + '-mass" class="mv-mass" type="range" min="0" max="20" step="0.1" value="1"></label>' +
+      '<label for="' + prefix + '-value">' + words.value + ' <output class="mv-value-label">100</output>' +
+      '<input id="' + prefix + '-value" class="mv-value" type="range" min="-100" max="100" step="1" value="100"></label></div>' +
+      '<div class="mv-results" aria-live="polite" aria-atomic="true">' +
+      '<div class="mv-result"><span>' + words.kept + '</span><b class="mv-kept"></b></div>' +
+      '<div class="mv-result"><span>' + words.full + '</span><b class="mv-full"></b></div>' +
+      '<div class="mv-result"><span>' + words.error + '</span><b class="mv-error"></b></div></div>' +
+      '<p class="mv-equation"></p><p class="mv-caption">' + words.caption + '</p>';
+    const mass = box.querySelector('.mv-mass');
+    const value = box.querySelector('.mv-value');
+    const fmt = new Intl.NumberFormat(es ? 'es' : 'en', {maximumFractionDigits: 3});
+    function update() {
+      const a = Number(mass.value) / 100, v = Number(value.value), full = a * v;
+      box.querySelector('.mv-mass-label').textContent = fmt.format(100 * a);
+      box.querySelector('.mv-value-label').textContent = fmt.format(v);
+      box.querySelector('.mv-kept').textContent = fmt.format(100 * (1 - a)) + '%';
+      box.querySelector('.mv-full').textContent = fmt.format(full);
+      box.querySelector('.mv-error').textContent = fmt.format(Math.abs(full));
+      box.querySelector('.mv-equation').textContent =
+        'o = ' + fmt.format(1 - a) + ' × 0 + ' + fmt.format(a) + ' × ' + fmt.format(v) + ' = ' + fmt.format(full);
+    }
+    mass.addEventListener('input', update);
+    value.addEventListener('input', update);
+    update();
+  });
+})();
+</script>
+
+<script>
+document.querySelectorAll('figure.quarto-float-tbl > div[aria-describedby]').forEach(function (region) {
+  region.tabIndex = 0;
+  region.setAttribute('role', 'region');
+  region.setAttribute('aria-labelledby', region.getAttribute('aria-describedby'));
+});
 </script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
