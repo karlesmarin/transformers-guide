@@ -8,6 +8,16 @@
 
 ---
 
+## 2026-10-25 · Return to the same problem / Volver al mismo problema
+
+**ES:** Los enlaces del resumen y revisión del resolutor conservan la ruta,
+idioma y alojamiento de TAF al volver desde la guía. Sin ejecución automática
+ni transmisión de datos pegados; la pestaña original conserva el resultado.
+
+**EN:** Resolver summary/review links preserve the problem route, TAF language
+and original host when returning from the guide. No automatic execution or
+pasted input transfer; the original tab retains the complete result.
+
 ## 2026-10-25 · Evidence review / Revisión de evidencia
 
 **ES:** R5 explica «Revisar este resultado»: evidencia, supuestos pendientes,
