@@ -8,6 +8,19 @@
 
 ---
 
+## 2026-10-24 · Symptom-led resolver / Resolutor por síntomas
+
+**ES:** R5 explica siete familias de síntomas y veinte situaciones, nueve
+comprobaciones directas y acceso a los 31 modos con requisitos, límites, demos y
+guía. Añade JSON, PEFT, prefijos, diferencias de evaluación, informes de atención
+y adaptadores. Las preguntas se contrastan con discusiones públicas; no hay
+vigilancia, respuestas automáticas en foros ni diagnósticos inventados.
+
+**EN:** R5 covers seven symptom families, twenty situations, nine direct checks
+and all 31 modes with requirements, limits, demos and guide links. New checks
+cover JSON, PEFT, prefixes, evaluation gaps, attention reports and adapters.
+Public reports inform the questions; no forum monitoring or posting is enabled.
+
 ## 2026-10-24 · Automatic problem resolver / Resolutorio automático
 
 **ES:** R5 acompaña las tres rutas de «Resolver mi problema» en TAF: memoria,
