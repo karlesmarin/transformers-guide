@@ -8,6 +8,16 @@
 
 ---
 
+## 2026-10-25 · Architecture, JSON and PEFT follow-up / Seguimiento de arquitectura, JSON y PEFT
+
+**ES:** Capítulos 10, 28, 30 y R5: límites de arquitectura, orden frente a validez
+JSON y avisos estáticos PEFT. 39 prioridades y 32 ejemplos en ocho rutas; Atención
+mantiene su protocolo. Sin atribuir demos sintéticas al modelo ni ejecutar código.
+
+**EN:** Chapters 10, 28, 30 and R5: architecture scope, JSON ordering versus validity
+and static PEFT findings. 39 priorities and 32 examples across eight routes;
+attention keeps its protocol. No synthetic model attribution or code execution.
+
 ## 2026-10-25 · Cache and evaluation follow-up / Seguimiento de caché y evaluación
 
 **ES:** Capítulos 36, 40 y R5: comprobar reutilización y diferencias de evaluación.

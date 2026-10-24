@@ -1221,8 +1221,9 @@ window.Quarto = {
   <li><a href="#from-asking-for-cot-to-models-that-reason-on-their-own-2025" id="toc-from-asking-for-cot-to-models-that-reason-on-their-own-2025" class="nav-link" data-scroll-target="#from-asking-for-cot-to-models-that-reason-on-their-own-2025"><span class="header-section-number">31.6</span> From asking for CoT to models that reason on their own (2025)</a></li>
   <li><a href="#prompt-engineering-the-practical-and-the-brittle" id="toc-prompt-engineering-the-practical-and-the-brittle" class="nav-link" data-scroll-target="#prompt-engineering-the-practical-and-the-brittle"><span class="header-section-number">31.7</span> Prompt engineering: the practical (and the brittle)</a></li>
   <li><a href="#the-limits-of-prompting" id="toc-the-limits-of-prompting" class="nav-link" data-scroll-target="#the-limits-of-prompting"><span class="header-section-number">31.8</span> The limits of prompting</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">31.9</span> Summary</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">31.10</span> Exercises</a></li>
+  <li><a href="#sec-resolver-json" id="toc-sec-resolver-json" class="nav-link" data-scroll-target="#sec-resolver-json"><span class="header-section-number">31.9</span> JSON output: ordering is not validation</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">31.10</span> Summary</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">31.11</span> Exercises</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
@@ -1416,8 +1417,15 @@ window.Quarto = {
 </div>
 </div>
 </section>
-<section id="summary" class="level2" data-number="31.9">
-<h2 data-number="31.9" class="anchored" data-anchor-id="summary"><span class="header-section-number">31.9</span> Summary</h2>
+<section id="sec-resolver-json" class="level2" data-number="31.9">
+<h2 data-number="31.9" class="anchored" data-anchor-id="sec-resolver-json"><span class="header-section-number">31.9</span> JSON output: ordering is not validation</h2>
+<p>The <a href="https://karlesmarin.github.io/tafagent/?resolve=cot&amp;lang=en">JSON resolver</a> inspects top-level field names. <strong>See the verification steps</strong> distinguishes an answer before an explanation, recognized preferred order, and no applicable pattern. A valid output contract may need no explanation; do not add a reasoning field just to satisfy this heuristic.</p>
+<p>The <a href="https://json-schema.org/draft/2020-12/json-schema-core#section-4.2.1">JSON Schema data model</a> treats objects without imposing property order. Some constrained decoders use schema order during generation: check your engine’s behavior. This does not make ordering a validity rule or evidence of faithful reasoning.</p>
+<p>Use a validator for the dialect and check the decoder’s supported subset: types, required fields, nesting and actual responses. If trying the optional reordered proposal, hold prompts and generation fixed and separate parse/schema success from task quality. TAF neither runs generation nor validates the complete schema; it reruns field-name inspection after trying the proposal.</p>
+<p><strong>Optional demo:</strong> three examples show an order to review, preferred order and a schema with no recognized pattern. Examples stay local and their content is excluded from the case report. Returning preserves the form and language.</p>
+</section>
+<section id="summary" class="level2" data-number="31.10">
+<h2 data-number="31.10" class="anchored" data-anchor-id="summary"><span class="header-section-number">31.10</span> Summary</h2>
 <ul>
 <li><strong>ICL</strong> <span class="citation" data-cites="brown2020gpt3">(<a href="#ref-brown2020gpt3" role="doc-biblioref"><span class="nocase">Brown et al.</span> 2020</a>)</span>: learning from examples in the context <strong>without updating weights</strong> (zero/one/few-shot).</li>
 <li><strong>What drives it (honest):</strong> <strong>correct labels matter less</strong> than the format and the distribution <span class="citation" data-cites="min2022rethinking">(<a href="#ref-min2022rethinking" role="doc-biblioref">Min et al. 2022</a>)</span> (nuanced by <span class="citation" data-cites="yoo2022groundtruth">(<a href="#ref-yoo2022groundtruth" role="doc-biblioref"><span class="nocase">Yoo et al.</span> 2022</a>)</span>); candidate mechanism = <strong>induction heads</strong> (the “[A][B]…[A]→[B]” rule, born in a <strong>phase change</strong>) <span class="citation" data-cites="olsson2022induction">(<a href="#ref-olsson2022induction" role="doc-biblioref"><span class="nocase">Olsson et al.</span> 2022</a>)</span>; <em>what</em> ICL is <strong>is not settled</strong> (Bayes / implicit GD / function classes).</li>
@@ -1427,8 +1435,8 @@ window.Quarto = {
 </ul>
 <p><strong>Next (Chapter 31):</strong> when the model needs knowledge it <strong>does not have</strong> (current facts, private documents), the prompt is not enough: you have to <strong>retrieve it</strong> and hand it over. We enter <em>embeddings</em>, semantic search and <strong>RAG</strong>.</p>
 </section>
-<section id="exercises" class="level2" data-number="31.10">
-<h2 data-number="31.10" class="anchored" data-anchor-id="exercises"><span class="header-section-number">31.10</span> Exercises</h2>
+<section id="exercises" class="level2" data-number="31.11">
+<h2 data-number="31.11" class="anchored" data-anchor-id="exercises"><span class="header-section-number">31.11</span> Exercises</h2>
 <ol type="1">
 <li><strong>No gradients.</strong> What does it mean that ICL happens “at inference time”? How does it differ from <em>fine-tuning</em>?</li>
 <li><strong>Random labels.</strong> What did Min et al.&nbsp;demonstrate by shuffling the example labels? What three things do matter, then?</li>

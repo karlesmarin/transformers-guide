@@ -1189,8 +1189,9 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
   <li><a href="#por-qué-ganó-solo-decodificador-para-los-llm" id="toc-por-qué-ganó-solo-decodificador-para-los-llm" class="nav-link" data-scroll-target="#por-qué-ganó-solo-decodificador-para-los-llm"><span class="header-section-number">11.6</span> Por qué ganó “solo decodificador” para los LLM</a></li>
   <li><a href="#sec-hybrid-learning" id="toc-sec-hybrid-learning" class="nav-link" data-scroll-target="#sec-hybrid-learning"><span class="header-section-number">11.7</span> Competing Learning in Hybrid Architectures</a></li>
   <li><a href="#sec-engram" id="toc-sec-engram" class="nav-link" data-scroll-target="#sec-engram"><span class="header-section-number">11.8</span> Conditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models</a></li>
-  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">11.9</span> Resumen</a></li>
-  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">11.10</span> Ejercicios</a></li>
+  <li><a href="#sec-resolver-architecture" id="toc-sec-resolver-architecture" class="nav-link" data-scroll-target="#sec-resolver-architecture"><span class="header-section-number">11.9</span> De la arquitectura declarada a la prueba de ejecución</a></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">11.10</span> Resumen</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">11.11</span> Ejercicios</a></li>
   <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias">Referencias</a></li>
   </ul>
 </nav>
@@ -1392,8 +1393,15 @@ Tabla&nbsp;11.1: Las tres familias de transformers
 <p><strong>Qué probar.</strong> Comparar calidad, cómputo activo, almacenamiento total de tablas y ancho de banda con recursos equivalentes.</p>
 <p><a href="https://karlesmarin.github.io/tafagent/?mode=research&amp;study=engram&amp;lang=es#research-section">🧪 Continuar en TAF: fuente, límites y experimento propuesto</a>.</p>
 </section>
-<section id="resumen" class="level2" data-number="11.9">
-<h2 data-number="11.9" class="anchored" data-anchor-id="resumen"><span class="header-section-number">11.9</span> Resumen</h2>
+<section id="sec-resolver-architecture" class="level2" data-number="11.9">
+<h2 data-number="11.9" class="anchored" data-anchor-id="sec-resolver-architecture"><span class="header-section-number">11.9</span> De la arquitectura declarada a la prueba de ejecución</h2>
+<p>El <a href="https://karlesmarin.github.io/tafagent/?resolve=compatibility&amp;lang=es">resolutor de arquitectura</a> distingue tres situaciones: fuera del esquema denso revisado de TAF, metadatos incompletos o incoherentes, y geometría aceptada. <strong>Ver los pasos de comprobación</strong> explica qué revisar primero, qué observar y cómo interpretar el resultado.</p>
+<p>Salir del esquema de TAF no significa que el modelo no funcione en otro motor. Revisa los mecanismos reales de atención, estado y expertos y la documentación de la versión del motor. No inventes cabezas KV, número de parámetros ni contexto entrenado para conseguir una estimación. Una geometría aceptada tampoco certifica kernels, memoria suficiente ni calidad.</p>
+<p>En tu entorno registra revisión, clase cargada, precisión, avisos y pico de memoria. Prueba la tarea mínima documentada antes de aumentar carga o contexto. Cargar con éxito y resolver bien la tarea son comprobaciones diferentes.</p>
+<p><strong>Demo opcional:</strong> tras cargar el ejemplo, <strong>Explorar otro ejemplo</strong> ofrece tres configuraciones sintéticas. Al elegirlas desaparecen el ID, revisión y fuentes del modelo anterior: no son nuevas mediciones de ese modelo. Inspector y Memory Reality ayudan a interpretar los límites; no ejecutan ni certifican tu programa.</p>
+</section>
+<section id="resumen" class="level2" data-number="11.10">
+<h2 data-number="11.10" class="anchored" data-anchor-id="resumen"><span class="header-section-number">11.10</span> Resumen</h2>
 <ul>
 <li>Las tres familias comparten piezas; las distingue <strong>la máscara</strong> (bidireccional vs causal) y la presencia de <strong>atención cruzada</strong>.</li>
 <li><strong>Solo encoder</strong> (BERT): bidireccional, rellena huecos, <strong>comprende</strong> (no genera).</li>
@@ -1403,8 +1411,8 @@ Tabla&nbsp;11.1: Las tres familias de transformers
 </ul>
 <p><strong>Siguiente (Capítulo 11):</strong> ya conocemos las arquitecturas. ¿Cómo se <strong>entrena</strong> de verdad uno de estos modelos? Objetivo, optimización, datos y leyes de escala.</p>
 </section>
-<section id="ejercicios" class="level2" data-number="11.10">
-<h2 data-number="11.10" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">11.10</span> Ejercicios</h2>
+<section id="ejercicios" class="level2" data-number="11.11">
+<h2 data-number="11.11" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">11.11</span> Ejercicios</h2>
 <ol type="1">
 <li><strong>El interruptor.</strong> ¿Cuál es el único cambio principal que convierte un modelo de “comprensión” en uno de “generación”?</li>
 <li><strong>¿Por qué BERT no escribe un ensayo?</strong> Explícalo en términos de su máscara y su objetivo de entrenamiento.</li>

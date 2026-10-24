@@ -1189,8 +1189,9 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
   <li><a href="#why-decoder-only-won-for-llms" id="toc-why-decoder-only-won-for-llms" class="nav-link" data-scroll-target="#why-decoder-only-won-for-llms"><span class="header-section-number">11.6</span> Why “decoder-only” won for LLMs</a></li>
   <li><a href="#sec-hybrid-learning" id="toc-sec-hybrid-learning" class="nav-link" data-scroll-target="#sec-hybrid-learning"><span class="header-section-number">11.7</span> Competing Learning in Hybrid Architectures</a></li>
   <li><a href="#sec-engram" id="toc-sec-engram" class="nav-link" data-scroll-target="#sec-engram"><span class="header-section-number">11.8</span> Conditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">11.9</span> Summary</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">11.10</span> Exercises</a></li>
+  <li><a href="#sec-resolver-architecture" id="toc-sec-resolver-architecture" class="nav-link" data-scroll-target="#sec-resolver-architecture"><span class="header-section-number">11.9</span> From declared architecture to a runtime check</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">11.10</span> Summary</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">11.11</span> Exercises</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
@@ -1392,8 +1393,15 @@ Table&nbsp;11.1: The three families of transformers
 <p><strong>What to test.</strong> Compare quality, active compute, total table storage and bandwidth under matched resources.</p>
 <p><a href="https://karlesmarin.github.io/tafagent/?mode=research&amp;study=engram&amp;lang=en#research-section">🧪 Continue in TAF: source, limits and proposed experiment</a>.</p>
 </section>
-<section id="summary" class="level2" data-number="11.9">
-<h2 data-number="11.9" class="anchored" data-anchor-id="summary"><span class="header-section-number">11.9</span> Summary</h2>
+<section id="sec-resolver-architecture" class="level2" data-number="11.9">
+<h2 data-number="11.9" class="anchored" data-anchor-id="sec-resolver-architecture"><span class="header-section-number">11.9</span> From declared architecture to a runtime check</h2>
+<p>The <a href="https://karlesmarin.github.io/tafagent/?resolve=compatibility&amp;lang=en">architecture resolver</a> distinguishes three situations: outside TAF’s reviewed dense schema, incomplete or inconsistent metadata, and accepted geometry. <strong>See the verification steps</strong> explains what to inspect first, what to observe and how to interpret the result.</p>
+<p>Being outside TAF’s schema does not mean the model cannot run in another engine. Check actual attention, state and expert mechanisms and the runtime version’s documentation. Do not invent KV heads, parameter counts or trained context to obtain an estimate. Accepted geometry does not certify kernels, sufficient memory or task quality either.</p>
+<p>In your environment record revision, loaded class, precision, warnings and peak memory. Test the documented minimal task before increasing workload or context. Successful loading and successful task performance are separate checks.</p>
+<p><strong>Optional demo:</strong> after loading the example, <strong>Explore another example</strong> offers three synthetic configs. Selecting one clears the previous model ID, revision and sources: these are not new measurements of that model. Inspector and Memory Reality help interpret limits without running or certifying your runtime.</p>
+</section>
+<section id="summary" class="level2" data-number="11.10">
+<h2 data-number="11.10" class="anchored" data-anchor-id="summary"><span class="header-section-number">11.10</span> Summary</h2>
 <ul>
 <li>The three families share pieces; what sets them apart is <strong>the mask</strong> (bidirectional vs causal) and the presence of <strong>cross-attention</strong>.</li>
 <li><strong>Encoder-only</strong> (BERT): bidirectional, fills in blanks, <strong>understands</strong> (doesn’t generate).</li>
@@ -1403,8 +1411,8 @@ Table&nbsp;11.1: The three families of transformers
 </ul>
 <p><strong>Next (Chapter 11):</strong> we now know the architectures. How is one of these models actually <strong>trained</strong>? Objective, optimization, data and scaling laws.</p>
 </section>
-<section id="exercises" class="level2" data-number="11.10">
-<h2 data-number="11.10" class="anchored" data-anchor-id="exercises"><span class="header-section-number">11.10</span> Exercises</h2>
+<section id="exercises" class="level2" data-number="11.11">
+<h2 data-number="11.11" class="anchored" data-anchor-id="exercises"><span class="header-section-number">11.11</span> Exercises</h2>
 <ol type="1">
 <li><strong>The switch.</strong> What is the single main change that turns a “comprehension” model into a “generation” one?</li>
 <li><strong>Why doesn’t BERT write an essay?</strong> Explain it in terms of its mask and its training objective.</li>

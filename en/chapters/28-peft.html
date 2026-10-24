@@ -1218,8 +1218,9 @@ window.Quarto = {
   <li><a href="#qlora-tuning-a-giant-on-a-single-gpu" id="toc-qlora-tuning-a-giant-on-a-single-gpu" class="nav-link" data-scroll-target="#qlora-tuning-a-giant-on-a-single-gpu"><span class="header-section-number">29.6</span> QLoRA: tuning a giant on a single GPU</a></li>
   <li><a href="#soft-prompts-prefix-and-prompt-tuning" id="toc-soft-prompts-prefix-and-prompt-tuning" class="nav-link" data-scroll-target="#soft-prompts-prefix-and-prompt-tuning"><span class="header-section-number">29.7</span> Soft prompts: prefix and prompt tuning</a></li>
   <li><a href="#when-to-use-each-one" id="toc-when-to-use-each-one" class="nav-link" data-scroll-target="#when-to-use-each-one"><span class="header-section-number">29.8</span> When to use each one</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">29.9</span> Summary</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">29.10</span> Exercises</a></li>
+  <li><a href="#sec-resolver-peft" id="toc-sec-resolver-peft" class="nav-link" data-scroll-target="#sec-resolver-peft"><span class="header-section-number">29.9</span> From a static warning to PEFT verification</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">29.10</span> Summary</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">29.11</span> Exercises</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
@@ -1429,8 +1430,15 @@ window.Quarto = {
 </div>
 </div>
 </section>
-<section id="summary" class="level2" data-number="29.9">
-<h2 data-number="29.9" class="anchored" data-anchor-id="summary"><span class="header-section-number">29.9</span> Summary</h2>
+<section id="sec-resolver-peft" class="level2" data-number="29.9">
+<h2 data-number="29.9" class="anchored" data-anchor-id="sec-resolver-peft"><span class="header-section-number">29.9</span> From a static warning to PEFT verification</h2>
+<p>The <a href="https://karlesmarin.github.io/tafagent/?resolve=peft&amp;lang=en">PEFT-code resolver</a> reads patterns and line numbers; it does not execute Python or reconstruct control flow. <strong>See the verification steps</strong> prioritizes loading intent, k-bit preparation order, target modules and scaling. It also guides cases with no recognized calls or no findings: neither certifies correct code.</p>
+<p>Creating a new adapter and restoring trained weights require different workflows. Check your intended operation and the adapter actually active. A checkpoint path in a string does not establish ignored weights. In the documented k-bit workflow, preparation precedes attaching trainable adapters; textual order can misrepresent separate functions or branches.</p>
+<p>Check actual modules and trainable parameters against your method. Do not change alpha merely to silence a linter convention. Before a long training run, inspect gradients and parameter updates in a small test in your environment. Adapter Reality can inspect saved metadata, not the optimizer or executed updates.</p>
+<p><strong>Optional demo:</strong> six synthetic snippets illustrate these situations in <strong>Explore another example</strong>. They are not executed or included in case reports. References: <a href="https://huggingface.co/docs/peft/developer_guides/quantization">PEFT quantization workflow</a> and <a href="https://huggingface.co/docs/peft/developer_guides/troubleshooting">PEFT troubleshooting</a>.</p>
+</section>
+<section id="summary" class="level2" data-number="29.10">
+<h2 data-number="29.10" class="anchored" data-anchor-id="summary"><span class="header-section-number">29.10</span> Summary</h2>
 <ul>
 <li><strong>Why PEFT:</strong> full tuning = one copy per task + ~12-16 bytes/parameter in memory + forgetting risk. PEFT <strong>freezes the base</strong> and trains a tiny fraction.</li>
 <li><strong>Adapters</strong> <span class="citation" data-cites="houlsby2019adapters">(<a href="#ref-houlsby2019adapters" role="doc-biblioref"><span class="nocase">Houlsby et al.</span> 2019</a>)</span>: bottleneck modules inside each layer (0.4% of full FT, +3.6% params) — but they <strong>add latency</strong>.</li>
@@ -1441,8 +1449,8 @@ window.Quarto = {
 </ul>
 <p><strong>Next (Part V):</strong> with the model trained, adapted, and aligned, we move on to <strong>using</strong> it: generation in depth, <em>prompting</em> and <em>in-context learning</em>, RAG, agents, and multimodal.</p>
 </section>
-<section id="exercises" class="level2" data-number="29.10">
-<h2 data-number="29.10" class="anchored" data-anchor-id="exercises"><span class="header-section-number">29.10</span> Exercises</h2>
+<section id="exercises" class="level2" data-number="29.11">
+<h2 data-number="29.11" class="anchored" data-anchor-id="exercises"><span class="header-section-number">29.11</span> Exercises</h2>
 <ol type="1">
 <li><strong>The saving.</strong> Why does PEFT reduce <strong>training memory</strong> so much? (Hint: for how many parameters do the optimizer states exist?)</li>
 <li><strong>LoRA term by term.</strong> In <span class="math inline">\(h=W_0x+\frac{\alpha}{r}BAx\)</span>, what is <span class="math inline">\(W_0\)</span>, what do <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> do, and why is <span class="math inline">\(B\)</span> initialized to zero?</li>

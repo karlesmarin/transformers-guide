@@ -1218,8 +1218,9 @@ window.Quarto = {
   <li><a href="#qlora-afinar-un-gigante-en-una-sola-gpu" id="toc-qlora-afinar-un-gigante-en-una-sola-gpu" class="nav-link" data-scroll-target="#qlora-afinar-un-gigante-en-una-sola-gpu"><span class="header-section-number">29.6</span> QLoRA: afinar un gigante en una sola GPU</a></li>
   <li><a href="#soft-prompts-prefix-y-prompt-tuning" id="toc-soft-prompts-prefix-y-prompt-tuning" class="nav-link" data-scroll-target="#soft-prompts-prefix-y-prompt-tuning"><span class="header-section-number">29.7</span> Soft prompts: prefix y prompt tuning</a></li>
   <li><a href="#cuándo-usar-cada-uno" id="toc-cuándo-usar-cada-uno" class="nav-link" data-scroll-target="#cuándo-usar-cada-uno"><span class="header-section-number">29.8</span> Cuándo usar cada uno</a></li>
-  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">29.9</span> Resumen</a></li>
-  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">29.10</span> Ejercicios</a></li>
+  <li><a href="#sec-resolver-peft" id="toc-sec-resolver-peft" class="nav-link" data-scroll-target="#sec-resolver-peft"><span class="header-section-number">29.9</span> Del aviso estático a la verificación PEFT</a></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">29.10</span> Resumen</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">29.11</span> Ejercicios</a></li>
   <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias">Referencias</a></li>
   </ul>
 </nav>
@@ -1429,8 +1430,15 @@ window.Quarto = {
 </div>
 </div>
 </section>
-<section id="resumen" class="level2" data-number="29.9">
-<h2 data-number="29.9" class="anchored" data-anchor-id="resumen"><span class="header-section-number">29.9</span> Resumen</h2>
+<section id="sec-resolver-peft" class="level2" data-number="29.9">
+<h2 data-number="29.9" class="anchored" data-anchor-id="sec-resolver-peft"><span class="header-section-number">29.9</span> Del aviso estático a la verificación PEFT</h2>
+<p>El <a href="https://karlesmarin.github.io/tafagent/?resolve=peft&amp;lang=es">resolutor de código PEFT</a> lee patrones y números de línea; no ejecuta Python ni reconstruye el flujo de control. <strong>Ver los pasos de comprobación</strong> prioriza intención de carga, orden de preparación k-bit, módulos objetivo y escala. También acompaña los casos sin llamadas reconocidas o sin avisos: ninguno certifica código correcto.</p>
+<p>Crear un adaptador nuevo y recuperar pesos entrenados requieren flujos distintos. Comprueba cuál pretendías usar y qué adaptador está realmente activo. Una ruta de checkpoint en una cadena no demuestra que se hayan ignorado pesos. Para el flujo k-bit documentado, la preparación precede a la incorporación de adaptadores entrenables; el orden textual puede confundir funciones independientes o ramas.</p>
+<p>Contrasta módulos reales y parámetros entrenables con tu método. No cambies alpha solo para silenciar una convención del linter. Antes de un entrenamiento largo, inspecciona gradientes y actualizaciones en una prueba pequeña de tu entorno. Adapter Reality puede revisar los metadatos guardados, no el optimizador ni las actualizaciones ejecutadas.</p>
+<p><strong>Demo opcional:</strong> seis fragmentos sintéticos muestran estas situaciones en <strong>Explorar otro ejemplo</strong>. No se ejecutan ni se incluyen en los informes de caso. Referencias: <a href="https://huggingface.co/docs/peft/developer_guides/quantization">flujo de cuantización de PEFT</a> y <a href="https://huggingface.co/docs/peft/developer_guides/troubleshooting">resolución de problemas de PEFT</a>.</p>
+</section>
+<section id="resumen" class="level2" data-number="29.10">
+<h2 data-number="29.10" class="anchored" data-anchor-id="resumen"><span class="header-section-number">29.10</span> Resumen</h2>
 <ul>
 <li><strong>Por qué PEFT:</strong> afinar entero = una copia por tarea + ~12-16 bytes/parámetro en memoria + riesgo de olvido. PEFT <strong>congela la base</strong> y entrena una fracción minúscula.</li>
 <li><strong>Adapters</strong> <span class="citation" data-cites="houlsby2019adapters">(<a href="#ref-houlsby2019adapters" role="doc-biblioref"><span class="nocase">Houlsby et&nbsp;al.</span> 2019</a>)</span>: módulos cuello de botella dentro de cada capa (0,4 % del full FT, +3,6 % params) — pero <strong>añaden latencia</strong>.</li>
@@ -1441,8 +1449,8 @@ window.Quarto = {
 </ul>
 <p><strong>Siguiente (Parte V):</strong> con el modelo entrenado, adaptado y alineado, pasamos a <strong>usarlo</strong>: generación en profundidad, <em>prompting</em> e <em>in-context learning</em>, RAG, agentes y multimodal.</p>
 </section>
-<section id="ejercicios" class="level2" data-number="29.10">
-<h2 data-number="29.10" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">29.10</span> Ejercicios</h2>
+<section id="ejercicios" class="level2" data-number="29.11">
+<h2 data-number="29.11" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">29.11</span> Ejercicios</h2>
 <ol type="1">
 <li><strong>El ahorro.</strong> ¿Por qué PEFT reduce tanto la <strong>memoria de entrenamiento</strong>? (Pista: ¿para cuántos parámetros existen los estados del optimizador?)</li>
 <li><strong>LoRA término a término.</strong> En <span class="math inline">\(h=W_0x+\frac{\alpha}{r}BAx\)</span>, ¿qué es <span class="math inline">\(W_0\)</span>, qué hacen <span class="math inline">\(A\)</span> y <span class="math inline">\(B\)</span>, y por qué <span class="math inline">\(B\)</span> se inicializa a cero?</li>
