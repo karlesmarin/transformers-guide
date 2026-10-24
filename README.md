@@ -8,6 +8,14 @@
 
 ---
 
+## 2026-10-25 · Ordered verification / Comprobaciones ordenadas
+
+**ES:** Capítulos 20, 28, 40 y R5 explican 17 prioridades y tres pasos para memoria,
+plantillas y adaptadores. Diez escenarios opcionales; sin ejecución automática.
+
+**EN:** Chapters 20, 28, 40 and R5 explain 17 priorities and three steps for memory,
+templates and adapters. Ten optional scenarios; no automatic runtime execution.
+
 ## 2026-10-25 · Protocol checklist / Lista de comprobación del protocolo
 
 **ES:** R4 y R5 explican 19 condiciones, diferencias entre informes y el siguiente
