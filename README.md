@@ -8,6 +8,14 @@
 
 ---
 
+## 2026-10-25 · Protocol checklist / Lista de comprobación del protocolo
+
+**ES:** R4 y R5 explican 19 condiciones, diferencias entre informes y el siguiente
+paso priorizado del resolutor. Incluye demo sintética; no inventa datos ausentes.
+
+**EN:** R4 and R5 explain 19 conditions, report differences and the resolver's
+prioritized next check. Includes a synthetic demo; missing data is not invented.
+
 ## 2026-10-25 · Return to the same problem / Volver al mismo problema
 
 **ES:** Los enlaces del resumen y revisión del resolutor conservan la ruta,
