@@ -1218,7 +1218,10 @@ window.Quarto = {
   <li><a href="#el-espejismo-del-benchmark-la-contaminación" id="toc-el-espejismo-del-benchmark-la-contaminación" class="nav-link" data-scroll-target="#el-espejismo-del-benchmark-la-contaminación"><span class="header-section-number">41.6</span> El espejismo del benchmark: la contaminación</a></li>
   <li><a href="#el-juez-es-un-llm-y-se-le-puede-engañar" id="toc-el-juez-es-un-llm-y-se-le-puede-engañar" class="nav-link" data-scroll-target="#el-juez-es-un-llm-y-se-le-puede-engañar"><span class="header-section-number">41.7</span> El juez es un LLM (y se le puede engañar)</a></li>
   <li><a href="#rigor-estadístico-ese-2-es-real" id="toc-rigor-estadístico-ese-2-es-real" class="nav-link" data-scroll-target="#rigor-estadístico-ese-2-es-real"><span class="header-section-number">41.8</span> Rigor estadístico: ¿ese “+2 %” es real?</a></li>
-  <li><a href="#sec-evaluacion-contexto" id="toc-sec-evaluacion-contexto" class="nav-link" data-scroll-target="#sec-evaluacion-contexto"><span class="header-section-number">41.9</span> Un laboratorio común para contexto y compresión</a></li>
+  <li><a href="#sec-evaluacion-contexto" id="toc-sec-evaluacion-contexto" class="nav-link" data-scroll-target="#sec-evaluacion-contexto"><span class="header-section-number">41.9</span> Un laboratorio común para contexto y compresión</a>
+  <ul class="collapse">
+  <li><a href="#sec-resolver-drift" id="toc-sec-resolver-drift" class="nav-link" data-scroll-target="#sec-resolver-drift"><span class="header-section-number">41.9.1</span> Acompañar una diferencia entre evaluaciones</a></li>
+  </ul></li>
   <li><a href="#puente-con-nuestro-tema-breve-y-honesto" id="toc-puente-con-nuestro-tema-breve-y-honesto" class="nav-link" data-scroll-target="#puente-con-nuestro-tema-breve-y-honesto"><span class="header-section-number">41.10</span> Puente con nuestro tema (breve y honesto)</a></li>
   <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">41.11</span> Resumen</a></li>
   <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">41.12</span> Ejercicios</a></li>
@@ -1450,6 +1453,13 @@ Tabla&nbsp;41.1: Benchmarks por capacidad (2024-2026)
 </div>
 </div>
 <p><strong>Conexión con TAF.</strong> Añade γ observado, intervalo, rango de ajuste y versión del protocolo como <strong>descriptores</strong>, siguiendo <a href="R4-medir-gamma.html" class="quarto-xref"><span>Capítulo 47</span></a>. Una correlación con el acierto puede orientar una hipótesis; un predictor útil necesita evaluación en modelos y tareas no usados para ajustarlo. Ni R² ni una puntuación de cobertura de evidencia son una probabilidad calibrada de que una respuesta sea correcta.</p>
+<section id="sec-resolver-drift" class="level3" data-number="41.9.1">
+<h3 data-number="41.9.1" class="anchored" data-anchor-id="sec-resolver-drift"><span class="header-section-number">41.9.1</span> Acompañar una diferencia entre evaluaciones</h3>
+<p>El <a href="https://karlesmarin.github.io/tafagent/?resolve=drift&amp;lang=es">resolutor de diferencias de TAF</a> recibe dos puntuaciones en escala 0–100 y unos ajustes declarados. La casilla de comparabilidad es una declaración del usuario: no comprueba versiones de tarea, particiones, muestras ni métricas. Su banda numérica es <strong>heurística</strong>, no un intervalo de confianza ni un test de significación.</p>
+<p><strong>Ver los pasos de comprobación</strong> decide qué revisar primero: aplicación de plantilla desconocida, estados distintos de aplicación, cambios de motor/precisión/ lote y, después, repetición o estimación de incertidumbre. Esta prioridad se mantiene aunque las puntuaciones sean iguales. Dos estados «aplicada» no prueban que las plantillas ni las conversaciones formateadas sean idénticas.</p>
+<p>Fija una referencia común, cambia un ajuste cada vez y conserva resultados por ejemplo cuando estén disponibles. Registra revisiones de modelo y tokenizador, versión de tarea, muestras, semillas, generación y entradas formateadas. Una diferencia menor tras el cambio es evidencia para investigar; no certifica una reparación ni atribuye por sí sola la causa a un kernel o a la plantilla.</p>
+<p><strong>Demo opcional:</strong> cinco situaciones ilustran estas prioridades en <strong>Explorar otro ejemplo</strong>. Las puntuaciones son sintéticas, no evaluaciones ejecutadas. El <a href="https://github.com/EleutherAI/lm-evaluation-harness/blob/main/docs/interface.md">manual de lm-evaluation-harness</a> describe cómo registrar configuración, semillas y muestras; comprueba las opciones de tu versión. Los resultados agregados de TAF no sustituyen esos registros ni un análisis de incertidumbre adecuado a la métrica.</p>
+</section>
 </section>
 <section id="puente-con-nuestro-tema-breve-y-honesto" class="level2" data-number="41.10">
 <h2 data-number="41.10" class="anchored" data-anchor-id="puente-con-nuestro-tema-breve-y-honesto"><span class="header-section-number">41.10</span> Puente con nuestro tema (breve y honesto)</h2>

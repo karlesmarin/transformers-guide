@@ -1186,7 +1186,10 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
   <li><a href="#the-two-phases-of-inference-and-why-they-clash" id="toc-the-two-phases-of-inference-and-why-they-clash" class="nav-link" data-scroll-target="#the-two-phases-of-inference-and-why-they-clash"><span class="header-section-number">37.3</span> The two phases of inference (and why they clash)</a></li>
   <li><a href="#the-metrics-that-matter" id="toc-the-metrics-that-matter" class="nav-link" data-scroll-target="#the-metrics-that-matter"><span class="header-section-number">37.4</span> The metrics that matter</a></li>
   <li><a href="#continuous-batching-the-big-win" id="toc-continuous-batching-the-big-win" class="nav-link" data-scroll-target="#continuous-batching-the-big-win"><span class="header-section-number">37.5</span> Continuous batching: the big win</a></li>
-  <li><a href="#managing-the-kv-cache-when-serving" id="toc-managing-the-kv-cache-when-serving" class="nav-link" data-scroll-target="#managing-the-kv-cache-when-serving"><span class="header-section-number">37.6</span> Managing the KV cache when serving</a></li>
+  <li><a href="#managing-the-kv-cache-when-serving" id="toc-managing-the-kv-cache-when-serving" class="nav-link" data-scroll-target="#managing-the-kv-cache-when-serving"><span class="header-section-number">37.6</span> Managing the KV cache when serving</a>
+  <ul class="collapse">
+  <li><a href="#sec-resolver-cache" id="toc-sec-resolver-cache" class="nav-link" data-scroll-target="#sec-resolver-cache"><span class="header-section-number">37.6.1</span> From text prefixes to measured reuse</a></li>
+  </ul></li>
   <li><a href="#disaggregated-and-chunked-prefill-2024" id="toc-disaggregated-and-chunked-prefill-2024" class="nav-link" data-scroll-target="#disaggregated-and-chunked-prefill-2024"><span class="header-section-number">37.7</span> Disaggregated and chunked prefill (2024)</a></li>
   <li><a href="#other-levers-that-you-already-know" id="toc-other-levers-that-you-already-know" class="nav-link" data-scroll-target="#other-levers-that-you-already-know"><span class="header-section-number">37.8</span> Other levers (that you already know)</a></li>
   <li><a href="#compilation-and-kernels-to-situate" id="toc-compilation-and-kernels-to-situate" class="nav-link" data-scroll-target="#compilation-and-kernels-to-situate"><span class="header-section-number">37.9</span> Compilation and kernels (to situate)</a></li>
@@ -1329,6 +1332,18 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
 <h2 data-number="37.6" class="anchored" data-anchor-id="managing-the-kv-cache-when-serving"><span class="header-section-number">37.6</span> Managing the KV cache when serving</h2>
 <p>The <strong>KV cache</strong> is the <strong>binding constraint</strong> of serving: it grows <strong>linearly with batch size and sequence length</strong>, and competes with the weights for HBM. How much KV fits decides <strong>how many requests you can batch</strong> —and therefore your throughput.</p>
 <p>This is where <strong>PagedAttention / vLLM</strong> <span class="citation" data-cites="kwon2023paged">(<a href="#ref-kwon2023paged" role="doc-biblioref"><span class="nocase">Kwon et al.</span> 2023</a>)</span> comes in (its mechanics, in Ch. 34). Its impact <strong>in serving</strong>: by storing the cache in <strong>blocks</strong> like virtual memory, it eliminates fragmentation (<strong>almost zero waste</strong>) → <strong>much larger batches fit</strong> → more throughput (up to <strong>2-4× under the reported conditions</strong>, at equal latency). And it allows <strong>prefix sharing</strong>: if many requests share the same <em>system prompt</em> or <em>few-shot</em> examples, their KV blocks are <strong>physically shared</strong> (<em>automatic prefix caching</em>) instead of recomputed.</p>
+<section id="sec-resolver-cache" class="level3" data-number="37.6.1">
+<h3 data-number="37.6.1" class="anchored" data-anchor-id="sec-resolver-cache"><span class="header-section-number">37.6.1</span> From text prefixes to measured reuse</h3>
+<p>Two texts sharing a beginning do not establish a cache hit. The <a href="https://karlesmarin.github.io/tafagent/?resolve=cache&amp;lang=en">TAF prompt resolver</a> compares <strong>UTF-16 units</strong>, not token IDs or server counters. It distinguishes identical, appended and shortened text, plus changes at the start or after a shared prefix. Appending or truncating text can change tokenization at the boundary; reusable blocks depend on the runtime and final rendered request.</p>
+<p><strong>See the verification steps</strong> accompanies the result with three steps:</p>
+<ol type="1">
+<li>Inspect the first difference or, for identical text, the actual cache settings, model/adapter, lifetime and block eviction.</li>
+<li>Compare a cold request with warm repetitions while holding model, prompt, output length and concurrency fixed. Record reuse counters where available and separate time to first token from total time.</li>
+<li>Interpret the result without equating less input with more reuse, or total latency with prefill time. Token Tax counts tokens but does not verify a cache hit. No discounts or speedups are computed here.</li>
+</ol>
+<p><strong>Optional demo:</strong> load the example and open <strong>Explore another example</strong> for five situations. Texts stay in the browser and are excluded from case reports. These are synthetic examples: they run no models and measure no caches.</p>
+<p>The <a href="https://docs.vllm.ai/en/latest/design/prefix_caching/">official vLLM prefix-cache design</a> explains how tokens, preceding prefixes and additional keys identify reusable blocks; shared text is only an investigative clue.</p>
+</section>
 </section>
 <section id="disaggregated-and-chunked-prefill-2024" class="level2" data-number="37.7">
 <h2 data-number="37.7" class="anchored" data-anchor-id="disaggregated-and-chunked-prefill-2024"><span class="header-section-number">37.7</span> Disaggregated and chunked prefill (2024)</h2>

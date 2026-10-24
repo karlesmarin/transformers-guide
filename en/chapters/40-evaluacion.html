@@ -1218,7 +1218,10 @@ window.Quarto = {
   <li><a href="#the-benchmark-mirage-contamination" id="toc-the-benchmark-mirage-contamination" class="nav-link" data-scroll-target="#the-benchmark-mirage-contamination"><span class="header-section-number">41.6</span> The benchmark mirage: contamination</a></li>
   <li><a href="#the-judge-is-an-llm-and-it-can-be-fooled" id="toc-the-judge-is-an-llm-and-it-can-be-fooled" class="nav-link" data-scroll-target="#the-judge-is-an-llm-and-it-can-be-fooled"><span class="header-section-number">41.7</span> The judge is an LLM (and it can be fooled)</a></li>
   <li><a href="#statistical-rigor-is-that-2-real" id="toc-statistical-rigor-is-that-2-real" class="nav-link" data-scroll-target="#statistical-rigor-is-that-2-real"><span class="header-section-number">41.8</span> Statistical rigor: is that “+2%” real?</a></li>
-  <li><a href="#sec-evaluacion-contexto" id="toc-sec-evaluacion-contexto" class="nav-link" data-scroll-target="#sec-evaluacion-contexto"><span class="header-section-number">41.9</span> A shared laboratory for context and compression</a></li>
+  <li><a href="#sec-evaluacion-contexto" id="toc-sec-evaluacion-contexto" class="nav-link" data-scroll-target="#sec-evaluacion-contexto"><span class="header-section-number">41.9</span> A shared laboratory for context and compression</a>
+  <ul class="collapse">
+  <li><a href="#sec-resolver-drift" id="toc-sec-resolver-drift" class="nav-link" data-scroll-target="#sec-resolver-drift"><span class="header-section-number">41.9.1</span> Following up an evaluation difference</a></li>
+  </ul></li>
   <li><a href="#bridge-to-our-theme-brief-and-honest" id="toc-bridge-to-our-theme-brief-and-honest" class="nav-link" data-scroll-target="#bridge-to-our-theme-brief-and-honest"><span class="header-section-number">41.10</span> Bridge to our theme (brief and honest)</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">41.11</span> Summary</a></li>
   <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">41.12</span> Exercises</a></li>
@@ -1450,6 +1453,13 @@ Table&nbsp;41.1: Benchmarks by capability (2024-2026)
 </div>
 </div>
 <p><strong>Connection to TAF.</strong> Add observed γ, its interval, fit range and protocol version as <strong>descriptors</strong>, following <a href="R4-medir-gamma.html" class="quarto-xref"><span>Chapter 47</span></a>. Correlation with accuracy can motivate a hypothesis; a useful predictor needs evaluation on models and tasks not used for fitting. Neither R² nor an evidence-coverage score is a calibrated probability that an answer is correct.</p>
+<section id="sec-resolver-drift" class="level3" data-number="41.9.1">
+<h3 data-number="41.9.1" class="anchored" data-anchor-id="sec-resolver-drift"><span class="header-section-number">41.9.1</span> Following up an evaluation difference</h3>
+<p>The <a href="https://karlesmarin.github.io/tafagent/?resolve=drift&amp;lang=en">TAF evaluation-drift resolver</a> accepts two scores on a 0–100 scale and declared settings. Its comparability checkbox is a user declaration: it does not verify task versions, splits, examples or metrics. Its numerical band is <strong>heuristic</strong>, not a confidence interval or significance test.</p>
+<p><strong>See the verification steps</strong> prioritizes unknown template application, different application states, changed framework/precision/batch, then repetition or uncertainty estimation. This order applies even if scores agree. Two “applied” states do not prove identical templates or rendered conversations.</p>
+<p>Establish a common baseline, change one setting at a time and keep per-example results where available. Record model/tokenizer revisions, task version, examples, seeds, generation settings and rendered inputs. A smaller gap after a change is evidence to investigate; it does not certify a fix or by itself attribute the cause to a kernel or template.</p>
+<p><strong>Optional demo:</strong> five situations illustrate these priorities in <strong>Explore another example</strong>. Scores are synthetic, not executed evaluations. The <a href="https://github.com/EleutherAI/lm-evaluation-harness/blob/main/docs/interface.md">lm-evaluation-harness interface</a> documents configuration, seed and sample logging; check the options in your version. TAF’s aggregate results do not replace those records or metric-appropriate uncertainty analysis.</p>
+</section>
 </section>
 <section id="bridge-to-our-theme-brief-and-honest" class="level2" data-number="41.10">
 <h2 data-number="41.10" class="anchored" data-anchor-id="bridge-to-our-theme-brief-and-honest"><span class="header-section-number">41.10</span> Bridge to our theme (brief and honest)</h2>

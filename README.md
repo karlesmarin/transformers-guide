@@ -8,6 +8,16 @@
 
 ---
 
+## 2026-10-25 · Cache and evaluation follow-up / Seguimiento de caché y evaluación
+
+**ES:** Capítulos 36, 40 y R5: comprobar reutilización y diferencias de evaluación.
+Diez ejemplos nuevos; 27 prioridades y veinte situaciones en total. Las demos no
+ejecutan modelos. Prefijos textuales no miden aciertos; bandas no miden incertidumbre.
+
+**EN:** Chapters 36, 40 and R5: checking reuse and evaluation differences. Ten new
+examples; 27 priorities and twenty situations overall. Demos run no models. Text
+prefixes do not measure hits; heuristic bands do not measure uncertainty.
+
 ## 2026-10-25 · Ordered verification / Comprobaciones ordenadas
 
 **ES:** Capítulos 20, 28, 40 y R5 explican 17 prioridades y tres pasos para memoria,
