@@ -8,6 +8,27 @@
 
 ---
 
+## 2026-10-25 · Follow-up observations / Observaciones de seguimiento
+
+**ES:** R5 y los capítulos relacionados explican cómo aportar una observación
+tras una comprobación: 27 opciones específicas en nueve rutas, más evidencia no
+disponible. Cambia la siguiente instrucción; conserva hasta doce declaraciones
+en el caso y en el informe, sin convertirlas en mediciones verificadas.
+La demo interactiva incorpora el paso; el vídeo anterior conserva su alcance.
+Fit Check demuestra un presupuesto con configuración guardada, sin consulta HF.
+
+**EN:** R5 and related chapters explain reported observations after checks:
+27 specific options on nine routes plus unavailable evidence. They change the
+next instruction and retain up to twelve declarations in the case/report,
+without claiming verified measurements. The interactive demo includes the step;
+the earlier recording retains its original scope. Fit Check demonstrates a
+budget from saved configuration without an HF request.
+
+
+
+Guía de campo y referencia completa sobre transformers. **Español = versión líder** (se redacta y depura primero); inglés se espeja después. Formato de trabajo: **HTML** (Quarto); el **PDF (Typst)** se pule en una pasada final.
+
+
 ## 2026-10-25 · Public sitemap / Sitemap público
 
 **ES:** [Sitemap de la guía](https://karlesmarin.github.io/transformers-guide/sitemap.xml):

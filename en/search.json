@@ -1408,7 +1408,7 @@
     "href": "chapters/10-arquitecturas.html",
     "title": "11  Encoder, decoder and encoder-decoder",
     "section": "",
-    "text": "11.1 The idea in one sentence\nThe three families use the same blocks (attention + FFN + scaffolding); what sets them apart is, above all, the attention mask —what each token can see— and whether there’s cross-attention between an encoder and a decoder.",
+    "text": "11.1 The idea in one sentence\nAfter testing the runtime, report whether it rejected the architecture, lacked metadata or loaded but failed the task. Record it in resolver follow-up to adapt the next check. This is your declaration; it does not modify the initial analysis.\nThe three families use the same blocks (attention + FFN + scaffolding); what sets them apart is, above all, the attention mask —what each token can see— and whether there’s cross-attention between an encoder and a decoder.",
     "crumbs": [
       "Part I — Foundations",
       "<span class='chapter-number'>11</span>  <span class='chapter-title'>Encoder, decoder and encoder-decoder</span>"
@@ -1470,39 +1470,6 @@
     ]
   },
   {
-    "objectID": "chapters/10-arquitecturas.html#sec-hybrid-learning",
-    "href": "chapters/10-arquitecturas.html#sec-hybrid-learning",
-    "title": "11  Encoder, decoder and encoder-decoder",
-    "section": "11.7 Competing Learning in Hybrid Architectures",
-    "text": "11.7 Competing Learning in Hybrid Architectures\nPreprint · arXiv v1 · 2026-10-19. Recurrent and attention blocks can compete during training; staged freezing changes their division of work. (Competing Learning in Hybrid Architectures 2026)\n\n\n\n\n\n\nEvidence scope. Tests reach 1B parameters; the main KDA hybrids disable RoPE. Configuration alone cannot diagnose this competition.\n\n\n\nWhat to test. Compare layer interventions and retrieval at matched training budgets, including multiple data distributions.\n🧪 Continue in TAF: source, limits and proposed experiment.",
-    "crumbs": [
-      "Part I — Foundations",
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Encoder, decoder and encoder-decoder</span>"
-    ]
-  },
-  {
-    "objectID": "chapters/10-arquitecturas.html#sec-engram",
-    "href": "chapters/10-arquitecturas.html#sec-engram",
-    "title": "11  Encoder, decoder and encoder-decoder",
-    "section": "11.8 Conditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models",
-    "text": "11.8 Conditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models\nPreprint · arXiv v2 · 2026-07-12. Engram complements conditional computation with learned, hashed n-gram lookup memory. (Conditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models 2026)\n\n\n\n\n\n\nEvidence scope. This is parametric memory, not an external RAG database or an agent diary. Lookup still incurs storage and transfer costs.\n\n\n\nWhat to test. Compare quality, active compute, total table storage and bandwidth under matched resources.\n🧪 Continue in TAF: source, limits and proposed experiment.",
-    "crumbs": [
-      "Part I — Foundations",
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Encoder, decoder and encoder-decoder</span>"
-    ]
-  },
-  {
-    "objectID": "chapters/10-arquitecturas.html#sec-resolver-architecture",
-    "href": "chapters/10-arquitecturas.html#sec-resolver-architecture",
-    "title": "11  Encoder, decoder and encoder-decoder",
-    "section": "11.9 From declared architecture to a runtime check",
-    "text": "11.9 From declared architecture to a runtime check\nThe architecture resolver distinguishes three situations: outside TAF’s reviewed dense schema, incomplete or inconsistent metadata, and accepted geometry. See the verification steps explains what to inspect first, what to observe and how to interpret the result.\nBeing outside TAF’s schema does not mean the model cannot run in another engine. Check actual attention, state and expert mechanisms and the runtime version’s documentation. Do not invent KV heads, parameter counts or trained context to obtain an estimate. Accepted geometry does not certify kernels, sufficient memory or task quality either.\nIn your environment record revision, loaded class, precision, warnings and peak memory. Test the documented minimal task before increasing workload or context. Successful loading and successful task performance are separate checks.\nOptional demo: after loading the example, Explore another example offers three synthetic configs. Selecting one clears the previous model ID, revision and sources: these are not new measurements of that model. Inspector and Memory Reality help interpret limits without running or certifying your runtime.",
-    "crumbs": [
-      "Part I — Foundations",
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Encoder, decoder and encoder-decoder</span>"
-    ]
-  },
-  {
     "objectID": "chapters/10-arquitecturas.html#summary",
     "href": "chapters/10-arquitecturas.html#summary",
     "title": "11  Encoder, decoder and encoder-decoder",
@@ -1530,6 +1497,39 @@
     "title": "11  Encoder, decoder and encoder-decoder",
     "section": "References",
     "text": "References\n\n\n\n\nCompeting Learning in Hybrid Architectures. 2026. arXiv v1. https://arxiv.org/abs/2610.26830v1.\n\n\nConditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models. 2026. arXiv v2. https://arxiv.org/abs/2601.07372v2.\n\n\nTay, Yi et al. 2022. UL2: Unifying Language Learning Paradigms. https://arxiv.org/abs/2205.05131.\n\n\nWang, Thomas et al. 2022. What Language Model Architecture and Pretraining Objective Work Best for Zero-Shot Generalization? https://arxiv.org/abs/2204.05832.",
+    "crumbs": [
+      "Part I — Foundations",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Encoder, decoder and encoder-decoder</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/10-arquitecturas.html#sec-hybrid-learning",
+    "href": "chapters/10-arquitecturas.html#sec-hybrid-learning",
+    "title": "11  Encoder, decoder and encoder-decoder",
+    "section": "11.7 Competing Learning in Hybrid Architectures",
+    "text": "11.7 Competing Learning in Hybrid Architectures\nPreprint · arXiv v1 · 2026-10-19. Recurrent and attention blocks can compete during training; staged freezing changes their division of work. (Competing Learning in Hybrid Architectures 2026)\n\n\n\n\n\n\nEvidence scope. Tests reach 1B parameters; the main KDA hybrids disable RoPE. Configuration alone cannot diagnose this competition.\n\n\n\nWhat to test. Compare layer interventions and retrieval at matched training budgets, including multiple data distributions.\n🧪 Continue in TAF: source, limits and proposed experiment.",
+    "crumbs": [
+      "Part I — Foundations",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Encoder, decoder and encoder-decoder</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/10-arquitecturas.html#sec-engram",
+    "href": "chapters/10-arquitecturas.html#sec-engram",
+    "title": "11  Encoder, decoder and encoder-decoder",
+    "section": "11.8 Conditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models",
+    "text": "11.8 Conditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models\nPreprint · arXiv v2 · 2026-07-12. Engram complements conditional computation with learned, hashed n-gram lookup memory. (Conditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models 2026)\n\n\n\n\n\n\nEvidence scope. This is parametric memory, not an external RAG database or an agent diary. Lookup still incurs storage and transfer costs.\n\n\n\nWhat to test. Compare quality, active compute, total table storage and bandwidth under matched resources.\n🧪 Continue in TAF: source, limits and proposed experiment.",
+    "crumbs": [
+      "Part I — Foundations",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Encoder, decoder and encoder-decoder</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/10-arquitecturas.html#sec-resolver-architecture",
+    "href": "chapters/10-arquitecturas.html#sec-resolver-architecture",
+    "title": "11  Encoder, decoder and encoder-decoder",
+    "section": "11.9 From declared architecture to a runtime check",
+    "text": "11.9 From declared architecture to a runtime check\nThe architecture resolver distinguishes three situations: outside TAF’s reviewed dense schema, incomplete or inconsistent metadata, and accepted geometry. See the verification steps explains what to inspect first, what to observe and how to interpret the result.\nBeing outside TAF’s schema does not mean the model cannot run in another engine. Check actual attention, state and expert mechanisms and the runtime version’s documentation. Do not invent KV heads, parameter counts or trained context to obtain an estimate. Accepted geometry does not certify kernels, sufficient memory or task quality either.\nIn your environment record revision, loaded class, precision, warnings and peak memory. Test the documented minimal task before increasing workload or context. Successful loading and successful task performance are separate checks.\nOptional demo: after loading the example, Explore another example offers three synthetic configs. Selecting one clears the previous model ID, revision and sources: these are not new measurements of that model. Inspector and Memory Reality help interpret limits without running or certifying your runtime.",
     "crumbs": [
       "Part I — Foundations",
       "<span class='chapter-number'>11</span>  <span class='chapter-title'>Encoder, decoder and encoder-decoder</span>"
@@ -2541,7 +2541,7 @@
     "href": "chapters/20-kv-cache.html",
     "title": "21  KV-cache compression in practice",
     "section": "",
-    "text": "21.1 The idea in one sentence\nHow much a model’s KV-cache can be compressed is decided by its exponent γ: with γ&gt;1 (light tail) a finite window captures almost all the attention; with γ&lt;1 (heavy tail) it doesn’t —and that window can be computed in closed form—.",
+    "text": "21.1 The idea in one sentence\nAfter testing, distinguish loading failure, failure even with a short request and failure only with longer requests. Record it in resolver follow-up to adapt the next check. This is your declaration; it does not modify the initial analysis.\nHow much a model’s KV-cache can be compressed is decided by its exponent γ: with γ&gt;1 (light tail) a finite window captures almost all the attention; with γ&lt;1 (heavy tail) it doesn’t —and that window can be computed in closed form—.",
     "crumbs": [
       "Part II — How transformers attend over distance",
       "<span class='chapter-number'>21</span>  <span class='chapter-title'>KV-cache compression in practice</span>"
@@ -2592,33 +2592,11 @@
     ]
   },
   {
-    "objectID": "chapters/20-kv-cache.html#sec-kv-evidencia",
-    "href": "chapters/20-kv-cache.html#sec-kv-evidencia",
-    "title": "21  KV-cache compression in practice",
-    "section": "21.6 Keeping mass, values and the thread of a task",
-    "text": "21.6 Keeping mass, values and the thread of a task\nThe notebook has a complication: a rarely consulted page may contain the only exception that changes an answer. How often a page is consulted and how much its content matters are different measurements.\nTwo recent studies make this limit concrete. KVFundaBench / ShotKV (ICML 2026) evaluates dense reasoning and proposes preserving examples as semantic units, separating prefill from decode (Liu et al. 2026). ValueDiff (preprint, October 2026 revision) studies architectures with attenuated sinks and selects using each value’s deviation from the cache mean (Park et al. 2026). Neither validates our D_f window: they provide tasks and alternatives against which to test it.\n\n\n\n\n\n\nNote🔍 A worked example: little mass, large effect\n\n\n\n\n\nA head’s output is a mixture \\(o=\\sum_i a_i v_i\\): \\(a_i\\) says how much a token is consulted and \\(v_i\\) what it contributes. With \\(a=(0.99,0.01)\\) and scalar values \\(v=(0,100)\\), the output is \\(o=1\\). Removing the second token and renormalizing preserves 99% of the original mass, but changes the output to 0. This is a teaching counterexample, not a model measurement; it shows why retained mass does not guarantee fidelity.\n\n\n\nMove the discarded token’s mass and value: truncated output stays at zero, but the error changes. This is the same two-token example, calculated live.\nTwo-token example: retaining 99% of mass can change output from 1 to 0 when the discarded token has value 100.\n\n\n\nTable 21.2: Head-to-head design; these are not TAF results.\n\n\n\n\n\n\n\n\n\n\n\nProposed comparison\nWhat is matched\nWhat is recorded\nStatus\n\n\n\n\nFull versus compressed cache\nModel, task and decoding\nReference accuracy and cost\nControl\n\n\nD_f window versus attention- or value-based selection\nCache bytes, including metadata\nMass, output error and accuracy\nExperiment pending\n\n\nRetrieval versus reasoning\nComparable budgets and lengths\nLoss by task type\nMotivated by KVFundaBench\n\n\nIndividual tokens versus intact units\nActual occupied memory\nExample integrity and task result\nMotivated by ShotKV\n\n\n\n\n\n\nLaboratory recipe. Start with the full cache. Reduce the budget in several steps, record prefill and decode separately, and retain failures as well as averages. A method that wins at key retrieval may lose at problem solving. The shared protocol in Section 41.9 helps avoid changing task, architecture and memory all at once.",
-    "crumbs": [
-      "Part II — How transformers attend over distance",
-      "<span class='chapter-number'>21</span>  <span class='chapter-title'>KV-cache compression in practice</span>"
-    ]
-  },
-  {
     "objectID": "chapters/20-kv-cache.html#honesty-whats-left-to-validate",
     "href": "chapters/20-kv-cache.html#honesty-whats-left-to-validate",
     "title": "21  KV-cache compression in practice",
     "section": "21.7 Honesty — what’s left to validate",
     "text": "21.7 Honesty — what’s left to validate\n\n\n\n\n\n\nCaution✗ What we do NOT claim (yet)\n\n\n\n\nThe head-to-head is missing. We need to compare D_f against the principled methods (Ada-KV, LAVa) at matched memory on task benchmarks (RULER, LongBench, NIAH), not just against heuristics. That head-to-head benchmark is pending: we present D_f as derived and predictive, not as proven superior.\nCapturing attention mass ≠ output fidelity. A low-mass token can matter through the norm of its value (Ada-KV’s critique). D_f reasons about mass, which is necessary but not sufficient.\nD_f goes ON TOP of the sink and the recent window, it doesn’t replace them: real attention is γ-tail + sink + recency (Ch. 17). The total budget counts the union of sink, local-window and D_f positions, without double-counting overlaps.\nMeasure the task, not perplexity. Perplexity can stay low while retrieval (needle) has already collapsed —perplexity is dominated by the local tokens you keep anyway—.\nD_f assumes a clean single-exponent tail; it’s weaker on induction/retrieval heads with flat or multimodal attention.\n\n\n\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\ntafagent includes the X-19 recipe (KV compression), which based on your model’s γ recommends soft-decay / cutoff / literature, and computes the KV memory at your target length. It’s D_f turned into practical advice.\n▶ See the demo in tafagent",
-    "crumbs": [
-      "Part II — How transformers attend over distance",
-      "<span class='chapter-number'>21</span>  <span class='chapter-title'>KV-cache compression in practice</span>"
-    ]
-  },
-  {
-    "objectID": "chapters/20-kv-cache.html#sec-octopus",
-    "href": "chapters/20-kv-cache.html#sec-octopus",
-    "title": "21  KV-cache compression in practice",
-    "section": "21.8 Octopus: Gated Selective Attention for Memory-Bounded Long-Context Inference in Large Language Models",
-    "text": "21.8 Octopus: Gated Selective Attention for Memory-Bounded Long-Context Inference in Large Language Models\nPublished · ACL 2026 · 2026-07. Learned gates retain selected KV states under a bounded memory budget. (Octopus: Gated Selective Attention for Memory-Bounded Long-Context Inference in Large Language Models 2026)\n\n\n\n\n\n\nEvidence scope. Requires distillation and fine-tuning; it is not a training-free switch. A benchmark gain does not guarantee retention of arbitrary facts.\n\n\n\nWhat to test. Compare reasoning and retrieval with the full-cache teacher and budget-matched baselines, including adaptation cost.\n🧪 Continue in TAF: source, limits and proposed experiment.",
     "crumbs": [
       "Part II — How transformers attend over distance",
       "<span class='chapter-number'>21</span>  <span class='chapter-title'>KV-cache compression in practice</span>"
@@ -2652,6 +2630,28 @@
     "title": "21  KV-cache compression in practice",
     "section": "References",
     "text": "References\n\n\n\n\nCai, Zefan et al. 2024. PyramidKV: Dynamic KV Cache Compression Based on Pyramidal Information Funneling. https://arxiv.org/abs/2406.02069.\n\n\nFeng, Yuan, Junlin Lv, Yukun Cao, Xike Xie, and Sean Zhou. 2025. “Ada-KV: Optimizing KV Cache Eviction by Adaptive Budget Allocation for Efficient LLM Inference.” NeurIPS. https://arxiv.org/abs/2407.11550.\n\n\nGe, Suyu et al. 2023. Model Tells You What to Discard: Adaptive KV Cache Compression for LLMs (FastGen). https://arxiv.org/abs/2310.01801.\n\n\nLi, Yuhong et al. 2024. SnapKV: LLM Knows What You Are Looking for Before Generation. https://arxiv.org/abs/2404.14469.\n\n\nLiu, Xiang, Zhenheng Tang, Hong Chen, et al. 2026. “Semantic Integrity Matters: Benchmarking and Preserving High-Density Reasoning in KV Cache Compression.” Proceedings of the 43rd International Conference on Machine Learning 306: 78537–65. https://proceedings.mlr.press/v306/liu26dz.html.\n\n\nLiu, Zichang et al. 2023. Scissorhands: Exploiting the Persistence of Importance Hypothesis for LLM KV Cache Compression. https://arxiv.org/abs/2305.17118.\n\n\nLiu, Zirui et al. 2024. KIVI: A Tuning-Free Asymmetric 2bit Quantization for KV Cache. https://arxiv.org/abs/2402.02750.\n\n\nMarín, Carles. 2026. Predicting How Transformers Attend: Analytic Power-Law Theory, Phase Transitions, and Practical Compression Tools. https://zenodo.org/records/20314038.\n\n\nOctopus: Gated Selective Attention for Memory-Bounded Long-Context Inference in Large Language Models. 2026. ACL 2026. https://aclanthology.org/2026.acl-long.1631/.\n\n\nPark, Junyoung, Jungwook Choi, and Mingu Lee. 2026. ValueDiff: Value-Geometric KV Cache Eviction for Sink-Suppressed LLMs. https://arxiv.org/abs/2609.23314v2.\n\n\nShen et al. 2025. LAVa: Layer-Wise and Adaptive KV Cache Compression via Residual Information Loss. https://arxiv.org/abs/2509.09754.\n\n\nXiao, Guangxuan, Yuandong Tian, Beidi Chen, Song Han, and Mike Lewis. 2024. “Efficient Streaming Language Models with Attention Sinks.” ICLR. https://arxiv.org/abs/2309.17453.\n\n\nZhang, Zhenyu et al. 2023. “H2O: Heavy-Hitter Oracle for Efficient Generative Inference of Large Language Models.” NeurIPS. https://arxiv.org/abs/2306.14048.",
+    "crumbs": [
+      "Part II — How transformers attend over distance",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>KV-cache compression in practice</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/20-kv-cache.html#sec-kv-evidencia",
+    "href": "chapters/20-kv-cache.html#sec-kv-evidencia",
+    "title": "21  KV-cache compression in practice",
+    "section": "21.6 Keeping mass, values and the thread of a task",
+    "text": "21.6 Keeping mass, values and the thread of a task\nThe notebook has a complication: a rarely consulted page may contain the only exception that changes an answer. How often a page is consulted and how much its content matters are different measurements.\nTwo recent studies make this limit concrete. KVFundaBench / ShotKV (ICML 2026) evaluates dense reasoning and proposes preserving examples as semantic units, separating prefill from decode (Liu et al. 2026). ValueDiff (preprint, October 2026 revision) studies architectures with attenuated sinks and selects using each value’s deviation from the cache mean (Park et al. 2026). Neither validates our D_f window: they provide tasks and alternatives against which to test it.\n\n\n\n\n\n\nNote🔍 A worked example: little mass, large effect\n\n\n\n\n\nA head’s output is a mixture \\(o=\\sum_i a_i v_i\\): \\(a_i\\) says how much a token is consulted and \\(v_i\\) what it contributes. With \\(a=(0.99,0.01)\\) and scalar values \\(v=(0,100)\\), the output is \\(o=1\\). Removing the second token and renormalizing preserves 99% of the original mass, but changes the output to 0. This is a teaching counterexample, not a model measurement; it shows why retained mass does not guarantee fidelity.\n\n\n\nMove the discarded token’s mass and value: truncated output stays at zero, but the error changes. This is the same two-token example, calculated live.\nTwo-token example: retaining 99% of mass can change output from 1 to 0 when the discarded token has value 100.\n\n\n\nTable 21.2: Head-to-head design; these are not TAF results.\n\n\n\n\n\n\n\n\n\n\n\nProposed comparison\nWhat is matched\nWhat is recorded\nStatus\n\n\n\n\nFull versus compressed cache\nModel, task and decoding\nReference accuracy and cost\nControl\n\n\nD_f window versus attention- or value-based selection\nCache bytes, including metadata\nMass, output error and accuracy\nExperiment pending\n\n\nRetrieval versus reasoning\nComparable budgets and lengths\nLoss by task type\nMotivated by KVFundaBench\n\n\nIndividual tokens versus intact units\nActual occupied memory\nExample integrity and task result\nMotivated by ShotKV\n\n\n\n\n\n\nLaboratory recipe. Start with the full cache. Reduce the budget in several steps, record prefill and decode separately, and retain failures as well as averages. A method that wins at key retrieval may lose at problem solving. The shared protocol in ?sec-evaluacion-contexto helps avoid changing task, architecture and memory all at once.",
+    "crumbs": [
+      "Part II — How transformers attend over distance",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>KV-cache compression in practice</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/20-kv-cache.html#sec-octopus",
+    "href": "chapters/20-kv-cache.html#sec-octopus",
+    "title": "21  KV-cache compression in practice",
+    "section": "21.8 Octopus: Gated Selective Attention for Memory-Bounded Long-Context Inference in Large Language Models",
+    "text": "21.8 Octopus: Gated Selective Attention for Memory-Bounded Long-Context Inference in Large Language Models\nPublished · ACL 2026 · 2026-07. Learned gates retain selected KV states under a bounded memory budget. (Octopus: Gated Selective Attention for Memory-Bounded Long-Context Inference in Large Language Models 2026)\n\n\n\n\n\n\nEvidence scope. Requires distillation and fine-tuning; it is not a training-free switch. A benchmark gain does not guarantee retention of arbitrary facts.\n\n\n\nWhat to test. Compare reasoning and retrieval with the full-cache teacher and budget-matched baselines, including adaptation cost.\n🧪 Continue in TAF: source, limits and proposed experiment.",
     "crumbs": [
       "Part II — How transformers attend over distance",
       "<span class='chapter-number'>21</span>  <span class='chapter-title'>KV-cache compression in practice</span>"
@@ -3498,7 +3498,7 @@
     "href": "chapters/28-peft.html",
     "title": "29  Parameter-efficient fine-tuning (PEFT)",
     "section": "",
-    "text": "29.1 The idea in one sentence\nInstead of retraining the whole model for each task, you freeze the base and train a tiny handful of new parameters —you get almost the same quality for a fraction of the cost and a checkpoint of a few megabytes.",
+    "text": "29.1 The idea in one sentence\nAfter checking, report an inactive adapter, missing targets/gradients or runtime failure. The adapter route also distinguishes a wrong base from unchanged outputs with an active adapter. Record it in resolver follow-up to adapt the next check. This is your declaration; it does not modify the initial analysis.\nInstead of retraining the whole model for each task, you freeze the base and train a tiny handful of new parameters —you get almost the same quality for a fraction of the cost and a checkpoint of a few megabytes.",
     "crumbs": [
       "Part IV — Training, adaptation and fine-tuning",
       "<span class='chapter-number'>29</span>  <span class='chapter-title'>Parameter-efficient fine-tuning (PEFT)</span>"
@@ -3582,17 +3582,6 @@
     ]
   },
   {
-    "objectID": "chapters/28-peft.html#sec-resolver-peft",
-    "href": "chapters/28-peft.html#sec-resolver-peft",
-    "title": "29  Parameter-efficient fine-tuning (PEFT)",
-    "section": "29.9 From a static warning to PEFT verification",
-    "text": "29.9 From a static warning to PEFT verification\nThe PEFT-code resolver reads patterns and line numbers; it does not execute Python or reconstruct control flow. See the verification steps prioritizes loading intent, k-bit preparation order, target modules and scaling. It also guides cases with no recognized calls or no findings: neither certifies correct code.\nCreating a new adapter and restoring trained weights require different workflows. Check your intended operation and the adapter actually active. A checkpoint path in a string does not establish ignored weights. In the documented k-bit workflow, preparation precedes attaching trainable adapters; textual order can misrepresent separate functions or branches.\nCheck actual modules and trainable parameters against your method. Do not change alpha merely to silence a linter convention. Before a long training run, inspect gradients and parameter updates in a small test in your environment. Adapter Reality can inspect saved metadata, not the optimizer or executed updates.\nOptional demo: six synthetic snippets illustrate these situations in Explore another example. They are not executed or included in case reports. References: PEFT quantization workflow and PEFT troubleshooting.",
-    "crumbs": [
-      "Part IV — Training, adaptation and fine-tuning",
-      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Parameter-efficient fine-tuning (PEFT)</span>"
-    ]
-  },
-  {
     "objectID": "chapters/28-peft.html#summary",
     "href": "chapters/28-peft.html#summary",
     "title": "29  Parameter-efficient fine-tuning (PEFT)",
@@ -3620,6 +3609,17 @@
     "title": "29  Parameter-efficient fine-tuning (PEFT)",
     "section": "References",
     "text": "References\n\n\n\n\nAghajanyan, Armen, Luke Zettlemoyer, and Sonal Gupta. 2020. Intrinsic Dimensionality Explains the Effectiveness of Language Model Fine-Tuning. https://arxiv.org/abs/2012.13255.\n\n\nBiderman, Dan, Jacob Portes, Jose Javier Gonzalez Ortiz, et al. 2024. LoRA Learns Less and Forgets Less. https://arxiv.org/abs/2405.09673.\n\n\nDettmers, Tim, Artidoro Pagnoni, Ari Holtzman, and Luke Zettlemoyer. 2023. “QLoRA: Efficient Finetuning of Quantized LLMs.” NeurIPS. https://arxiv.org/abs/2305.14314.\n\n\nHoulsby, Neil, Andrei Giurgiu, Stanisław Jastrzębski, et al. 2019. “Parameter-Efficient Transfer Learning for NLP.” ICML. https://arxiv.org/abs/1902.00751.\n\n\nHu, Edward J., Yelong Shen, Phillip Wallis, et al. 2022. “LoRA: Low-Rank Adaptation of Large Language Models.” ICLR. https://arxiv.org/abs/2106.09685.\n\n\nLester, Brian, Rami Al-Rfou, and Noah Constant. 2021. “The Power of Scale for Parameter-Efficient Prompt Tuning.” EMNLP. https://arxiv.org/abs/2104.08691.\n\n\nLi, Xiang Lisa, and Percy Liang. 2021. “Prefix-Tuning: Optimizing Continuous Prompts for Generation.” ACL. https://arxiv.org/abs/2101.00190.\n\n\nLialin, Vladislav, Vijeta Deshpande, and Anna Rumshisky. 2023. Scaling down to Scale up: A Guide to Parameter-Efficient Fine-Tuning. https://arxiv.org/abs/2303.15647.\n\n\nLiu, Shih-Yang, Chien-Yi Wang, Hongxu Yin, et al. 2024. DoRA: Weight-Decomposed Low-Rank Adaptation. https://arxiv.org/abs/2402.09353.\n\n\nLiu, Xiao, Kaixuan Ji, Yicheng Fu, et al. 2021. P-Tuning V2: Prompt Tuning Can Be Comparable to Fine-Tuning Universally Across Scales and Tasks. https://arxiv.org/abs/2110.07602.",
+    "crumbs": [
+      "Part IV — Training, adaptation and fine-tuning",
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Parameter-efficient fine-tuning (PEFT)</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/28-peft.html#sec-resolver-peft",
+    "href": "chapters/28-peft.html#sec-resolver-peft",
+    "title": "29  Parameter-efficient fine-tuning (PEFT)",
+    "section": "29.9 From a static warning to PEFT verification",
+    "text": "29.9 From a static warning to PEFT verification\nThe PEFT-code resolver reads patterns and line numbers; it does not execute Python or reconstruct control flow. See the verification steps prioritizes loading intent, k-bit preparation order, target modules and scaling. It also guides cases with no recognized calls or no findings: neither certifies correct code.\nCreating a new adapter and restoring trained weights require different workflows. Check your intended operation and the adapter actually active. A checkpoint path in a string does not establish ignored weights. In the documented k-bit workflow, preparation precedes attaching trainable adapters; textual order can misrepresent separate functions or branches.\nCheck actual modules and trainable parameters against your method. Do not change alpha merely to silence a linter convention. Before a long training run, inspect gradients and parameter updates in a small test in your environment. Adapter Reality can inspect saved metadata, not the optimizer or executed updates.\nOptional demo: six synthetic snippets illustrate these situations in Explore another example. They are not executed or included in case reports. References: PEFT quantization workflow and PEFT troubleshooting.",
     "crumbs": [
       "Part IV — Training, adaptation and fine-tuning",
       "<span class='chapter-number'>29</span>  <span class='chapter-title'>Parameter-efficient fine-tuning (PEFT)</span>"
@@ -3751,7 +3751,7 @@
     "href": "chapters/30-prompting.html",
     "title": "31  Prompting and in-context learning",
     "section": "",
-    "text": "31.1 The idea in one sentence\nAn LLM can learn a task from a few examples in its own context, at inference time and with no training step whatsoever —but prompting elicits capabilities the model already has, it does not add knowledge—.",
+    "text": "31.1 The idea in one sentence\nAfter generation, distinguish unparseable JSON, schema violations and an incorrect answer with valid structure. Record it in resolver follow-up to adapt the next check. This is your declaration; it does not modify the initial analysis.\nAn LLM can learn a task from a few examples in its own context, at inference time and with no training step whatsoever —but prompting elicits capabilities the model already has, it does not add knowledge—.",
     "crumbs": [
       "Part V — Using transformers",
       "<span class='chapter-number'>31</span>  <span class='chapter-title'>Prompting and in-context learning</span>"
@@ -3835,17 +3835,6 @@
     ]
   },
   {
-    "objectID": "chapters/30-prompting.html#sec-resolver-json",
-    "href": "chapters/30-prompting.html#sec-resolver-json",
-    "title": "31  Prompting and in-context learning",
-    "section": "31.9 JSON output: ordering is not validation",
-    "text": "31.9 JSON output: ordering is not validation\nThe JSON resolver inspects top-level field names. See the verification steps distinguishes an answer before an explanation, recognized preferred order, and no applicable pattern. A valid output contract may need no explanation; do not add a reasoning field just to satisfy this heuristic.\nThe JSON Schema data model treats objects without imposing property order. Some constrained decoders use schema order during generation: check your engine’s behavior. This does not make ordering a validity rule or evidence of faithful reasoning.\nUse a validator for the dialect and check the decoder’s supported subset: types, required fields, nesting and actual responses. If trying the optional reordered proposal, hold prompts and generation fixed and separate parse/schema success from task quality. TAF neither runs generation nor validates the complete schema; it reruns field-name inspection after trying the proposal.\nOptional demo: three examples show an order to review, preferred order and a schema with no recognized pattern. Examples stay local and their content is excluded from the case report. Returning preserves the form and language.",
-    "crumbs": [
-      "Part V — Using transformers",
-      "<span class='chapter-number'>31</span>  <span class='chapter-title'>Prompting and in-context learning</span>"
-    ]
-  },
-  {
     "objectID": "chapters/30-prompting.html#summary",
     "href": "chapters/30-prompting.html#summary",
     "title": "31  Prompting and in-context learning",
@@ -3873,6 +3862,17 @@
     "title": "31  Prompting and in-context learning",
     "section": "References",
     "text": "References\n\n\n\n\nBrown, Tom B. et al. 2020. “Language Models Are Few-Shot Learners (GPT-3).” NeurIPS. https://arxiv.org/abs/2005.14165.\n\n\nDeepSeek-AI. 2025. DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning. https://arxiv.org/abs/2501.12948.\n\n\nElhage, Nelson et al. 2021. “A Mathematical Framework for Transformer Circuits.” Transformer Circuits Thread (Anthropic). https://transformer-circuits.pub/2021/framework/index.html.\n\n\nGarg, Shivam, Dimitris Tsipras, Percy Liang, and Gregory Valiant. 2022. “What Can Transformers Learn in-Context? A Case Study of Simple Function Classes.” NeurIPS. https://arxiv.org/abs/2208.01066.\n\n\nGreshake, Kai, Sahar Abdelnabi, Shailesh Mishra, Christoph Endres, Thorsten Holz, and Mario Fritz. 2023. Not What You’ve Signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection. https://arxiv.org/abs/2302.12173.\n\n\nKe, Zixuan, Fangkai Jiao, Yifei Ming, Xuan-Phi Nguyen, et al. 2025. A Survey of Frontiers in LLM Reasoning: Inference Scaling, Learning to Reason, and Agentic Systems. https://arxiv.org/abs/2504.09037.\n\n\nKojima, Takeshi, Shixiang Shane Gu, Machel Reid, Yutaka Matsuo, and Yusuke Iwasawa. 2022. “Large Language Models Are Zero-Shot Reasoners.” NeurIPS. https://arxiv.org/abs/2205.11916.\n\n\nLu, Yao, Max Bartolo, Alastair Moore, Sebastian Riedel, and Pontus Stenetorp. 2022. “Fantastically Ordered Prompts and Where to Find Them: Overcoming Few-Shot Prompt Order Sensitivity.” ACL. https://arxiv.org/abs/2104.08786.\n\n\nMin, Sewon, Xinxi Lyu, Ari Holtzman, et al. 2022. “Rethinking the Role of Demonstrations: What Makes in-Context Learning Work?” EMNLP. https://arxiv.org/abs/2202.12837.\n\n\nOlsson, Catherine et al. 2022. “In-Context Learning and Induction Heads.” Transformer Circuits Thread (Anthropic). https://arxiv.org/abs/2209.11895.\n\n\nOpenAI. 2025. Introducing GPT-5. OpenAI Blog. https://openai.com/index/introducing-gpt-5/.\n\n\nOswald, Johannes von et al. 2023. “Transformers Learn in-Context by Gradient Descent.” ICML. https://arxiv.org/abs/2212.07677.\n\n\nSclar, Melanie, Yejin Choi, Yulia Tsvetkov, and Alane Suhr. 2024. “Quantifying Language Models’ Sensitivity to Spurious Features in Prompt Design.” ICLR. https://arxiv.org/abs/2310.11324.\n\n\nTurpin, Miles, Julian Michael, Ethan Perez, and Samuel R. Bowman. 2023. “Language Models Don’t Always Say What They Think: Unfaithful Explanations in Chain-of-Thought Prompting.” NeurIPS. https://arxiv.org/abs/2305.04388.\n\n\nWang, Xuezhi, Jason Wei, Dale Schuurmans, et al. 2023. “Self-Consistency Improves Chain of Thought Reasoning in Language Models.” ICLR. https://arxiv.org/abs/2203.11171.\n\n\nWei, Jason, Xuezhi Wang, Dale Schuurmans, et al. 2022. “Chain-of-Thought Prompting Elicits Reasoning in Large Language Models.” NeurIPS. https://arxiv.org/abs/2201.11903.\n\n\nXie, Sang Michael, Aditi Raghunathan, Percy Liang, and Tengyu Ma. 2022. “An Explanation of in-Context Learning as Implicit Bayesian Inference.” ICLR. https://arxiv.org/abs/2111.02080.\n\n\nYao, Shunyu, Dian Yu, Jeffrey Zhao, et al. 2023. “Tree of Thoughts: Deliberate Problem Solving with Large Language Models.” NeurIPS. https://arxiv.org/abs/2305.10601.\n\n\nYao, Shunyu, Jeffrey Zhao, Dian Yu, et al. 2023. “ReAct: Synergizing Reasoning and Acting in Language Models.” ICLR. https://arxiv.org/abs/2210.03629.\n\n\nYoo, Kang Min et al. 2022. “Ground-Truth Labels Matter: A Deeper Look into Input-Label Demonstrations.” EMNLP. https://arxiv.org/abs/2205.12685.\n\n\nZhou, Chunting et al. 2023. “LIMA: Less Is More for Alignment.” NeurIPS. https://arxiv.org/abs/2305.11206.",
+    "crumbs": [
+      "Part V — Using transformers",
+      "<span class='chapter-number'>31</span>  <span class='chapter-title'>Prompting and in-context learning</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/30-prompting.html#sec-resolver-json",
+    "href": "chapters/30-prompting.html#sec-resolver-json",
+    "title": "31  Prompting and in-context learning",
+    "section": "31.9 JSON output: ordering is not validation",
+    "text": "31.9 JSON output: ordering is not validation\nThe JSON resolver inspects top-level field names. See the verification steps distinguishes an answer before an explanation, recognized preferred order, and no applicable pattern. A valid output contract may need no explanation; do not add a reasoning field just to satisfy this heuristic.\nThe JSON Schema data model treats objects without imposing property order. Some constrained decoders use schema order during generation: check your engine’s behavior. This does not make ordering a validity rule or evidence of faithful reasoning.\nUse a validator for the dialect and check the decoder’s supported subset: types, required fields, nesting and actual responses. If trying the optional reordered proposal, hold prompts and generation fixed and separate parse/schema success from task quality. TAF neither runs generation nor validates the complete schema; it reruns field-name inspection after trying the proposal.\nOptional demo: three examples show an order to review, preferred order and a schema with no recognized pattern. Examples stay local and their content is excluded from the case report. Returning preserves the form and language.",
     "crumbs": [
       "Part V — Using transformers",
       "<span class='chapter-number'>31</span>  <span class='chapter-title'>Prompting and in-context learning</span>"
@@ -4565,7 +4565,7 @@
     "href": "chapters/36-serving.html",
     "title": "37  Serving and deployment",
     "section": "",
-    "text": "37.1 The idea in one sentence\nServing an LLM well comes down to keeping the GPU busy despite generation being inherently sequential: the art is in batching many requests and managing the KV cache, balancing throughput (total tokens/sec) against latency (speed for each user).",
+    "text": "37.1 The idea in one sentence\nAfter measuring, distinguish different token prefixes, no hits despite matching tokens and hits without a latency improvement. Record it in resolver follow-up to adapt the next check. This is your declaration; it does not modify the initial analysis.\nServing an LLM well comes down to keeping the GPU busy despite generation being inherently sequential: the art is in batching many requests and managing the KV cache, balancing throughput (total tokens/sec) against latency (speed for each user).",
     "crumbs": [
       "Part VI — Efficiency, systems and deployment",
       "<span class='chapter-number'>37</span>  <span class='chapter-title'>Serving and deployment</span>"
@@ -4693,17 +4693,6 @@
     ]
   },
   {
-    "objectID": "chapters/36-serving.html#sec-spin",
-    "href": "chapters/36-serving.html#sec-spin",
-    "title": "37  Serving and deployment",
-    "section": "37.13 SPIN: Shadow Predictive Indexer for Sparse Attention",
-    "text": "37.13 SPIN: Shadow Predictive Indexer for Sparse Attention\nPreprint · arXiv v2 · 2026-10-08. SPIN predicts which blocks a sparse-attention indexer should inspect from historical scores. (SPIN: Shadow Predictive Indexer for Sparse Attention 2026)\n\n\n\n\n\n\nEvidence scope. Pruning indexer inputs is not KV eviction. Sudden attention shifts and partial feedback can cause misses.\n\n\n\nWhat to test. Measure task quality and tail latency together, including abrupt topic switches and an exploration ablation.\n🧪 Continue in TAF: source, limits and proposed experiment.",
-    "crumbs": [
-      "Part VI — Efficiency, systems and deployment",
-      "<span class='chapter-number'>37</span>  <span class='chapter-title'>Serving and deployment</span>"
-    ]
-  },
-  {
     "objectID": "chapters/36-serving.html#summary",
     "href": "chapters/36-serving.html#summary",
     "title": "37  Serving and deployment",
@@ -4731,6 +4720,17 @@
     "title": "37  Serving and deployment",
     "section": "References",
     "text": "References\n\n\n\n\nAgrawal, Amey, Nitin Kedia, Ashish Panwar, et al. 2024. “Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve.” OSDI. https://arxiv.org/abs/2403.02310.\n\n\nKwon, Woosuk, Zhuohan Li, Siyuan Zhuang, et al. 2023. “Efficient Memory Management for Large Language Model Serving with PagedAttention.” SOSP. https://arxiv.org/abs/2309.06180.\n\n\nSheng, Ying, Shiyi Cao, Dacheng Li, et al. 2023. S-LoRA: Serving Thousands of Concurrent LoRA Adapters. https://arxiv.org/abs/2311.03285.\n\n\nSPIN: Shadow Predictive Indexer for Sparse Attention. 2026. arXiv v2. https://arxiv.org/abs/2610.09025v2.\n\n\nYu, Gyeong-In, Joo Seong Jeong, Geon-Woo Kim, Soojeong Kim, and Byung-Gon Chun. 2022. “Orca: A Distributed Serving System for Transformer-Based Generative Models.” OSDI. https://www.usenix.org/conference/osdi22/presentation/yu.\n\n\nZhong, Yinmin, Shengyu Liu, Junda Chen, et al. 2024. “DistServe: Disaggregating Prefill and Decoding for Goodput-Optimized Large Language Model Serving.” OSDI. https://arxiv.org/abs/2401.09670.",
+    "crumbs": [
+      "Part VI — Efficiency, systems and deployment",
+      "<span class='chapter-number'>37</span>  <span class='chapter-title'>Serving and deployment</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/36-serving.html#sec-spin",
+    "href": "chapters/36-serving.html#sec-spin",
+    "title": "37  Serving and deployment",
+    "section": "37.13 SPIN: Shadow Predictive Indexer for Sparse Attention",
+    "text": "37.13 SPIN: Shadow Predictive Indexer for Sparse Attention\nPreprint · arXiv v2 · 2026-10-08. SPIN predicts which blocks a sparse-attention indexer should inspect from historical scores. (SPIN: Shadow Predictive Indexer for Sparse Attention 2026)\n\n\n\n\n\n\nEvidence scope. Pruning indexer inputs is not KV eviction. Sudden attention shifts and partial feedback can cause misses.\n\n\n\nWhat to test. Measure task quality and tail latency together, including abrupt topic switches and an exploration ablation.\n🧪 Continue in TAF: source, limits and proposed experiment.",
     "crumbs": [
       "Part VI — Efficiency, systems and deployment",
       "<span class='chapter-number'>37</span>  <span class='chapter-title'>Serving and deployment</span>"
@@ -5060,7 +5060,7 @@
     "href": "chapters/40-evaluacion.html",
     "title": "41  Evaluation: measuring without fooling yourself",
     "section": "",
-    "text": "41.1 The idea in one sentence\nEvaluating an LLM means estimating its capability with metrics that are proxies —none measures it directly— so knowing how to evaluate is, above all, knowing the traps: data contamination, the judge that gets fooled, and Goodhart’s law.",
+    "text": "41.1 The idea in one sentence\nAfter repeating, report differing controls, a gap that persists after alignment or a gap that disappeared. Record it in resolver follow-up to adapt the next check. This is your declaration; it does not modify the initial analysis.\nEvaluating an LLM means estimating its capability with metrics that are proxies —none measures it directly— so knowing how to evaluate is, above all, knowing the traps: data contamination, the judge that gets fooled, and Goodhart’s law.",
     "crumbs": [
       "Part VII — Interpretability and what is real",
       "<span class='chapter-number'>41</span>  <span class='chapter-title'>Evaluation: measuring without fooling yourself</span>"
@@ -5144,17 +5144,6 @@
     ]
   },
   {
-    "objectID": "chapters/40-evaluacion.html#sec-evaluacion-contexto",
-    "href": "chapters/40-evaluacion.html#sec-evaluacion-contexto",
-    "title": "41  Evaluation: measuring without fooling yourself",
-    "section": "41.9 A shared laboratory for context and compression",
-    "text": "41.9 A shared laboratory for context and compression\nAn accuracy number is like a race time: without distance and terrain, comparing it can mislead. To connect context in Section 20.6 with cache in Section 21.6, publish the race conditions, not just the score.\n\nFreeze model and task. Weight revision, tokenizer, chat template, engine, precision, generation parameters and question set. Hold out examples that are not used to choose the cache budget.\nVary one difficulty at a time. Length, position, filler, evidence scope and dispersion, or reasoning steps. State what stayed fixed. LURCH and CRE motivate these controls (Qin et al. 2026; Zhang et al. 2026).\nEstablish a full-cache reference. Then compare compression policies at matched effective memory. Separate prefill, decode, KV bytes and total memory.\nScore by task and example. Retrieval, integration and reasoning need their own evidence. Use the same questions on both sides; keep per-example outcomes and estimate uncertainty by resampling complete questions.\nReport what did not run. OOM, unexecuted tasks and unsupported configurations differ from zero accuracy. Preserve actual failures so an average does not hide lost behavior.\n\n\n\n\n\n\n\nNote🔍 Point difference: a worked example\n\n\n\n\n\nIf the full cache answers 80 of 100 questions correctly and compression answers 72 of the same 100, the difference is \\(72\\%-80\\%=-8\\) percentage points, while relative retention is \\(72/80=90\\%\\). These are distinct summaries of an invented example. To assess stability, you need correctness pairs per question: 80 and 72 alone cannot determine uncertainty in the paired difference.\n\n\n\nConnection to TAF. Add observed γ, its interval, fit range and protocol version as descriptors, following Chapter 47. Correlation with accuracy can motivate a hypothesis; a useful predictor needs evaluation on models and tasks not used for fitting. Neither R² nor an evidence-coverage score is a calibrated probability that an answer is correct.\n\n41.9.1 Following up an evaluation difference\nThe TAF evaluation-drift resolver accepts two scores on a 0–100 scale and declared settings. Its comparability checkbox is a user declaration: it does not verify task versions, splits, examples or metrics. Its numerical band is heuristic, not a confidence interval or significance test.\nSee the verification steps prioritizes unknown template application, different application states, changed framework/precision/batch, then repetition or uncertainty estimation. This order applies even if scores agree. Two “applied” states do not prove identical templates or rendered conversations.\nEstablish a common baseline, change one setting at a time and keep per-example results where available. Record model/tokenizer revisions, task version, examples, seeds, generation settings and rendered inputs. A smaller gap after a change is evidence to investigate; it does not certify a fix or by itself attribute the cause to a kernel or template.\nOptional demo: five situations illustrate these priorities in Explore another example. Scores are synthetic, not executed evaluations. The lm-evaluation-harness interface documents configuration, seed and sample logging; check the options in your version. TAF’s aggregate results do not replace those records or metric-appropriate uncertainty analysis.",
-    "crumbs": [
-      "Part VII — Interpretability and what is real",
-      "<span class='chapter-number'>41</span>  <span class='chapter-title'>Evaluation: measuring without fooling yourself</span>"
-    ]
-  },
-  {
     "objectID": "chapters/40-evaluacion.html#bridge-to-our-theme-brief-and-honest",
     "href": "chapters/40-evaluacion.html#bridge-to-our-theme-brief-and-honest",
     "title": "41  Evaluation: measuring without fooling yourself",
@@ -5193,6 +5182,17 @@
     "title": "41  Evaluation: measuring without fooling yourself",
     "section": "References",
     "text": "References\n\n\n\n\nChen, Mark, Jerry Tworek, Heewoo Jun, Qiming Yuan, et al. 2021. “Evaluating Large Language Models Trained on Code.” arXiv Preprint arXiv:2107.03374. https://arxiv.org/abs/2107.03374.\n\n\nChollet, Francois, Mike Knoop, Gregory Kamradt, Bryan Landers, and Henry Pinkard. 2025. ARC-AGI-2: A New Challenge for Frontier AI Reasoning Systems. https://arxiv.org/abs/2505.11831.\n\n\nCobbe, Karl, Vineet Kosaraju, Mohammad Bavarian, Mark Chen, et al. 2021. “Training Verifiers to Solve Math Word Problems.” arXiv Preprint arXiv:2110.14168. https://arxiv.org/abs/2110.14168.\n\n\nGlazer, Elliot, Ege Erdil, Tamay Besiroglu, Diego Chicharro, Evan Chen, et al. 2024. FrontierMath: A Benchmark for Evaluating Advanced Mathematical Reasoning in AI. https://arxiv.org/abs/2411.04872.\n\n\nGolchin, Shahriar, and Mihai Surdeanu. 2024. “Time Travel in LLMs: Tracing Data Contamination in Large Language Models.” International Conference on Learning Representations (ICLR). https://arxiv.org/abs/2308.08493.\n\n\nHendrycks, Dan, Collin Burns, Steven Basart, et al. 2021. “Measuring Massive Multitask Language Understanding.” International Conference on Learning Representations (ICLR). https://arxiv.org/abs/2009.03300.\n\n\nHsieh, Cheng-Ping, Simeng Sun, Samuel Kriman, Shantanu Acharya, et al. 2024. “RULER: Whats the Real Context Size of Your Long-Context Language Models?” First Conference on Language Modeling (COLM). https://arxiv.org/abs/2404.06654.\n\n\nJimenez, Carlos E., John Yang, Alexander Wettig, et al. 2024. “SWE-Bench: Can Language Models Resolve Real-World GitHub Issues?” International Conference on Learning Representations (ICLR). https://arxiv.org/abs/2310.06770.\n\n\nOpenAI. 2026. Why SWE-Bench Verified No Longer Measures Frontier Coding Capabilities. OpenAI Blog. https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/.\n\n\nPhan, Long, Alice Gatti, Ziwen Han, Nathaniel Li, et al. 2025. Humanity’s Last Exam. https://arxiv.org/abs/2501.14249.\n\n\nQin, Shiwen, Cameron Barker, Henry Gouk, et al. 2026. Beyond Context Length: Characterising the Difficulty of Long-Context Reasoning. https://arxiv.org/abs/2610.22067v1.\n\n\nSharma, Mrinank et al. 2023. Towards Understanding Sycophancy in Language Models. https://arxiv.org/abs/2310.13548.\n\n\nZhang, Chuyifei, Hongyu Cui, Xiaowen Huang, and Jitao Sang. 2026. Positional Failures in Long-Context LLMs: A Blind Spot in Reasoning Benchmarks. https://arxiv.org/abs/2605.23170v1.",
+    "crumbs": [
+      "Part VII — Interpretability and what is real",
+      "<span class='chapter-number'>41</span>  <span class='chapter-title'>Evaluation: measuring without fooling yourself</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/40-evaluacion.html#sec-evaluacion-contexto",
+    "href": "chapters/40-evaluacion.html#sec-evaluacion-contexto",
+    "title": "41  Evaluation: measuring without fooling yourself",
+    "section": "41.9 A shared laboratory for context and compression",
+    "text": "41.9 A shared laboratory for context and compression\nAn accuracy number is like a race time: without distance and terrain, comparing it can mislead. To connect context in ?sec-contexto-evidencia with cache in Section 21.6, publish the race conditions, not just the score.\n\nFreeze model and task. Weight revision, tokenizer, chat template, engine, precision, generation parameters and question set. Hold out examples that are not used to choose the cache budget.\nVary one difficulty at a time. Length, position, filler, evidence scope and dispersion, or reasoning steps. State what stayed fixed. LURCH and CRE motivate these controls (Qin et al. 2026; Zhang et al. 2026).\nEstablish a full-cache reference. Then compare compression policies at matched effective memory. Separate prefill, decode, KV bytes and total memory.\nScore by task and example. Retrieval, integration and reasoning need their own evidence. Use the same questions on both sides; keep per-example outcomes and estimate uncertainty by resampling complete questions.\nReport what did not run. OOM, unexecuted tasks and unsupported configurations differ from zero accuracy. Preserve actual failures so an average does not hide lost behavior.\n\n\n\n\n\n\n\nNote🔍 Point difference: a worked example\n\n\n\n\n\nIf the full cache answers 80 of 100 questions correctly and compression answers 72 of the same 100, the difference is \\(72\\%-80\\%=-8\\) percentage points, while relative retention is \\(72/80=90\\%\\). These are distinct summaries of an invented example. To assess stability, you need correctness pairs per question: 80 and 72 alone cannot determine uncertainty in the paired difference.\n\n\n\nConnection to TAF. Add observed γ, its interval, fit range and protocol version as descriptors, following Chapter 47. Correlation with accuracy can motivate a hypothesis; a useful predictor needs evaluation on models and tasks not used for fitting. Neither R² nor an evidence-coverage score is a calibrated probability that an answer is correct.\n\n41.9.1 Following up an evaluation difference\nThe TAF evaluation-drift resolver accepts two scores on a 0–100 scale and declared settings. Its comparability checkbox is a user declaration: it does not verify task versions, splits, examples or metrics. Its numerical band is heuristic, not a confidence interval or significance test.\nSee the verification steps prioritizes unknown template application, different application states, changed framework/precision/batch, then repetition or uncertainty estimation. This order applies even if scores agree. Two “applied” states do not prove identical templates or rendered conversations.\nEstablish a common baseline, change one setting at a time and keep per-example results where available. Record model/tokenizer revisions, task version, examples, seeds, generation settings and rendered inputs. A smaller gap after a change is evidence to investigate; it does not certify a fix or by itself attribute the cause to a kernel or template.\nOptional demo: five situations illustrate these priorities in Explore another example. Scores are synthetic, not executed evaluations. The lm-evaluation-harness interface documents configuration, seed and sample logging; check the options in your version. TAF’s aggregate results do not replace those records or metric-appropriate uncertainty analysis.",
     "crumbs": [
       "Part VII — Interpretability and what is real",
       "<span class='chapter-number'>41</span>  <span class='chapter-title'>Evaluation: measuring without fooling yourself</span>"
@@ -5830,18 +5830,7 @@
     "href": "chapters/R4-medir-gamma.html",
     "title": "47  R4 · Measuring your own γ (and reproducing the atlas)",
     "section": "",
-    "text": "47.1 The idea in one sentence\nγ needs a surname: model, layer, head, texts, positions and fitting rule. Two numbers called γ may answer different questions when their protocols differ.",
-    "crumbs": [
-      "Part VIII — Reference",
-      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R4 · Measuring your own γ (and reproducing the atlas)</span>"
-    ]
-  },
-  {
-    "objectID": "chapters/R4-medir-gamma.html#the-idea-in-one-sentence",
-    "href": "chapters/R4-medir-gamma.html#the-idea-in-one-sentence",
-    "title": "47  R4 · Measuring your own γ (and reproducing the atlas)",
-    "section": "",
-    "text": "🧩 Analogy — measuring rain. A garden rain gauge, a city average and a storm maximum all measure rain, but are not interchangeable. Likewise, the last attention query and an average over all queries observe similar distances from different situations.",
+    "text": "47.1 The idea in one sentence\nAfter repeating the measurement, report a protocol mismatch, differing curves or apparently stable repeats. Record it in resolver follow-up to adapt the next check. This is your declaration; it does not modify the initial analysis.\nγ needs a surname: model, layer, head, texts, positions and fitting rule. Two numbers called γ may answer different questions when their protocols differ.",
     "crumbs": [
       "Part VIII — Reference",
       "<span class='chapter-number'>47</span>  <span class='chapter-title'>R4 · Measuring your own γ (and reproducing the atlas)</span>"
@@ -5853,6 +5842,50 @@
     "title": "47  R4 · Measuring your own γ (and reproducing the atlas)",
     "section": "47.2 The procedure, step by step",
     "text": "47.2 The procedure, step by step\n\nFreeze the measurement conditions. Model identifier and revision, tokenizer, template, corpus and seed; effective length, precision, engine and RoPE settings. Use independent, representative texts. Random tokens are a separate control.\nCollect real attention per layer and head. Run a backend exposing attention probabilities. output_attentions=True does not guarantee that every kernel returns them. Record the actual backend and version; disable dropout and document the cost of materializing large matrices.\nDeclare query positions. For instance, only the final position of each fixed-length text. Averaging every row is a different protocol: it mixes different normalizers and available contexts. Do not interchange the results.\nSeparate sink, recency and tail. Declare how many initial tokens are excluded and the distance range. Measure sink mass separately. Do not silently renormalize rows after exclusion: that changes each query’s relative contribution.\nAverage by distance, then fit. First take the arithmetic mean of valid weights at each distance; then take logs and fit a line. Fitting all individual pairs in log-log space is another estimator: it overweights distances with more pairs and averages logs.\nDeliver the curve and uncertainty. γ, log-log R², residuals, pair counts per distance and fit range. Repeat per head and layer before summarizing the model.",
+    "crumbs": [
+      "Part VIII — Reference",
+      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R4 · Measuring your own γ (and reproducing the atlas)</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/R4-medir-gamma.html#the-controls-that-make-it-trustworthy-dont-fool-yourself",
+    "href": "chapters/R4-medir-gamma.html#the-controls-that-make-it-trustworthy-dont-fool-yourself",
+    "title": "47  R4 · Measuring your own γ (and reproducing the atlas)",
+    "section": "47.2 The controls that make it trustworthy (don’t fool yourself)",
+    "text": "47.2 The controls that make it trustworthy (don’t fool yourself)\n\nR² before γ. With R² &gt; 0.95 the γ is a good summary; at R² ≈ 0.85 it is coarser —say so, don’t hide it—. A γ with low R² is not comparable to one with high R².\nDon’t compare raw γ across different models. That mixes θ + data + architecture (the decomposition of Ch. 15). The clean control is within-model: change only θ in the same model (Ch. 16-17).\nAverage carefully. γ varies by head and by depth (γ-field, Ch. 16); a single number per model is a summary, not the whole story.\nSeparate the sink. The concentration mass (sink) is an axis apart from γ (Ch. 17); don’t fold it into the tail fit.",
+    "crumbs": [
+      "Part VIII — Reference",
+      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R4 · Measuring your own γ (and reproducing the atlas)</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/R4-medir-gamma.html#compare-with-the-geometric-prediction",
+    "href": "chapters/R4-medir-gamma.html#compare-with-the-geometric-prediction",
+    "title": "47  R4 · Measuring your own γ (and reproducing the atlas)",
+    "section": "47.6 Compare with the geometric prediction",
+    "text": "47.6 Compare with the geometric prediction\nCompute γ_Padé at the same length and effective RoPE settings. Call the difference \\(\\delta=\\gamma_{\\rm observed}-\\gamma_{\\rm geometric}\\) a description of the residual, not an automatic causal attribution to training. Rule out corpus, position, mask and fit differences before interpreting δ. The decomposition in Chapter 16 proposes an explanation; a common protocol makes it testable. Uncertainty in γ does not turn prediction error into certainty.",
+    "crumbs": [
+      "Part VIII — Reference",
+      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R4 · Measuring your own γ (and reproducing the atlas)</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/R4-medir-gamma.html#open-data-to-reproduce-or-refute",
+    "href": "chapters/R4-medir-gamma.html#open-data-to-reproduce-or-refute",
+    "title": "47  R4 · Measuring your own γ (and reproducing the atlas)",
+    "section": "47.7 Open data to reproduce (or refute)",
+    "text": "47.7 Open data to reproduce (or refute)\n\nThe γ atlas (79 measurements across 42 unique models from 4 families) and the within-model experiments (θ-rescale, γ⊥sink) are published as open data alongside Paper I (Zenodo 20314038) — downloadable, reproducible, criticizable.\nThe decay measurements are also published as the TAF Attention-Decay Dataset (CC-BY-4.0) on Hugging Face, under the identifier karlexmarin/taf-attention-decay; if the identifier has changed, search for it by name in the Hub’s datasets search.\nThe tafagent model panel (23 models: config and predictions, not attention measurements) and the tool’s formal apparatus are open at github.com/karlesmarin/tafagent-registry and github.com/karlesmarin/lean-taf (formal proofs).\n\n\n\n\n\n\n\nWarning⚠ What this laboratory checks\n\n\n\nA fit and its controls assess \\(A(d)\\propto d^{-\\gamma}\\) under a specified protocol. They do not by themselves validate D_f, output quality, context extension or a causal mechanism. For those steps, return to the design in Section 41.9.\n\n\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\nFrom an identifier or config.json, tafagent computes configuration-based predictions and can display previously registered measurements; the browser does not execute the model to measure attention. Your own measurements require external inference, for example the project’s diagnostic CLI, followed by viewing/importing supported output. The CLI and this example may aggregate differently: check their protocols before comparing. R5 explains the tool.",
+    "crumbs": [
+      "Part VIII — Reference",
+      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R4 · Measuring your own γ (and reproducing the atlas)</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/R4-medir-gamma.html#the-idea-in-one-sentence",
+    "href": "chapters/R4-medir-gamma.html#the-idea-in-one-sentence",
+    "title": "47  R4 · Measuring your own γ (and reproducing the atlas)",
+    "section": "",
+    "text": "🧩 Analogy — measuring rain. A garden rain gauge, a city average and a storm maximum all measure rain, but are not interchangeable. Likewise, the last attention query and an average over all queries observe similar distances from different situations.",
     "crumbs": [
       "Part VIII — Reference",
       "<span class='chapter-number'>47</span>  <span class='chapter-title'>R4 · Measuring your own γ (and reproducing the atlas)</span>"
@@ -5892,28 +5925,6 @@
     ]
   },
   {
-    "objectID": "chapters/R4-medir-gamma.html#compare-with-the-geometric-prediction",
-    "href": "chapters/R4-medir-gamma.html#compare-with-the-geometric-prediction",
-    "title": "47  R4 · Measuring your own γ (and reproducing the atlas)",
-    "section": "47.6 Compare with the geometric prediction",
-    "text": "47.6 Compare with the geometric prediction\nCompute γ_Padé at the same length and effective RoPE settings. Call the difference \\(\\delta=\\gamma_{\\rm observed}-\\gamma_{\\rm geometric}\\) a description of the residual, not an automatic causal attribution to training. Rule out corpus, position, mask and fit differences before interpreting δ. The decomposition in Chapter 16 proposes an explanation; a common protocol makes it testable. Uncertainty in γ does not turn prediction error into certainty.",
-    "crumbs": [
-      "Part VIII — Reference",
-      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R4 · Measuring your own γ (and reproducing the atlas)</span>"
-    ]
-  },
-  {
-    "objectID": "chapters/R4-medir-gamma.html#open-data-to-reproduce-or-refute",
-    "href": "chapters/R4-medir-gamma.html#open-data-to-reproduce-or-refute",
-    "title": "47  R4 · Measuring your own γ (and reproducing the atlas)",
-    "section": "47.7 Open data to reproduce (or refute)",
-    "text": "47.7 Open data to reproduce (or refute)\n\nThe γ atlas (79 measurements across 42 unique models from 4 families) and the within-model experiments (θ-rescale, γ⊥sink) are published as open data alongside Paper I (Zenodo 20314038) — downloadable, reproducible, criticizable.\nThe decay measurements are also published as the TAF Attention-Decay Dataset (CC-BY-4.0) on Hugging Face, under the identifier karlexmarin/taf-attention-decay; if the identifier has changed, search for it by name in the Hub’s datasets search.\nThe tafagent model panel (23 models: config and predictions, not attention measurements) and the tool’s formal apparatus are open at github.com/karlesmarin/tafagent-registry and github.com/karlesmarin/lean-taf (formal proofs).\n\n\n\n\n\n\n\nWarning⚠ What this laboratory checks\n\n\n\nA fit and its controls assess \\(A(d)\\propto d^{-\\gamma}\\) under a specified protocol. They do not by themselves validate D_f, output quality, context extension or a causal mechanism. For those steps, return to the design in Section 41.9.\n\n\n\n\n\n\n\n\nNote🧪 Try it — tafagent\n\n\n\nFrom an identifier or config.json, tafagent computes configuration-based predictions and can display previously registered measurements; the browser does not execute the model to measure attention. Your own measurements require external inference, for example the project’s diagnostic CLI, followed by viewing/importing supported output. The CLI and this example may aggregate differently: check their protocols before comparing. R5 explains the tool.",
-    "crumbs": [
-      "Part VIII — Reference",
-      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R4 · Measuring your own γ (and reproducing the atlas)</span>"
-    ]
-  },
-  {
     "objectID": "chapters/R4-medir-gamma.html#summary",
     "href": "chapters/R4-medir-gamma.html#summary",
     "title": "47  R4 · Measuring your own γ (and reproducing the atlas)",
@@ -5929,7 +5940,7 @@
     "href": "chapters/R4-medir-gamma.html#exercises",
     "title": "47  R4 · Measuring your own γ (and reproducing the atlas)",
     "section": "47.9 Exercises",
-    "text": "47.9 Exercises\n\nTwo means. Verify the 0.04 and 0.16 example. Why need fitting individual pairs not reproduce the slope of the mean curve?\nTwo queries. Measure the last row and all rows of the same matrices. Which part of the protocol changed, despite using the identical model?\nExperimental unit. You have ten documents, each split into twenty chunks. What do you resample to avoid pretending you have two hundred independent documents?\nA perfect R². Construct a synthetic \\(d^{-0.8}\\) tail. What does recovering it with the code validate, and what does it not establish about a real transformer?\n\nSolutions: Section 49.43. Next reference (R5): the tafagent manual.",
+    "text": "47.9 Exercises\n\nTwo means. Verify the 0.04 and 0.16 example. Why need fitting individual pairs not reproduce the slope of the mean curve?\nTwo queries. Measure the last row and all rows of the same matrices. Which part of the protocol changed, despite using the identical model?\nExperimental unit. You have ten documents, each split into twenty chunks. What do you resample to avoid pretending you have two hundred independent documents?\nA perfect R². Construct a synthetic \\(d^{-0.8}\\) tail. What does recovering it with the code validate, and what does it not establish about a real transformer?\n\nSolutions: ?sec-soluciones-r4. Next reference (R5): the tafagent manual.",
     "crumbs": [
       "Part VIII — Reference",
       "<span class='chapter-number'>47</span>  <span class='chapter-title'>R4 · Measuring your own γ (and reproducing the atlas)</span>"
@@ -5952,39 +5963,6 @@
     "title": "48  R5 · tafagent manual",
     "section": "",
     "text": "It is: a tool in the browser (zero install, zero GPU, no telemetry) that estimates aspects of viability of an LLM before you spend GPU/€: proposed context limits, quantization degradation, chat template, config errors.\nIt isn’t: an attention-map viewer, nor a service that runs the model. What you see are deterministic predictions (computed with Pyodide) plus a natural-language layer.\nInput: an HF model id or a config.json (it reads θ, T_train, heads…); you set T_eval (the target length) and whether the model uses a sliding window (SWA).",
-    "crumbs": [
-      "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · tafagent manual</span>"
-    ]
-  },
-  {
-    "objectID": "chapters/R5-tafagent.html#taf-routes",
-    "href": "chapters/R5-tafagent.html#taf-routes",
-    "title": "48  R5 · tafagent manual",
-    "section": "48.2 From a question to the right tool",
-    "text": "48.2 From a question to the right tool\nThe selector prepares a route: concept → tool → explanation. TAF’s Understand this result links bring the selected metric, value and its origin (estimate or imported measurement) into the guide. This is a snapshot; the guide does not run the model or verify the result. Open explanations in a new tab to keep your diagnosis, or use Return to TAF to prepare the same mode.\nFind a model: click the optional field to see popular Hugging Face models, or type part of a name. Use arrow keys and Enter to select, or enter the full ID yourself. Queries go to HF and results are cached in this tab for five minutes. Results are ordered by downloads, not release date; appearing in the list does not guarantee TAF compatibility. No weights are downloaded and no analysis starts.\n\nWithout JavaScript: profile, measure attention, compare measurements.\nOptional demo: “Try an example” prepares an attention probe using Pythia-70m; it downloads no weights and runs no inference. TAF also offers a guided reading demo.\nEntropy measurement: Diagnose CLI can generate --entropy-only or --measure-entropy. Inference runs with Python/PyTorch on your computer, not in this selector. Entropy does not determine γ and no automatic entropy correction is applied. The phase diagram reads the atlas; it does not perform a new measurement.",
-    "crumbs": [
-      "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · tafagent manual</span>"
-    ]
-  },
-  {
-    "objectID": "chapters/R5-tafagent.html#problem-resolver",
-    "href": "chapters/R5-tafagent.html#problem-resolver",
-    "title": "48  R5 · tafagent manual",
-    "section": "48.3 Solve my problem: from uncertainty to a check",
-    "text": "48.3 Solve my problem: from uncertainty to a check\nThink of a diagnostic desk: you arrive with “it does not work” and receive the questions needed to narrow down the problem. You do not need to know each module’s name beforehand. Solve my problem provides this journey automatically in the browser, without an operator or a chat service.\nThe window starts with what is going wrong, not a module name. Choose memory, responses, adapters, access/loading, long context, evaluation or performance. One follow-up question narrows the case: for example, whether memory runs out while loading, generating or training. There are seven families and twenty situations. Distributed training receives an explicit boundary and guide reading, not an inference-memory estimate.\nIf you already know what to check, nine direct routes are available:\n\nMemory: the model does not fit or fails while generating.\nChat template: inspect the conversation format.\nCompatibility: understand the architecture and its limits.\nJSON: review reasoning and answer field order.\nPEFT / QLoRA: inspect code without executing it.\nPrompts: compare the common text prefix.\nEvaluations: review differences and settings.\nAttention: inspect a measurement and its protocol.\nAdapter: check metadata and the base model.\n\nLinks only open the form. Every route has Try an offline example, so you can explore the responses before entering your model. The memory example recalculates with fewer tokens or compares a weight format; it changes the estimate without running or modifying the model.\nThe six new checks analyze pasted data locally without downloading weights. Reordered JSON is a proposal to review and check again; it does not validate the whole schema or guarantee quality. Prompt comparison predicts neither prices nor cache hits. An evaluation gap does not prove a bug and imported gamma is not a new inference run. Reports omit pasted code, prompts, files and JSON proposals.\nFind a tool for another problem connects all 31 modes, explaining required inputs, outputs and limits. Each entry links to its specialized form, optional demo and guide reading. Some tools require Pyodide, network files, local Python or WebGPU; opening them does not mean a diagnosis has run. The questions draw on a public discussion sample, not a statistical ranking or automatic monitoring.\nReview this result. After each direct check, expand a review of its evidence: what supports the result, what remains unverified and how to check it, with a link to this guide’s explanation. The panel distinguishes configuration estimates, static inspections, heuristic comparisons and imported measurements. It runs no additional model and assigns no probability of failure. Attention reports retain missing-protocol counts and comparison notices.\nFor example, a memory budget that fits does not prove your workload will fit: loading peaks, buffers and runtime concurrency remain unmeasured. The next check suggests trying a short request and observing free memory at the failing stage. Saved or synthetic examples stay labelled as demos, not diagnoses of your model. The guided demo opens this panel; the downloaded report includes it without adding pasted source text.\nReturn to the same problem. When you reach the guide from a case summary or review, Return to this problem’s form preserves the route, TAF language and original host (GitHub or Hugging Face). It prepares the form without running a check or restoring pasted inputs. Keep the original tab for the complete result. Examples do not transmit a model ID as if it were yours.\n\n\n\n\n\n\nFrom a notice to the next check. In Solve my problem → Attention, paste one or two reports containing γ and open Show protocol details. The panel lists 19 known conditions in four groups: model/data, sampling, execution and aggregation/fit. It identifies missing documentation and differences from the reference. Custom fields count, but their names and values are not exported.\nWhat to check first prioritizes context conflicts or limitations, then protocol differences and missing documentation. If all checked conditions are documented and match, it proposes inspecting the curve and repeating the run. Recover settings from the actual experiment; never invent them to make reports match. A documented field does not establish accuracy or validate the theory. The optional route demo uses synthetic uniform attention to illustrate missing conditions; no model is run. The guide lets you return to the same form.\n\n\n\nOrdered checks across eight routes. See the verification steps shows three instructions: what to inspect first, what to observe in your environment, and how to interpret or redirect the case. One of 39 priorities is selected from the result. Attention retains its own protocol checklist: all nine routes guide the next check. Recalculation updates the summary, review and “It still fails”.\nExplore another example offers 32 situations: four memory, three template, three adapter, five cache, five evaluation, three architecture, three JSON and six PEFT-code cases. Changing examples resets the comparison and retains the illustrative label. Alternate architecture examples remove the previous ID, revision and sources to avoid attributing a synthetic config to the real model.\nReports retain the plan with executed: false. TAF has not executed these checks or certified a fix. The narrated memory demo shows the steps. Read more about architecture, PEFT code, JSON, cache and latency and evaluation differences. Chapters 20 and 28 also explain memory budgets and adapters. Returning opens the same form on the original host and in the original language without transmitting code, prompts or private results.\n\n48.3.1 Continuing after a check: optional tracking\nTrack my checks records what you could review while retaining the current result. It is available on all nine routes. Each step can be pending, reviewed without a discrepancy, discrepant, or blocked. These are user declarations, not tests executed or verified by TAF.\nThe next step is selected automatically: first the first discrepancy, then the first blocked check, then the first pending step. Go to the next check focuses its control. “It still fails” uses this follow-up alongside the plan based on the original data. The guide link still explains the case; marks do not alter results or protocol metadata. Marking all three steps reviewed does not certify a fix: test the original task and retain counterexamples if it still fails.\nOptional demo: in a saved example, Simulate a blocked check marks one step reviewed, one blocked and one pending. The narrated demo shows this in step five. These marks are illustrative, not an execution record. The simulation button does not appear in a case using your own inputs.\nMarks stay only in the original tab when closing the panel or changing language. Changed inputs, recalculation, another example or route clear them; reloading also loses them. Reports include tracking as unverified declarations, without free-text notes, prompts or pasted code. They cannot restore the session. Guide return links open a fresh form: keep the original tab open to retain your case and marks.\nA concrete case: weights can fit on a GPU while generation exceeds its memory after adding the KV cache. The route asks for available memory, total tokens, weight format and whether failure occurs during loading or generation. It reuses Fit Check to separate those components. This is an estimate for one GPU and one sequence, not a measurement of your hardware or a guaranteed diagnosis.\nIn the other routes, finding a template does not prove that the runtime applies it correctly, and recognizing an architecture does not certify quality or support in every engine. TAF shows the inspected files and revision, explains limitations and proposes the next check.\nYou can select I tried it and it worked or It still fails, open the detailed tool, read the relevant chapter and download the report. Pasted questions and errors stay in this tab; model queries go to HF. A shareable link carries only the route, model ID and language, with no error, hardware or result data. Responses are not posted automatically to HF. The technical note describes the scope and how to add routes using other TAF modules.",
-    "crumbs": [
-      "Part VIII — Reference",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · tafagent manual</span>"
-    ]
-  },
-  {
-    "objectID": "chapters/R5-tafagent.html#reviewed-models",
-    "href": "chapters/R5-tafagent.html#reviewed-models",
-    "title": "48  R5 · tafagent manual",
-    "section": "48.4 Choosing a model: recognition is not validation",
-    "text": "48.4 Choosing a model: recognition is not validation\nA technical specification is like a blueprint: it describes parts, but does not prove how the machine behaves. Hugging Face search finds names; the importer also needs a compatible architecture; measuring attention requires running the weights under a documented protocol. These are three separate steps.\nReview dated 2026-10-24: TAF includes eight public configurations pinned to revisions and two restricted Gemma 3 configurations left unverified. It retains the eleven historical examples and adds two dense Qwen3 presets. Explore these saved examples without downloading weights:\n\nQwen3-0.6B: load a reviewed preset.\nQwen3.8: inspect why the hybrid needs separate treatment.\nDeepSeek-V3.2: inspect the MLA and MoE boundary.\n\nThe panel shows provenance and limits before loading values. It does not start an analysis. Automatic imports in Profile, recipes, Inspector, Compare, Depth, Fit Check and Launch reject incompatible dense assumptions: hybrid layers, MoE, MLA, mixed windows, partial/scaled RoPE or multimodal components. Other modes keep their own scope; historical presets may simplify the architecture. A refusal does not mean the model is defective.\nA careful-reading example: the official Qwen3-8B card lists 32,768 tokens of native context, while its configuration declares 40,960. Both new saved presets use 32,768 as their reference. Live config imports label configured context as a provisional reference: max_position_embeddings does not establish training length. Verify T_train before interpreting the formulas. Imported parameter counts are also estimates, not measurements from weights.\nEditing Profile geometry detaches the model and creates a manual scenario. If a new import fails, TAF will not run the previous inputs under the new name. Understanding architectures helps you choose the next step; the technical review note details sources and checks. This update adds no atlas measurements and does not refresh benchmark tables.",
     "crumbs": [
       "Part VIII — Reference",
       "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · tafagent manual</span>"
@@ -6062,6 +6040,39 @@
     "title": "48  R5 · tafagent manual",
     "section": "48.11 Verification (the receipts)",
     "text": "48.11 Verification (the receipts)\n\nPyodide for the math (deterministic), WebLLM for the natural language, transformers.js for the tokenizer.\nLean+Mathlib verification: 15 identities formally proved (github.com/karlesmarin/lean-taf).\nPanel of 23 models open (github.com/karlesmarin/tafagent-registry). It is the tool’s registry (config + tested predictions), not the γ atlas of Ch. 16 —that one is 42 models and 79 measurements of real attention—.\n\n\n\n\n\n\n\nWarning⚠ Honest — what is prediction and what is measurement\n\n\n\nMany outputs (γ_Padé, estimated horizon, KV at length L) are predictions from the config —fast and useful for deciding before spending GPU—, not measurements of real attention. Once you have the model, contrast them with γ_observed (measured) and with your own measurement (R4). And remember the book’s limits: D_f and the context headroom are 🟡 rules not fully validated (R1).\n\n\nNext reference (R6): the suggested solutions to each chapter’s exercises.\nStudies and demos: Float32 · mHC. Optional illustrative calculations, without inference or weight downloads.",
+    "crumbs": [
+      "Part VIII — Reference",
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · tafagent manual</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/R5-tafagent.html#taf-routes",
+    "href": "chapters/R5-tafagent.html#taf-routes",
+    "title": "48  R5 · tafagent manual",
+    "section": "48.2 From a question to the right tool",
+    "text": "48.2 From a question to the right tool\nThe selector prepares a route: concept → tool → explanation. TAF’s Understand this result links bring the selected metric, value and its origin (estimate or imported measurement) into the guide. This is a snapshot; the guide does not run the model or verify the result. Open explanations in a new tab to keep your diagnosis, or use Return to TAF to prepare the same mode.\nFind a model: click the optional field to see popular Hugging Face models, or type part of a name. Use arrow keys and Enter to select, or enter the full ID yourself. Queries go to HF and results are cached in this tab for five minutes. Results are ordered by downloads, not release date; appearing in the list does not guarantee TAF compatibility. No weights are downloaded and no analysis starts.\n\nWithout JavaScript: profile, measure attention, compare measurements.\nOptional demo: “Try an example” prepares an attention probe using Pythia-70m; it downloads no weights and runs no inference. TAF also offers a guided reading demo.\nEntropy measurement: Diagnose CLI can generate --entropy-only or --measure-entropy. Inference runs with Python/PyTorch on your computer, not in this selector. Entropy does not determine γ and no automatic entropy correction is applied. The phase diagram reads the atlas; it does not perform a new measurement.",
+    "crumbs": [
+      "Part VIII — Reference",
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · tafagent manual</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/R5-tafagent.html#problem-resolver",
+    "href": "chapters/R5-tafagent.html#problem-resolver",
+    "title": "48  R5 · tafagent manual",
+    "section": "48.3 Solve my problem: from uncertainty to a check",
+    "text": "48.3 Solve my problem: from uncertainty to a check\nThink of a diagnostic desk: you arrive with “it does not work” and receive the questions needed to narrow down the problem. You do not need to know each module’s name beforehand. Solve my problem provides this journey automatically in the browser, without an operator or a chat service.\nThe window starts with what is going wrong, not a module name. Choose memory, responses, adapters, access/loading, long context, evaluation or performance. One follow-up question narrows the case: for example, whether memory runs out while loading, generating or training. There are seven families and twenty situations. Distributed training receives an explicit boundary and guide reading, not an inference-memory estimate.\nIf you already know what to check, nine direct routes are available:\n\nMemory: the model does not fit or fails while generating.\nChat template: inspect the conversation format.\nCompatibility: understand the architecture and its limits.\nJSON: review reasoning and answer field order.\nPEFT / QLoRA: inspect code without executing it.\nPrompts: compare the common text prefix.\nEvaluations: review differences and settings.\nAttention: inspect a measurement and its protocol.\nAdapter: check metadata and the base model.\n\nLinks only open the form. Every route has Try an offline example, so you can explore the responses before entering your model. The memory example recalculates with fewer tokens or compares a weight format; it changes the estimate without running or modifying the model.\nThe six new checks analyze pasted data locally without downloading weights. Reordered JSON is a proposal to review and check again; it does not validate the whole schema or guarantee quality. Prompt comparison predicts neither prices nor cache hits. An evaluation gap does not prove a bug and imported gamma is not a new inference run. Reports omit pasted code, prompts, files and JSON proposals.\nFind a tool for another problem connects all 31 modes, explaining required inputs, outputs and limits. Each entry links to its specialized form, optional demo and guide reading. Some tools require Pyodide, network files, local Python or WebGPU; opening them does not mean a diagnosis has run. The questions draw on a public discussion sample, not a statistical ranking or automatic monitoring.\nReview this result. After each direct check, expand a review of its evidence: what supports the result, what remains unverified and how to check it, with a link to this guide’s explanation. The panel distinguishes configuration estimates, static inspections, heuristic comparisons and imported measurements. It runs no additional model and assigns no probability of failure. Attention reports retain missing-protocol counts and comparison notices.\nFor example, a memory budget that fits does not prove your workload will fit: loading peaks, buffers and runtime concurrency remain unmeasured. The next check suggests trying a short request and observing free memory at the failing stage. Saved or synthetic examples stay labelled as demos, not diagnoses of your model. The guided demo opens this panel; the downloaded report includes it without adding pasted source text.\nReturn to the same problem. When you reach the guide from a case summary or review, Return to this problem’s form preserves the route, TAF language and original host (GitHub or Hugging Face). It prepares the form without running a check or restoring pasted inputs. Keep the original tab for the complete result. Examples do not transmit a model ID as if it were yours.\n\n\n\n\n\n\nFrom a notice to the next check. In Solve my problem → Attention, paste one or two reports containing γ and open Show protocol details. The panel lists 19 known conditions in four groups: model/data, sampling, execution and aggregation/fit. It identifies missing documentation and differences from the reference. Custom fields count, but their names and values are not exported.\nWhat to check first prioritizes context conflicts or limitations, then protocol differences and missing documentation. If all checked conditions are documented and match, it proposes inspecting the curve and repeating the run. Recover settings from the actual experiment; never invent them to make reports match. A documented field does not establish accuracy or validate the theory. The optional route demo uses synthetic uniform attention to illustrate missing conditions; no model is run. The guide lets you return to the same form.\n\n\n\nOrdered checks across eight routes. See the verification steps shows three instructions: what to inspect first, what to observe in your environment, and how to interpret or redirect the case. One of 39 priorities is selected from the result. Attention retains its own protocol checklist: all nine routes guide the next check. Recalculation updates the summary, review and “It still fails”.\nExplore another example offers 32 situations: four memory, three template, three adapter, five cache, five evaluation, three architecture, three JSON and six PEFT-code cases. Changing examples resets the comparison and retains the illustrative label. Alternate architecture examples remove the previous ID, revision and sources to avoid attributing a synthetic config to the real model.\nReports retain the plan with executed: false. TAF has not executed these checks or certified a fix. The narrated memory demo shows the steps. Read more about architecture, PEFT code, JSON, cache and latency and evaluation differences. Chapters 20 and 28 also explain memory budgets and adapters. Returning opens the same form on the original host and in the original language without transmitting code, prompts or private results.\n\n48.3.1 Continuing after a check: optional tracking\nTrack my checks records what you could review while retaining the current result. It is available on all nine routes. Each step can be pending, reviewed without a discrepancy, discrepant, or blocked. These are user declarations, not tests executed or verified by TAF.\nThe next step is selected automatically: first the first discrepancy, then the first blocked check, then the first pending step. Go to the next check focuses its control. “It still fails” uses this follow-up alongside the plan based on the original data. The guide link still explains the case; marks do not alter results or protocol metadata. Marking all three steps reviewed does not certify a fix: test the original task and retain counterexamples if it still fails.\nOptional demo: in a saved example, Simulate a blocked check marks one step reviewed, one blocked and one pending. The narrated demo shows this in step five. These marks are illustrative, not an execution record. The simulation button does not appear in a case using your own inputs.\nMarks stay only in the original tab when closing the panel or changing language. Changed inputs, recalculation, another example or route clear them; reloading also loses them. Reports include tracking as unverified declarations, without free-text notes, prompts or pasted code. They cannot restore the session. Guide return links open a fresh form: keep the original tab open to retain your case and marks.\n\n\n48.3.2 Continue from what you observed\nAfter trying a check, open What happened when you checked?, select the step and report the observed outcome. It still fails opens this panel. The nine routes offer 27 concrete observations plus an option for unavailable evidence.\nFor example, if a short request works but a long one fails, TAF suggests fixing model, precision and concurrency, gradually increasing tokens and recording peak VRAM. Failure before generation instead leads to loading-memory and actual weight-format checks. JSON distinguishes invalid syntax, schema violations and incorrect answers with valid structure. The next instruction uses your report; the original analysis remains visible and does not become a verified repair.\nThe last twelve observations for the result are kept in order. Language changes and closing the panel retain them; changed inputs, recalculation, another case/example and reload clear them. Clear observations leaves analysis and progress marks intact. Reports include them as declarations without free text and cannot restore a session. Suggested tools open their catalog entry; their results do not return automatically to the case.\nThe interactive demo simulates an observation in step five. The recorded video shows the earlier progress-mark flow; use the interactive demo for observations. The standalone Fit Check demo uses a saved Qwen3-8B configuration and computes a budget without HF requests: 24 GiB, BF16 weights and FP16 KV. It illustrates an estimate, not your GPU usage.\nA concrete case: weights can fit on a GPU while generation exceeds its memory after adding the KV cache. The route asks for available memory, total tokens, weight format and whether failure occurs during loading or generation. It reuses Fit Check to separate those components. This is an estimate for one GPU and one sequence, not a measurement of your hardware or a guaranteed diagnosis.\nIn the other routes, finding a template does not prove that the runtime applies it correctly, and recognizing an architecture does not certify quality or support in every engine. TAF shows the inspected files and revision, explains limitations and proposes the next check.\nYou can select I tried it and it worked or It still fails, open the detailed tool, read the relevant chapter and download the report. Pasted questions and errors stay in this tab; model queries go to HF. A shareable link carries only the route, model ID and language, with no error, hardware or result data. Responses are not posted automatically to HF. The technical note describes the scope and how to add routes using other TAF modules.",
+    "crumbs": [
+      "Part VIII — Reference",
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · tafagent manual</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/R5-tafagent.html#reviewed-models",
+    "href": "chapters/R5-tafagent.html#reviewed-models",
+    "title": "48  R5 · tafagent manual",
+    "section": "48.4 Choosing a model: recognition is not validation",
+    "text": "48.4 Choosing a model: recognition is not validation\nA technical specification is like a blueprint: it describes parts, but does not prove how the machine behaves. Hugging Face search finds names; the importer also needs a compatible architecture; measuring attention requires running the weights under a documented protocol. These are three separate steps.\nReview dated 2026-10-24: TAF includes eight public configurations pinned to revisions and two restricted Gemma 3 configurations left unverified. It retains the eleven historical examples and adds two dense Qwen3 presets. Explore these saved examples without downloading weights:\n\nQwen3-0.6B: load a reviewed preset.\nQwen3.8: inspect why the hybrid needs separate treatment.\nDeepSeek-V3.2: inspect the MLA and MoE boundary.\n\nThe panel shows provenance and limits before loading values. It does not start an analysis. Automatic imports in Profile, recipes, Inspector, Compare, Depth, Fit Check and Launch reject incompatible dense assumptions: hybrid layers, MoE, MLA, mixed windows, partial/scaled RoPE or multimodal components. Other modes keep their own scope; historical presets may simplify the architecture. A refusal does not mean the model is defective.\nA careful-reading example: the official Qwen3-8B card lists 32,768 tokens of native context, while its configuration declares 40,960. Both new saved presets use 32,768 as their reference. Live config imports label configured context as a provisional reference: max_position_embeddings does not establish training length. Verify T_train before interpreting the formulas. Imported parameter counts are also estimates, not measurements from weights.\nEditing Profile geometry detaches the model and creates a manual scenario. If a new import fails, TAF will not run the previous inputs under the new name. Understanding architectures helps you choose the next step; the technical review note details sources and checks. This update adds no atlas measurements and does not refresh benchmark tables.",
     "crumbs": [
       "Part VIII — Reference",
       "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · tafagent manual</span>"

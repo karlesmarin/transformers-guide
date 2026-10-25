@@ -1266,6 +1266,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
+<p>Tras probarlo, distingue fallo durante la carga, fallo incluso con una petición corta y fallo solo al alargarla. Registra esa observación en <a href="../chapters/R5-tafagent.html#sec-resolver-observations">el seguimiento del resolutor</a> para adaptar la siguiente comprobación. Es una declaración tuya; no modifica el análisis inicial.</p>
 <section id="la-idea-en-una-frase" class="level2" data-number="21.1">
 <h2 data-number="21.1" class="anchored" data-anchor-id="la-idea-en-una-frase"><span class="header-section-number">21.1</span> La idea en una frase</h2>
 <p>Cuánto se puede <strong>comprimir</strong> el KV-cache de un modelo lo decide su exponente γ: con γ&gt;1 (cola ligera) una <strong>ventana finita</strong> captura casi toda la atención; con γ&lt;1 (cola pesada) no —y esa ventana se puede calcular en forma cerrada—.</p>
@@ -1481,7 +1482,7 @@ Tabla&nbsp;21.2: Diseño del cara a cara; no se atribuyen resultados a TAF.
 </div>
 </figure>
 </div>
-<p><strong>Receta de laboratorio.</strong> Empieza con la caché completa. Reduce después el presupuesto en varios escalones, registra prefill y decode por separado y conserva los fallos, no solo el promedio. Un resultado que gana recuperando una clave puede perder resolviendo un problema. La receta común de <a href="40-evaluacion.html#sec-evaluacion-contexto" class="quarto-xref"><span>Sección 41.9</span></a> ayuda a no cambiar simultáneamente tarea, arquitectura y memoria.</p>
+<p><strong>Receta de laboratorio.</strong> Empieza con la caché completa. Reduce después el presupuesto en varios escalones, registra prefill y decode por separado y conserva los fallos, no solo el promedio. Un resultado que gana recuperando una clave puede perder resolviendo un problema. La receta común de <span class="quarto-unresolved-ref">?sec-evaluacion-contexto</span> ayuda a no cambiar simultáneamente tarea, arquitectura y memoria.</p>
 </section>
 <section id="honestidad-lo-que-falta-validar" class="level2" data-number="21.7">
 <h2 data-number="21.7" class="anchored" data-anchor-id="honestidad-lo-que-falta-validar"><span class="header-section-number">21.7</span> Honestidad — lo que falta validar</h2>

@@ -1281,6 +1281,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
+<p>Tras repetir, indica si encontraste controles distintos, si la diferencia persiste al alinearlos o si desapareció. Registra esa observación en <a href="../chapters/R5-tafagent.html#sec-resolver-observations">el seguimiento del resolutor</a> para adaptar la siguiente comprobación. Es una declaración tuya; no modifica el análisis inicial.</p>
 <section id="la-idea-en-una-frase" class="level2" data-number="41.1">
 <h2 data-number="41.1" class="anchored" data-anchor-id="la-idea-en-una-frase"><span class="header-section-number">41.1</span> La idea en una frase</h2>
 <p>Evaluar un LLM es estimar su capacidad con <strong>métricas que son proxies</strong> —ninguna la mide directamente—, así que saber evaluar consiste, sobre todo, en <strong>conocer las trampas</strong>: la contaminación de datos, el juez que se deja engañar y la ley de Goodhart.</p>
@@ -1428,7 +1429,7 @@ Tabla&nbsp;41.1: Benchmarks por capacidad (2024-2026)
 </section>
 <section id="sec-evaluacion-contexto" class="level2" data-number="41.9">
 <h2 data-number="41.9" class="anchored" data-anchor-id="sec-evaluacion-contexto"><span class="header-section-number">41.9</span> Un laboratorio común para contexto y compresión</h2>
-<p>Un número de acierto es como el tiempo de una carrera: sin saber la distancia y el terreno, compararlo con otro puede engañar. Para enlazar el contexto de <a href="19-contexto-largo.html#sec-contexto-evidencia" class="quarto-xref"><span>Sección 20.6</span></a> con la caché de <a href="20-kv-cache.html#sec-kv-evidencia" class="quarto-xref"><span>Sección 21.6</span></a>, publica <strong>la ficha de la carrera</strong>, no solo el marcador.</p>
+<p>Un número de acierto es como el tiempo de una carrera: sin saber la distancia y el terreno, compararlo con otro puede engañar. Para enlazar el contexto de <span class="quarto-unresolved-ref">?sec-contexto-evidencia</span> con la caché de <a href="20-kv-cache.html#sec-kv-evidencia" class="quarto-xref"><span>Sección 21.6</span></a>, publica <strong>la ficha de la carrera</strong>, no solo el marcador.</p>
 <ol type="1">
 <li><strong>Congela el modelo y la tarea.</strong> Revisión de pesos, tokenizador, plantilla de chat, motor, precisión, parámetros de generación y conjunto de preguntas. Reserva ejemplos que no uses para elegir el presupuesto de caché.</li>
 <li><strong>Varía una dificultad cada vez.</strong> Longitud, posición, relleno, cantidad y dispersión de evidencia, o pasos de razonamiento. Declara qué se mantuvo fijo. Los diseños de LURCH y CRE motivan estos controles <span class="citation" data-cites="qin2026lurch zhang2026cre">(<a href="#ref-qin2026lurch" role="doc-biblioref">Qin et&nbsp;al. 2026</a>; <a href="#ref-zhang2026cre" role="doc-biblioref">Zhang et&nbsp;al. 2026</a>)</span>.</li>

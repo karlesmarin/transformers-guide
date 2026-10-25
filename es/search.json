@@ -1408,7 +1408,7 @@
     "href": "chapters/10-arquitecturas.html",
     "title": "11  Encoder, decoder y encoder-decoder",
     "section": "",
-    "text": "11.1 La idea en una frase\nLas tres familias usan los mismos bloques (atención + FFN + andamiaje); lo que las distingue es, sobre todo, la máscara de atención —qué puede ver cada token— y si hay atención cruzada entre un codificador y un decodificador.",
+    "text": "11.1 La idea en una frase\nTras probar el motor, indica si rechazó la arquitectura, faltaban metadatos o cargó pero falló la tarea. Registra esa observación en el seguimiento del resolutor para adaptar la siguiente comprobación. Es una declaración tuya; no modifica el análisis inicial.\nLas tres familias usan los mismos bloques (atención + FFN + andamiaje); lo que las distingue es, sobre todo, la máscara de atención —qué puede ver cada token— y si hay atención cruzada entre un codificador y un decodificador.",
     "crumbs": [
       "Parte I — Fundamentos",
       "<span class='chapter-number'>11</span>  <span class='chapter-title'>Encoder, decoder y encoder-decoder</span>"
@@ -1470,39 +1470,6 @@
     ]
   },
   {
-    "objectID": "chapters/10-arquitecturas.html#sec-hybrid-learning",
-    "href": "chapters/10-arquitecturas.html#sec-hybrid-learning",
-    "title": "11  Encoder, decoder y encoder-decoder",
-    "section": "11.7 Competing Learning in Hybrid Architectures",
-    "text": "11.7 Competing Learning in Hybrid Architectures\nPreprint · arXiv v1 · 2026-10-19. Los bloques recurrentes y de atención pueden competir al entrenar; congelarlos por etapas cambia el reparto de trabajo. (Competing Learning in Hybrid Architectures 2026)\n\n\n\n\n\n\nAlcance de la evidencia. Las pruebas llegan a 1B de parámetros; los híbridos KDA principales desactivan RoPE. La configuración no diagnostica esa competencia.\n\n\n\nQué probar. Comparar intervenciones por capa y recuperación con igual presupuesto de entrenamiento y varias distribuciones de datos.\n🧪 Continuar en TAF: fuente, límites y experimento propuesto.",
-    "crumbs": [
-      "Parte I — Fundamentos",
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Encoder, decoder y encoder-decoder</span>"
-    ]
-  },
-  {
-    "objectID": "chapters/10-arquitecturas.html#sec-engram",
-    "href": "chapters/10-arquitecturas.html#sec-engram",
-    "title": "11  Encoder, decoder y encoder-decoder",
-    "section": "11.8 Conditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models",
-    "text": "11.8 Conditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models\nPreprint · arXiv v2 · 2026-07-12. Engram complementa el cómputo condicional con memoria aprendida de consulta de n-gramas mediante hash. (Conditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models 2026)\n\n\n\n\n\n\nAlcance de la evidencia. Es memoria paramétrica, no una base RAG externa ni el diario de un agente. Consultar sigue teniendo costes de almacenamiento y transferencia.\n\n\n\nQué probar. Comparar calidad, cómputo activo, almacenamiento total de tablas y ancho de banda con recursos equivalentes.\n🧪 Continuar en TAF: fuente, límites y experimento propuesto.",
-    "crumbs": [
-      "Parte I — Fundamentos",
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Encoder, decoder y encoder-decoder</span>"
-    ]
-  },
-  {
-    "objectID": "chapters/10-arquitecturas.html#sec-resolver-architecture",
-    "href": "chapters/10-arquitecturas.html#sec-resolver-architecture",
-    "title": "11  Encoder, decoder y encoder-decoder",
-    "section": "11.9 De la arquitectura declarada a la prueba de ejecución",
-    "text": "11.9 De la arquitectura declarada a la prueba de ejecución\nEl resolutor de arquitectura distingue tres situaciones: fuera del esquema denso revisado de TAF, metadatos incompletos o incoherentes, y geometría aceptada. Ver los pasos de comprobación explica qué revisar primero, qué observar y cómo interpretar el resultado.\nSalir del esquema de TAF no significa que el modelo no funcione en otro motor. Revisa los mecanismos reales de atención, estado y expertos y la documentación de la versión del motor. No inventes cabezas KV, número de parámetros ni contexto entrenado para conseguir una estimación. Una geometría aceptada tampoco certifica kernels, memoria suficiente ni calidad.\nEn tu entorno registra revisión, clase cargada, precisión, avisos y pico de memoria. Prueba la tarea mínima documentada antes de aumentar carga o contexto. Cargar con éxito y resolver bien la tarea son comprobaciones diferentes.\nDemo opcional: tras cargar el ejemplo, Explorar otro ejemplo ofrece tres configuraciones sintéticas. Al elegirlas desaparecen el ID, revisión y fuentes del modelo anterior: no son nuevas mediciones de ese modelo. Inspector y Memory Reality ayudan a interpretar los límites; no ejecutan ni certifican tu programa.",
-    "crumbs": [
-      "Parte I — Fundamentos",
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Encoder, decoder y encoder-decoder</span>"
-    ]
-  },
-  {
     "objectID": "chapters/10-arquitecturas.html#resumen",
     "href": "chapters/10-arquitecturas.html#resumen",
     "title": "11  Encoder, decoder y encoder-decoder",
@@ -1530,6 +1497,39 @@
     "title": "11  Encoder, decoder y encoder-decoder",
     "section": "Referencias",
     "text": "Referencias\n\n\n\n\nCompeting Learning in Hybrid Architectures. 2026. arXiv v1. https://arxiv.org/abs/2610.26830v1.\n\n\nConditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models. 2026. arXiv v2. https://arxiv.org/abs/2601.07372v2.\n\n\nTay, Yi et al. 2022. UL2: Unifying Language Learning Paradigms. https://arxiv.org/abs/2205.05131.\n\n\nWang, Thomas et al. 2022. What Language Model Architecture and Pretraining Objective Work Best for Zero-Shot Generalization? https://arxiv.org/abs/2204.05832.",
+    "crumbs": [
+      "Parte I — Fundamentos",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Encoder, decoder y encoder-decoder</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/10-arquitecturas.html#sec-hybrid-learning",
+    "href": "chapters/10-arquitecturas.html#sec-hybrid-learning",
+    "title": "11  Encoder, decoder y encoder-decoder",
+    "section": "11.7 Competing Learning in Hybrid Architectures",
+    "text": "11.7 Competing Learning in Hybrid Architectures\nPreprint · arXiv v1 · 2026-10-19. Los bloques recurrentes y de atención pueden competir al entrenar; congelarlos por etapas cambia el reparto de trabajo. (Competing Learning in Hybrid Architectures 2026)\n\n\n\n\n\n\nAlcance de la evidencia. Las pruebas llegan a 1B de parámetros; los híbridos KDA principales desactivan RoPE. La configuración no diagnostica esa competencia.\n\n\n\nQué probar. Comparar intervenciones por capa y recuperación con igual presupuesto de entrenamiento y varias distribuciones de datos.\n🧪 Continuar en TAF: fuente, límites y experimento propuesto.",
+    "crumbs": [
+      "Parte I — Fundamentos",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Encoder, decoder y encoder-decoder</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/10-arquitecturas.html#sec-engram",
+    "href": "chapters/10-arquitecturas.html#sec-engram",
+    "title": "11  Encoder, decoder y encoder-decoder",
+    "section": "11.8 Conditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models",
+    "text": "11.8 Conditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models\nPreprint · arXiv v2 · 2026-07-12. Engram complementa el cómputo condicional con memoria aprendida de consulta de n-gramas mediante hash. (Conditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models 2026)\n\n\n\n\n\n\nAlcance de la evidencia. Es memoria paramétrica, no una base RAG externa ni el diario de un agente. Consultar sigue teniendo costes de almacenamiento y transferencia.\n\n\n\nQué probar. Comparar calidad, cómputo activo, almacenamiento total de tablas y ancho de banda con recursos equivalentes.\n🧪 Continuar en TAF: fuente, límites y experimento propuesto.",
+    "crumbs": [
+      "Parte I — Fundamentos",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Encoder, decoder y encoder-decoder</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/10-arquitecturas.html#sec-resolver-architecture",
+    "href": "chapters/10-arquitecturas.html#sec-resolver-architecture",
+    "title": "11  Encoder, decoder y encoder-decoder",
+    "section": "11.9 De la arquitectura declarada a la prueba de ejecución",
+    "text": "11.9 De la arquitectura declarada a la prueba de ejecución\nEl resolutor de arquitectura distingue tres situaciones: fuera del esquema denso revisado de TAF, metadatos incompletos o incoherentes, y geometría aceptada. Ver los pasos de comprobación explica qué revisar primero, qué observar y cómo interpretar el resultado.\nSalir del esquema de TAF no significa que el modelo no funcione en otro motor. Revisa los mecanismos reales de atención, estado y expertos y la documentación de la versión del motor. No inventes cabezas KV, número de parámetros ni contexto entrenado para conseguir una estimación. Una geometría aceptada tampoco certifica kernels, memoria suficiente ni calidad.\nEn tu entorno registra revisión, clase cargada, precisión, avisos y pico de memoria. Prueba la tarea mínima documentada antes de aumentar carga o contexto. Cargar con éxito y resolver bien la tarea son comprobaciones diferentes.\nDemo opcional: tras cargar el ejemplo, Explorar otro ejemplo ofrece tres configuraciones sintéticas. Al elegirlas desaparecen el ID, revisión y fuentes del modelo anterior: no son nuevas mediciones de ese modelo. Inspector y Memory Reality ayudan a interpretar los límites; no ejecutan ni certifican tu programa.",
     "crumbs": [
       "Parte I — Fundamentos",
       "<span class='chapter-number'>11</span>  <span class='chapter-title'>Encoder, decoder y encoder-decoder</span>"
@@ -2541,7 +2541,7 @@
     "href": "chapters/20-kv-cache.html",
     "title": "21  Compresión de KV-cache en práctica",
     "section": "",
-    "text": "21.1 La idea en una frase\nCuánto se puede comprimir el KV-cache de un modelo lo decide su exponente γ: con γ&gt;1 (cola ligera) una ventana finita captura casi toda la atención; con γ&lt;1 (cola pesada) no —y esa ventana se puede calcular en forma cerrada—.",
+    "text": "21.1 La idea en una frase\nTras probarlo, distingue fallo durante la carga, fallo incluso con una petición corta y fallo solo al alargarla. Registra esa observación en el seguimiento del resolutor para adaptar la siguiente comprobación. Es una declaración tuya; no modifica el análisis inicial.\nCuánto se puede comprimir el KV-cache de un modelo lo decide su exponente γ: con γ&gt;1 (cola ligera) una ventana finita captura casi toda la atención; con γ&lt;1 (cola pesada) no —y esa ventana se puede calcular en forma cerrada—.",
     "crumbs": [
       "Parte II — Cómo atienden a lo largo de la distancia",
       "<span class='chapter-number'>21</span>  <span class='chapter-title'>Compresión de KV-cache en práctica</span>"
@@ -2592,33 +2592,11 @@
     ]
   },
   {
-    "objectID": "chapters/20-kv-cache.html#sec-kv-evidencia",
-    "href": "chapters/20-kv-cache.html#sec-kv-evidencia",
-    "title": "21  Compresión de KV-cache en práctica",
-    "section": "21.6 Conservar masa, valores y el hilo de una tarea",
-    "text": "21.6 Conservar masa, valores y el hilo de una tarea\nLa libreta del principio tiene una complicación: una página casi nunca consultada puede contener la única excepción que cambia una respuesta. Frecuencia de consulta e importancia de lo consultado no son la misma medida.\nDos trabajos recientes hacen concreto este límite. KVFundaBench / ShotKV (ICML 2026) evalúa razonamiento denso y propone conservar ejemplos como unidades semánticas, separando prefill de decode (Liu et al. 2026). ValueDiff (preprint, versión de octubre de 2026) estudia arquitecturas con sumideros atenuados y selecciona usando la diferencia entre cada valor y el valor medio de la caché (Park et al. 2026). No prueban nuestra ventana D_f: aportan tareas y alternativas con las que contrastarla.\n\n\n\n\n\n\nNota🔍 Un ejemplo calculado: poca masa, mucho efecto\n\n\n\n\n\nLa salida de una cabeza es una mezcla \\(o=\\sum_i a_i v_i\\): \\(a_i\\) indica cuánto se consulta el token y \\(v_i\\) qué aporta. Si \\(a=(0{,}99,0{,}01)\\) y los valores escalares son \\(v=(0,100)\\), la salida es \\(o=1\\). Eliminar el segundo token y renormalizar conserva el 99 % de la masa original, pero cambia la salida a 0. Es un contraejemplo didáctico, no una medición de un modelo; prueba por qué masa retenida no garantiza fidelidad.\n\n\n\nMueve la masa y el valor del token descartado: la salida recortada sigue siendo cero, pero el error cambia. Es el mismo ejemplo de dos tokens, calculado en directo.\nEjemplo de dos tokens: conservar 99 % de masa puede cambiar la salida de 1 a 0 si el token descartado tiene valor 100.\n\n\n\nTabla 21.2: Diseño del cara a cara; no se atribuyen resultados a TAF.\n\n\n\n\n\n\n\n\n\n\n\nComparación propuesta\nQué se iguala\nQué se registra\nEstado\n\n\n\n\nCaché completa frente a comprimida\nModelo, tarea y decodificación\nAcierto y coste de referencia\nControl\n\n\nVentana D_f frente a selección por atención o valores\nBytes de caché, incluidos metadatos\nMasa, error de salida y acierto\nExperimento pendiente\n\n\nRecuperación frente a razonamiento\nPresupuestos y longitudes comparables\nPérdida por tipo de tarea\nMotivado por KVFundaBench\n\n\nConservar tokens frente a unidades completas\nMemoria realmente ocupada\nIntegridad de ejemplos y resultado\nMotivado por ShotKV\n\n\n\n\n\n\nReceta de laboratorio. Empieza con la caché completa. Reduce después el presupuesto en varios escalones, registra prefill y decode por separado y conserva los fallos, no solo el promedio. Un resultado que gana recuperando una clave puede perder resolviendo un problema. La receta común de Sección 41.9 ayuda a no cambiar simultáneamente tarea, arquitectura y memoria.",
-    "crumbs": [
-      "Parte II — Cómo atienden a lo largo de la distancia",
-      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Compresión de KV-cache en práctica</span>"
-    ]
-  },
-  {
     "objectID": "chapters/20-kv-cache.html#honestidad-lo-que-falta-validar",
     "href": "chapters/20-kv-cache.html#honestidad-lo-que-falta-validar",
     "title": "21  Compresión de KV-cache en práctica",
     "section": "21.7 Honestidad — lo que falta validar",
     "text": "21.7 Honestidad — lo que falta validar\n\n\n\n\n\n\nPrecaución✗ Qué NO afirmamos (todavía)\n\n\n\n\nFalta el cara a cara. Hay que comparar D_f contra los métodos principiados (Ada-KV, LAVa) a memoria igualada en benchmarks de tarea (RULER, LongBench, NIAH), no solo contra heurísticas. Ese benchmark head-to-head está pendiente: presentamos D_f como derivado y predictivo, no como demostrado superior.\nCaptar masa de atención ≠ fidelidad de salida. Un token de poca masa puede importar por la norma de su valor (la crítica de Ada-KV). D_f razona sobre la masa, que es necesaria pero no suficiente.\nD_f va ENCIMA del sumidero y lo reciente, no los reemplaza: la atención real es cola-γ + sumidero + recencia (Cap. 17). El presupuesto total cuenta la unión de sumidero, ventana local y posiciones de D_f, sin duplicar los solapamientos.\nMide la tarea, no la perplejidad. La perplejidad puede seguir baja mientras la recuperación (needle) ya colapsó —la perplejidad la dominan los tokens locales que igualmente conservas—.\nD_f asume una cola de un solo exponente limpio; es más flojo en cabezas de inducción/recuperación con atención plana o multimodal.\n\n\n\n\n\n\n\n\n\nNota🧪 Pruébalo — tafagent\n\n\n\ntafagent incluye la receta X-19 (KV compression), que según el γ de tu modelo recomienda soft-decay / cutoff / literatura, y te calcula la memoria de KV a la longitud objetivo. Es D_f convertido en consejo práctico.\n▶ Ver la demo en tafagent",
-    "crumbs": [
-      "Parte II — Cómo atienden a lo largo de la distancia",
-      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Compresión de KV-cache en práctica</span>"
-    ]
-  },
-  {
-    "objectID": "chapters/20-kv-cache.html#sec-octopus",
-    "href": "chapters/20-kv-cache.html#sec-octopus",
-    "title": "21  Compresión de KV-cache en práctica",
-    "section": "21.8 Octopus: Gated Selective Attention for Memory-Bounded Long-Context Inference in Large Language Models",
-    "text": "21.8 Octopus: Gated Selective Attention for Memory-Bounded Long-Context Inference in Large Language Models\nPublicado · ACL 2026 · 2026-07. Compuertas aprendidas retienen estados KV seleccionados con un presupuesto de memoria acotado. (Octopus: Gated Selective Attention for Memory-Bounded Long-Context Inference in Large Language Models 2026)\n\n\n\n\n\n\nAlcance de la evidencia. Requiere destilación y ajuste; no es un interruptor sin entrenamiento. Mejorar un benchmark no garantiza conservar cualquier dato.\n\n\n\nQué probar. Comparar razonamiento y recuperación con el profesor de caché completa y alternativas de igual presupuesto, incluyendo el coste de adaptación.\n🧪 Continuar en TAF: fuente, límites y experimento propuesto.",
     "crumbs": [
       "Parte II — Cómo atienden a lo largo de la distancia",
       "<span class='chapter-number'>21</span>  <span class='chapter-title'>Compresión de KV-cache en práctica</span>"
@@ -2652,6 +2630,28 @@
     "title": "21  Compresión de KV-cache en práctica",
     "section": "Referencias",
     "text": "Referencias\n\n\n\n\nCai, Zefan et al. 2024. PyramidKV: Dynamic KV Cache Compression based on Pyramidal Information Funneling. https://arxiv.org/abs/2406.02069.\n\n\nFeng, Yuan, Junlin Lv, Yukun Cao, Xike Xie, y Sean Zhou. 2025. «Ada-KV: Optimizing KV Cache Eviction by Adaptive Budget Allocation for Efficient LLM Inference». NeurIPS. https://arxiv.org/abs/2407.11550.\n\n\nGe, Suyu et al. 2023. Model Tells You What to Discard: Adaptive KV Cache Compression for LLMs (FastGen). https://arxiv.org/abs/2310.01801.\n\n\nLi, Yuhong et al. 2024. SnapKV: LLM Knows What You are Looking for Before Generation. https://arxiv.org/abs/2404.14469.\n\n\nLiu, Xiang, Zhenheng Tang, Hong Chen, et al. 2026. «Semantic Integrity Matters: Benchmarking and Preserving High-Density Reasoning in KV Cache Compression». Proceedings of the 43rd International Conference on Machine Learning 306: 78537-65. https://proceedings.mlr.press/v306/liu26dz.html.\n\n\nLiu, Zichang et al. 2023. Scissorhands: Exploiting the Persistence of Importance Hypothesis for LLM KV Cache Compression. https://arxiv.org/abs/2305.17118.\n\n\nLiu, Zirui et al. 2024. KIVI: A Tuning-Free Asymmetric 2bit Quantization for KV Cache. https://arxiv.org/abs/2402.02750.\n\n\nMarín, Carles. 2026. Predicting How Transformers Attend: Analytic Power-Law Theory, Phase Transitions, and Practical Compression Tools. https://zenodo.org/records/20314038.\n\n\nOctopus: Gated Selective Attention for Memory-Bounded Long-Context Inference in Large Language Models. 2026. ACL 2026. https://aclanthology.org/2026.acl-long.1631/.\n\n\nPark, Junyoung, Jungwook Choi, y Mingu Lee. 2026. ValueDiff: Value-Geometric KV Cache Eviction for Sink-Suppressed LLMs. https://arxiv.org/abs/2609.23314v2.\n\n\nShen et al. 2025. LAVa: Layer-wise and Adaptive KV Cache Compression via Residual Information Loss. https://arxiv.org/abs/2509.09754.\n\n\nXiao, Guangxuan, Yuandong Tian, Beidi Chen, Song Han, y Mike Lewis. 2024. «Efficient Streaming Language Models with Attention Sinks». ICLR. https://arxiv.org/abs/2309.17453.\n\n\nZhang, Zhenyu et al. 2023. «H2O: Heavy-Hitter Oracle for Efficient Generative Inference of Large Language Models». NeurIPS. https://arxiv.org/abs/2306.14048.",
+    "crumbs": [
+      "Parte II — Cómo atienden a lo largo de la distancia",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Compresión de KV-cache en práctica</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/20-kv-cache.html#sec-kv-evidencia",
+    "href": "chapters/20-kv-cache.html#sec-kv-evidencia",
+    "title": "21  Compresión de KV-cache en práctica",
+    "section": "21.6 Conservar masa, valores y el hilo de una tarea",
+    "text": "21.6 Conservar masa, valores y el hilo de una tarea\nLa libreta del principio tiene una complicación: una página casi nunca consultada puede contener la única excepción que cambia una respuesta. Frecuencia de consulta e importancia de lo consultado no son la misma medida.\nDos trabajos recientes hacen concreto este límite. KVFundaBench / ShotKV (ICML 2026) evalúa razonamiento denso y propone conservar ejemplos como unidades semánticas, separando prefill de decode (Liu et al. 2026). ValueDiff (preprint, versión de octubre de 2026) estudia arquitecturas con sumideros atenuados y selecciona usando la diferencia entre cada valor y el valor medio de la caché (Park et al. 2026). No prueban nuestra ventana D_f: aportan tareas y alternativas con las que contrastarla.\n\n\n\n\n\n\nNota🔍 Un ejemplo calculado: poca masa, mucho efecto\n\n\n\n\n\nLa salida de una cabeza es una mezcla \\(o=\\sum_i a_i v_i\\): \\(a_i\\) indica cuánto se consulta el token y \\(v_i\\) qué aporta. Si \\(a=(0{,}99,0{,}01)\\) y los valores escalares son \\(v=(0,100)\\), la salida es \\(o=1\\). Eliminar el segundo token y renormalizar conserva el 99 % de la masa original, pero cambia la salida a 0. Es un contraejemplo didáctico, no una medición de un modelo; prueba por qué masa retenida no garantiza fidelidad.\n\n\n\nMueve la masa y el valor del token descartado: la salida recortada sigue siendo cero, pero el error cambia. Es el mismo ejemplo de dos tokens, calculado en directo.\nEjemplo de dos tokens: conservar 99 % de masa puede cambiar la salida de 1 a 0 si el token descartado tiene valor 100.\n\n\n\nTabla 21.2: Diseño del cara a cara; no se atribuyen resultados a TAF.\n\n\n\n\n\n\n\n\n\n\n\nComparación propuesta\nQué se iguala\nQué se registra\nEstado\n\n\n\n\nCaché completa frente a comprimida\nModelo, tarea y decodificación\nAcierto y coste de referencia\nControl\n\n\nVentana D_f frente a selección por atención o valores\nBytes de caché, incluidos metadatos\nMasa, error de salida y acierto\nExperimento pendiente\n\n\nRecuperación frente a razonamiento\nPresupuestos y longitudes comparables\nPérdida por tipo de tarea\nMotivado por KVFundaBench\n\n\nConservar tokens frente a unidades completas\nMemoria realmente ocupada\nIntegridad de ejemplos y resultado\nMotivado por ShotKV\n\n\n\n\n\n\nReceta de laboratorio. Empieza con la caché completa. Reduce después el presupuesto en varios escalones, registra prefill y decode por separado y conserva los fallos, no solo el promedio. Un resultado que gana recuperando una clave puede perder resolviendo un problema. La receta común de ?sec-evaluacion-contexto ayuda a no cambiar simultáneamente tarea, arquitectura y memoria.",
+    "crumbs": [
+      "Parte II — Cómo atienden a lo largo de la distancia",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Compresión de KV-cache en práctica</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/20-kv-cache.html#sec-octopus",
+    "href": "chapters/20-kv-cache.html#sec-octopus",
+    "title": "21  Compresión de KV-cache en práctica",
+    "section": "21.8 Octopus: Gated Selective Attention for Memory-Bounded Long-Context Inference in Large Language Models",
+    "text": "21.8 Octopus: Gated Selective Attention for Memory-Bounded Long-Context Inference in Large Language Models\nPublicado · ACL 2026 · 2026-07. Compuertas aprendidas retienen estados KV seleccionados con un presupuesto de memoria acotado. (Octopus: Gated Selective Attention for Memory-Bounded Long-Context Inference in Large Language Models 2026)\n\n\n\n\n\n\nAlcance de la evidencia. Requiere destilación y ajuste; no es un interruptor sin entrenamiento. Mejorar un benchmark no garantiza conservar cualquier dato.\n\n\n\nQué probar. Comparar razonamiento y recuperación con el profesor de caché completa y alternativas de igual presupuesto, incluyendo el coste de adaptación.\n🧪 Continuar en TAF: fuente, límites y experimento propuesto.",
     "crumbs": [
       "Parte II — Cómo atienden a lo largo de la distancia",
       "<span class='chapter-number'>21</span>  <span class='chapter-title'>Compresión de KV-cache en práctica</span>"
@@ -3498,7 +3498,7 @@
     "href": "chapters/28-peft.html",
     "title": "29  Fine-tuning eficiente en parámetros (PEFT)",
     "section": "",
-    "text": "29.1 La idea en una frase\nEn vez de reentrenar el modelo entero para cada tarea, congelas la base y entrenas un puñado diminuto de parámetros nuevos —obtienes casi la misma calidad por una fracción del coste y un checkpoint de pocos megas—.",
+    "text": "29.1 La idea en una frase\nTras comprobarlo, indica si faltaba el adaptador activo, había objetivos o gradientes ausentes, o falló la ejecución. La ruta de adaptadores también distingue base incorrecta y salidas iguales con el adaptador activo. Registra esa observación en el seguimiento del resolutor para adaptar la siguiente comprobación. Es una declaración tuya; no modifica el análisis inicial.\nEn vez de reentrenar el modelo entero para cada tarea, congelas la base y entrenas un puñado diminuto de parámetros nuevos —obtienes casi la misma calidad por una fracción del coste y un checkpoint de pocos megas—.",
     "crumbs": [
       "Parte IV — Entrenamiento, adaptación y fine-tuning",
       "<span class='chapter-number'>29</span>  <span class='chapter-title'>Fine-tuning eficiente en parámetros (PEFT)</span>"
@@ -3582,17 +3582,6 @@
     ]
   },
   {
-    "objectID": "chapters/28-peft.html#sec-resolver-peft",
-    "href": "chapters/28-peft.html#sec-resolver-peft",
-    "title": "29  Fine-tuning eficiente en parámetros (PEFT)",
-    "section": "29.9 Del aviso estático a la verificación PEFT",
-    "text": "29.9 Del aviso estático a la verificación PEFT\nEl resolutor de código PEFT lee patrones y números de línea; no ejecuta Python ni reconstruye el flujo de control. Ver los pasos de comprobación prioriza intención de carga, orden de preparación k-bit, módulos objetivo y escala. También acompaña los casos sin llamadas reconocidas o sin avisos: ninguno certifica código correcto.\nCrear un adaptador nuevo y recuperar pesos entrenados requieren flujos distintos. Comprueba cuál pretendías usar y qué adaptador está realmente activo. Una ruta de checkpoint en una cadena no demuestra que se hayan ignorado pesos. Para el flujo k-bit documentado, la preparación precede a la incorporación de adaptadores entrenables; el orden textual puede confundir funciones independientes o ramas.\nContrasta módulos reales y parámetros entrenables con tu método. No cambies alpha solo para silenciar una convención del linter. Antes de un entrenamiento largo, inspecciona gradientes y actualizaciones en una prueba pequeña de tu entorno. Adapter Reality puede revisar los metadatos guardados, no el optimizador ni las actualizaciones ejecutadas.\nDemo opcional: seis fragmentos sintéticos muestran estas situaciones en Explorar otro ejemplo. No se ejecutan ni se incluyen en los informes de caso. Referencias: flujo de cuantización de PEFT y resolución de problemas de PEFT.",
-    "crumbs": [
-      "Parte IV — Entrenamiento, adaptación y fine-tuning",
-      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Fine-tuning eficiente en parámetros (PEFT)</span>"
-    ]
-  },
-  {
     "objectID": "chapters/28-peft.html#resumen",
     "href": "chapters/28-peft.html#resumen",
     "title": "29  Fine-tuning eficiente en parámetros (PEFT)",
@@ -3620,6 +3609,17 @@
     "title": "29  Fine-tuning eficiente en parámetros (PEFT)",
     "section": "Referencias",
     "text": "Referencias\n\n\n\n\nAghajanyan, Armen, Luke Zettlemoyer, y Sonal Gupta. 2020. Intrinsic Dimensionality Explains the Effectiveness of Language Model Fine-Tuning. https://arxiv.org/abs/2012.13255.\n\n\nBiderman, Dan, Jacob Portes, Jose Javier Gonzalez Ortiz, et al. 2024. LoRA Learns Less and Forgets Less. https://arxiv.org/abs/2405.09673.\n\n\nDettmers, Tim, Artidoro Pagnoni, Ari Holtzman, y Luke Zettlemoyer. 2023. «QLoRA: Efficient Finetuning of Quantized LLMs». NeurIPS. https://arxiv.org/abs/2305.14314.\n\n\nHoulsby, Neil, Andrei Giurgiu, Stanisław Jastrzębski, et al. 2019. «Parameter-Efficient Transfer Learning for NLP». ICML. https://arxiv.org/abs/1902.00751.\n\n\nHu, Edward J., Yelong Shen, Phillip Wallis, et al. 2022. «LoRA: Low-Rank Adaptation of Large Language Models». ICLR. https://arxiv.org/abs/2106.09685.\n\n\nLester, Brian, Rami Al-Rfou, y Noah Constant. 2021. «The Power of Scale for Parameter-Efficient Prompt Tuning». EMNLP. https://arxiv.org/abs/2104.08691.\n\n\nLi, Xiang Lisa, y Percy Liang. 2021. «Prefix-Tuning: Optimizing Continuous Prompts for Generation». ACL. https://arxiv.org/abs/2101.00190.\n\n\nLialin, Vladislav, Vijeta Deshpande, y Anna Rumshisky. 2023. Scaling Down to Scale Up: A Guide to Parameter-Efficient Fine-Tuning. https://arxiv.org/abs/2303.15647.\n\n\nLiu, Shih-Yang, Chien-Yi Wang, Hongxu Yin, et al. 2024. DoRA: Weight-Decomposed Low-Rank Adaptation. https://arxiv.org/abs/2402.09353.\n\n\nLiu, Xiao, Kaixuan Ji, Yicheng Fu, et al. 2021. P-Tuning v2: Prompt Tuning Can Be Comparable to Fine-tuning Universally Across Scales and Tasks. https://arxiv.org/abs/2110.07602.",
+    "crumbs": [
+      "Parte IV — Entrenamiento, adaptación y fine-tuning",
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Fine-tuning eficiente en parámetros (PEFT)</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/28-peft.html#sec-resolver-peft",
+    "href": "chapters/28-peft.html#sec-resolver-peft",
+    "title": "29  Fine-tuning eficiente en parámetros (PEFT)",
+    "section": "29.9 Del aviso estático a la verificación PEFT",
+    "text": "29.9 Del aviso estático a la verificación PEFT\nEl resolutor de código PEFT lee patrones y números de línea; no ejecuta Python ni reconstruye el flujo de control. Ver los pasos de comprobación prioriza intención de carga, orden de preparación k-bit, módulos objetivo y escala. También acompaña los casos sin llamadas reconocidas o sin avisos: ninguno certifica código correcto.\nCrear un adaptador nuevo y recuperar pesos entrenados requieren flujos distintos. Comprueba cuál pretendías usar y qué adaptador está realmente activo. Una ruta de checkpoint en una cadena no demuestra que se hayan ignorado pesos. Para el flujo k-bit documentado, la preparación precede a la incorporación de adaptadores entrenables; el orden textual puede confundir funciones independientes o ramas.\nContrasta módulos reales y parámetros entrenables con tu método. No cambies alpha solo para silenciar una convención del linter. Antes de un entrenamiento largo, inspecciona gradientes y actualizaciones en una prueba pequeña de tu entorno. Adapter Reality puede revisar los metadatos guardados, no el optimizador ni las actualizaciones ejecutadas.\nDemo opcional: seis fragmentos sintéticos muestran estas situaciones en Explorar otro ejemplo. No se ejecutan ni se incluyen en los informes de caso. Referencias: flujo de cuantización de PEFT y resolución de problemas de PEFT.",
     "crumbs": [
       "Parte IV — Entrenamiento, adaptación y fine-tuning",
       "<span class='chapter-number'>29</span>  <span class='chapter-title'>Fine-tuning eficiente en parámetros (PEFT)</span>"
@@ -3751,7 +3751,7 @@
     "href": "chapters/30-prompting.html",
     "title": "31  Prompting e in-context learning",
     "section": "",
-    "text": "31.1 La idea en una frase\nUn LLM puede aprender una tarea a partir de unos pocos ejemplos en su propio contexto, en tiempo de inferencia y sin ningún paso de entrenamiento —pero el prompting elicita capacidades que ya tiene, no le añade conocimiento—.",
+    "text": "31.1 La idea en una frase\nTras generar, distingue JSON que no se puede parsear, JSON que incumple el esquema y una respuesta incorrecta con formato válido. Registra esa observación en el seguimiento del resolutor para adaptar la siguiente comprobación. Es una declaración tuya; no modifica el análisis inicial.\nUn LLM puede aprender una tarea a partir de unos pocos ejemplos en su propio contexto, en tiempo de inferencia y sin ningún paso de entrenamiento —pero el prompting elicita capacidades que ya tiene, no le añade conocimiento—.",
     "crumbs": [
       "Parte V — Usar transformers",
       "<span class='chapter-number'>31</span>  <span class='chapter-title'>Prompting e in-context learning</span>"
@@ -3835,17 +3835,6 @@
     ]
   },
   {
-    "objectID": "chapters/30-prompting.html#sec-resolver-json",
-    "href": "chapters/30-prompting.html#sec-resolver-json",
-    "title": "31  Prompting e in-context learning",
-    "section": "31.9 Salida JSON: ordenar no equivale a validar",
-    "text": "31.9 Salida JSON: ordenar no equivale a validar\nEl resolutor JSON inspecciona nombres de campos de primer nivel. Ver los pasos de comprobación distingue respuesta antes de explicación, orden preferido reconocido y ausencia de un patrón aplicable. Un contrato válido puede no necesitar explicación; no hay que añadir un campo de razonamiento para satisfacer la heurística.\nEl modelo de datos de JSON Schema trata los objetos sin imponer un orden de propiedades. Algunos decodificadores condicionados sí usan el orden del esquema al generar: revisa el comportamiento de tu motor. Eso no convierte el orden en una regla de validez ni en evidencia de razonamiento fiel.\nUsa un validador del dialecto y comprueba el subconjunto admitido por el decodificador: tipos, campos obligatorios, anidación y respuestas reales. Si pruebas la propuesta opcional de reordenación, mantén prompts y generación fijos y separa éxito de parseo/esquema de calidad en la tarea. TAF no ejecuta generación ni valida el esquema completo; recalcula la inspección de nombres tras probar la propuesta.\nDemo opcional: tres ejemplos muestran un orden a revisar, el orden preferido y un esquema sin patrón reconocido. Los ejemplos permanecen locales y su contenido no se incluye en el informe. El enlace de vuelta conserva formulario e idioma.",
-    "crumbs": [
-      "Parte V — Usar transformers",
-      "<span class='chapter-number'>31</span>  <span class='chapter-title'>Prompting e in-context learning</span>"
-    ]
-  },
-  {
     "objectID": "chapters/30-prompting.html#resumen",
     "href": "chapters/30-prompting.html#resumen",
     "title": "31  Prompting e in-context learning",
@@ -3873,6 +3862,17 @@
     "title": "31  Prompting e in-context learning",
     "section": "Referencias",
     "text": "Referencias\n\n\n\n\nBrown, Tom B. et al. 2020. «Language Models are Few-Shot Learners (GPT-3)». NeurIPS. https://arxiv.org/abs/2005.14165.\n\n\nDeepSeek-AI. 2025. DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning. https://arxiv.org/abs/2501.12948.\n\n\nElhage, Nelson et al. 2021. «A Mathematical Framework for Transformer Circuits». Transformer Circuits Thread (Anthropic). https://transformer-circuits.pub/2021/framework/index.html.\n\n\nGarg, Shivam, Dimitris Tsipras, Percy Liang, y Gregory Valiant. 2022. «What Can Transformers Learn In-Context? A Case Study of Simple Function Classes». NeurIPS. https://arxiv.org/abs/2208.01066.\n\n\nGreshake, Kai, Sahar Abdelnabi, Shailesh Mishra, Christoph Endres, Thorsten Holz, y Mario Fritz. 2023. Not What You’ve Signed Up For: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection. https://arxiv.org/abs/2302.12173.\n\n\nKe, Zixuan, Fangkai Jiao, Yifei Ming, Xuan-Phi Nguyen, et al. 2025. A Survey of Frontiers in LLM Reasoning: Inference Scaling, Learning to Reason, and Agentic Systems. https://arxiv.org/abs/2504.09037.\n\n\nKojima, Takeshi, Shixiang Shane Gu, Machel Reid, Yutaka Matsuo, y Yusuke Iwasawa. 2022. «Large Language Models are Zero-Shot Reasoners». NeurIPS. https://arxiv.org/abs/2205.11916.\n\n\nLu, Yao, Max Bartolo, Alastair Moore, Sebastian Riedel, y Pontus Stenetorp. 2022. «Fantastically Ordered Prompts and Where to Find Them: Overcoming Few-Shot Prompt Order Sensitivity». ACL. https://arxiv.org/abs/2104.08786.\n\n\nMin, Sewon, Xinxi Lyu, Ari Holtzman, et al. 2022. «Rethinking the Role of Demonstrations: What Makes In-Context Learning Work?» EMNLP. https://arxiv.org/abs/2202.12837.\n\n\nOlsson, Catherine et al. 2022. «In-context Learning and Induction Heads». Transformer Circuits Thread (Anthropic). https://arxiv.org/abs/2209.11895.\n\n\nOpenAI. 2025. Introducing GPT-5. OpenAI Blog. https://openai.com/index/introducing-gpt-5/.\n\n\nOswald, Johannes von et al. 2023. «Transformers Learn In-Context by Gradient Descent». ICML. https://arxiv.org/abs/2212.07677.\n\n\nSclar, Melanie, Yejin Choi, Yulia Tsvetkov, y Alane Suhr. 2024. «Quantifying Language Models’ Sensitivity to Spurious Features in Prompt Design». ICLR. https://arxiv.org/abs/2310.11324.\n\n\nTurpin, Miles, Julian Michael, Ethan Perez, y Samuel R. Bowman. 2023. «Language Models Don’t Always Say What They Think: Unfaithful Explanations in Chain-of-Thought Prompting». NeurIPS. https://arxiv.org/abs/2305.04388.\n\n\nWang, Xuezhi, Jason Wei, Dale Schuurmans, et al. 2023. «Self-Consistency Improves Chain of Thought Reasoning in Language Models». ICLR. https://arxiv.org/abs/2203.11171.\n\n\nWei, Jason, Xuezhi Wang, Dale Schuurmans, et al. 2022. «Chain-of-Thought Prompting Elicits Reasoning in Large Language Models». NeurIPS. https://arxiv.org/abs/2201.11903.\n\n\nXie, Sang Michael, Aditi Raghunathan, Percy Liang, y Tengyu Ma. 2022. «An Explanation of In-context Learning as Implicit Bayesian Inference». ICLR. https://arxiv.org/abs/2111.02080.\n\n\nYao, Shunyu, Dian Yu, Jeffrey Zhao, et al. 2023. «Tree of Thoughts: Deliberate Problem Solving with Large Language Models». NeurIPS. https://arxiv.org/abs/2305.10601.\n\n\nYao, Shunyu, Jeffrey Zhao, Dian Yu, et al. 2023. «ReAct: Synergizing Reasoning and Acting in Language Models». ICLR. https://arxiv.org/abs/2210.03629.\n\n\nYoo, Kang Min et al. 2022. «Ground-Truth Labels Matter: A Deeper Look into Input-Label Demonstrations». EMNLP. https://arxiv.org/abs/2205.12685.\n\n\nZhou, Chunting et al. 2023. «LIMA: Less Is More for Alignment». NeurIPS. https://arxiv.org/abs/2305.11206.",
+    "crumbs": [
+      "Parte V — Usar transformers",
+      "<span class='chapter-number'>31</span>  <span class='chapter-title'>Prompting e in-context learning</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/30-prompting.html#sec-resolver-json",
+    "href": "chapters/30-prompting.html#sec-resolver-json",
+    "title": "31  Prompting e in-context learning",
+    "section": "31.9 Salida JSON: ordenar no equivale a validar",
+    "text": "31.9 Salida JSON: ordenar no equivale a validar\nEl resolutor JSON inspecciona nombres de campos de primer nivel. Ver los pasos de comprobación distingue respuesta antes de explicación, orden preferido reconocido y ausencia de un patrón aplicable. Un contrato válido puede no necesitar explicación; no hay que añadir un campo de razonamiento para satisfacer la heurística.\nEl modelo de datos de JSON Schema trata los objetos sin imponer un orden de propiedades. Algunos decodificadores condicionados sí usan el orden del esquema al generar: revisa el comportamiento de tu motor. Eso no convierte el orden en una regla de validez ni en evidencia de razonamiento fiel.\nUsa un validador del dialecto y comprueba el subconjunto admitido por el decodificador: tipos, campos obligatorios, anidación y respuestas reales. Si pruebas la propuesta opcional de reordenación, mantén prompts y generación fijos y separa éxito de parseo/esquema de calidad en la tarea. TAF no ejecuta generación ni valida el esquema completo; recalcula la inspección de nombres tras probar la propuesta.\nDemo opcional: tres ejemplos muestran un orden a revisar, el orden preferido y un esquema sin patrón reconocido. Los ejemplos permanecen locales y su contenido no se incluye en el informe. El enlace de vuelta conserva formulario e idioma.",
     "crumbs": [
       "Parte V — Usar transformers",
       "<span class='chapter-number'>31</span>  <span class='chapter-title'>Prompting e in-context learning</span>"
@@ -4565,7 +4565,7 @@
     "href": "chapters/36-serving.html",
     "title": "37  Servir y desplegar",
     "section": "",
-    "text": "37.1 La idea en una frase\nServir bien un LLM consiste en mantener la GPU ocupada pese a que generar es intrínsecamente secuencial: el arte está en agrupar muchas peticiones y gestionar la caché KV, equilibrando throughput (tokens/seg totales) contra latencia (rapidez para cada usuario).",
+    "text": "37.1 La idea en una frase\nTras medir, distingue prefijos tokenizados distintos, ausencia de aciertos con tokens iguales y aciertos sin mejora de latencia. Registra esa observación en el seguimiento del resolutor para adaptar la siguiente comprobación. Es una declaración tuya; no modifica el análisis inicial.\nServir bien un LLM consiste en mantener la GPU ocupada pese a que generar es intrínsecamente secuencial: el arte está en agrupar muchas peticiones y gestionar la caché KV, equilibrando throughput (tokens/seg totales) contra latencia (rapidez para cada usuario).",
     "crumbs": [
       "Parte VI — Eficiencia, sistemas y despliegue",
       "<span class='chapter-number'>37</span>  <span class='chapter-title'>Servir y desplegar</span>"
@@ -4693,17 +4693,6 @@
     ]
   },
   {
-    "objectID": "chapters/36-serving.html#sec-spin",
-    "href": "chapters/36-serving.html#sec-spin",
-    "title": "37  Servir y desplegar",
-    "section": "37.13 SPIN: Shadow Predictive Indexer for Sparse Attention",
-    "text": "37.13 SPIN: Shadow Predictive Indexer for Sparse Attention\nPreprint · arXiv v2 · 2026-10-08. SPIN predice qué bloques debe inspeccionar el indexador de atención dispersa a partir de puntuaciones históricas. (SPIN: Shadow Predictive Indexer for Sparse Attention 2026)\n\n\n\n\n\n\nAlcance de la evidencia. Recortar entradas del indexador no equivale a expulsar KV. Los cambios bruscos y la información parcial pueden causar omisiones.\n\n\n\nQué probar. Medir calidad y latencia de cola juntas, con cambios bruscos de tema y una ablación de la exploración.\n🧪 Continuar en TAF: fuente, límites y experimento propuesto.",
-    "crumbs": [
-      "Parte VI — Eficiencia, sistemas y despliegue",
-      "<span class='chapter-number'>37</span>  <span class='chapter-title'>Servir y desplegar</span>"
-    ]
-  },
-  {
     "objectID": "chapters/36-serving.html#resumen",
     "href": "chapters/36-serving.html#resumen",
     "title": "37  Servir y desplegar",
@@ -4731,6 +4720,17 @@
     "title": "37  Servir y desplegar",
     "section": "Referencias",
     "text": "Referencias\n\n\n\n\nAgrawal, Amey, Nitin Kedia, Ashish Panwar, et al. 2024. «Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve». OSDI. https://arxiv.org/abs/2403.02310.\n\n\nKwon, Woosuk, Zhuohan Li, Siyuan Zhuang, et al. 2023. «Efficient Memory Management for Large Language Model Serving with PagedAttention». SOSP. https://arxiv.org/abs/2309.06180.\n\n\nSheng, Ying, Shiyi Cao, Dacheng Li, et al. 2023. S-LoRA: Serving Thousands of Concurrent LoRA Adapters. https://arxiv.org/abs/2311.03285.\n\n\nSPIN: Shadow Predictive Indexer for Sparse Attention. 2026. arXiv v2. https://arxiv.org/abs/2610.09025v2.\n\n\nYu, Gyeong-In, Joo Seong Jeong, Geon-Woo Kim, Soojeong Kim, y Byung-Gon Chun. 2022. «Orca: A Distributed Serving System for Transformer-Based Generative Models». OSDI. https://www.usenix.org/conference/osdi22/presentation/yu.\n\n\nZhong, Yinmin, Shengyu Liu, Junda Chen, et al. 2024. «DistServe: Disaggregating Prefill and Decoding for Goodput-optimized Large Language Model Serving». OSDI. https://arxiv.org/abs/2401.09670.",
+    "crumbs": [
+      "Parte VI — Eficiencia, sistemas y despliegue",
+      "<span class='chapter-number'>37</span>  <span class='chapter-title'>Servir y desplegar</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/36-serving.html#sec-spin",
+    "href": "chapters/36-serving.html#sec-spin",
+    "title": "37  Servir y desplegar",
+    "section": "37.13 SPIN: Shadow Predictive Indexer for Sparse Attention",
+    "text": "37.13 SPIN: Shadow Predictive Indexer for Sparse Attention\nPreprint · arXiv v2 · 2026-10-08. SPIN predice qué bloques debe inspeccionar el indexador de atención dispersa a partir de puntuaciones históricas. (SPIN: Shadow Predictive Indexer for Sparse Attention 2026)\n\n\n\n\n\n\nAlcance de la evidencia. Recortar entradas del indexador no equivale a expulsar KV. Los cambios bruscos y la información parcial pueden causar omisiones.\n\n\n\nQué probar. Medir calidad y latencia de cola juntas, con cambios bruscos de tema y una ablación de la exploración.\n🧪 Continuar en TAF: fuente, límites y experimento propuesto.",
     "crumbs": [
       "Parte VI — Eficiencia, sistemas y despliegue",
       "<span class='chapter-number'>37</span>  <span class='chapter-title'>Servir y desplegar</span>"
@@ -5060,7 +5060,7 @@
     "href": "chapters/40-evaluacion.html",
     "title": "41  Evaluación: medir sin engañarte",
     "section": "",
-    "text": "41.1 La idea en una frase\nEvaluar un LLM es estimar su capacidad con métricas que son proxies —ninguna la mide directamente—, así que saber evaluar consiste, sobre todo, en conocer las trampas: la contaminación de datos, el juez que se deja engañar y la ley de Goodhart.",
+    "text": "41.1 La idea en una frase\nTras repetir, indica si encontraste controles distintos, si la diferencia persiste al alinearlos o si desapareció. Registra esa observación en el seguimiento del resolutor para adaptar la siguiente comprobación. Es una declaración tuya; no modifica el análisis inicial.\nEvaluar un LLM es estimar su capacidad con métricas que son proxies —ninguna la mide directamente—, así que saber evaluar consiste, sobre todo, en conocer las trampas: la contaminación de datos, el juez que se deja engañar y la ley de Goodhart.",
     "crumbs": [
       "Parte VII — Interpretabilidad y qué es real",
       "<span class='chapter-number'>41</span>  <span class='chapter-title'>Evaluación: medir sin engañarte</span>"
@@ -5144,17 +5144,6 @@
     ]
   },
   {
-    "objectID": "chapters/40-evaluacion.html#sec-evaluacion-contexto",
-    "href": "chapters/40-evaluacion.html#sec-evaluacion-contexto",
-    "title": "41  Evaluación: medir sin engañarte",
-    "section": "41.9 Un laboratorio común para contexto y compresión",
-    "text": "41.9 Un laboratorio común para contexto y compresión\nUn número de acierto es como el tiempo de una carrera: sin saber la distancia y el terreno, compararlo con otro puede engañar. Para enlazar el contexto de Sección 20.6 con la caché de Sección 21.6, publica la ficha de la carrera, no solo el marcador.\n\nCongela el modelo y la tarea. Revisión de pesos, tokenizador, plantilla de chat, motor, precisión, parámetros de generación y conjunto de preguntas. Reserva ejemplos que no uses para elegir el presupuesto de caché.\nVaría una dificultad cada vez. Longitud, posición, relleno, cantidad y dispersión de evidencia, o pasos de razonamiento. Declara qué se mantuvo fijo. Los diseños de LURCH y CRE motivan estos controles (Qin et al. 2026; Zhang et al. 2026).\nObtén una referencia con caché completa. Después compara políticas de compresión a memoria efectiva igualada. Distingue prefill, decode, bytes de KV y memoria total.\nPuntúa por tarea y por ejemplo. Recuperación, integración y razonamiento necesitan recibos propios. Usa las mismas preguntas a ambos lados de la comparación; guarda resultados individuales y estima la incertidumbre remuestreando preguntas completas.\nPublica también lo que no salió. OOM, tareas sin ejecutar y configuraciones no soportadas son estados distintos de un acierto cero. Conserva los fallos reales para que el promedio no oculte qué comportamiento se perdió.\n\n\n\n\n\n\n\nNota🔍 Diferencia de puntos: un ejemplo a mano\n\n\n\n\n\nSi la caché completa acierta 80 de 100 preguntas y la comprimida 72 de las mismas 100, la diferencia es \\(72\\%-80\\%=-8\\) puntos porcentuales, y la retención relativa es \\(72/80=90\\%\\). Son dos resúmenes distintos de un ejemplo inventado. Para saber si el cambio es estable necesitas los pares de acierto por pregunta: 80 y 72 por sí solos no bastan para calcular la incertidumbre de la diferencia pareada.\n\n\n\nConexión con TAF. Añade γ observado, intervalo, rango de ajuste y versión del protocolo como descriptores, siguiendo Capítulo 47. Una correlación con el acierto puede orientar una hipótesis; un predictor útil necesita evaluación en modelos y tareas no usados para ajustarlo. Ni R² ni una puntuación de cobertura de evidencia son una probabilidad calibrada de que una respuesta sea correcta.\n\n41.9.1 Acompañar una diferencia entre evaluaciones\nEl resolutor de diferencias de TAF recibe dos puntuaciones en escala 0–100 y unos ajustes declarados. La casilla de comparabilidad es una declaración del usuario: no comprueba versiones de tarea, particiones, muestras ni métricas. Su banda numérica es heurística, no un intervalo de confianza ni un test de significación.\nVer los pasos de comprobación decide qué revisar primero: aplicación de plantilla desconocida, estados distintos de aplicación, cambios de motor/precisión/ lote y, después, repetición o estimación de incertidumbre. Esta prioridad se mantiene aunque las puntuaciones sean iguales. Dos estados «aplicada» no prueban que las plantillas ni las conversaciones formateadas sean idénticas.\nFija una referencia común, cambia un ajuste cada vez y conserva resultados por ejemplo cuando estén disponibles. Registra revisiones de modelo y tokenizador, versión de tarea, muestras, semillas, generación y entradas formateadas. Una diferencia menor tras el cambio es evidencia para investigar; no certifica una reparación ni atribuye por sí sola la causa a un kernel o a la plantilla.\nDemo opcional: cinco situaciones ilustran estas prioridades en Explorar otro ejemplo. Las puntuaciones son sintéticas, no evaluaciones ejecutadas. El manual de lm-evaluation-harness describe cómo registrar configuración, semillas y muestras; comprueba las opciones de tu versión. Los resultados agregados de TAF no sustituyen esos registros ni un análisis de incertidumbre adecuado a la métrica.",
-    "crumbs": [
-      "Parte VII — Interpretabilidad y qué es real",
-      "<span class='chapter-number'>41</span>  <span class='chapter-title'>Evaluación: medir sin engañarte</span>"
-    ]
-  },
-  {
     "objectID": "chapters/40-evaluacion.html#puente-con-nuestro-tema-breve-y-honesto",
     "href": "chapters/40-evaluacion.html#puente-con-nuestro-tema-breve-y-honesto",
     "title": "41  Evaluación: medir sin engañarte",
@@ -5193,6 +5182,17 @@
     "title": "41  Evaluación: medir sin engañarte",
     "section": "Referencias",
     "text": "Referencias\n\n\n\n\nChen, Mark, Jerry Tworek, Heewoo Jun, Qiming Yuan, et al. 2021. «Evaluating Large Language Models Trained on Code». arXiv preprint arXiv:2107.03374. https://arxiv.org/abs/2107.03374.\n\n\nChollet, Francois, Mike Knoop, Gregory Kamradt, Bryan Landers, y Henry Pinkard. 2025. ARC-AGI-2: A New Challenge for Frontier AI Reasoning Systems. https://arxiv.org/abs/2505.11831.\n\n\nCobbe, Karl, Vineet Kosaraju, Mohammad Bavarian, Mark Chen, et al. 2021. «Training Verifiers to Solve Math Word Problems». arXiv preprint arXiv:2110.14168. https://arxiv.org/abs/2110.14168.\n\n\nGlazer, Elliot, Ege Erdil, Tamay Besiroglu, Diego Chicharro, Evan Chen, et al. 2024. FrontierMath: A Benchmark for Evaluating Advanced Mathematical Reasoning in AI. https://arxiv.org/abs/2411.04872.\n\n\nGolchin, Shahriar, y Mihai Surdeanu. 2024. «Time Travel in LLMs: Tracing Data Contamination in Large Language Models». International Conference on Learning Representations (ICLR). https://arxiv.org/abs/2308.08493.\n\n\nHendrycks, Dan, Collin Burns, Steven Basart, et al. 2021. «Measuring Massive Multitask Language Understanding». International Conference on Learning Representations (ICLR). https://arxiv.org/abs/2009.03300.\n\n\nHsieh, Cheng-Ping, Simeng Sun, Samuel Kriman, Shantanu Acharya, et al. 2024. «RULER: Whats the Real Context Size of Your Long-Context Language Models?» First Conference on Language Modeling (COLM). https://arxiv.org/abs/2404.06654.\n\n\nJimenez, Carlos E., John Yang, Alexander Wettig, et al. 2024. «SWE-bench: Can Language Models Resolve Real-World GitHub Issues?» International Conference on Learning Representations (ICLR). https://arxiv.org/abs/2310.06770.\n\n\nOpenAI. 2026. Why SWE-bench Verified no longer measures frontier coding capabilities. OpenAI Blog. https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/.\n\n\nPhan, Long, Alice Gatti, Ziwen Han, Nathaniel Li, et al. 2025. Humanity’s Last Exam. https://arxiv.org/abs/2501.14249.\n\n\nQin, Shiwen, Cameron Barker, Henry Gouk, et al. 2026. Beyond Context Length: Characterising the Difficulty of Long-Context Reasoning. https://arxiv.org/abs/2610.22067v1.\n\n\nSharma, Mrinank et al. 2023. Towards Understanding Sycophancy in Language Models. https://arxiv.org/abs/2310.13548.\n\n\nZhang, Chuyifei, Hongyu Cui, Xiaowen Huang, y Jitao Sang. 2026. Positional Failures in Long-Context LLMs: A Blind Spot in Reasoning Benchmarks. https://arxiv.org/abs/2605.23170v1.",
+    "crumbs": [
+      "Parte VII — Interpretabilidad y qué es real",
+      "<span class='chapter-number'>41</span>  <span class='chapter-title'>Evaluación: medir sin engañarte</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/40-evaluacion.html#sec-evaluacion-contexto",
+    "href": "chapters/40-evaluacion.html#sec-evaluacion-contexto",
+    "title": "41  Evaluación: medir sin engañarte",
+    "section": "41.9 Un laboratorio común para contexto y compresión",
+    "text": "41.9 Un laboratorio común para contexto y compresión\nUn número de acierto es como el tiempo de una carrera: sin saber la distancia y el terreno, compararlo con otro puede engañar. Para enlazar el contexto de ?sec-contexto-evidencia con la caché de Sección 21.6, publica la ficha de la carrera, no solo el marcador.\n\nCongela el modelo y la tarea. Revisión de pesos, tokenizador, plantilla de chat, motor, precisión, parámetros de generación y conjunto de preguntas. Reserva ejemplos que no uses para elegir el presupuesto de caché.\nVaría una dificultad cada vez. Longitud, posición, relleno, cantidad y dispersión de evidencia, o pasos de razonamiento. Declara qué se mantuvo fijo. Los diseños de LURCH y CRE motivan estos controles (Qin et al. 2026; Zhang et al. 2026).\nObtén una referencia con caché completa. Después compara políticas de compresión a memoria efectiva igualada. Distingue prefill, decode, bytes de KV y memoria total.\nPuntúa por tarea y por ejemplo. Recuperación, integración y razonamiento necesitan recibos propios. Usa las mismas preguntas a ambos lados de la comparación; guarda resultados individuales y estima la incertidumbre remuestreando preguntas completas.\nPublica también lo que no salió. OOM, tareas sin ejecutar y configuraciones no soportadas son estados distintos de un acierto cero. Conserva los fallos reales para que el promedio no oculte qué comportamiento se perdió.\n\n\n\n\n\n\n\nNota🔍 Diferencia de puntos: un ejemplo a mano\n\n\n\n\n\nSi la caché completa acierta 80 de 100 preguntas y la comprimida 72 de las mismas 100, la diferencia es \\(72\\%-80\\%=-8\\) puntos porcentuales, y la retención relativa es \\(72/80=90\\%\\). Son dos resúmenes distintos de un ejemplo inventado. Para saber si el cambio es estable necesitas los pares de acierto por pregunta: 80 y 72 por sí solos no bastan para calcular la incertidumbre de la diferencia pareada.\n\n\n\nConexión con TAF. Añade γ observado, intervalo, rango de ajuste y versión del protocolo como descriptores, siguiendo Capítulo 47. Una correlación con el acierto puede orientar una hipótesis; un predictor útil necesita evaluación en modelos y tareas no usados para ajustarlo. Ni R² ni una puntuación de cobertura de evidencia son una probabilidad calibrada de que una respuesta sea correcta.\n\n41.9.1 Acompañar una diferencia entre evaluaciones\nEl resolutor de diferencias de TAF recibe dos puntuaciones en escala 0–100 y unos ajustes declarados. La casilla de comparabilidad es una declaración del usuario: no comprueba versiones de tarea, particiones, muestras ni métricas. Su banda numérica es heurística, no un intervalo de confianza ni un test de significación.\nVer los pasos de comprobación decide qué revisar primero: aplicación de plantilla desconocida, estados distintos de aplicación, cambios de motor/precisión/ lote y, después, repetición o estimación de incertidumbre. Esta prioridad se mantiene aunque las puntuaciones sean iguales. Dos estados «aplicada» no prueban que las plantillas ni las conversaciones formateadas sean idénticas.\nFija una referencia común, cambia un ajuste cada vez y conserva resultados por ejemplo cuando estén disponibles. Registra revisiones de modelo y tokenizador, versión de tarea, muestras, semillas, generación y entradas formateadas. Una diferencia menor tras el cambio es evidencia para investigar; no certifica una reparación ni atribuye por sí sola la causa a un kernel o a la plantilla.\nDemo opcional: cinco situaciones ilustran estas prioridades en Explorar otro ejemplo. Las puntuaciones son sintéticas, no evaluaciones ejecutadas. El manual de lm-evaluation-harness describe cómo registrar configuración, semillas y muestras; comprueba las opciones de tu versión. Los resultados agregados de TAF no sustituyen esos registros ni un análisis de incertidumbre adecuado a la métrica.",
     "crumbs": [
       "Parte VII — Interpretabilidad y qué es real",
       "<span class='chapter-number'>41</span>  <span class='chapter-title'>Evaluación: medir sin engañarte</span>"
@@ -5830,18 +5830,7 @@
     "href": "chapters/R4-medir-gamma.html",
     "title": "47  R4 · Medir tu propio γ (y reproducir el atlas)",
     "section": "",
-    "text": "47.1 La idea en una frase\nγ necesita apellido: modelo, capa, cabeza, textos, posiciones y regla de ajuste. Dos números llamados γ pueden responder a preguntas distintas si cambia ese protocolo.",
-    "crumbs": [
-      "Parte VIII — Referencia",
-      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R4 · Medir tu propio γ (y reproducir el atlas)</span>"
-    ]
-  },
-  {
-    "objectID": "chapters/R4-medir-gamma.html#la-idea-en-una-frase",
-    "href": "chapters/R4-medir-gamma.html#la-idea-en-una-frase",
-    "title": "47  R4 · Medir tu propio γ (y reproducir el atlas)",
-    "section": "",
-    "text": "🧩 Analogía — medir la lluvia. Un pluviómetro en un jardín, el promedio de una ciudad y el máximo durante una tormenta miden lluvia, pero no son intercambiables. Con atención pasa lo mismo: la última consulta y el promedio de todas las consultas miran distancias parecidas desde situaciones distintas.",
+    "text": "47.1 La idea en una frase\nTras repetir la medición, indica si cambió el protocolo, difieren las curvas o parecen estables. Registra esa observación en el seguimiento del resolutor para adaptar la siguiente comprobación. Es una declaración tuya; no modifica el análisis inicial.\nγ necesita apellido: modelo, capa, cabeza, textos, posiciones y regla de ajuste. Dos números llamados γ pueden responder a preguntas distintas si cambia ese protocolo.",
     "crumbs": [
       "Parte VIII — Referencia",
       "<span class='chapter-number'>47</span>  <span class='chapter-title'>R4 · Medir tu propio γ (y reproducir el atlas)</span>"
@@ -5853,6 +5842,50 @@
     "title": "47  R4 · Medir tu propio γ (y reproducir el atlas)",
     "section": "47.2 El procedimiento, paso a paso",
     "text": "47.2 El procedimiento, paso a paso\n\nCongela el contexto de la medida. Identificador y revisión del modelo, tokenizador, plantilla, corpus y semilla; longitud efectiva, precisión, motor y configuración de RoPE. Usa textos independientes y representativos. Tokens aleatorios son un control aparte.\nRecoge atención real por capa y cabeza. Ejecuta el modelo con un backend que exponga las probabilidades de atención. output_attentions=True no garantiza que todos los kernels las devuelvan. Guarda la versión y el backend realmente utilizados; desactiva dropout y documenta el coste de materializar matrices grandes.\nDeclara las posiciones de consulta. Por ejemplo, solo la última posición de cada texto de longitud fija. Promediar todas las filas es otro protocolo: cambia la mezcla de normalizadores y de contextos disponibles. No intercambies ambos resultados.\nSepara sumidero, recencia y cola. Declara cuántos tokens iniciales excluyes del ajuste y el rango de distancias. Mide su masa aparte. No renormalices silenciosamente las filas después de excluirlos: cambiaría el peso relativo de cada consulta.\nPromedia por distancia y después ajusta. Primero media aritmética de los pesos válidos a cada distancia; después logaritmo y recta. Ajustar todos los pares individuales en log-log es otro estimador: sobrepondera distancias con más pares y promedia logaritmos.\nEntrega la curva y su incertidumbre. γ, R² en log-log, residuos, número de pares por distancia y rango de ajuste. Repite por cabeza y capa antes de resumir el modelo.",
+    "crumbs": [
+      "Parte VIII — Referencia",
+      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R4 · Medir tu propio γ (y reproducir el atlas)</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/R4-medir-gamma.html#los-controles-que-lo-hacen-fiable-no-te-engañes",
+    "href": "chapters/R4-medir-gamma.html#los-controles-que-lo-hacen-fiable-no-te-engañes",
+    "title": "47  R4 · Medir tu propio γ (y reproducir el atlas)",
+    "section": "47.2 Los controles que lo hacen fiable (no te engañes)",
+    "text": "47.2 Los controles que lo hacen fiable (no te engañes)\n\nR² antes que γ. Con R² &gt; 0,95 el γ es un buen resumen; con R² ≈ 0,85 es más grueso —dilo, no lo escondas—. Un γ con R² bajo no es comparable con uno de R² alto.\nNo compares γ crudo entre modelos distintos. Mezcla θ + datos + arquitectura (la descomposición del Cap. 15). El control limpio es within-model: cambiar solo θ en el mismo modelo (Cap. 16-17).\nPromedia con cabeza. El γ varía por cabeza y por profundidad (γ-field, Cap. 16); un único número por modelo es un resumen, no toda la historia.\nSepara el sumidero. La masa de concentración (sumidero) es un eje aparte de γ (Cap. 17); no la metas en el ajuste de la cola.",
+    "crumbs": [
+      "Parte VIII — Referencia",
+      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R4 · Medir tu propio γ (y reproducir el atlas)</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/R4-medir-gamma.html#compara-con-la-predicción-geométrica",
+    "href": "chapters/R4-medir-gamma.html#compara-con-la-predicción-geométrica",
+    "title": "47  R4 · Medir tu propio γ (y reproducir el atlas)",
+    "section": "47.6 Compara con la predicción geométrica",
+    "text": "47.6 Compara con la predicción geométrica\nCalcula γ_Padé con la misma longitud y la configuración efectiva de RoPE. Llama \\(\\delta=\\gamma_{\\rm observado}-\\gamma_{\\rm geométrico}\\) a la diferencia: es una descripción del residuo, no una atribución causal automática al entrenamiento. Antes de interpretar δ, descarta diferencias de corpus, posición, máscara y ajuste. La descomposición de Capítulo 16 propone una explicación; el protocolo común permite ponerla a prueba. La incertidumbre de γ no convierte el error de la predicción en certeza.",
+    "crumbs": [
+      "Parte VIII — Referencia",
+      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R4 · Medir tu propio γ (y reproducir el atlas)</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/R4-medir-gamma.html#datos-abiertos-para-reproducir-o-refutar",
+    "href": "chapters/R4-medir-gamma.html#datos-abiertos-para-reproducir-o-refutar",
+    "title": "47  R4 · Medir tu propio γ (y reproducir el atlas)",
+    "section": "47.7 Datos abiertos para reproducir (o refutar)",
+    "text": "47.7 Datos abiertos para reproducir (o refutar)\n\nEl atlas γ (79 medidas sobre 42 modelos únicos de 4 familias) y los experimentos within-model (θ-rescale, γ⊥sumidero) están publicados como datos abiertos junto al Paper I (Zenodo 20314038) — descargables, reproducibles, criticables.\nLas medidas de decaimiento se publican también como el TAF Attention-Decay Dataset (CC-BY-4.0) en Hugging Face, bajo el identificador karlexmarin/taf-attention-decay; si el identificador hubiera cambiado, búscalo por su nombre en el buscador de datasets del Hub.\nEl panel de modelos de tafagent (23 modelos: config y predicciones, no medidas de atención) y el aparato formal de la herramienta están en abierto en github.com/karlesmarin/tafagent-registry y github.com/karlesmarin/lean-taf (pruebas formales).\n\n\n\n\n\n\n\nAdvertencia⚠ Qué comprueba este laboratorio\n\n\n\nUn ajuste y sus controles evalúan la descripción \\(A(d)\\propto d^{-\\gamma}\\) bajo un protocolo. No validan por sí solos la ventana D_f, la calidad de salida, la extensión de contexto ni un mecanismo causal. Para esos pasos, vuelve al diseño de Sección 41.9.\n\n\n\n\n\n\n\n\nNota🧪 Pruébalo — tafagent\n\n\n\nDesde un identificador o config.json, tafagent calcula predicciones de configuración y puede mostrar medidas previamente registradas; el navegador no ejecuta el modelo para medir atención. Las medidas propias requieren inferencia externa, por ejemplo el CLI de diagnóstico del proyecto, y su posterior consulta/importación según el formato admitido. El CLI y este ejemplo pueden usar distinta agregación: comprueba sus protocolos antes de comparar. R5 explica la herramienta.",
+    "crumbs": [
+      "Parte VIII — Referencia",
+      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R4 · Medir tu propio γ (y reproducir el atlas)</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/R4-medir-gamma.html#la-idea-en-una-frase",
+    "href": "chapters/R4-medir-gamma.html#la-idea-en-una-frase",
+    "title": "47  R4 · Medir tu propio γ (y reproducir el atlas)",
+    "section": "",
+    "text": "🧩 Analogía — medir la lluvia. Un pluviómetro en un jardín, el promedio de una ciudad y el máximo durante una tormenta miden lluvia, pero no son intercambiables. Con atención pasa lo mismo: la última consulta y el promedio de todas las consultas miran distancias parecidas desde situaciones distintas.",
     "crumbs": [
       "Parte VIII — Referencia",
       "<span class='chapter-number'>47</span>  <span class='chapter-title'>R4 · Medir tu propio γ (y reproducir el atlas)</span>"
@@ -5892,28 +5925,6 @@
     ]
   },
   {
-    "objectID": "chapters/R4-medir-gamma.html#compara-con-la-predicción-geométrica",
-    "href": "chapters/R4-medir-gamma.html#compara-con-la-predicción-geométrica",
-    "title": "47  R4 · Medir tu propio γ (y reproducir el atlas)",
-    "section": "47.6 Compara con la predicción geométrica",
-    "text": "47.6 Compara con la predicción geométrica\nCalcula γ_Padé con la misma longitud y la configuración efectiva de RoPE. Llama \\(\\delta=\\gamma_{\\rm observado}-\\gamma_{\\rm geométrico}\\) a la diferencia: es una descripción del residuo, no una atribución causal automática al entrenamiento. Antes de interpretar δ, descarta diferencias de corpus, posición, máscara y ajuste. La descomposición de Capítulo 16 propone una explicación; el protocolo común permite ponerla a prueba. La incertidumbre de γ no convierte el error de la predicción en certeza.",
-    "crumbs": [
-      "Parte VIII — Referencia",
-      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R4 · Medir tu propio γ (y reproducir el atlas)</span>"
-    ]
-  },
-  {
-    "objectID": "chapters/R4-medir-gamma.html#datos-abiertos-para-reproducir-o-refutar",
-    "href": "chapters/R4-medir-gamma.html#datos-abiertos-para-reproducir-o-refutar",
-    "title": "47  R4 · Medir tu propio γ (y reproducir el atlas)",
-    "section": "47.7 Datos abiertos para reproducir (o refutar)",
-    "text": "47.7 Datos abiertos para reproducir (o refutar)\n\nEl atlas γ (79 medidas sobre 42 modelos únicos de 4 familias) y los experimentos within-model (θ-rescale, γ⊥sumidero) están publicados como datos abiertos junto al Paper I (Zenodo 20314038) — descargables, reproducibles, criticables.\nLas medidas de decaimiento se publican también como el TAF Attention-Decay Dataset (CC-BY-4.0) en Hugging Face, bajo el identificador karlexmarin/taf-attention-decay; si el identificador hubiera cambiado, búscalo por su nombre en el buscador de datasets del Hub.\nEl panel de modelos de tafagent (23 modelos: config y predicciones, no medidas de atención) y el aparato formal de la herramienta están en abierto en github.com/karlesmarin/tafagent-registry y github.com/karlesmarin/lean-taf (pruebas formales).\n\n\n\n\n\n\n\nAdvertencia⚠ Qué comprueba este laboratorio\n\n\n\nUn ajuste y sus controles evalúan la descripción \\(A(d)\\propto d^{-\\gamma}\\) bajo un protocolo. No validan por sí solos la ventana D_f, la calidad de salida, la extensión de contexto ni un mecanismo causal. Para esos pasos, vuelve al diseño de Sección 41.9.\n\n\n\n\n\n\n\n\nNota🧪 Pruébalo — tafagent\n\n\n\nDesde un identificador o config.json, tafagent calcula predicciones de configuración y puede mostrar medidas previamente registradas; el navegador no ejecuta el modelo para medir atención. Las medidas propias requieren inferencia externa, por ejemplo el CLI de diagnóstico del proyecto, y su posterior consulta/importación según el formato admitido. El CLI y este ejemplo pueden usar distinta agregación: comprueba sus protocolos antes de comparar. R5 explica la herramienta.",
-    "crumbs": [
-      "Parte VIII — Referencia",
-      "<span class='chapter-number'>47</span>  <span class='chapter-title'>R4 · Medir tu propio γ (y reproducir el atlas)</span>"
-    ]
-  },
-  {
     "objectID": "chapters/R4-medir-gamma.html#resumen",
     "href": "chapters/R4-medir-gamma.html#resumen",
     "title": "47  R4 · Medir tu propio γ (y reproducir el atlas)",
@@ -5929,7 +5940,7 @@
     "href": "chapters/R4-medir-gamma.html#ejercicios",
     "title": "47  R4 · Medir tu propio γ (y reproducir el atlas)",
     "section": "47.9 Ejercicios",
-    "text": "47.9 Ejercicios\n\nDos medias. Comprueba el ejemplo 0,04 y 0,16. ¿Por qué ajustar pares individuales no reproduce necesariamente la pendiente de la curva media?\nDos consultas. Mide última fila y todas las filas sobre las mismas matrices. ¿Qué parte del protocolo cambió, aunque el modelo sea idéntico?\nLa unidad experimental. Tienes diez documentos, cada uno dividido en veinte fragmentos. ¿Qué remuestreas para no fingir doscientos documentos independientes?\nUn R² perfecto. Construye una cola sintética \\(d^{-0{,}8}\\). ¿Qué valida recuperarla con el código y qué no valida sobre un transformer real?\n\nSoluciones: Sección 49.43. Siguiente referencia (R5): el manual de tafagent.",
+    "text": "47.9 Ejercicios\n\nDos medias. Comprueba el ejemplo 0,04 y 0,16. ¿Por qué ajustar pares individuales no reproduce necesariamente la pendiente de la curva media?\nDos consultas. Mide última fila y todas las filas sobre las mismas matrices. ¿Qué parte del protocolo cambió, aunque el modelo sea idéntico?\nLa unidad experimental. Tienes diez documentos, cada uno dividido en veinte fragmentos. ¿Qué remuestreas para no fingir doscientos documentos independientes?\nUn R² perfecto. Construye una cola sintética \\(d^{-0{,}8}\\). ¿Qué valida recuperarla con el código y qué no valida sobre un transformer real?\n\nSoluciones: ?sec-soluciones-r4. Siguiente referencia (R5): el manual de tafagent.",
     "crumbs": [
       "Parte VIII — Referencia",
       "<span class='chapter-number'>47</span>  <span class='chapter-title'>R4 · Medir tu propio γ (y reproducir el atlas)</span>"
@@ -5952,39 +5963,6 @@
     "title": "48  R5 · Manual de tafagent",
     "section": "",
     "text": "Es: una herramienta en el navegador (cero instalación, cero GPU, sin telemetría) que estima aspectos de viabilidad de un LLM antes de gastar GPU/€: límites de contexto propuestos, degradación por cuantización, plantilla de chat, errores de config.\nNo es: un visor de mapas de atención, ni un servicio que ejecute el modelo. Lo que ves son predicciones deterministas (calculadas con Pyodide) más una capa de lenguaje natural.\nEntrada: un HF model id o un config.json (lee θ, T_train, cabezas…); tú fijas T_eval (la longitud objetivo) y si el modelo usa ventana deslizante (SWA).",
-    "crumbs": [
-      "Parte VIII — Referencia",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · Manual de tafagent</span>"
-    ]
-  },
-  {
-    "objectID": "chapters/R5-tafagent.html#taf-routes",
-    "href": "chapters/R5-tafagent.html#taf-routes",
-    "title": "48  R5 · Manual de tafagent",
-    "section": "48.2 De la pregunta a la herramienta",
-    "text": "48.2 De la pregunta a la herramienta\nEl selector prepara una ruta: concepto → herramienta → explicación. Los enlaces de Entender este resultado en TAF traen a la guía la métrica seleccionada, su valor y si es una estimación o una medición importada. Ese valor es una instantánea; la guía no ejecuta el modelo ni verifica el resultado. Abre la explicación en otra pestaña para conservar tu diagnóstico, o usa Volver a TAF para preparar el mismo modo.\nBuscar un modelo: pulsa el campo opcional para ver modelos populares de Hugging Face, o escribe parte del nombre. Puedes elegir con las flechas y Enter o escribir el ID completo. Las consultas se envían a HF y se guardan en caché en esta pestaña durante cinco minutos. Los resultados se ordenan por descargas, no por fecha; aparecer en la lista no garantiza compatibilidad con TAF. No se descargan pesos ni se inicia un análisis.\n\nSin JavaScript: perfil, medir atención, comparar con mediciones.\nDemo opcional: el botón «Probar un ejemplo» prepara una sonda de atención con Pythia-70m; no descarga pesos ni ejecuta inferencia. En TAF también puedes abrir la demo de lectura acompañada.\nMedición de entropía: Diagnose CLI permite generar --entropy-only o --measure-entropy. La inferencia se ejecuta con Python/PyTorch en tu equipo; no dentro de este selector. La entropía no determina γ y no se aplica una corrección automática por entropía. El diagrama de fases consulta el atlas, no realiza una nueva medición.",
-    "crumbs": [
-      "Parte VIII — Referencia",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · Manual de tafagent</span>"
-    ]
-  },
-  {
-    "objectID": "chapters/R5-tafagent.html#problem-resolver",
-    "href": "chapters/R5-tafagent.html#problem-resolver",
-    "title": "48  R5 · Manual de tafagent",
-    "section": "48.3 Resolver mi problema: de la duda a la comprobación",
-    "text": "48.3 Resolver mi problema: de la duda a la comprobación\nPiensa en un mostrador de diagnóstico: llegas con «no me funciona» y recibes las preguntas que permiten acotar el problema. No necesitas conocer de antemano el nombre de cada módulo. Resolver mi problema hace ese recorrido automáticamente en el navegador, sin un operador ni un servicio de chat.\nLa ventana comienza por lo que te ocurre, no por el nombre del módulo. Elige entre memoria, respuestas, adaptadores, acceso/carga, contexto largo, evaluación o rendimiento. Una segunda pregunta acota el caso: por ejemplo, si falta memoria al cargar, al generar o durante el entrenamiento. Son siete familias y veinte situaciones. La ruta de entrenamiento distribuido explica su límite y remite a la guía; no aplica una estimación de inferencia.\nSi ya sabes qué comprobar, puedes abrir directamente las nueve rutas:\n\nMemoria: el modelo no cabe o falla al generar.\nPlantilla de chat: revisar el formato de la conversación.\nCompatibilidad: entender la arquitectura y los límites.\nJSON: revisar el orden de campos de razonamiento y respuesta.\nPEFT / QLoRA: revisar el código sin ejecutarlo.\nPrompts: comparar el prefijo textual común.\nEvaluaciones: revisar diferencias y condiciones.\nAtención: revisar una medición y su protocolo.\nAdaptador: comprobar metadatos y modelo base.\n\nLos enlaces solo abren el formulario. Cada ruta tiene Probar un ejemplo sin conexión: puedes explorar sus respuestas antes de introducir tu modelo. El ejemplo de memoria permite recalcular con menos contexto o comparar un formato de pesos; cambia la estimación, no ejecuta ni modifica el modelo.\nLos seis casos nuevos analizan datos pegados localmente, sin descargar pesos. El JSON reordenado es una propuesta que puedes revisar y volver a comprobar; no valida todo el esquema ni garantiza la calidad. La comparación de prompts no predice precios ni aciertos de caché. Una diferencia de evaluación no prueba un bug y una gamma importada no es una nueva inferencia. Los informes excluyen código, prompts, archivos pegados y propuestas JSON.\nEl selector Buscar herramienta para otro problema conecta los 31 modos: explica qué datos requiere cada uno, qué calcula y qué no permite concluir. Incluye formulario especializado, demo opcional y lectura de la guía. Algunas herramientas necesitan Pyodide, archivos de red, Python local o WebGPU; abrirlas no significa que ya hayan diagnosticado el problema. Las preguntas parten de una muestra pública de discusiones, no de una clasificación estadística ni de vigilancia automática.\nRevisar este resultado. Tras cada comprobación directa puedes desplegar una revisión de la evidencia: en qué se apoya el resultado, qué queda sin verificar y cómo comprobarlo, con un enlace a la explicación de esta guía. El panel distingue estimaciones de configuración, inspecciones estáticas, comparaciones heurísticas y mediciones importadas. No ejecuta otro modelo ni asigna una probabilidad de fallo. En los informes de atención mantiene visibles los datos de protocolo ausentes y los avisos de comparación.\nPor ejemplo, un presupuesto de memoria que cabe no prueba que tu carga real quepa: faltan los picos de carga, buffers y concurrencia de tu programa. La comprobación siguiente propone probar una petición corta y observar la memoria libre en la fase del fallo. Los ejemplos guardados o sintéticos siguen identificados como demos, no como diagnósticos de tu modelo. La demo guiada abre este panel; el informe descargable lo incluye sin añadir los textos pegados.\nVolver sin perder la ruta. Si llegas a la guía desde el resumen o la revisión de un caso, el enlace Volver al formulario de este problema conserva la ruta, el idioma de TAF y el alojamiento de origen (GitHub o Hugging Face). Prepara el formulario; no ejecuta una comprobación ni restaura los datos pegados. Conserva la pestaña original para consultar el resultado completo. Los ejemplos no transmiten un ID de modelo como si fuera el tuyo.\n\n\n\n\n\n\nDel aviso al siguiente paso. En Resolver mi problema → Atención, pega uno o dos informes con γ y abre Ver detalles del protocolo. El panel enumera 19 condiciones conocidas en cuatro grupos: modelo/datos, muestreo, ejecución y agregación/ajuste. Marca lo ausente y lo que difiere de la referencia. Los campos personalizados cuentan, pero sus nombres y valores no se exportan.\nQué comprobar primero da prioridad a las contradicciones o límites de contexto, después a las diferencias entre protocolos y a los datos pendientes. Si todo está documentado y coincide, propone revisar la curva y repetir la medición. Recupera los ajustes de la ejecución real; no los inventes para hacer coincidir informes. Un campo documentado no demuestra que sea correcto ni valida la teoría. La demo opcional de esa ruta utiliza atención uniforme sintética para mostrar datos pendientes; no ejecuta un modelo. La guía permite volver al mismo formulario.\n\n\n\nPasos ordenados en ocho rutas. Ver los pasos de comprobación muestra tres instrucciones: qué revisar primero, qué observar en tu entorno y cómo interpretar o redirigir el caso. Se elige entre 39 prioridades según el resultado. Atención conserva su lista específica de protocolo: las nueve rutas acompañan el siguiente paso. Recalcular actualiza resumen, revisión y «Sigue fallando».\nExplorar otro ejemplo ofrece 32 situaciones: cuatro de memoria, tres de plantillas, tres de adaptadores, cinco de caché, cinco de evaluación, tres de arquitectura, tres de JSON y seis de código PEFT. Cambiar de ejemplo reinicia la comparación y mantiene su etiqueta ilustrativa. Los ejemplos alternativos de arquitectura retiran el ID, revisión y fuentes anteriores para no atribuir una configuración sintética al modelo real.\nEl informe conserva el plan con executed: false. TAF no ha ejecutado esas comprobaciones ni certificado una reparación. La demo animada de memoria enseña los pasos. Puedes profundizar en arquitectura, código PEFT, JSON, caché y latencia y diferencias de evaluación. Los capítulos 20 y 28 también explican los presupuestos de memoria y adaptadores. Volver abre el mismo formulario en el alojamiento e idioma originales, sin transmitir código, prompts ni resultados privados.\n\n48.3.1 Continuar después de comprobar: seguimiento opcional\nSeguir mis comprobaciones permite indicar qué has podido revisar sin perder el resultado actual. Está disponible en las nueve rutas. Cada paso admite cuatro estados: pendiente, revisado sin discrepancias detectadas, discrepancia encontrada o no se ha podido comprobar. Son declaraciones del usuario, no pruebas ejecutadas ni verificadas por TAF.\nEl siguiente paso se selecciona automáticamente: primero la primera discrepancia, después el primer bloqueo y luego el primer pendiente. Ir a la siguiente comprobación lleva al control correspondiente. «Sigue fallando» utiliza ese seguimiento junto al plan basado en los datos originales. El enlace a la guía continúa explicando el caso; las marcas no cambian los resultados ni el protocolo. Marcar los tres pasos como revisados no certifica una solución: hay que comprobar la tarea original y conservar los contraejemplos si persiste el fallo.\nDemo opcional: en un ejemplo guardado, Simular una comprobación bloqueada marca un paso revisado, otro bloqueado y otro pendiente. La demo animada muestra este recorrido en su quinto paso. Estas marcas son ilustrativas; no representan una ejecución. El botón de simulación no aparece en un caso con datos propios.\nLas marcas se conservan solo en la pestaña original al cerrar el panel o cambiar idioma. Cambiar datos, recalcular, escoger otro ejemplo o ruta las borra; recargar la página también las pierde. El informe incluye el seguimiento como declaraciones sin verificar y no contiene notas libres, prompts ni código pegado. No permite restaurar la sesión. Los enlaces de la guía abren un formulario nuevo: mantén abierta la pestaña original para volver al caso y sus marcas.\nUn caso concreto: los pesos pueden caber en una GPU y la generación superar su memoria al añadir la caché KV. La ruta pregunta por la memoria disponible, los tokens totales, el formato de pesos y si falla al cargar o al generar. Reutiliza Fit Check para separar esos componentes. Es una estimación para una GPU y una secuencia, no una medición de tu equipo ni un diagnóstico garantizado del error.\nEn las otras rutas, encontrar una plantilla no demuestra que el programa la aplique correctamente, y reconocer una arquitectura no certifica su calidad ni su soporte en todos los motores. TAF muestra qué archivos consultó y su revisión, explica las limitaciones y propone la siguiente comprobación.\nPuedes indicar Lo probé y funcionó o Sigue fallando, abrir la herramienta detallada, leer el capítulo correspondiente y descargar el informe. Las preguntas y errores pegados permanecen en la pestaña; HF recibe las consultas de modelos. El enlace para compartir lleva solo la ruta, el ID y el idioma; no lleva errores, hardware ni resultados. Las respuestas compartidas no se publican automáticamente en HF. La nota técnica describe el alcance y cómo ampliar las rutas con otros módulos.",
-    "crumbs": [
-      "Parte VIII — Referencia",
-      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · Manual de tafagent</span>"
-    ]
-  },
-  {
-    "objectID": "chapters/R5-tafagent.html#reviewed-models",
-    "href": "chapters/R5-tafagent.html#reviewed-models",
-    "title": "48  R5 · Manual de tafagent",
-    "section": "48.4 Elegir un modelo sin confundir reconocimiento y validación",
-    "text": "48.4 Elegir un modelo sin confundir reconocimiento y validación\nUna ficha técnica sirve como un plano: describe piezas, pero no demuestra cómo se comporta la máquina. La búsqueda de Hugging Face encuentra nombres; el importador necesita además una arquitectura compatible; medir la atención requiere ejecutar los pesos con un protocolo. Son tres pasos distintos.\nRevisión del 24-10-2026: TAF incluye ocho configuraciones públicas fijadas a una revisión y dos configuraciones Gemma 3 restringidas que quedan sin verificar. Conserva los once ejemplos históricos y añade dos perfiles densos Qwen3. Puedes explorar estos ejemplos guardados sin descargar pesos:\n\nQwen3-0.6B: cargar un perfil revisado.\nQwen3.8: examinar por qué el híbrido necesita otro tratamiento.\nDeepSeek-V3.2: examinar el límite de MLA y MoE.\n\nEl panel muestra procedencia y límites antes de cargar valores. No inicia un análisis. Las importaciones automáticas de Profile, recetas, Inspector, Compare, Depth, Fit Check y Launch rechazan los supuestos densos no compatibles: capas híbridas, MoE, MLA, ventanas mixtas, RoPE parcial/escalado o componentes multimodales. Los otros modos conservan su propio alcance; los ejemplos históricos pueden simplificar la arquitectura. Un rechazo no significa que el modelo sea defectuoso.\nEjemplo de lectura cuidadosa: la ficha oficial de Qwen3-8B indica 32.768 tokens de contexto nativo, mientras que su configuración declara 40.960. Los dos nuevos perfiles guardados usan 32.768 como referencia. Al importar una configuración en directo, TAF etiqueta el contexto configurado como referencia provisional: max_position_embeddings no demuestra la longitud de entrenamiento. Verifica T_train antes de interpretar las fórmulas. El número de parámetros importado también es una estimación, no una medición de los pesos.\nSi editas la geometría de Profile, TAF desvincula el modelo y pasa a un escenario manual. Si una nueva carga falla, no ejecuta los valores anteriores bajo el nuevo nombre. Entender las arquitecturas ayuda a elegir el siguiente paso; la nota técnica de la revisión detalla fuentes y pruebas. Esta actualización no añade mediciones al atlas ni actualiza las tablas de benchmarks.",
     "crumbs": [
       "Parte VIII — Referencia",
       "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · Manual de tafagent</span>"
@@ -6062,6 +6040,39 @@
     "title": "48  R5 · Manual de tafagent",
     "section": "48.11 Verificación (los recibos)",
     "text": "48.11 Verificación (los recibos)\n\nPyodide para las matemáticas (deterministas), WebLLM para el lenguaje natural, transformers.js para el tokenizador.\nVerificación Lean+Mathlib: 15 identidades probadas formalmente (github.com/karlesmarin/lean-taf).\nPanel de 23 modelos abierto (github.com/karlesmarin/tafagent-registry). Es el registro de la herramienta (config + predicciones contrastadas), no el atlas γ del Cap. 16 —ese son 42 modelos y 79 medidas de atención real—.\n\n\n\n\n\n\n\nAdvertencia⚠ Honesto — qué es predicción y qué es medida\n\n\n\nMuchas salidas (γ_Padé, horizonte estimado, KV a longitud L) son predicciones desde la config —rápidas y útiles para decidir antes de gastar GPU—, no medidas sobre la atención real. Cuando tengas el modelo, contrasta con γ_observado (medido) y con tu propia medición (R4). Y recuerda los límites del libro: D_f y el headroom de contexto son 🟡 reglas no validadas del todo (R1).\n\n\nSiguiente referencia (R6): las soluciones orientativas de los ejercicios de cada capítulo.\nEstudios y demos: Float32 · mHC. Cálculos ilustrativos opcionales, sin inferencia ni descarga de pesos.",
+    "crumbs": [
+      "Parte VIII — Referencia",
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · Manual de tafagent</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/R5-tafagent.html#taf-routes",
+    "href": "chapters/R5-tafagent.html#taf-routes",
+    "title": "48  R5 · Manual de tafagent",
+    "section": "48.2 De la pregunta a la herramienta",
+    "text": "48.2 De la pregunta a la herramienta\nEl selector prepara una ruta: concepto → herramienta → explicación. Los enlaces de Entender este resultado en TAF traen a la guía la métrica seleccionada, su valor y si es una estimación o una medición importada. Ese valor es una instantánea; la guía no ejecuta el modelo ni verifica el resultado. Abre la explicación en otra pestaña para conservar tu diagnóstico, o usa Volver a TAF para preparar el mismo modo.\nBuscar un modelo: pulsa el campo opcional para ver modelos populares de Hugging Face, o escribe parte del nombre. Puedes elegir con las flechas y Enter o escribir el ID completo. Las consultas se envían a HF y se guardan en caché en esta pestaña durante cinco minutos. Los resultados se ordenan por descargas, no por fecha; aparecer en la lista no garantiza compatibilidad con TAF. No se descargan pesos ni se inicia un análisis.\n\nSin JavaScript: perfil, medir atención, comparar con mediciones.\nDemo opcional: el botón «Probar un ejemplo» prepara una sonda de atención con Pythia-70m; no descarga pesos ni ejecuta inferencia. En TAF también puedes abrir la demo de lectura acompañada.\nMedición de entropía: Diagnose CLI permite generar --entropy-only o --measure-entropy. La inferencia se ejecuta con Python/PyTorch en tu equipo; no dentro de este selector. La entropía no determina γ y no se aplica una corrección automática por entropía. El diagrama de fases consulta el atlas, no realiza una nueva medición.",
+    "crumbs": [
+      "Parte VIII — Referencia",
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · Manual de tafagent</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/R5-tafagent.html#problem-resolver",
+    "href": "chapters/R5-tafagent.html#problem-resolver",
+    "title": "48  R5 · Manual de tafagent",
+    "section": "48.3 Resolver mi problema: de la duda a la comprobación",
+    "text": "48.3 Resolver mi problema: de la duda a la comprobación\nPiensa en un mostrador de diagnóstico: llegas con «no me funciona» y recibes las preguntas que permiten acotar el problema. No necesitas conocer de antemano el nombre de cada módulo. Resolver mi problema hace ese recorrido automáticamente en el navegador, sin un operador ni un servicio de chat.\nLa ventana comienza por lo que te ocurre, no por el nombre del módulo. Elige entre memoria, respuestas, adaptadores, acceso/carga, contexto largo, evaluación o rendimiento. Una segunda pregunta acota el caso: por ejemplo, si falta memoria al cargar, al generar o durante el entrenamiento. Son siete familias y veinte situaciones. La ruta de entrenamiento distribuido explica su límite y remite a la guía; no aplica una estimación de inferencia.\nSi ya sabes qué comprobar, puedes abrir directamente las nueve rutas:\n\nMemoria: el modelo no cabe o falla al generar.\nPlantilla de chat: revisar el formato de la conversación.\nCompatibilidad: entender la arquitectura y los límites.\nJSON: revisar el orden de campos de razonamiento y respuesta.\nPEFT / QLoRA: revisar el código sin ejecutarlo.\nPrompts: comparar el prefijo textual común.\nEvaluaciones: revisar diferencias y condiciones.\nAtención: revisar una medición y su protocolo.\nAdaptador: comprobar metadatos y modelo base.\n\nLos enlaces solo abren el formulario. Cada ruta tiene Probar un ejemplo sin conexión: puedes explorar sus respuestas antes de introducir tu modelo. El ejemplo de memoria permite recalcular con menos contexto o comparar un formato de pesos; cambia la estimación, no ejecuta ni modifica el modelo.\nLos seis casos nuevos analizan datos pegados localmente, sin descargar pesos. El JSON reordenado es una propuesta que puedes revisar y volver a comprobar; no valida todo el esquema ni garantiza la calidad. La comparación de prompts no predice precios ni aciertos de caché. Una diferencia de evaluación no prueba un bug y una gamma importada no es una nueva inferencia. Los informes excluyen código, prompts, archivos pegados y propuestas JSON.\nEl selector Buscar herramienta para otro problema conecta los 31 modos: explica qué datos requiere cada uno, qué calcula y qué no permite concluir. Incluye formulario especializado, demo opcional y lectura de la guía. Algunas herramientas necesitan Pyodide, archivos de red, Python local o WebGPU; abrirlas no significa que ya hayan diagnosticado el problema. Las preguntas parten de una muestra pública de discusiones, no de una clasificación estadística ni de vigilancia automática.\nRevisar este resultado. Tras cada comprobación directa puedes desplegar una revisión de la evidencia: en qué se apoya el resultado, qué queda sin verificar y cómo comprobarlo, con un enlace a la explicación de esta guía. El panel distingue estimaciones de configuración, inspecciones estáticas, comparaciones heurísticas y mediciones importadas. No ejecuta otro modelo ni asigna una probabilidad de fallo. En los informes de atención mantiene visibles los datos de protocolo ausentes y los avisos de comparación.\nPor ejemplo, un presupuesto de memoria que cabe no prueba que tu carga real quepa: faltan los picos de carga, buffers y concurrencia de tu programa. La comprobación siguiente propone probar una petición corta y observar la memoria libre en la fase del fallo. Los ejemplos guardados o sintéticos siguen identificados como demos, no como diagnósticos de tu modelo. La demo guiada abre este panel; el informe descargable lo incluye sin añadir los textos pegados.\nVolver sin perder la ruta. Si llegas a la guía desde el resumen o la revisión de un caso, el enlace Volver al formulario de este problema conserva la ruta, el idioma de TAF y el alojamiento de origen (GitHub o Hugging Face). Prepara el formulario; no ejecuta una comprobación ni restaura los datos pegados. Conserva la pestaña original para consultar el resultado completo. Los ejemplos no transmiten un ID de modelo como si fuera el tuyo.\n\n\n\n\n\n\nDel aviso al siguiente paso. En Resolver mi problema → Atención, pega uno o dos informes con γ y abre Ver detalles del protocolo. El panel enumera 19 condiciones conocidas en cuatro grupos: modelo/datos, muestreo, ejecución y agregación/ajuste. Marca lo ausente y lo que difiere de la referencia. Los campos personalizados cuentan, pero sus nombres y valores no se exportan.\nQué comprobar primero da prioridad a las contradicciones o límites de contexto, después a las diferencias entre protocolos y a los datos pendientes. Si todo está documentado y coincide, propone revisar la curva y repetir la medición. Recupera los ajustes de la ejecución real; no los inventes para hacer coincidir informes. Un campo documentado no demuestra que sea correcto ni valida la teoría. La demo opcional de esa ruta utiliza atención uniforme sintética para mostrar datos pendientes; no ejecuta un modelo. La guía permite volver al mismo formulario.\n\n\n\nPasos ordenados en ocho rutas. Ver los pasos de comprobación muestra tres instrucciones: qué revisar primero, qué observar en tu entorno y cómo interpretar o redirigir el caso. Se elige entre 39 prioridades según el resultado. Atención conserva su lista específica de protocolo: las nueve rutas acompañan el siguiente paso. Recalcular actualiza resumen, revisión y «Sigue fallando».\nExplorar otro ejemplo ofrece 32 situaciones: cuatro de memoria, tres de plantillas, tres de adaptadores, cinco de caché, cinco de evaluación, tres de arquitectura, tres de JSON y seis de código PEFT. Cambiar de ejemplo reinicia la comparación y mantiene su etiqueta ilustrativa. Los ejemplos alternativos de arquitectura retiran el ID, revisión y fuentes anteriores para no atribuir una configuración sintética al modelo real.\nEl informe conserva el plan con executed: false. TAF no ha ejecutado esas comprobaciones ni certificado una reparación. La demo animada de memoria enseña los pasos. Puedes profundizar en arquitectura, código PEFT, JSON, caché y latencia y diferencias de evaluación. Los capítulos 20 y 28 también explican los presupuestos de memoria y adaptadores. Volver abre el mismo formulario en el alojamiento e idioma originales, sin transmitir código, prompts ni resultados privados.\n\n48.3.1 Continuar después de comprobar: seguimiento opcional\nSeguir mis comprobaciones permite indicar qué has podido revisar sin perder el resultado actual. Está disponible en las nueve rutas. Cada paso admite cuatro estados: pendiente, revisado sin discrepancias detectadas, discrepancia encontrada o no se ha podido comprobar. Son declaraciones del usuario, no pruebas ejecutadas ni verificadas por TAF.\nEl siguiente paso se selecciona automáticamente: primero la primera discrepancia, después el primer bloqueo y luego el primer pendiente. Ir a la siguiente comprobación lleva al control correspondiente. «Sigue fallando» utiliza ese seguimiento junto al plan basado en los datos originales. El enlace a la guía continúa explicando el caso; las marcas no cambian los resultados ni el protocolo. Marcar los tres pasos como revisados no certifica una solución: hay que comprobar la tarea original y conservar los contraejemplos si persiste el fallo.\nDemo opcional: en un ejemplo guardado, Simular una comprobación bloqueada marca un paso revisado, otro bloqueado y otro pendiente. La demo animada muestra este recorrido en su quinto paso. Estas marcas son ilustrativas; no representan una ejecución. El botón de simulación no aparece en un caso con datos propios.\nLas marcas se conservan solo en la pestaña original al cerrar el panel o cambiar idioma. Cambiar datos, recalcular, escoger otro ejemplo o ruta las borra; recargar la página también las pierde. El informe incluye el seguimiento como declaraciones sin verificar y no contiene notas libres, prompts ni código pegado. No permite restaurar la sesión. Los enlaces de la guía abren un formulario nuevo: mantén abierta la pestaña original para volver al caso y sus marcas.\n\n\n48.3.2 Continuar con lo que observaste\nDespués de probar una comprobación, abre ¿Qué ocurrió al comprobarlo?, selecciona el paso y el resultado observado. Sigue fallando abre ese panel. Las nueve rutas ofrecen 27 observaciones concretas y una opción para indicar que no pudiste obtener la evidencia.\nPor ejemplo, si una petición corta funciona y una larga falla, TAF propone fijar modelo, precisión y concurrencia, aumentar gradualmente los tokens y registrar el pico de VRAM. Si falla antes de generar, propone revisar la memoria durante la carga y el formato real de pesos. En JSON distingue sintaxis inválida, incumplimiento del esquema y respuesta incorrecta con formato válido. La siguiente instrucción depende de lo que indicas; el análisis original permanece visible y no se convierte en una reparación verificada.\nSe conservan las últimas doce observaciones del resultado, en orden. Cambiar idioma o cerrar el panel las conserva; cambiar datos, recalcular, elegir otro caso o ejemplo y recargar las borra. Borrar observaciones no borra el análisis ni las marcas de progreso. El informe las incluye como declaraciones, sin texto libre, y no permite restaurar una sesión. Las herramientas sugeridas abren su ficha: sus resultados no vuelven automáticamente al caso.\nLa demo interactiva muestra una observación simulada en el quinto paso. El vídeo grabado muestra el flujo anterior de marcas de progreso; para ver las observaciones utiliza la demo interactiva. La demo independiente de Fit Check usa una configuración guardada de Qwen3-8B y calcula el presupuesto sin consultar HF: 24 GiB, pesos BF16 y caché FP16. Es una ilustración, no una medida de tu GPU.\nUn caso concreto: los pesos pueden caber en una GPU y la generación superar su memoria al añadir la caché KV. La ruta pregunta por la memoria disponible, los tokens totales, el formato de pesos y si falla al cargar o al generar. Reutiliza Fit Check para separar esos componentes. Es una estimación para una GPU y una secuencia, no una medición de tu equipo ni un diagnóstico garantizado del error.\nEn las otras rutas, encontrar una plantilla no demuestra que el programa la aplique correctamente, y reconocer una arquitectura no certifica su calidad ni su soporte en todos los motores. TAF muestra qué archivos consultó y su revisión, explica las limitaciones y propone la siguiente comprobación.\nPuedes indicar Lo probé y funcionó o Sigue fallando, abrir la herramienta detallada, leer el capítulo correspondiente y descargar el informe. Las preguntas y errores pegados permanecen en la pestaña; HF recibe las consultas de modelos. El enlace para compartir lleva solo la ruta, el ID y el idioma; no lleva errores, hardware ni resultados. Las respuestas compartidas no se publican automáticamente en HF. La nota técnica describe el alcance y cómo ampliar las rutas con otros módulos.",
+    "crumbs": [
+      "Parte VIII — Referencia",
+      "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · Manual de tafagent</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/R5-tafagent.html#reviewed-models",
+    "href": "chapters/R5-tafagent.html#reviewed-models",
+    "title": "48  R5 · Manual de tafagent",
+    "section": "48.4 Elegir un modelo sin confundir reconocimiento y validación",
+    "text": "48.4 Elegir un modelo sin confundir reconocimiento y validación\nUna ficha técnica sirve como un plano: describe piezas, pero no demuestra cómo se comporta la máquina. La búsqueda de Hugging Face encuentra nombres; el importador necesita además una arquitectura compatible; medir la atención requiere ejecutar los pesos con un protocolo. Son tres pasos distintos.\nRevisión del 24-10-2026: TAF incluye ocho configuraciones públicas fijadas a una revisión y dos configuraciones Gemma 3 restringidas que quedan sin verificar. Conserva los once ejemplos históricos y añade dos perfiles densos Qwen3. Puedes explorar estos ejemplos guardados sin descargar pesos:\n\nQwen3-0.6B: cargar un perfil revisado.\nQwen3.8: examinar por qué el híbrido necesita otro tratamiento.\nDeepSeek-V3.2: examinar el límite de MLA y MoE.\n\nEl panel muestra procedencia y límites antes de cargar valores. No inicia un análisis. Las importaciones automáticas de Profile, recetas, Inspector, Compare, Depth, Fit Check y Launch rechazan los supuestos densos no compatibles: capas híbridas, MoE, MLA, ventanas mixtas, RoPE parcial/escalado o componentes multimodales. Los otros modos conservan su propio alcance; los ejemplos históricos pueden simplificar la arquitectura. Un rechazo no significa que el modelo sea defectuoso.\nEjemplo de lectura cuidadosa: la ficha oficial de Qwen3-8B indica 32.768 tokens de contexto nativo, mientras que su configuración declara 40.960. Los dos nuevos perfiles guardados usan 32.768 como referencia. Al importar una configuración en directo, TAF etiqueta el contexto configurado como referencia provisional: max_position_embeddings no demuestra la longitud de entrenamiento. Verifica T_train antes de interpretar las fórmulas. El número de parámetros importado también es una estimación, no una medición de los pesos.\nSi editas la geometría de Profile, TAF desvincula el modelo y pasa a un escenario manual. Si una nueva carga falla, no ejecuta los valores anteriores bajo el nuevo nombre. Entender las arquitecturas ayuda a elegir el siguiente paso; la nota técnica de la revisión detalla fuentes y pruebas. Esta actualización no añade mediciones al atlas ni actualiza las tablas de benchmarks.",
     "crumbs": [
       "Parte VIII — Referencia",
       "<span class='chapter-number'>48</span>  <span class='chapter-title'>R5 · Manual de tafagent</span>"
