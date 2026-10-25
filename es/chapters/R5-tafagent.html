@@ -1168,6 +1168,7 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
   <ul class="collapse">
   <li><a href="#sec-resolver-progress" id="toc-sec-resolver-progress" class="nav-link" data-scroll-target="#sec-resolver-progress"><span class="header-section-number">48.3.1</span> Continuar después de comprobar: seguimiento opcional</a></li>
   <li><a href="#sec-resolver-observations" id="toc-sec-resolver-observations" class="nav-link" data-scroll-target="#sec-resolver-observations"><span class="header-section-number">48.3.2</span> Continuar con lo que observaste</a></li>
+  <li><a href="#sec-resolver-memory-peaks" id="toc-sec-resolver-memory-peaks" class="nav-link" data-scroll-target="#sec-resolver-memory-peaks"><span class="header-section-number">48.3.3</span> Cabe según la estimación, pero falla: fases y picos</a></li>
   </ul></li>
   <li><a href="#reviewed-models" id="toc-reviewed-models" class="nav-link" data-scroll-target="#reviewed-models"><span class="header-section-number">48.4</span> Elegir un modelo sin confundir reconocimiento y validación</a></li>
   <li><a href="#las-métricas-que-calcula" id="toc-las-métricas-que-calcula" class="nav-link" data-scroll-target="#las-métricas-que-calcula"><span class="header-section-number">48.5</span> Las métricas que calcula</a></li>
@@ -1250,7 +1251,7 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
 <p>Los seis casos nuevos analizan datos pegados localmente, sin descargar pesos. El JSON reordenado es una propuesta que puedes revisar y volver a comprobar; no valida todo el esquema ni garantiza la calidad. La comparación de prompts no predice precios ni aciertos de caché. Una diferencia de evaluación no prueba un bug y una gamma importada no es una nueva inferencia. Los informes excluyen código, prompts, archivos pegados y propuestas JSON.</p>
 <p>El selector <strong>Buscar herramienta para otro problema</strong> conecta los <strong>31 modos</strong>: explica qué datos requiere cada uno, qué calcula y qué no permite concluir. Incluye formulario especializado, demo opcional y lectura de la guía. Algunas herramientas necesitan Pyodide, archivos de red, Python local o WebGPU; abrirlas no significa que ya hayan diagnosticado el problema. Las preguntas parten de una <a href="https://github.com/karlesmarin/tafagent/blob/main/docs/resolver-community.md">muestra pública de discusiones</a>, no de una clasificación estadística ni de vigilancia automática.</p>
 <p><strong>Revisar este resultado.</strong> Tras cada comprobación directa puedes desplegar una revisión de la evidencia: en qué se apoya el resultado, qué queda sin verificar y cómo comprobarlo, con un enlace a la explicación de esta guía. El panel distingue estimaciones de configuración, inspecciones estáticas, comparaciones heurísticas y mediciones importadas. No ejecuta otro modelo ni asigna una probabilidad de fallo. En los informes de atención mantiene visibles los datos de protocolo ausentes y los avisos de comparación.</p>
-<p>Por ejemplo, un presupuesto de memoria que cabe no prueba que tu carga real quepa: faltan los picos de carga, buffers y concurrencia de tu programa. La comprobación siguiente propone probar una petición corta y observar la memoria libre en la fase del fallo. Los ejemplos guardados o sintéticos siguen identificados como demos, no como diagnósticos de tu modelo. La demo guiada abre este panel; el informe descargable lo incluye sin añadir los textos pegados.</p>
+<p>Por ejemplo, un presupuesto de memoria que cabe no prueba que tu carga real quepa: TAF no mide picos de carga, buffers ni concurrencia; los picos declarados siguen sin verificar. La comprobación siguiente propone probar una petición corta y observar la memoria libre en la fase del fallo. Los ejemplos guardados o sintéticos siguen identificados como demos, no como diagnósticos de tu modelo. La demo guiada abre este panel; el informe descargable lo incluye sin añadir los textos pegados.</p>
 <p><strong>Volver sin perder la ruta.</strong> Si llegas a la guía desde el resumen o la revisión de un caso, el enlace <strong>Volver al formulario de este problema</strong> conserva la ruta, el idioma de TAF y el alojamiento de origen (GitHub o Hugging Face). Prepara el formulario; no ejecuta una comprobación ni restaura los datos pegados. Conserva la pestaña original para consultar el resultado completo. Los ejemplos no transmiten un ID de modelo como si fuera el tuyo.</p>
 <div class="callout callout-style-simple callout-tip">
 <div class="callout-body d-flex">
@@ -1263,8 +1264,8 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
 </div>
 </div>
 </div>
-<p><strong>Pasos ordenados en ocho rutas.</strong> <strong>Ver los pasos de comprobación</strong> muestra tres instrucciones: qué revisar primero, qué observar en tu entorno y cómo interpretar o redirigir el caso. Se elige entre <strong>39 prioridades</strong> según el resultado. Atención conserva su lista específica de protocolo: las nueve rutas acompañan el siguiente paso. Recalcular actualiza resumen, revisión y «Sigue fallando».</p>
-<p><strong>Explorar otro ejemplo</strong> ofrece <strong>32 situaciones</strong>: cuatro de memoria, tres de plantillas, tres de adaptadores, cinco de caché, cinco de evaluación, tres de arquitectura, tres de JSON y seis de código PEFT. Cambiar de ejemplo reinicia la comparación y mantiene su etiqueta ilustrativa. Los ejemplos alternativos de arquitectura retiran el ID, revisión y fuentes anteriores para no atribuir una configuración sintética al modelo real.</p>
+<p><strong>Pasos ordenados en ocho rutas.</strong> <strong>Ver los pasos de comprobación</strong> muestra tres instrucciones: qué revisar primero, qué observar en tu entorno y cómo interpretar o redirigir el caso. Se elige entre <strong>41 prioridades</strong> según el resultado. Atención conserva su lista específica de protocolo: las nueve rutas acompañan el siguiente paso. Recalcular actualiza resumen, revisión y «Sigue fallando».</p>
+<p><strong>Explorar otro ejemplo</strong> ofrece <strong>33 situaciones</strong>: cinco de memoria, tres de plantillas, tres de adaptadores, cinco de caché, cinco de evaluación, tres de arquitectura, tres de JSON y seis de código PEFT. Cambiar de ejemplo reinicia la comparación y mantiene su etiqueta ilustrativa. Los ejemplos alternativos de arquitectura retiran el ID, revisión y fuentes anteriores para no atribuir una configuración sintética al modelo real.</p>
 <p>El informe conserva el plan con <code>executed: false</code>. TAF no ha ejecutado esas comprobaciones ni certificado una reparación. La demo animada de memoria enseña los pasos. Puedes profundizar en <a href="../chapters/10-arquitecturas.html#sec-resolver-architecture">arquitectura</a>, <a href="../chapters/28-peft.html#sec-resolver-peft">código PEFT</a>, <a href="../chapters/30-prompting.html#sec-resolver-json">JSON</a>, <a href="../chapters/36-serving.html#sec-resolver-cache">caché y latencia</a> y <a href="../chapters/40-evaluacion.html#sec-resolver-drift">diferencias de evaluación</a>. Los capítulos 20 y 28 también explican los presupuestos de memoria y adaptadores. Volver abre el mismo formulario en el alojamiento e idioma originales, sin transmitir código, prompts ni resultados privados.</p>
 <section id="sec-resolver-progress" class="level3" data-number="48.3.1">
 <h3 data-number="48.3.1" class="anchored" data-anchor-id="sec-resolver-progress"><span class="header-section-number">48.3.1</span> Continuar después de comprobar: seguimiento opcional</h3>
@@ -1282,6 +1283,42 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
 <p><strong>Un caso concreto:</strong> los pesos pueden caber en una GPU y la generación superar su memoria al añadir la caché KV. La ruta pregunta por la memoria disponible, los tokens totales, el formato de pesos y si falla al cargar o al generar. Reutiliza Fit Check para separar esos componentes. Es una estimación para una GPU y una secuencia, no una medición de tu equipo ni un diagnóstico garantizado del error.</p>
 <p>En las otras rutas, encontrar una plantilla no demuestra que el programa la aplique correctamente, y reconocer una arquitectura no certifica su calidad ni su soporte en todos los motores. TAF muestra qué archivos consultó y su revisión, explica las limitaciones y propone la siguiente comprobación.</p>
 <p>Puedes indicar <strong>Lo probé y funcionó</strong> o <strong>Sigue fallando</strong>, abrir la herramienta detallada, leer el capítulo correspondiente y descargar el informe. Las preguntas y errores pegados permanecen en la pestaña; HF recibe las consultas de modelos. El enlace para compartir lleva solo la ruta, el ID y el idioma; no lleva errores, hardware ni resultados. Las respuestas compartidas no se publican automáticamente en HF. La <a href="https://github.com/karlesmarin/tafagent/blob/main/docs/resolver.md">nota técnica</a> describe el alcance y cómo ampliar las rutas con otros módulos.</p>
+</section>
+<section id="sec-resolver-memory-peaks" class="level3" data-number="48.3.3">
+<h3 data-number="48.3.3" class="anchored" data-anchor-id="sec-resolver-memory-peaks"><span class="header-section-number">48.3.3</span> Cabe según la estimación, pero falla: fases y picos</h3>
+<p>El presupuesto estable y el pico de una fase son cantidades distintas. En la ruta de memoria puedes indicar <strong>carga</strong>, <strong>prefill</strong> (procesamiento del prompt), <strong>decodificación</strong> (tokens posteriores) o <strong>fase desconocida</strong>. Una llamada a <code>generate()</code> puede incluir prefill y decodificación: medir su máximo no separa ambas fases. Si no conoces la frontera, conserva «fase desconocida».</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fase</th>
+<th>Referencia y siguiente comprobación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Carga</td>
+<td>Pesos residentes, sin afirmar que predicen el pico. Revisa copias temporales, conversión y memoria libre antes de cargar.</td>
+</tr>
+<tr class="even">
+<td>Prefill</td>
+<td>Presupuesto con los tokens del prompt. Aísla ese procesamiento; comprueba buffers temporales de atención/logits y backend realmente usado. Acorta solo el prompt al repetir.</td>
+</tr>
+<tr class="odd">
+<td>Decodificación</td>
+<td>Presupuesto con los tokens realmente almacenados: prompt más tokens generados. Reinicia contadores después del prefill; revisa crecimiento KV, salidas retenidas y concurrencia. Mantén el prompt fijo al variar la longitud generada.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Pico de memoria observado</strong> es opcional. Introduce la medida, su unidad (<strong>GiB</strong>, <strong>GB</strong> decimal o <strong>MiB</strong>) y qué representa: tensores asignados por PyTorch, memoria reservada por su asignador, uso muestreado del dispositivo o métrica desconocida. El tamaño de la asignación solicitada en un error OOM no es un pico observado. No introduzcas cero para suplir una medida ausente.</p>
+<p>La diferencia numérica solo aparece para un pico de <strong>tensores asignados</strong>, una fase conocida, una medida aislada de esa fase y la misma carga: modelo, formato, tokens, una GPU, una secuencia, pesos residentes y KV FP16. También hace falta geometría admitida. Carga se compara con pesos residentes; prefill/decodificación con la estimación estable. Son referencias, no predicciones del máximo real. La memoria reservada y el uso del dispositivo quedan como contexto, sin restarlos de una estimación que cuenta otras cosas.</p>
+<p>La diferencia <strong>no mide fragmentación, no prueba una causa ni certifica una solución</strong>. Un pico bajo el presupuesto no descarta OOM: una asignación fallida no pasa a formar parte de la memoria asignada con éxito. TAF tampoco verifica la medición aportada. El informe distingue <code>user_reported</code> de <code>illustrative</code> y mantiene <code>independently_verified: false</code> y <code>executed_by_taf: false</code>.</p>
+<p><strong>Cómo medir en tu entorno.</strong> Identifica la GPU y la frontera de la fase; registra versiones, formato real, backend, tokens y opciones relevantes. Con PyTorch, sincroniza ese dispositivo antes de empezar, llama a <code>torch.cuda.reset_peak_memory_stats(device)</code>, ejecuta solo la fase delimitada y vuelve a sincronizar antes de leer <code>torch.cuda.max_memory_allocated(device)</code> y <code>torch.cuda.max_memory_reserved(device)</code>. Ambos valores se expresan en bytes: divide por <code>2**30</code> para GiB. Reiniciar contadores no libera los tensores ya residentes. Si no puedes separar prefill de decodificación, registra el máximo global con fase desconocida. TAF no ejecuta estas operaciones.</p>
+<p>La <a href="https://docs.pytorch.org/docs/stable/notes/cuda.html#cuda-memory-management">documentación de memoria de PyTorch</a> explica las diferencias entre asignado, reservado y uso mostrado por el dispositivo. Consulta también <a href="https://docs.pytorch.org/docs/stable/generated/torch.cuda.memory.max_memory_allocated.html">el contador máximo de tensores</a> y <a href="https://docs.pytorch.org/docs/stable/generated/torch.cuda.memory.reset_peak_memory_stats.html">el reinicio de picos</a>.</p>
+<p><strong>Ejemplo guardado.</strong> En «Explorar otro ejemplo», elige «cabe según la estimación, pico mayor en prefill». Usa geometría guardada de Qwen3-8B, BF16, 4.096 tokens y 24 GiB disponibles, con un pico <strong>sintético</strong> de 22 GiB. Ilustra la diferencia; no es un benchmark medido de Qwen ni demuestra un OOM. Cambiar modelo, presupuesto, tokens, precisión o fase borra la medida; aplicar una alternativa requiere medir de nuevo. Cambiar de idioma la conserva. El informe separa los datos iniciales de los actuales y el enlace compartido no incluye medidas.</p>
 </section>
 </section>
 <section id="reviewed-models" class="level2" data-number="48.4">

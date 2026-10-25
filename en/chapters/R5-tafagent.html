@@ -1168,6 +1168,7 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
   <ul class="collapse">
   <li><a href="#sec-resolver-progress" id="toc-sec-resolver-progress" class="nav-link" data-scroll-target="#sec-resolver-progress"><span class="header-section-number">48.3.1</span> Continuing after a check: optional tracking</a></li>
   <li><a href="#sec-resolver-observations" id="toc-sec-resolver-observations" class="nav-link" data-scroll-target="#sec-resolver-observations"><span class="header-section-number">48.3.2</span> Continue from what you observed</a></li>
+  <li><a href="#sec-resolver-memory-peaks" id="toc-sec-resolver-memory-peaks" class="nav-link" data-scroll-target="#sec-resolver-memory-peaks"><span class="header-section-number">48.3.3</span> It fits the estimate but fails: phases and peaks</a></li>
   </ul></li>
   <li><a href="#reviewed-models" id="toc-reviewed-models" class="nav-link" data-scroll-target="#reviewed-models"><span class="header-section-number">48.4</span> Choosing a model: recognition is not validation</a></li>
   <li><a href="#the-metrics-it-computes" id="toc-the-metrics-it-computes" class="nav-link" data-scroll-target="#the-metrics-it-computes"><span class="header-section-number">48.5</span> The metrics it computes</a></li>
@@ -1250,7 +1251,7 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
 <p>The six new checks analyze pasted data locally without downloading weights. Reordered JSON is a proposal to review and check again; it does not validate the whole schema or guarantee quality. Prompt comparison predicts neither prices nor cache hits. An evaluation gap does not prove a bug and imported gamma is not a new inference run. Reports omit pasted code, prompts, files and JSON proposals.</p>
 <p><strong>Find a tool for another problem</strong> connects all <strong>31 modes</strong>, explaining required inputs, outputs and limits. Each entry links to its specialized form, optional demo and guide reading. Some tools require Pyodide, network files, local Python or WebGPU; opening them does not mean a diagnosis has run. The questions draw on a <a href="https://github.com/karlesmarin/tafagent/blob/main/docs/resolver-community.md">public discussion sample</a>, not a statistical ranking or automatic monitoring.</p>
 <p><strong>Review this result.</strong> After each direct check, expand a review of its evidence: what supports the result, what remains unverified and how to check it, with a link to this guide’s explanation. The panel distinguishes configuration estimates, static inspections, heuristic comparisons and imported measurements. It runs no additional model and assigns no probability of failure. Attention reports retain missing-protocol counts and comparison notices.</p>
-<p>For example, a memory budget that fits does not prove your workload will fit: loading peaks, buffers and runtime concurrency remain unmeasured. The next check suggests trying a short request and observing free memory at the failing stage. Saved or synthetic examples stay labelled as demos, not diagnoses of your model. The guided demo opens this panel; the downloaded report includes it without adding pasted source text.</p>
+<p>For example, a memory budget that fits does not prove your workload will fit: TAF does not measure loading peaks, buffers or runtime concurrency; reported peaks remain unverified. The next check suggests trying a short request and observing free memory at the failing stage. Saved or synthetic examples stay labelled as demos, not diagnoses of your model. The guided demo opens this panel; the downloaded report includes it without adding pasted source text.</p>
 <p><strong>Return to the same problem.</strong> When you reach the guide from a case summary or review, <strong>Return to this problem’s form</strong> preserves the route, TAF language and original host (GitHub or Hugging Face). It prepares the form without running a check or restoring pasted inputs. Keep the original tab for the complete result. Examples do not transmit a model ID as if it were yours.</p>
 <div class="callout callout-style-simple callout-tip">
 <div class="callout-body d-flex">
@@ -1263,8 +1264,8 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
 </div>
 </div>
 </div>
-<p><strong>Ordered checks across eight routes.</strong> <strong>See the verification steps</strong> shows three instructions: what to inspect first, what to observe in your environment, and how to interpret or redirect the case. One of <strong>39 priorities</strong> is selected from the result. Attention retains its own protocol checklist: all nine routes guide the next check. Recalculation updates the summary, review and “It still fails”.</p>
-<p><strong>Explore another example</strong> offers <strong>32 situations</strong>: four memory, three template, three adapter, five cache, five evaluation, three architecture, three JSON and six PEFT-code cases. Changing examples resets the comparison and retains the illustrative label. Alternate architecture examples remove the previous ID, revision and sources to avoid attributing a synthetic config to the real model.</p>
+<p><strong>Ordered checks across eight routes.</strong> <strong>See the verification steps</strong> shows three instructions: what to inspect first, what to observe in your environment, and how to interpret or redirect the case. One of <strong>41 priorities</strong> is selected from the result. Attention retains its own protocol checklist: all nine routes guide the next check. Recalculation updates the summary, review and “It still fails”.</p>
+<p><strong>Explore another example</strong> offers <strong>33 situations</strong>: five memory, three template, three adapter, five cache, five evaluation, three architecture, three JSON and six PEFT-code cases. Changing examples resets the comparison and retains the illustrative label. Alternate architecture examples remove the previous ID, revision and sources to avoid attributing a synthetic config to the real model.</p>
 <p>Reports retain the plan with <code>executed: false</code>. TAF has not executed these checks or certified a fix. The narrated memory demo shows the steps. Read more about <a href="../chapters/10-arquitecturas.html#sec-resolver-architecture">architecture</a>, <a href="../chapters/28-peft.html#sec-resolver-peft">PEFT code</a>, <a href="../chapters/30-prompting.html#sec-resolver-json">JSON</a>, <a href="../chapters/36-serving.html#sec-resolver-cache">cache and latency</a> and <a href="../chapters/40-evaluacion.html#sec-resolver-drift">evaluation differences</a>. Chapters 20 and 28 also explain memory budgets and adapters. Returning opens the same form on the original host and in the original language without transmitting code, prompts or private results.</p>
 <section id="sec-resolver-progress" class="level3" data-number="48.3.1">
 <h3 data-number="48.3.1" class="anchored" data-anchor-id="sec-resolver-progress"><span class="header-section-number">48.3.1</span> Continuing after a check: optional tracking</h3>
@@ -1282,6 +1283,42 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
 <p><strong>A concrete case:</strong> weights can fit on a GPU while generation exceeds its memory after adding the KV cache. The route asks for available memory, total tokens, weight format and whether failure occurs during loading or generation. It reuses Fit Check to separate those components. This is an estimate for one GPU and one sequence, not a measurement of your hardware or a guaranteed diagnosis.</p>
 <p>In the other routes, finding a template does not prove that the runtime applies it correctly, and recognizing an architecture does not certify quality or support in every engine. TAF shows the inspected files and revision, explains limitations and proposes the next check.</p>
 <p>You can select <strong>I tried it and it worked</strong> or <strong>It still fails</strong>, open the detailed tool, read the relevant chapter and download the report. Pasted questions and errors stay in this tab; model queries go to HF. A shareable link carries only the route, model ID and language, with no error, hardware or result data. Responses are not posted automatically to HF. The <a href="https://github.com/karlesmarin/tafagent/blob/main/docs/resolver.md">technical note</a> describes the scope and how to add routes using other TAF modules.</p>
+</section>
+<section id="sec-resolver-memory-peaks" class="level3" data-number="48.3.3">
+<h3 data-number="48.3.3" class="anchored" data-anchor-id="sec-resolver-memory-peaks"><span class="header-section-number">48.3.3</span> It fits the estimate but fails: phases and peaks</h3>
+<p>A steady memory budget and a phase peak are different quantities. The memory route lets you select <strong>loading</strong>, <strong>prefill</strong> (prompt processing), <strong>decode</strong> (subsequent tokens) or <strong>unknown phase</strong>. One <code>generate()</code> call may contain both prefill and decode: its maximum does not separate them. Keep the unknown phase when you cannot identify the boundary.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Phase</th>
+<th>Baseline and next check</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Loading</td>
+<td>Resident weights, without claiming they predict the peak. Check temporary copies, conversion and free memory before loading.</td>
+</tr>
+<tr class="even">
+<td>Prefill</td>
+<td>Budget at the prompt token count. Isolate that processing; inspect temporary attention/logit buffers and the backend actually used. Shorten only the prompt when repeating.</td>
+</tr>
+<tr class="odd">
+<td>Decode</td>
+<td>Budget at the actual cached token count: prompt plus generated tokens. Reset counters after prefill; check KV growth, retained outputs and concurrency. Keep the prompt fixed while varying generated length.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Observed memory peak</strong> is optional. Enter the value, its unit (<strong>GiB</strong>, decimal <strong>GB</strong> or <strong>MiB</strong>) and metric: PyTorch tensor allocations, allocator reserved memory, sampled device usage or unknown. The allocation requested in an OOM message is not an observed peak. Do not enter zero to replace a missing value.</p>
+<p>A numerical difference requires a <strong>tensor-allocation</strong> peak, a known phase, a measurement isolated to that phase and a matching workload: model, weight format, tokens, one GPU, one sequence, resident weights and FP16 KV cache. Supported geometry is also required. Loading is compared with resident weights; prefill/decode with the steady estimate. These are baselines, not predictions of the real maximum. Reserved memory and device usage remain context, without subtracting them from an estimate that counts different quantities.</p>
+<p>The difference <strong>does not measure fragmentation, prove a cause or certify a fix</strong>. A peak below budget does not rule out OOM: a failed allocation does not become successfully allocated memory. TAF does not verify the supplied measurement. The report separates <code>user_reported</code> from <code>illustrative</code> and keeps <code>independently_verified: false</code> and <code>executed_by_taf: false</code>.</p>
+<p><strong>Measuring in your environment.</strong> Identify the GPU and phase boundary; record versions, actual format, backend, tokens and relevant options. With PyTorch, synchronize that device before starting, call <code>torch.cuda.reset_peak_memory_stats(device)</code>, execute only the delimited phase and synchronize again before reading <code>torch.cuda.max_memory_allocated(device)</code> and <code>torch.cuda.max_memory_reserved(device)</code>. Both return bytes: divide by <code>2**30</code> for GiB. Resetting counters does not free resident tensors. If you cannot separate prefill from decode, record the whole-run maximum as phase-unknown. TAF does not execute these operations.</p>
+<p><a href="https://docs.pytorch.org/docs/stable/notes/cuda.html#cuda-memory-management">PyTorch memory management</a> explains the distinction between allocated, reserved and device-reported usage. See also <a href="https://docs.pytorch.org/docs/stable/generated/torch.cuda.memory.max_memory_allocated.html">the peak tensor counter</a> and <a href="https://docs.pytorch.org/docs/stable/generated/torch.cuda.memory.reset_peak_memory_stats.html">resetting peak statistics</a>.</p>
+<p><strong>Saved example.</strong> Under “Explore another example”, choose “fits on paper, higher prefill peak”. It uses saved Qwen3-8B geometry, BF16, 4,096 tokens and a 24 GiB budget, with a <strong>synthetic</strong> 22 GiB peak. It illustrates the difference; it is not a measured Qwen benchmark or proof of OOM. Changing model, budget, tokens, precision or phase clears the measurement; applying an alternative requires measuring again. Language changes retain it. The report separates initial inputs from current inputs, and share links contain no measurements.</p>
 </section>
 </section>
 <section id="reviewed-models" class="level2" data-number="48.4">
