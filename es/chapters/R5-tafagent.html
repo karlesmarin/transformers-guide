@@ -1176,7 +1176,8 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
   <li><a href="#el-anti-bullshit-pack" id="toc-el-anti-bullshit-pack" class="nav-link" data-scroll-target="#el-anti-bullshit-pack"><span class="header-section-number">48.8</span> El <em>Anti-Bullshit Pack</em></a></li>
   <li><a href="#las-recetas-8-core" id="toc-las-recetas-8-core" class="nav-link" data-scroll-target="#las-recetas-8-core"><span class="header-section-number">48.9</span> Las recetas (8 core)</a></li>
   <li><a href="#cómo-leer-la-salida-la-taf-card" id="toc-cómo-leer-la-salida-la-taf-card" class="nav-link" data-scroll-target="#cómo-leer-la-salida-la-taf-card"><span class="header-section-number">48.10</span> Cómo leer la salida: la <em>TAF Card</em></a></li>
-  <li><a href="#verificación-los-recibos" id="toc-verificación-los-recibos" class="nav-link" data-scroll-target="#verificación-los-recibos"><span class="header-section-number">48.11</span> Verificación (los recibos)</a></li>
+  <li><a href="#sec-evidence-score" id="toc-sec-evidence-score" class="nav-link" data-scroll-target="#sec-evidence-score"><span class="header-section-number">48.11</span> Puntuación de evidencias: puntos, no probabilidades</a></li>
+  <li><a href="#verificación-los-recibos" id="toc-verificación-los-recibos" class="nav-link" data-scroll-target="#verificación-los-recibos"><span class="header-section-number">48.12</span> Verificación (los recibos)</a></li>
   </ul>
 </nav>
     </div>
@@ -1447,8 +1448,15 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
 <p>El resultado se resume en una <strong>TAF Card</strong> con veredictos <strong>✅ / ⚠ / ❌</strong> por dimensión (contexto, cuantización, plantilla, régimen). Y hay un <strong>dashboard de falsación (F1-F23)</strong>: no solo te da números, sino que <strong>somete las afirmaciones a prueba</strong> —la misma filosofía del Cap. 38—.</p>
 <p><strong>Un flujo típico:</strong> <em>Profile</em> (pega el id) → lee el <strong>veredicto</strong> de la TAF Card → si algo sale ⚠/❌, abre el <strong>diagnóstico</strong> concreto (p.&nbsp;ej. <em>Context Unmasker</em> o <em>Quant-regime</em>) → usa la <strong>receta</strong> correspondiente (X-2 contexto, X-19 KV) para decidir.</p>
 </section>
-<section id="verificación-los-recibos" class="level2" data-number="48.11">
-<h2 data-number="48.11" class="anchored" data-anchor-id="verificación-los-recibos"><span class="header-section-number">48.11</span> Verificación (los recibos)</h2>
+<section id="sec-evidence-score" class="level2" data-number="48.11">
+<h2 data-number="48.11" class="anchored" data-anchor-id="sec-evidence-score"><span class="header-section-number">48.11</span> Puntuación de evidencias: puntos, no probabilidades</h2>
+<p>X-2 y Memory Reality muestran <strong>Puntuación de evidencias: N / 100</strong>. Es una heurística de los factores enumerados, no una probabilidad de acierto, una exactitud medida ni un benchmark de calidad de la tarea. Incluso <strong>100/100</strong> solo cubre esa lista: no demuestra que la predicción vaya a cumplirse.</p>
+<p>Cada factor aporta 1 si tiene apoyo, 0,5 si es parcial y 0 si falta o está fuera del régimen indicado. La media ponderada se multiplica por 100 y se redondea. Los pesos son 1 salvo indicación; los niveles alto (≥ 80), medio (≥ 55) y bajo son decisiones heurísticas, no umbrales calibrados con una tasa de acierto. La interfaz permite desplegar el método y cambia de idioma con el resultado.</p>
+<p>Una γ aportada no es un benchmark independiente de calidad. Estar dentro del régimen de una fórmula tampoco demuestra validación empírica. Como las listas varían entre modos, no se deben usar sus puntuaciones para ordenar la calidad de modelos. La puntuación no ejecuta inferencia ni recoge nuevas mediciones.</p>
+<p><strong>Predicción frente a realidad</strong> compara registros y condiciones del protocolo; no muestra esta puntuación. R² sigue siendo bondad de ajuste, no una probabilidad de éxito (véase <a href="../chapters/R4-medir-gamma.html">R4</a>). Los campos JSON históricos <code>confidence</code> y <code>pct</code> se conservan por compatibilidad, junto a <code>score</code>, <code>max_score: 100</code>, <code>kind: "evidence_checklist"</code>, <code>calibrated: false</code> y <code>scope: "listed_factors_only"</code>.</p>
+</section>
+<section id="verificación-los-recibos" class="level2" data-number="48.12">
+<h2 data-number="48.12" class="anchored" data-anchor-id="verificación-los-recibos"><span class="header-section-number">48.12</span> Verificación (los recibos)</h2>
 <ul>
 <li><strong>Pyodide</strong> para las matemáticas (deterministas), <strong>WebLLM</strong> para el lenguaje natural, <strong>transformers.js</strong> para el tokenizador.</li>
 <li><strong>Verificación Lean+Mathlib:</strong> 15 identidades probadas formalmente (<code>github.com/karlesmarin/lean-taf</code>).</li>

@@ -1176,7 +1176,8 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
   <li><a href="#the-anti-bullshit-pack" id="toc-the-anti-bullshit-pack" class="nav-link" data-scroll-target="#the-anti-bullshit-pack"><span class="header-section-number">48.8</span> The <em>Anti-Bullshit Pack</em></a></li>
   <li><a href="#the-recipes-8-core" id="toc-the-recipes-8-core" class="nav-link" data-scroll-target="#the-recipes-8-core"><span class="header-section-number">48.9</span> The recipes (8 core)</a></li>
   <li><a href="#how-to-read-the-output-the-taf-card" id="toc-how-to-read-the-output-the-taf-card" class="nav-link" data-scroll-target="#how-to-read-the-output-the-taf-card"><span class="header-section-number">48.10</span> How to read the output: the <em>TAF Card</em></a></li>
-  <li><a href="#verification-the-receipts" id="toc-verification-the-receipts" class="nav-link" data-scroll-target="#verification-the-receipts"><span class="header-section-number">48.11</span> Verification (the receipts)</a></li>
+  <li><a href="#sec-evidence-score" id="toc-sec-evidence-score" class="nav-link" data-scroll-target="#sec-evidence-score"><span class="header-section-number">48.11</span> Evidence scores: points, not probabilities</a></li>
+  <li><a href="#verification-the-receipts" id="toc-verification-the-receipts" class="nav-link" data-scroll-target="#verification-the-receipts"><span class="header-section-number">48.12</span> Verification (the receipts)</a></li>
   </ul>
 </nav>
     </div>
@@ -1447,8 +1448,15 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
 <p>The result is summarized in a <strong>TAF Card</strong> with <strong>✅ / ⚠ / ❌</strong> verdicts per dimension (context, quantization, template, regime). And there is a <strong>falsification dashboard (F1-F23)</strong>: it doesn’t just hand you numbers, it <strong>puts the claims to the test</strong> —the same philosophy as Ch. 38—.</p>
 <p><strong>A typical flow:</strong> <em>Profile</em> (paste the id) → read the <strong>verdict</strong> on the TAF Card → if something comes back ⚠/❌, open the specific <strong>diagnostic</strong> (e.g.&nbsp;<em>Context Unmasker</em> or <em>Quant-regime</em>) → use the matching <strong>recipe</strong> (X-2 context, X-19 KV) to decide.</p>
 </section>
-<section id="verification-the-receipts" class="level2" data-number="48.11">
-<h2 data-number="48.11" class="anchored" data-anchor-id="verification-the-receipts"><span class="header-section-number">48.11</span> Verification (the receipts)</h2>
+<section id="sec-evidence-score" class="level2" data-number="48.11">
+<h2 data-number="48.11" class="anchored" data-anchor-id="sec-evidence-score"><span class="header-section-number">48.11</span> Evidence scores: points, not probabilities</h2>
+<p>X-2 and Memory Reality display <strong>Evidence score: N / 100</strong>. This is a heuristic for the listed factors, not a probability of correctness, measured accuracy or a task-quality benchmark. Even <strong>100/100</strong> only covers that checklist; it does not establish that a prediction will hold.</p>
+<p>Each factor contributes 1 when supported, 0.5 when partial and 0 when missing or outside the stated regime. The weighted average is multiplied by 100 and rounded. Weights are 1 unless shown; high (≥ 80), medium (≥ 55) and low bands are heuristic design choices, not thresholds calibrated against accuracy. The interface can expand the method and change language with the result still displayed.</p>
+<p>A supplied gamma is not an independent task-quality benchmark. Being inside a formula’s regime does not establish empirical validation either. Checklists differ between modes, so their scores should not rank model quality. The score runs no inference and collects no new measurements.</p>
+<p><strong>Prediction vs Reality</strong> compares records and protocol conditions without this score. R² remains goodness of fit, not a success probability (see <a href="../chapters/R4-medir-gamma.html">R4</a>). Legacy JSON fields <code>confidence</code> and <code>pct</code> remain for compatibility, alongside <code>score</code>, <code>max_score: 100</code>, <code>kind: "evidence_checklist"</code>, <code>calibrated: false</code> and <code>scope: "listed_factors_only"</code>.</p>
+</section>
+<section id="verification-the-receipts" class="level2" data-number="48.12">
+<h2 data-number="48.12" class="anchored" data-anchor-id="verification-the-receipts"><span class="header-section-number">48.12</span> Verification (the receipts)</h2>
 <ul>
 <li><strong>Pyodide</strong> for the math (deterministic), <strong>WebLLM</strong> for the natural language, <strong>transformers.js</strong> for the tokenizer.</li>
 <li><strong>Lean+Mathlib verification:</strong> 15 identities formally proved (<code>github.com/karlesmarin/lean-taf</code>).</li>

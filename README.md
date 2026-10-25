@@ -1,5 +1,16 @@
 # Transformers Guide · Cómo Atienden los Transformers / How Transformers Attend
 
+## 2026-10-25 · Evidence scores / Puntuaciones de evidencias
+
+**ES:** R5 explica la puntuación heurística sobre 100 de X-2 y Memory Reality,
+sus factores, pesos y límites. No es una probabilidad de acierto ni un benchmark.
+Predicción frente a realidad compara protocolos sin esa puntuación.
+
+**EN:** R5 explains the heuristic score out of 100 in X-2 and Memory Reality,
+its factors, weights and limits. It is not a correctness probability or benchmark.
+Prediction vs Reality compares protocols without that score.
+
+
 > Una guía de campo y referencia · A field guide & reference
 > De los tokens al contexto largo — cada fórmula verificada, medida y construida desde cero.
 > From tokens to long context — every formula verified, measured and built from scratch.
