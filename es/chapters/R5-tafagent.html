@@ -23,6 +23,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -1170,6 +1205,7 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
   <li><a href="#sec-resolver-observations" id="toc-sec-resolver-observations" class="nav-link" data-scroll-target="#sec-resolver-observations"><span class="header-section-number">48.3.2</span> Continuar con lo que observaste</a></li>
   <li><a href="#sec-resolver-memory-peaks" id="toc-sec-resolver-memory-peaks" class="nav-link" data-scroll-target="#sec-resolver-memory-peaks"><span class="header-section-number">48.3.3</span> Cabe según la estimación, pero falla: fases y picos</a></li>
   <li><a href="#sec-resolver-saved-cases" id="toc-sec-resolver-saved-cases" class="nav-link" data-scroll-target="#sec-resolver-saved-cases"><span class="header-section-number">48.3.4</span> Guardar un caso y retomarlo otro día</a></li>
+  <li><a href="#sec-resolver-memory-import" id="toc-sec-resolver-memory-import" class="nav-link" data-scroll-target="#sec-resolver-memory-import"><span class="header-section-number">48.3.5</span> Incorporar una medición de memoria al caso</a></li>
   </ul></li>
   <li><a href="#reviewed-models" id="toc-reviewed-models" class="nav-link" data-scroll-target="#reviewed-models"><span class="header-section-number">48.4</span> Elegir un modelo sin confundir reconocimiento y validación</a></li>
   <li><a href="#las-métricas-que-calcula" id="toc-las-métricas-que-calcula" class="nav-link" data-scroll-target="#las-métricas-que-calcula"><span class="header-section-number">48.5</span> Las métricas que calcula</a></li>
@@ -1327,6 +1363,26 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
 <p><strong>Este archivo no está cifrado y puede contener los textos, código, informes o configuraciones privados que pegaste.</strong> Guárdalo en tu dispositivo y revísalo antes de compartirlo. TAF no lo sube ni guarda una copia automáticamente en el navegador. <strong>Exportar informe</strong> sigue creando el informe reducido que omite los textos y código de las rutas locales; ese informe no permite recuperar datos que se eliminaron.</p>
 <p>Para continuar, abre <strong>Resolver mi problema → Abrir caso guardado</strong>, elige el archivo (máximo 4 MiB), comprueba la ruta y fecha y pulsa <strong>Abrir y sustituir el caso actual</strong>. Cancelar o seleccionar un archivo inválido conserva el caso actual. Puedes abrirlo en cualquiera de los dos alojamientos de TAF.</p>
 <p>Al recuperar se recalculan las comprobaciones con la versión actual de TAF, sin consultar Hugging Face, ejecutar código pegado ni ejecutar el modelo. Se conserva el idioma actual. Los metadatos y revisiones del archivo se etiquetan como no verificados y los ejemplos siguen siendo ilustrativos. Si el plan de comprobación ha cambiado se descarta el seguimiento incompatible. Para obtener metadatos actuales del repositorio, vuelve a ejecutar la comprobación de HF. Recuperar un caso no prueba que una solución haya funcionado.</p>
+</section>
+<section id="sec-resolver-memory-import" class="level3" data-number="48.3.5">
+<h3 data-number="48.3.5" class="anchored" data-anchor-id="sec-resolver-memory-import"><span class="header-section-number">48.3.5</span> Incorporar una medición de memoria al caso</h3>
+<p>Primero calcula tu caso de memoria con el modelo, revisión consultada, formato, fase y tokens. Después abre <strong>Importar medición de memoria</strong>, selecciona un JSON <code>taf-memory-measurement</code> (hasta <strong>64 KiB</strong>) y revisa las condiciones declaradas. La previsualización indica coincidencias, diferencias y datos sin documentar. Pulsa <strong>Incorporar pico a este caso</strong> para rellenar únicamente pico, unidad y métrica; no se cambian el modelo, fase, precisión ni longitud del caso.</p>
+<p>Las confirmaciones de misma carga y fase aislada quedan desmarcadas. Revísalas en tu entorno y repite la comprobación. Marcarlas no anula diferencias ni datos ausentes del archivo. Modelo, revisión, fase, formato y carga deben concordar; una GPU, una secuencia, pesos residentes y KV FP16 delimitan la comparación. En carga no se exige longitud ni tipo KV, porque la referencia son los pesos. Los picos reservados, de dispositivo o de fase desconocida quedan como contexto. Un archivo ilustrativo tampoco habilita una diferencia numérica.</p>
+<p><strong>Cómo obtener el informe.</strong> El <a href="https://github.com/karlesmarin/tafagent/blob/main/cli/memory_probe.py">auxiliar memory_probe.py</a> se importa en tu programa PyTorch/CUDA y rodea la operación que tú ejecutas. No instala dependencias, carga modelos ni ejecuta tareas por su cuenta. El ejemplo siguiente usa variables y una función de tu programa; no es un benchmark listo para ejecutar:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cli.memory_probe <span class="im">import</span> memory_probe</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> memory_probe(</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"prefill-memory.json"</span>, model<span class="op">=</span>MODEL_ID, revision<span class="op">=</span>MODEL_COMMIT,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    phase<span class="op">=</span><span class="st">"prefill"</span>, tokens<span class="op">=</span>ACTUAL_PROMPT_TOKENS, precision<span class="op">=</span>WEIGHT_FORMAT,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    device<span class="op">=</span>CUDA_DEVICE, phase_isolated<span class="op">=</span>PHASE_WAS_ISOLATED,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    gpu_count<span class="op">=</span>GPU_COUNT, batch_size<span class="op">=</span>SEQUENCE_COUNT,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    resident_weights<span class="op">=</span>WEIGHTS_RESIDENT, kv_dtype<span class="op">=</span>ACTUAL_KV_DTYPE,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>) <span class="im">as</span> record:</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    outputs <span class="op">=</span> run_your_prefill()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>El auxiliar sincroniza la GPU elegida, reinicia contadores, espera a que tu bloque termine, vuelve a sincronizar y escribe el máximo de tensores asignados en MiB, con versión de PyTorch, dispositivo y fecha. <code>metric="reserved"</code> recoge el máximo reservado. Los metadatos de modelo y carga son declaraciones tuyas; deja <code>None</code> si no los conoces. La revisión debe ser un hash completo, no <code>main</code>.</p>
+<p>Para una llamada completa a <code>generate()</code>, usa <code>phase="generate"</code>: no demuestra la separación de prefill y decodificación. En decodificación registra la longitud real de caché en el punto comparado, no el máximo configurado; puedes completar <code>record["tokens"]</code> dentro del bloque. Aísla otras actividades y no solapes medidores en la misma GPU: los contadores pertenecen al proceso/dispositivo. Si el bloque falla, incluso por OOM, no se escribe un informe nuevo ni se oculta el error. Los archivos existentes no se sobrescriben. Reiniciar máximos no libera memoria.</p>
+<p><strong>Guardar y compartir.</strong> El caso privado conserva el informe normalizado con los detalles del entorno y usa la versión 2 del archivo recuperable. Sigue leyendo casos anteriores de versión 1; estos continúan usándose si no hay una medición adjunta. Actualiza la aplicación antes de abrir un caso v2 en una pestaña antigua. El informe reducido conserva el pico y categorías de comparación, pero omite el registro original y sus identificadores del entorno. Cambiar modelo, presupuesto, longitud, formato o fase elimina la medición; editar pico/unidad/métrica la convierte en una entrada manual. Ninguna coincidencia verifica la medida ni una reparación.</p>
+<p>Consulta <a href="https://github.com/karlesmarin/tafagent/blob/main/docs/memory-measurement.md">formato completo, ejemplo ilustrativo y pruebas</a> y la <a href="https://docs.pytorch.org/docs/stable/generated/torch.cuda.memory.max_memory_allocated.html">documentación de contadores de PyTorch</a>. La interfaz y la ayuda están disponibles en ES/EN/FR/ZH; el navegador no ejecuta código de los archivos ni realiza medidas GPU.</p>
 </section>
 </section>
 <section id="reviewed-models" class="level2" data-number="48.4">

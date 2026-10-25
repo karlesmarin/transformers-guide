@@ -23,6 +23,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -1170,6 +1205,7 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
   <li><a href="#sec-resolver-observations" id="toc-sec-resolver-observations" class="nav-link" data-scroll-target="#sec-resolver-observations"><span class="header-section-number">48.3.2</span> Continue from what you observed</a></li>
   <li><a href="#sec-resolver-memory-peaks" id="toc-sec-resolver-memory-peaks" class="nav-link" data-scroll-target="#sec-resolver-memory-peaks"><span class="header-section-number">48.3.3</span> It fits the estimate but fails: phases and peaks</a></li>
   <li><a href="#sec-resolver-saved-cases" id="toc-sec-resolver-saved-cases" class="nav-link" data-scroll-target="#sec-resolver-saved-cases"><span class="header-section-number">48.3.4</span> Save a case and continue another day</a></li>
+  <li><a href="#sec-resolver-memory-import" id="toc-sec-resolver-memory-import" class="nav-link" data-scroll-target="#sec-resolver-memory-import"><span class="header-section-number">48.3.5</span> Attach a memory measurement to the case</a></li>
   </ul></li>
   <li><a href="#reviewed-models" id="toc-reviewed-models" class="nav-link" data-scroll-target="#reviewed-models"><span class="header-section-number">48.4</span> Choosing a model: recognition is not validation</a></li>
   <li><a href="#the-metrics-it-computes" id="toc-the-metrics-it-computes" class="nav-link" data-scroll-target="#the-metrics-it-computes"><span class="header-section-number">48.5</span> The metrics it computes</a></li>
@@ -1273,7 +1309,7 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
 <p><strong>Track my checks</strong> records what you could review while retaining the current result. It is available on all nine routes. Each step can be pending, reviewed without a discrepancy, discrepant, or blocked. These are <strong>user declarations</strong>, not tests executed or verified by TAF.</p>
 <p>The next step is selected automatically: first the first discrepancy, then the first blocked check, then the first pending step. <strong>Go to the next check</strong> focuses its control. “It still fails” uses this follow-up alongside the plan based on the original data. The guide link still explains the case; marks do not alter results or protocol metadata. Marking all three steps reviewed does not certify a fix: test the original task and retain counterexamples if it still fails.</p>
 <p><strong>Optional demo:</strong> in a saved example, <strong>Simulate a blocked check</strong> marks one step reviewed, one blocked and one pending. The narrated demo shows this in step five. These marks are illustrative, not an execution record. The simulation button does not appear in a case using your own inputs.</p>
-<p>Without saving a private case, marks stay <strong>only in the original tab</strong> when closing the panel or changing language. Changed inputs, recalculation, another example or route clear them; reloading also loses them. Reports include tracking as unverified declarations, without free-text notes, prompts or pasted code. They cannot restore the session. Guide return links open a fresh form: keep the original tab open to retain your case and marks.</p>
+<p>Without saving a private case, marks stay <strong>only in the original tab</strong> when closing the panel or changing language. Changed inputs, recalculation, another example or route clear them; reloading also loses unsaved changes. Reduced reports include tracking as unverified declarations, without free-text notes, prompts or pasted code. They cannot restore the session. Guide return links open a fresh form: keep the original tab open to retain your case and marks, or save a private case to continue later.</p>
 </section>
 <section id="sec-resolver-observations" class="level3" data-number="48.3.2">
 <h3 data-number="48.3.2" class="anchored" data-anchor-id="sec-resolver-observations"><span class="header-section-number">48.3.2</span> Continue from what you observed</h3>
@@ -1327,6 +1363,26 @@ figure.quarto-float-tbl > div[aria-describedby]:focus-visible {outline:2px solid
 <p><strong>This file is unencrypted and may contain private text, code, reports or configurations you pasted.</strong> Keep it on your device and review it before sharing. TAF does not upload it or automatically persist a browser copy. <strong>Export report</strong> still produces the reduced report that omits pasted text and code from local routes; that report cannot restore inputs that were removed.</p>
 <p>To continue, open <strong>Solve my problem → Open saved case</strong>, select the file (up to 4 MiB), check the route and save date, then choose <strong>Open and replace current case</strong>. Cancelling or selecting an invalid file preserves the current case. The same file works on either TAF host.</p>
 <p>Opening recalculates checks with the current TAF version without contacting Hugging Face, executing pasted code or running a model. It retains the current UI language. File metadata and revisions remain unverified; examples remain illustrative. If the check plan has changed, incompatible follow-up is cleared. Run the HF check again to refresh repository metadata. Reopening a case does not establish that a repair worked.</p>
+</section>
+<section id="sec-resolver-memory-import" class="level3" data-number="48.3.5">
+<h3 data-number="48.3.5" class="anchored" data-anchor-id="sec-resolver-memory-import"><span class="header-section-number">48.3.5</span> Attach a memory measurement to the case</h3>
+<p>First calculate your memory case with its model, inspected revision, format, phase and token count. Open <strong>Import memory measurement</strong>, select a <code>taf-memory-measurement</code> JSON (up to <strong>64 KiB</strong>) and inspect the declared conditions. The preview distinguishes matches, differences and undocumented values. <strong>Attach peak to this case</strong> fills only peak value, unit and metric; it does not change the case model, selected phase, precision or token count.</p>
+<p>Same-workload and isolated-phase confirmations start unchecked. Review them in your runtime, then rerun the check. Checking them cannot override differences or missing data in the file. Model, revision, phase, format and workload must agree; one GPU, one sequence, resident weights and FP16 KV bound the comparison. Loading does not require token count or KV dtype because its baseline is weights. Reserved, device and unknown-phase peaks remain context. Illustrative files do not enable numerical differences either.</p>
+<p><strong>Collect a report.</strong> Import <a href="https://github.com/karlesmarin/tafagent/blob/main/cli/memory_probe.py">memory_probe.py</a> into your existing PyTorch/CUDA program and wrap the operation you execute. It does not install packages, load models or run a task by itself. The example below uses variables and a function from your program; it is not a runnable benchmark:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cli.memory_probe <span class="im">import</span> memory_probe</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> memory_probe(</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"prefill-memory.json"</span>, model<span class="op">=</span>MODEL_ID, revision<span class="op">=</span>MODEL_COMMIT,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    phase<span class="op">=</span><span class="st">"prefill"</span>, tokens<span class="op">=</span>ACTUAL_PROMPT_TOKENS, precision<span class="op">=</span>WEIGHT_FORMAT,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    device<span class="op">=</span>CUDA_DEVICE, phase_isolated<span class="op">=</span>PHASE_WAS_ISOLATED,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    gpu_count<span class="op">=</span>GPU_COUNT, batch_size<span class="op">=</span>SEQUENCE_COUNT,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    resident_weights<span class="op">=</span>WEIGHTS_RESIDENT, kv_dtype<span class="op">=</span>ACTUAL_KV_DTYPE,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>) <span class="im">as</span> record:</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    outputs <span class="op">=</span> run_your_prefill()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The helper synchronizes the chosen device, resets counters, yields to your block, synchronizes again and writes peak allocated tensor memory in MiB, with the PyTorch version, device and timestamp. <code>metric="reserved"</code> records the reserved peak instead. Model/workload metadata is caller-declared; use <code>None</code> for unknowns. A revision must be a full commit hash, not <code>main</code>.</p>
+<p>Use <code>phase="generate"</code> around a whole <code>generate()</code> call: this does not establish separate prefill/decode boundaries. During decode, record the actual cached length at the comparison point, not the configured maximum; update <code>record["tokens"]</code> inside the block if necessary. Isolate other activity and do not overlap probes on the same GPU: counters are process/device scoped. If the block fails, including OOM, no new report is written and the error propagates. Existing files are never overwritten. Resetting peaks does not free memory.</p>
+<p><strong>Save and share.</strong> A private case retains the normalized report and runtime details using private-file version 2. The reader still accepts version 1, which remains the output format when no measurement is attached. Reload an older app before opening v2. The reduced report retains the peak and comparison categories, but omits the original record and runtime identifiers. Changes to model, budget, length, format or phase clear the record; editing peak value/unit/metric detaches it into manual input. No declared match independently verifies a measurement or successful repair.</p>
+<p>See <a href="https://github.com/karlesmarin/tafagent/blob/main/docs/memory-measurement.md">full format, illustrative example and tests</a> and <a href="https://docs.pytorch.org/docs/stable/generated/torch.cuda.memory.max_memory_allocated.html">PyTorch peak-counter documentation</a>. UI/help are available in EN/ES/FR/ZH. The browser never executes file contents or performs GPU measurements.</p>
 </section>
 </section>
 <section id="reviewed-models" class="level2" data-number="48.4">
