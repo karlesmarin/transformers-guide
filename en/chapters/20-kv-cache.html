@@ -1239,6 +1239,7 @@ window.Quarto = {
 </header>
 
 
+<div id="the-problem"></div>
 <p>For one request, estimated KV storage is <span class="math display">\[M=2bLH_{\rm KV}d_{\rm head}T\quad\text{bytes},\]</span> where <span class="math inline">\(b\)</span> is bytes per element, <span class="math inline">\(L\)</span> layers and <span class="math inline">\(H_{\rm KV}\)</span> KV heads. BF16 uses <span class="math inline">\(b=2\)</span>, giving a total factor of 4. Runtime overhead is additional. GQA reduces KV heads; it does not supply a universal gamma correction.</p>
 <section id="family-quantiles-and-observed-mass" class="level2" data-number="21.1">
 <h2 data-number="21.1" class="anchored" data-anchor-id="family-quantiles-and-observed-mass"><span class="header-section-number">21.1</span> Family quantiles and observed mass</h2>
