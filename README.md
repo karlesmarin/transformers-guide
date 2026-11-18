@@ -1,5 +1,26 @@
 # Transformers Guide · Cómo Atienden los Transformers / How Transformers Attend
 
+## 🆕 18 de noviembre de 2026 — correcciones publicadas
+
+🧮 **Fórmulas:** familia discreta consistente, C_V=γ² Var(log d), cuantiles finitos,
+inversa Padé y conteo de planos con la dimensión rotatoria real.
+🔎 **Interpretación:** candidato, medida y cálculo de familia conservan significados
+distintos. Sin observación, gamma queda vacío; GQA +0.11 desactivado por defecto;
+X-2/NIAH requieren evaluación y X-19 informa masa, sin garantía de calidad KV.
+📖 **Coherencia:** guía ES/EN, animaciones, recetas, glosario y tafagent EN/ES/FR/ZH.
+🌐 **Publicado:** [tafagent](https://karlesmarin.github.io/tafagent/),
+[HF Space](https://huggingface.co/spaces/karlexmarin/taf-agent) y
+[guía](https://karlesmarin.github.io/transformers-guide/).
+📚 [Notas de versión](https://github.com/karlesmarin/tafagent/blob/main/docs/RELEASE_NOTES_2026-11.md)
+· [Contrato de fórmulas](https://github.com/karlesmarin/tafagent/blob/main/docs/finite-family-contract.md).
+✅ 95 pruebas Python y flujos reales de perfil/modelos con Pyodide verificados;
+el resultado completo de CI y los hashes se conservan en el recibo de publicación.
+🗂️ Parte I vigente local: `output/pdf/part1_review_20261118/Parte_I_EN_corregida.pdf`
+(120 páginas). La revisión no se ha depositado como nueva versión de Zenodo.
+🧭 Nueva campaña QL, entrenamiento causal y evaluación KV siguen como investigación
+pendiente. Las entradas fechadas anteriores describen su momento histórico.
+
+
 ## 2026-10-25 · Evidence scores / Puntuaciones de evidencias
 
 **ES:** R5 explica la puntuación heurística sobre 100 de X-2 y Memory Reality,
