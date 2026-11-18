@@ -35,9 +35,11 @@ def measure_gamma(attention, *, queries, sink_tokens, d_min, d_max):
     for i in q:
         if (a[:, i, i + 1:] > 1e-7).any():
             raise ValueError("Future-token mass: expected a causal attention matrix")
+    if (q - d_max < sink_tokens).any():
+        raise ValueError("Every query must be eligible at every fitted distance")
     distances, means, counts = [], [], []
     for d in range(d_min, d_max + 1):
-        valid_q = q[q - d >= sink_tokens]
+        valid_q = q  # same queries at every distance
         if valid_q.size:
             values = a[:, valid_q, valid_q - d]
             distances.append(d)
@@ -56,7 +58,7 @@ def measure_gamma(attention, *, queries, sink_tokens, d_min, d_max):
         "distance": d.tolist(), "mean_attention": mean.tolist(),
         "pair_count": counts, "residual_log": residual.tolist(),
         "sink_mass": float(selected[:, :, :sink_tokens].sum(axis=-1).mean()),
-        "protocol": {"id": "guide-distance-mean-v1", "queries": q.tolist(),
+        "protocol": {"id": "guide-fixed-query-mean-v2", "queries": q.tolist(),
                      "sink_tokens": sink_tokens, "d_min": d_min, "d_max": d_max,
                      "samples": int(a.shape[0]), "length": int(n),
                      "pooling": "arithmetic_mean_per_distance",
