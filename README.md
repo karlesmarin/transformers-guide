@@ -1,5 +1,12 @@
 # Transformers Guide · Cómo Atienden los Transformers / How Transformers Attend
 
+## 🔗 19 de noviembre de 2026 — revisión de la Parte I
+
+La [guía ES](es/chapters/R5-tafagent.html) y la [guía EN](en/chapters/R5-tafagent.html)
+enlazan el paper revisado (129 páginas EN, 140 ES) y TAFAgent con sus dominios y
+procedencias. La revisión está en GitHub y todavía no tiene depósito nuevo en
+Zenodo; el registro anterior corresponde a la edición histórica.
+
 ## 🆕 18 de noviembre de 2026 — correcciones publicadas
 
 🧮 **Fórmulas:** familia discreta consistente, C_V=γ² Var(log d), cuantiles finitos,
@@ -15,8 +22,8 @@ X-2/NIAH requieren evaluación y X-19 informa masa, sin garantía de calidad KV.
 · [Contrato de fórmulas](https://github.com/karlesmarin/tafagent/blob/main/docs/finite-family-contract.md).
 ✅ 95 pruebas Python y flujos reales de perfil/modelos con Pyodide verificados;
 el resultado completo de CI y los hashes se conservan en el recibo de publicación.
-🗂️ Parte I vigente local: `output/pdf/part1_review_20261118/Parte_I_EN_corregida.pdf`
-(120 páginas). La revisión no se ha depositado como nueva versión de Zenodo.
+🗂️ Esta entrada registra la edición del 18 de noviembre (120 páginas); la
+edición posterior se describe arriba y aún no tiene depósito nuevo en Zenodo.
 🧭 Nueva campaña QL, entrenamiento causal y evaluación KV siguen como investigación
 pendiente. Las entradas fechadas anteriores describen su momento histórico.
 
